@@ -10,35 +10,49 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DataApiController extends Controller
 {
-    public static $FEED_TYPES = [
+    const FEED_TYPES = [
         'LINKY' => [
-            'param' => ['LOGIN', 'PASSWORD'],
-            'dataType' => [
+            'ID' => 1,
+            'NAME' => 'Linky',
+            'PARAM' => ['LOGIN', 'PASSWORD'],
+            'DATA_TYPE' => [
                 'CONSO_ELEC' => [
-                    'unit' => 'KWh',
+                    'UNIT' => 'KWh',
                 ]
-            ]
+            ],
+            'FETCH_CALLBACK' => 'fetchLinkyData',
         ],
         'METEO_FRANCE' => [
-            'param' => ['LOGIN', 'PASSWORD', 'TOKEN'],
-            'dataType' => [
+            'ID' => 2,
+            'NAME' => 'Meteo France',
+            'PARAM' => ['LOGIN', 'PASSWORD', 'TOKEN'],
+            'DATA_TYPE' => [
                 'TEMPERATURE' => [
-                    'unit' => '°C',
+                    'UNIT' => '°C',
                 ],
                 'DJU' => [
-                    'unit' => 'DJU',
+                    'UNIT' => 'DJU',
                 ],
                 'PRESSURE' => [
-                    'unit' => 'hPa',
+                    'UNIT' => 'hPa',
                 ],
                 'HUMIDITY' => [
-                    'unit' => '%',
+                    'UNIT' => '%',
                 ],
                 'NEBULOSITY' => [
-                    'unit' => '%',
+                    'UNIT' => '%',
                 ],
             ],
+            'FETCH_CALLBACK' => 'fetchMeteoFranceData',
         ],
+    ];
+    
+    const FREQUENCY = [
+        'HOUR' => 1,
+        'DAY' => 2,
+        'WEEK' => 3,
+        'MONTH' => 4,
+        'YEAR' => 5,
     ];
     
     /**
