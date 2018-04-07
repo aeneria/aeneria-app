@@ -21,15 +21,16 @@ class FeedData
      */
     private $id;
 
-    /*
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Feed")
      * @ORM\JoinColumn(nullable=false)
      */
     private $feed;
 
-    /*
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\DataType")
-     * @ORM\JoinColumn(nullable=false)
+       /**
+     * @var int
+     *
+     * @ORM\Column(name="data_type", type="integer")
      */
     private $dataType;
 
@@ -42,5 +43,53 @@ class FeedData
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set dataType
+     *
+     * @param integer $dataType
+     *
+     * @return FeedData
+     */
+    public function setDataType($dataType)
+    {
+        $this->dataType = $dataType;
+
+        return $this;
+    }
+
+    /**
+     * Get dataType
+     *
+     * @return integer
+     */
+    public function getDataType()
+    {
+        return $this->dataType;
+    }
+
+    /**
+     * Set feed
+     *
+     * @param \AppBundle\Entity\Feed $feed
+     *
+     * @return FeedData
+     */
+    public function setFeed(\AppBundle\Entity\Feed $feed)
+    {
+        $this->feed = $feed;
+
+        return $this;
+    }
+
+    /**
+     * Get feed
+     *
+     * @return \AppBundle\Entity\Feed
+     */
+    public function getFeed()
+    {
+        return $this->feed;
     }
 }

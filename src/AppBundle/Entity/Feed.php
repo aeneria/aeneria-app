@@ -28,9 +28,10 @@ class Feed
      */
     private $name;
 
-    /*
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\FeedType")
-     * @ORM\JoinColumn(nullable=false)
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="feed_type", type="string", length=255, unique=true)
      */
     private $feedType;
 
@@ -160,5 +161,29 @@ class Feed
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * Set feedType
+     *
+     * @param string $feedType
+     *
+     * @return Feed
+     */
+    public function setFeedType($feedType)
+    {
+        $this->feedType = $feedType;
+
+        return $this;
+    }
+
+    /**
+     * Get feedType
+     *
+     * @return string
+     */
+    public function getFeedType()
+    {
+        return $this->feedType;
     }
 }

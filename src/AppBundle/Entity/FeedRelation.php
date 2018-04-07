@@ -21,13 +21,13 @@ class FeedRelation
      */
     private $id;
 
-    /*
+    /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Feed")
      * @ORM\JoinColumn(nullable=false)
      */
     private $primaryFeed;
 
-    /*
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Feed")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -42,5 +42,53 @@ class FeedRelation
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set primaryFeed
+     *
+     * @param \AppBundle\Entity\Feed $primaryFeed
+     *
+     * @return FeedRelation
+     */
+    public function setPrimaryFeed(\AppBundle\Entity\Feed $primaryFeed)
+    {
+        $this->primaryFeed = $primaryFeed;
+
+        return $this;
+    }
+
+    /**
+     * Get primaryFeed
+     *
+     * @return \AppBundle\Entity\Feed
+     */
+    public function getPrimaryFeed()
+    {
+        return $this->primaryFeed;
+    }
+
+    /**
+     * Set secondaryFeed
+     *
+     * @param \AppBundle\Entity\Feed $secondaryFeed
+     *
+     * @return FeedRelation
+     */
+    public function setSecondaryFeed(\AppBundle\Entity\Feed $secondaryFeed)
+    {
+        $this->secondaryFeed = $secondaryFeed;
+
+        return $this;
+    }
+
+    /**
+     * Get secondaryFeed
+     *
+     * @return \AppBundle\Entity\Feed
+     */
+    public function getSecondaryFeed()
+    {
+        return $this->secondaryFeed;
     }
 }
