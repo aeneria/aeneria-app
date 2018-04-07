@@ -1,0 +1,44 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * DataType
+ *
+ * @ORM\Table(name="data_type")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DataTypeRepository")
+ */
+class DataType
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /*
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\FeedType")
+	 * @ORM\JoinColumn(nullable=false)
+     */
+    private $feedType;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Unit", type="string", length=50)
+     */
+    private $unit;
+
+}

@@ -1,0 +1,16 @@
+body {
+ background: #f6ffcd;
+}
+
+.navbar {
+ background: #4f323b;
+ box-shadow: 0 4px 3px rgba(10,10,10,.1),0 0 0 2px rgba(10,10,10,.1);
+}
+
+.navbar-item {
+ color: #f6ffcd;
+}
+
+.card {
+ border-radius: 5px;
+}

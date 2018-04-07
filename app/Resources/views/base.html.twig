@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class='has-navbar-fixed-top'>
+<head>
+<meta charset="UTF-8" />
+<title>{% block title %}Pilea{% endblock %}</title>
+{% block stylesheets %}
+{% endblock %}
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+<link rel="stylesheet" href={{ asset("css/style.css") }}></link>
+
+</head>
+<body>
+  <nav class="navbar is-fixed-top">
+    <div class="navbar-brand">
+      <a class="navbar-item" href='/'>
+        <img src="{{ asset('image/logo.png') }}" alt="Pilea {{ 'Analyser votre consommation d\'électricité' | trans }}" >
+        Pilea
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item active" title="{{ 'General dashboard' | trans }}">*</a> 
+        <a class="navbar-item" title="{{ 'Analyser votre consommation d\'électricité' | trans }}">**</a>
+      </div>
+      <div class="navbar-end">
+        <a class="navbar-item" title="{{ 'onfiguration'| trans }}">***</a>
+      </div>
+    </div>
+  </nav>
+  
+  {% block body %}
+  {% endblock %}
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  {% block javascripts %}
+  {% endblock %}
+</body>
+</html>
