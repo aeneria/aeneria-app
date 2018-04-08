@@ -1,37 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<section class="section">
-  <div class="container">
-    <div class='columns'>
-      <div id='evolution' class='column is-two-third'>
+  <div class="container-fluid">
+    <div class='row'>
+      <div id='evolution' class='col-9'>
         <div class='card'>
-          <header class="card-header">
-            <p class="card-header-title">{{ 'Evolution de la consommation sur la période' | trans }}</p>
-          </header>
+          <div class="card-header">
+            <h3>{{ 'Evolution de la consommation sur la période' | trans }}</h3>
+          </div>
           <div class="card-content">
             <div class="content">Lorem ipsum dolor sit amet,
               consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
           </div>
         </div>
       </div>
-      <div id='repartition' class='column is-one-quarter'>
+      <div id='repartition' class='col-3'>
         <div class='card'>
-          <header class="card-header">
-            <p class="card-header-title">{{ 'Répartition sur la semaine' | trans }} </p>
-          </header>
+          <div class="card-header">
+            {{ 'Répartition sur la semaine' | trans }}
+          </div>
           <div class="card-content">
             <div id="week-repartition"></div>
           </div>
         </div>
       </div>
     </div>
-    <div class='columns'>
-      <div class='column'>
+    <div class='row'>
+      <div class='col'>
         <div class='card'>
-          <header class="card-header">
-            <p class="card-header-title">{{ 'Consommation sur la période' | trans }}</p>
-          </header>
+          <div class="card-header">
+            <h3>{{ 'Consommation sur la période' | trans }}</h3>
+          </div>
           <div class="card-content">
             <div class="content">Lorem ipsum dolor sit amet,
               consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
@@ -40,7 +39,6 @@
       </div>
     </div>
   </div>
-</section>
 {% endblock %}
 
 {% block stylesheets %}

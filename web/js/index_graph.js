@@ -8,7 +8,6 @@ $.ajax({
   },
   success: function( result ) {
       var data = JSON.parse(result);
-      console.log(data);
       var layout = {
           xaxis: {
               ticks: '',
