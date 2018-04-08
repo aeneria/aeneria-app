@@ -14,7 +14,7 @@ class DataApiController extends Controller
         'LINKY' => [
             'ID' => 1,
             'NAME' => 'Linky',
-            'PARAM' => ['LOGIN', 'PASSWORD'],
+            'PARAM' => ['LOGIN', 'PASSWORD', 'ADDRESS'],
             'DATA_TYPE' => [
                 'CONSO_ELEC' => [
                     'UNIT' => 'KWh',
@@ -25,7 +25,7 @@ class DataApiController extends Controller
         'METEO_FRANCE' => [
             'ID' => 2,
             'NAME' => 'Meteo France',
-            'PARAM' => ['LOGIN', 'PASSWORD', 'TOKEN'],
+            'PARAM' => ['STATION_ID', 'CITY_NAME'],
             'DATA_TYPE' => [
                 'TEMPERATURE' => [
                     'UNIT' => '°C',
@@ -46,7 +46,7 @@ class DataApiController extends Controller
             'FETCH_CALLBACK' => 'fetchMeteoFranceData',
         ],
     ];
-    
+
     const FREQUENCY = [
         'HOUR' => 1,
         'DAY' => 2,
@@ -54,16 +54,16 @@ class DataApiController extends Controller
         'MONTH' => 4,
         'YEAR' => 5,
     ];
-    
+
     /**
      * @Route("/data/week-repartition", name="data-week-repartition")
      */
     public function getWeekRepartionAction(Request $request)
     {
         $var = $request->request;
-        
+
         $xValues = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'];
-        
+
         $yValues = [];
         for($i = 0; $i<24; $i++) {
             $yValues[$i] = sprintf("%02d", $i) . 'h';
@@ -74,7 +74,7 @@ class DataApiController extends Controller
                 $zValues[$yKey][$xKey] = random_int(0, 50);
             }
         }
-        
+
         $data = [
             (Object)[
                 'x' => $xValues,
@@ -91,7 +91,7 @@ class DataApiController extends Controller
                 ]
             ]
         ];
-        
+
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
     }

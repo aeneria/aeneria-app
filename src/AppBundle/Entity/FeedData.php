@@ -27,10 +27,10 @@ class FeedData
      */
     private $feed;
 
-       /**
-     * @var int
+    /**
+     * @var string
      *
-     * @ORM\Column(name="data_type", type="integer")
+     * @ORM\Column(name="data_type", type="string", length=255, unique=true)
      */
     private $dataType;
 
