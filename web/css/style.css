@@ -20,10 +20,19 @@ body {
 
 #sidebar {
  background: #4e4e4e;
- width: 40px;
+ width: 45px;
  height: 100%;
  padding: 10px;
  position: fixed;
+}
+
+#sidebar > div > a {
+ min-width: 30px;
+ min-height: 34px;
+}
+
+#sidebar > div > a > img {
+ max-width: 28px;
 }
 
 .card {

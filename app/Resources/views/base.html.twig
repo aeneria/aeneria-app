@@ -6,7 +6,7 @@
     <title>{% block title %}Pilea{% endblock %}</title>
     {% block stylesheets %}
     {% endblock %}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('image/icon/favicon.png') }}" />
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href={{ asset("css/style.css") }}></link>
@@ -14,22 +14,24 @@
 <body>
     <nav class="navbar navbar navbar-expand-lg sticky-top navbar-expand">
         <a class="navbar-brand" href='/'>
-            <img src="{{ asset('image/logo.png') }}" alt="Pilea {{ 'Analyser votre consommation d\'électricité' | trans }}" >
+            <img src="{{ asset('image/icon/logo.png') }}" alt="Pilea {{ 'Analyser votre consommation d\'électricité' | trans }}" >
             Pilea
         </a>
+        {% block selection %}
+        {% endblock %}
         <div class="ml-auto">
-            <a class="navbar-item" title="{{ 'onfiguration'| trans }}">***</a>
+            <a class="navbar-item" title="{{ 'Configuration'| trans }}">
+                 <img src="{{ asset('image/icon/config.png') }}" height=24 alt="*" >
+            </a>
         </div>
     </nav>
     <nav class="nav" id="sidebar">
         <div class="nav flex-column">
             <a href="#menu1">
-                <i class="fa fa-dashboard"></i>
-                <span class="hidden-sm-down">Item 1</span>
+                <img src="{{ asset('image/icon/general.png') }}" alt="*" >
             </a>
             <a href="#">
-                <i class="fa fa-film"></i>
-                <span class="hidden-sm-down">Item 2</span>
+                <img src="{{ asset('image/icon/meteo1.png') }}" alt="*" >
             </a>
         </div>
     </nav>
