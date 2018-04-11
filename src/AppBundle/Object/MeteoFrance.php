@@ -109,15 +109,17 @@ class MeteoFrance {
             );
         }
 
-        // Flush all persisted DataValue.
-        $this->entityManager->flush();
-
         // Refresh week and month aggregate data.
         $this->refreshAgregateValue($yesterday);
+
+        // Flush all persisted DataValue.
+        $this->entityManager->flush();
     }
 
     /**
-     * Create or refresh month and week agregate data for the date
+     * Create or refresh month and week agregate data for the date.
+     * Persist it in EntityManager.
+     *
      * @param \DateTime $date
      */
     public function refreshAgregateValue(\DateTime $date)
@@ -164,6 +166,7 @@ class MeteoFrance {
 
         return $rawData;
     }
+
 
     /**
      * Extract data for the day from all 3-hours SYNOP for a day.
@@ -234,8 +237,11 @@ class MeteoFrance {
         return $fastenData;
     }
 
+
     /**
-     * Create or refresh week agregate data for the date
+     * Create or refresh week agregate data for the date.
+     * Persist it in EntityManager
+     *
      * @param \DateTime $date
      */
     private function refreshWeekValue(\DateTime $date)
@@ -243,11 +249,16 @@ class MeteoFrance {
         $firstDayOfWeek = clone $date;
         $firstDayOfWeek->sub(new \DateInterval('P' . ($date->format('w') - 1) . 'D'));
 
-        // @TODO
+        $lastDayOfWeek = clone $firstDayOfWeek;
+        $lastDayOfWeek->add(new \DateInterval('P6D'));
+
+        $this->performAgregateValue($firstDayOfWeek, $lastDayOfWeek, DataValue::FREQUENCY['WEEK']);
     }
 
     /**
-     * Create or refresh month agregate data for the date
+     * Create or refresh month agregate data for the date.
+     * Persist it in EntityManager
+     *
      * @param \DateTime $date
      */
     private function refreshMonthValue(\DateTime $date)
@@ -255,7 +266,58 @@ class MeteoFrance {
         $firstDayOfMonth = clone $date;
         $firstDayOfMonth->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
 
-        // @TODO
+        $lastDayOfMonth = clone $firstDayOfMonth;
+        $lastDayOfMonth->sub(new \DateInterval('P' . ($date->format('t') - 1) . 'D'));
+
+        $this->performAgregateValue($firstDayOfMonth, $lastDayOfMonth, DataValue::FREQUENCY['MONTH']);
+    }
+
+    /**
+     * Agregate Values between 2 date and push it to EntityManager.
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param int $frequency
+     */
+    private function performAgregateValue(\DateTime $startDate, \DateTime $endDate, int $frequency)
+    {
+        // Get all feedData.
+        $feedDataList = $this->entityManager->getRepository('AppBundle:FeedData')->findByFeed($this->feed);
+
+        /** @var \AppBundle\Entity\FeedData $feedData */
+        foreach ($feedDataList as $feedData) {
+            if ($feedData->getDataType() != 'DJU') {
+                $agregateData = $this
+                    ->entityManager
+                    ->getRepository('AppBundle:DataValue')
+                    ->getAverageValue(
+                        $startDate,
+                        $endDate,
+                        $feedData,
+                        DataValue::FREQUENCY['DAY']
+                    )
+                ;
+            }
+            else {
+                $agregateData = $this
+                    ->entityManager
+                    ->getRepository('AppBundle:DataValue')
+                    ->getSumValue(
+                        $startDate,
+                        $endDate,
+                        $feedData,
+                        DataValue::FREQUENCY['DAY']
+                    )
+                ;
+            }
+
+            $feedData->updateOrCreateValue(
+                $startDate,
+                $frequency,
+                $agregateData,
+                $this->entityManager
+            );
+        }
     }
 
     /**

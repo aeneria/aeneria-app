@@ -98,11 +98,11 @@ class FeedData
      * Update or Create a new DataValue and persist it.
      *
      * @param \DateInterval $date
-     * @param string $frequency
+     * @param int $frequency
      * @param string $value
      * @param EntityManager $entityManager
      */
-    public function updateOrCreateValue(\DateInterval $date, string $frequency, string $value ,EntityManager &$entityManager)
+    public function updateOrCreateValue(\DateTime $date, int $frequency, string $value , EntityManager &$entityManager)
     {
         $criteria = [
             'feedData' => $this,
