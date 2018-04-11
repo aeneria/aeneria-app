@@ -12,6 +12,43 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feed
 {
+    public const FEED_TYPES = [
+        'LINKY' => [
+            'ID' => 1,
+            'NAME' => 'Linky',
+            'PARAM' => ['LOGIN', 'PASSWORD', 'ADDRESS'],
+            'DATA_TYPE' => [
+                'CONSO_ELEC' => [
+                    'UNIT' => 'KWh',
+                ]
+            ],
+            'FETCH_CALLBACK' => 'fetchLinkyData',
+        ],
+        'METEO_FRANCE' => [
+            'ID' => 2,
+            'NAME' => 'Meteo France',
+            'PARAM' => ['STATION_ID', 'CITY_NAME'],
+            'DATA_TYPE' => [
+                'TEMPERATURE' => [
+                    'UNIT' => '°C',
+                ],
+                'DJU' => [
+                    'UNIT' => 'DJU',
+                ],
+                'PRESSURE' => [
+                    'UNIT' => 'hPa',
+                ],
+                'HUMIDITY' => [
+                    'UNIT' => '%',
+                ],
+                'NEBULOSITY' => [
+                    'UNIT' => '%',
+                ],
+            ],
+            'FETCH_CALLBACK' => 'fetchMeteoFranceData',
+        ],
+    ];
+
     /**
      * @var int
      *

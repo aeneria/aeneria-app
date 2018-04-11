@@ -12,6 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataValue
 {
+    public const FREQUENCY = [
+        'HOUR' => 1,
+        'DAY' => 2,
+        'WEEK' => 3,
+        'MONTH' => 4,
+        'YEAR' => 5,
+    ];
+
     /**
      * @var int
      *
@@ -34,35 +42,35 @@ class DataValue
      * @ORM\Column(name="date", type="datetime")
      */
     private $date;
-    
+
     /**
      * @var int
      *
      * @ORM\Column(name="hour", type="integer", nullable=true)
      */
     private $hour;
-    
+
     /**
      * @var int
      *
      * @ORM\Column(name="week_day", type="integer", nullable=true)
      */
     private $weekDay;
-    
+
     /**
      * @var int
      *
      * @ORM\Column(name="week", type="integer", nullable=true)
      */
     private $week;
-    
+
     /**
      * @var int
      *
      * @ORM\Column(name="month", type="integer", nullable=true, nullable=true)
      */
     private $month;
-    
+
     /**
      * @var int
      *
@@ -75,7 +83,7 @@ class DataValue
      * @ORM\JoinColumn(nullable=false)
      */
     private $feedData;
-    
+
     /**
      * @var int
      *

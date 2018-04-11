@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
 
 /**
  * FeedData
@@ -91,5 +92,38 @@ class FeedData
     public function getFeed()
     {
         return $this->feed;
+    }
+
+    /**
+     * Update or Create a new DataValue and persist it.
+     *
+     * @param \DateInterval $date
+     * @param string $frequency
+     * @param string $value
+     * @param EntityManager $entityManager
+     */
+    public function updateOrCreateValue(\DateInterval $date, string $frequency, string $value ,EntityManager &$entityManager)
+    {
+        $criteria = [
+            'feedData' => $this,
+            'date' => $date,
+            'frequency' => $frequency,
+        ];
+
+        // Try to get the corresponding DataValue.
+        $dataValue = $entityManager->getRepository('AppBundle:DataValue')->findOneBy($criteria);
+
+        // Create it if it doesn't exist.
+        if (!isset($dataValue)) {
+            $dataValue = new DataValue();
+            $dataValue->setFrequency($frequency);
+            $dataValue->setFeedData($this);
+            $dataValue->setDate($yesterday);
+        }
+
+        $dataValue->setValue($value);
+
+        // Persit the dataValue.
+        $entityManager->persist($dataValue);
     }
 }

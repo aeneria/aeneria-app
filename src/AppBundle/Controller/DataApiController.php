@@ -10,51 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DataApiController extends Controller
 {
-    const FEED_TYPES = [
-        'LINKY' => [
-            'ID' => 1,
-            'NAME' => 'Linky',
-            'PARAM' => ['LOGIN', 'PASSWORD', 'ADDRESS'],
-            'DATA_TYPE' => [
-                'CONSO_ELEC' => [
-                    'UNIT' => 'KWh',
-                ]
-            ],
-            'FETCH_CALLBACK' => 'fetchLinkyData',
-        ],
-        'METEO_FRANCE' => [
-            'ID' => 2,
-            'NAME' => 'Meteo France',
-            'PARAM' => ['STATION_ID', 'CITY_NAME'],
-            'DATA_TYPE' => [
-                'TEMPERATURE' => [
-                    'UNIT' => '°C',
-                ],
-                'DJU' => [
-                    'UNIT' => 'DJU',
-                ],
-                'PRESSURE' => [
-                    'UNIT' => 'hPa',
-                ],
-                'HUMIDITY' => [
-                    'UNIT' => '%',
-                ],
-                'NEBULOSITY' => [
-                    'UNIT' => '%',
-                ],
-            ],
-            'FETCH_CALLBACK' => 'fetchMeteoFranceData',
-        ],
-    ];
-
-    const FREQUENCY = [
-        'HOUR' => 1,
-        'DAY' => 2,
-        'WEEK' => 3,
-        'MONTH' => 4,
-        'YEAR' => 5,
-    ];
-
     /**
      * @Route("/data/week-repartition", name="data-week-repartition")
      */
