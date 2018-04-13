@@ -20,17 +20,17 @@
         {% block selection %}
         {% endblock %}
         <div class="ml-auto">
-            <a class="navbar-item" title="{{ 'Configuration'| trans }}">
+            <a class="navbar-item" title="{{ 'Configuration'| trans }}" href="{{ url('congiguration') }}">
                  <img src="{{ asset('image/icon/config.png') }}" height=24 alt="*" >
             </a>
         </div>
     </nav>
     <nav class="nav" id="sidebar">
         <div class="nav flex-column">
-            <a href="#menu1">
+            <a href="{{ url() }}">
                 <img src="{{ asset('image/icon/general.png') }}" alt="*" >
             </a>
-            <a href="#">
+            <a href="{{ url('temperature') }}">
                 <img src="{{ asset('image/icon/meteo1.png') }}" alt="*" >
             </a>
         </div>

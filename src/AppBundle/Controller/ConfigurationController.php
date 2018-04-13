@@ -11,7 +11,7 @@ use AppBundle\Form\MeteoFranceType;
 class ConfigurationController extends Controller
 {
     /**
-     * @Route("/configuration/config", name="config_install")
+     * @Route("/configuration", name="config_install")
      */
     public function configAction(Request $request)
     {
