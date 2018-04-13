@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class='row'>
+      <div id='evolution' class='col-6'>
+        <div class='card'>
+          <div class="card-header">
+            <h3>{{ 'Compteur Linky' | trans }}</h3>
+          </div>
+          <div class="card-content">
+            {{ form(form_linky) }}
+          </div>
+        </div>
+      </div>
+      <div id='repartition' class='col-6'>
+        <div class='card'>
+          <div class="card-header">
+            {{ 'Meteo France' | trans }}
+          </div>
+          <div class="card-content">
+            {{ form(form_meteo_france) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
