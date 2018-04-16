@@ -279,7 +279,7 @@ class MeteoFrance {
      * @param \DateTime $endDate
      * @param int $frequency
      */
-    private function performAgregateValue(\DateTime $startDate, \DateTime $endDate, int $frequency)
+    private function performAgregateValue(\DateTime $startDate, \DateTime $endDate, $frequency)
     {
         // Get all feedData.
         $feedDataList = $this->entityManager->getRepository('AppBundle:FeedData')->findByFeed($this->feed);
@@ -357,7 +357,7 @@ class MeteoFrance {
      * @param float $curMax
      * @param float $newValue
      */
-    private function updateExtrema(float &$curMin, float &$curMax, float $newValue)
+    private function updateExtrema(&$curMin, &$curMax, $newValue)
     {
         if (!isset($curMin)) {
             $curMin = $newValue;
@@ -388,7 +388,7 @@ class MeteoFrance {
      * @param float $tempMax
      * @return float DJU
      */
-    private function calculateDju(float $tempMin,float $tempMax) {
+    private function calculateDju($tempMin, $tempMax) {
         $tempAvg = ($tempMax + $tempMin)/2;
 
         if (self::BASE_DJU > $tempMax) {

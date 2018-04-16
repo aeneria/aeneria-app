@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\DataValue;
 use AppBundle\Entity\FeedData;
 use Doctrine\DBAL\Query\QueryBuilder;
 
@@ -20,14 +21,14 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
    * @param \DateTime $endDate
    * @param int $frequency
    */
-  public function getAverageValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, int $frequency)
+  public function getAverageValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
   {
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
       $queryBuilder->select('AVG(d.value) as average');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy(d.id);
+      $queryBuilder->groupBy('d.id');
 
       return $queryBuilder
           ->getQuery()
@@ -42,14 +43,14 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
    * @param \DateTime $endDate
    * @param string $frequency
    */
-  public function getSumValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, int $frequency)
+  public function getSumValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
   {
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
       $queryBuilder->select('SUM(d.value) as sum');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy(d.id);
+      $queryBuilder->groupBy('d.id');
 
       return $queryBuilder
           ->getQuery()
@@ -57,7 +58,64 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       ;
   }
 
-  public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, int $frequency, QueryBuilder &$queryBuilder)
+  /**
+   * Get value
+   *
+   * @param \DateTime $startDate
+   * @param \DateTime $endDate
+   * @param string $frequency
+   */
+  public function getValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+  {
+      // Create the query builder
+      $queryBuilder = $this->createQueryBuilder('d');
+
+      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+
+      return $queryBuilder
+          ->getQuery()
+          ->getResult()
+      ;
+  }
+
+  /**
+   * Get repartition
+   *
+   * @param \DateTime $startDate
+   * @param \DateTime $endDate
+   * @param string $frequency
+   */
+  public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $repartitionType)
+  {
+      if ($repartitionType === 'WEEK') {
+          $axeX = 'week_day';
+          $axeY = 'hour';
+          $frequency = DataValue::FREQUENCY['HOUR'];
+      }
+      elseif ($repartitionType === 'YEAR') {
+          $axeX = 'week';
+          $axeY = 'week_day';
+          $frequency = DataValue::FREQUENCY['DAY'];
+      }
+      else {
+        return NULL;
+      }
+
+      // Create the query builder
+      $queryBuilder = $this->createQueryBuilder('d');
+
+      $queryBuilder->select('AVG(d.value) as average, d.' . $axeX . ', d.' . $axeY . '');
+      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+      $queryBuilder->groupBy('d.' . $axeX);
+      $queryBuilder->groupBy('d.' . $axeY);
+
+      return $queryBuilder
+          ->getQuery()
+          ->getResult()
+      ;
+  }
+
+  public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
   {
       $queryBuilder
           ->andWhere('d.date BETWEEN :start AND :end')

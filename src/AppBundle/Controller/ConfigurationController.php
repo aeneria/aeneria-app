@@ -18,6 +18,7 @@ class ConfigurationController extends Controller
         $linkyForm = $this
             ->get('form.factory')
             ->createNamedBuilder(LinkyType::class,'form_linky');
+
         $meteoFranceForm = $this
             ->get('form.factory')
             ->createNamedBuilder(MeteoFranceType::class, 'form_meteo_france');
