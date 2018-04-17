@@ -97,7 +97,7 @@ class FetchDataCommand extends ContainerAwareCommand
 
     private function fetchMeteoFranceData(Feed $feed)
     {
-        $meteoFrance = new MeteoFrance($feed);
+        $meteoFrance = new MeteoFrance($feed, $this->entityManager);
         $meteoFrance->fetchYesterdayData();
     }
 }

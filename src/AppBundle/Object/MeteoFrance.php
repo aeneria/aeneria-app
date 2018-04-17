@@ -60,10 +60,10 @@ class MeteoFrance {
      * @param Feed $feed
      * @param EntityManager $entityManager
      */
-    public function __construct(Feed $feed)//, EntityManager $entityManager)
+    public function __construct(Feed $feed, EntityManager $entityManager)
     {
         $this->feed = $feed;
-        //$this->entityManager = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -247,7 +247,7 @@ class MeteoFrance {
     private function refreshWeekValue(\DateTime $date)
     {
         $firstDayOfWeek = clone $date;
-        $firstDayOfWeek->sub(new \DateInterval('P' . ($date->format('w') - 1) . 'D'));
+        $firstDayOfWeek->sub(new \DateInterval('P' . ($date->format('w') - 1) . 'D')); //@TODO atention ça peut devenir negéatif !
 
         $lastDayOfWeek = clone $firstDayOfWeek;
         $lastDayOfWeek->add(new \DateInterval('P6D'));

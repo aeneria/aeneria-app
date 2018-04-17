@@ -102,7 +102,7 @@ class FeedData
      * @param string $value
      * @param EntityManager $entityManager
      */
-    public function updateOrCreateValue(\DateTime $date, int $frequency, string $value , EntityManager &$entityManager)
+    public function updateOrCreateValue(\DateTime $date, $frequency, $value , EntityManager &$entityManager)
     {
         $criteria = [
             'feedData' => $this,
@@ -118,7 +118,7 @@ class FeedData
             $dataValue = new DataValue();
             $dataValue->setFrequency($frequency);
             $dataValue->setFeedData($this);
-            $dataValue->setDate($yesterday);
+            $dataValue->setDate($date);
         }
 
         $dataValue->setValue($value);
