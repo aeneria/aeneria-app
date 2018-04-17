@@ -16,24 +16,24 @@ class MeteoFrance {
     /**
      * Different usefull URIs.
      */
-    public const SYNOP_BASE_PATH = 'https://donneespubliques.meteofrance.fr/';
-    public const SYNOP_DATA = 'donnees_libres/Txt/Synop/synop.'; // exemple synop.2018040800.csv
-    public const SYNOP_POSTES = 'donnees_libres/Txt/Synop/postesSynop.csv';
+    const SYNOP_BASE_PATH = 'https://donneespubliques.meteofrance.fr/';
+    const SYNOP_DATA = 'donnees_libres/Txt/Synop/synop.'; // exemple synop.2018040800.csv
+    const SYNOP_POSTES = 'donnees_libres/Txt/Synop/postesSynop.csv';
 
     /**
      * Reference Temperature for DJU calculation.
      */
-    public const BASE_DJU = 18;
+    const BASE_DJU = 18;
 
     /**
      * Convert degree Kelvin to Celsius.
      */
-    public const KELVIN_TO_CELSIUS = 273.15;
+    const KELVIN_TO_CELSIUS = 273.15;
 
     /**
      * Correspondance between synop variable name and our variable name.
      */
-    public const SYNOP_DATA_NAME = [
+    const SYNOP_DATA_NAME = [
         'STATION_ID' => 'numer_sta',
         'TEMPERATURE' => 't',
         'PRESSURE' => 'pres',

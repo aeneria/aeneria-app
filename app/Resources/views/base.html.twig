@@ -13,24 +13,24 @@
 </head>
 <body>
     <nav class="navbar navbar navbar-expand-lg sticky-top navbar-expand">
-        <a class="navbar-brand" href='/'>
+        <a class="navbar-brand" href="{{ url('homepage') }}">
             <img src="{{ asset('image/icon/logo.png') }}" alt="Pilea {{ 'Analyser votre consommation d\'électricité' | trans }}" >
             Pilea
         </a>
         {% block selection %}
         {% endblock %}
         <div class="ml-auto">
-            <a class="navbar-item" title="{{ 'Configuration'| trans }}" href="{{ url('congiguration') }}">
+            <a class="navbar-item" title="{{ 'Configuration'| trans }}" href="{{ path('config') }}">
                  <img src="{{ asset('image/icon/config.png') }}" height=24 alt="*" >
             </a>
         </div>
     </nav>
     <nav class="nav" id="sidebar">
         <div class="nav flex-column">
-            <a href="{{ url() }}">
+            <a href="/">
                 <img src="{{ asset('image/icon/general.png') }}" alt="*" >
             </a>
-            <a href="{{ url('temperature') }}">
+            <a href="#">
                 <img src="{{ asset('image/icon/meteo1.png') }}" alt="*" >
             </a>
         </div>

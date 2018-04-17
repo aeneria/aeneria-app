@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataValue
 {
-    public const FREQUENCY = [
+    const FREQUENCY = [
         'HOUR' => 1,
         'DAY' => 2,
         'WEEK' => 3,

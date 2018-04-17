@@ -11,20 +11,21 @@ use AppBundle\Form\MeteoFranceType;
 class ConfigurationController extends Controller
 {
     /**
-     * @Route("/configuration", name="config_install")
+     * @Route("/configuration", name="config")
      */
     public function configAction(Request $request)
     {
+        /** @var \Symfony\Component\Form\FormBuilder $linkyForm */
         $linkyForm = $this
             ->get('form.factory')
-            ->createNamedBuilder(LinkyType::class,'form_linky');
+            ->createNamedBuilder('form_linky', LinkyType::class);
 
+        /** @var \Symfony\Component\Form\FormBuilder $meteoFranceForm */
         $meteoFranceForm = $this
             ->get('form.factory')
-            ->createNamedBuilder(MeteoFranceType::class, 'form_meteo_france');
+            ->createNamedBuilder('form_meteo_france', MeteoFranceType::class);
 
         if('POST' === $request->getMethod()) {
-
             if ($request->request->has('form_linky')) {
               // handle the first form
             }
@@ -35,8 +36,8 @@ class ConfigurationController extends Controller
         }
 
         return $this->render('default/config.html.twig', array(
-          'form_linky' => $linkyForm->createView(),
-          'form_meteo_france' => $meteoFranceForm->createView(),
+            'form_linky' => $linkyForm->getForm()->createView(),
+            'form_meteo_france' => $meteoFranceForm->getForm()->createView(),
         ));
     }
 }

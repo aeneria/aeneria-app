@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feed
 {
-    public const FEED_TYPES = [
+    const FEED_TYPES = [
         'LINKY' => [
             'ID' => 1,
             'NAME' => 'Linky',

@@ -14,9 +14,9 @@ class LinkyType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder
-    ->add('Nom du compteur',      TextType::class)
-    ->add('Adresse e-mail',     TextType::class)
-    ->add('Mot de passe',    TextType::class)
+    ->add('Nom_du_compteur',      TextType::class)
+    ->add('Adresse_e-mail',     TextType::class)
+    ->add('Mot_de_passe',    TextType::class)
     ->add('Enregistrer',      SubmitType::class);
   }
 
