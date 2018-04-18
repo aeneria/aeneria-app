@@ -15,14 +15,24 @@ class MeteoFranceType extends AbstractType
 
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
-    $stations = MeteoFrance::getAvailableStations();
+      // We get the current MeteoFrance feed if there's one
+      $meteoFrance = $this->
+      // We get the list of Meteo France SYNOP observation stations
+      $stations = MeteoFrance::getAvailableStations();
 
-    $builder
-    ->add('Nom', TextType::class)
-    ->add('Stations', ChoiceType::class, [
-        'choices' => $stations,
-    ])
-    ->add('Enregister', SubmitType::class);
+      $builder
+      ->add('name', TextType::class, [
+          'label' => 'Nom',
+          'required' => TRUE,
+      ])
+      ->add('station', ChoiceType::class, [
+          'choices' => $stations,
+          'label' => 'Station',
+          'required' => TRUE,
+      ])
+      ->add('save', SubmitType::class, [
+          'label' => 'Enregistrer',
+      ]);
   }
 
   public function configureOptions(OptionsResolver $resolver)

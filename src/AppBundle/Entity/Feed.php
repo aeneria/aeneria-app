@@ -16,7 +16,11 @@ class Feed
         'LINKY' => [
             'ID' => 1,
             'NAME' => 'Linky',
-            'PARAM' => ['LOGIN', 'PASSWORD', 'ADDRESS'],
+            'PARAM' => [
+                'ADDRESS' => 'Adresse du compteur',
+                'LOGIN' => 'Adresse email du compte Enedis',
+                'PASSWORD' => 'Mot de passe',
+            ],
             'DATA_TYPE' => [
                 'CONSO_ELEC' => [
                     'UNIT' => 'KWh',
@@ -27,7 +31,10 @@ class Feed
         'METEO_FRANCE' => [
             'ID' => 2,
             'NAME' => 'Meteo France',
-            'PARAM' => ['STATION_ID', 'CITY_NAME'],
+            'PARAM' => [
+                'STATION_ID' => 'Id de la station',
+                'CITY_NAME' => 'Ville',
+            ],
             'DATA_TYPE' => [
                 'TEMPERATURE' => [
                     'UNIT' => '°C',
