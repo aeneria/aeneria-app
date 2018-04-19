@@ -32,8 +32,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       return $queryBuilder
           ->getQuery()
-          ->getScalarResult()
-      ;
+          ->getScalarResult();
   }
 
   /**
@@ -54,8 +53,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       return $queryBuilder
           ->getQuery()
-          ->getScalarResult()
-      ;
+          ->getScalarResult();
   }
 
   /**
@@ -74,8 +72,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       return $queryBuilder
           ->getQuery()
-          ->getResult()
-      ;
+          ->getResult();
   }
 
   /**
@@ -111,8 +108,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       return $queryBuilder
           ->getQuery()
-          ->getResult()
-      ;
+          ->getResult() ;
   }
 
   public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
@@ -123,10 +119,8 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
           ->setParameter('end',   $endDate)
           // Add condition on feedData
           ->andWhere('d.feed_data = :feedData')
-          ->setParameter('feedData', $feedData)
+          ->setParameter('feedData', $feedData->getId())
           // Add condition on frequency
-          ->andWhere('d.frequency = :frequency')
-          ->setParameter('frequency', $frequency)
-      ;
+          ->andWhere('d.frequency = :frequency');
   }
 }

@@ -10,4 +10,25 @@ namespace AppBundle\Repository;
  */
 class FeedDataRepository extends \Doctrine\ORM\EntityRepository
 {
+  /**
+   * Get sum of value
+   *
+   * @param \DateTime $startDate
+   * @param \DateTime $endDate
+   * @param string $frequency
+   */
+  public function findOneByFeedAndDataType(Feed $feed, $dataType)
+  {
+    // Create the query builder
+    $queryBuilder = $this
+    ->createQueryBuilder('df')
+    ->andWhere('df.feed = :feed')
+    ->setParameter('feed', $feed->getId())
+    ->andWhere('df.data_type = :data_type')
+    ->setParameter('data_type', $dataType);
+
+    return $queryBuilder
+    ->getQuery()
+    ->getScalarResult();
+  }
 }
