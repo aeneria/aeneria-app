@@ -15,8 +15,6 @@ class MeteoFranceType extends AbstractType
 
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
-      // We get the current MeteoFrance feed if there's one
-      $meteoFrance = $this->
       // We get the list of Meteo France SYNOP observation stations
       $stations = MeteoFrance::getAvailableStations();
 

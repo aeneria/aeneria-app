@@ -74,7 +74,38 @@ class MeteoFrance {
     {
         $stations = [];
 
-        // @TODO Get stations from meteofrance
+        // Declare the http client.
+        $client = new Client(['base_uri' => self::SYNOP_BASE_PATH]);
+        $clientOption = [
+          'verify' => false,
+          'stream' => true,
+        ];
+
+        // We get the raw CSV.
+        $response = $client->get(self::SYNOP_POSTES, $clientOption);
+        $stationsData = $response->getBody()->getContents();
+        if ($response->getStatusCode() == 200) {
+          // We parse it get a nice table.
+          $rows = array_filter(preg_split('/\R/', $stationsData));
+          $header = NULL;
+
+          foreach($rows as $row) {
+            $row = str_getcsv ($row, ';');
+
+            if(!$header) {
+              $header = $row;
+            }
+            else {
+              $row = array_combine($header, $row);
+
+              // We only keep ID and name for each station.
+              $stations[(int)$row['ID']] = $row['Nom'];
+            }
+          }
+
+          // Sort stations.
+          asort($stations,SORT_STRING);
+        }
 
         return $stations;
     }
