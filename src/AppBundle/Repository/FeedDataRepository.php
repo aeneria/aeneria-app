@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Feed;
+
 /**
  * FeedDataRepository
  *
@@ -24,7 +26,7 @@ class FeedDataRepository extends \Doctrine\ORM\EntityRepository
     ->createQueryBuilder('df')
     ->andWhere('df.feed = :feed')
     ->setParameter('feed', $feed->getId())
-    ->andWhere('df.data_type = :data_type')
+    ->andWhere('df.dataType = :data_type')
     ->setParameter('data_type', $dataType);
 
     return $queryBuilder

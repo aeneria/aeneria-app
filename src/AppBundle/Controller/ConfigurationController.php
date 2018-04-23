@@ -26,16 +26,16 @@ class ConfigurationController extends Controller
 
         if('POST' === $request->getMethod()) {
             if ($request->request->has('form_linky')) {
-              $linkyForm->handleRequest();
-              if ($linkyForm->isValid()) {
-                $this->persistLinky($linky, $linkyForm);
-              }
+                $linkyForm->handleRequest($request);
+                if ($linkyForm->isValid()) {
+                    $this->persistLinky($linky, $linkyForm);
+                }
             }
             elseif ($request->request->has('form_meteo_france')) {
-              $meteoFranceForm->handleRequest();
-              if ($meteoFranceForm->isValid()) {
-                $this->persistMeteoFrance($meteoFrance, $meteoFranceForm);
-              }
+                $meteoFranceForm->handleRequest($request);
+                if ($meteoFranceForm->isValid()) {
+                    $this->persistMeteoFrance($meteoFrance, $meteoFranceForm);
+                }
             }
         }
 
@@ -56,14 +56,14 @@ class ConfigurationController extends Controller
         $linky = $this
             ->getDoctrine()
             ->getRepository('AppBundle:Feed')
-            ->findOneByType('LINKY');
+            ->findOneByFeedType('LINKY');
 
         // We set defaultValue if there's alreadya linky feed.
         $defaultValue= [];
         if ($linky) {
             $defaultValue['name'] = $linky->getName();
-            $param = json_decode($linky->getParam());
-            foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $paramName) {
+            $param = $linky->getParam();
+            foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $paramName => $label) {
                 $defaultValue[strtolower($paramName)] = $param[$paramName];
             }
         }
@@ -88,20 +88,20 @@ class ConfigurationController extends Controller
         $meteoFrance = $this
             ->getDoctrine()
             ->getRepository('AppBundle:Feed')
-            ->findOneByType('METEO_FRANCE');
+            ->findOneByFeedType('METEO_FRANCE');
 
         // We set defaultValue if there's alreadya linky feed.
         $defaultValue= [];
         if ($meteoFrance) {
             $defaultValue['name'] = $meteoFrance->getName();
-            $param = json_decode($meteoFrance->getParam());
-            $defaultValue['station'] = $param['STATION_ID'];
+            $param = $meteoFrance->getParam();
+            $defaultValue['station'] = (int)$param['STATION_ID'];
         }
 
         /** @var \Symfony\Component\Form\FormBuilder $linkyForm */
         $meteoFranceForm = $this
             ->get('form.factory')
-            ->createNamedBuilder('form_linky', LinkyType::class, $defaultValue)
+            ->createNamedBuilder('form_meteo_france', MeteoFranceType::class, $defaultValue)
             ->getForm();
 
         return [$meteoFranceForm, $meteoFrance];
@@ -113,7 +113,7 @@ class ConfigurationController extends Controller
      * @param Feed $linky
      * @param Form $linkyForm
      */
-    private function persistLinky(Feed &$linky, Form $linkyForm) {
+    private function persistLinky(Feed &$linky = NULL, Form $linkyForm) {
         if(!$linky) {
             $linky = new Feed();
             $linky->setFeedType('LINKY');
@@ -121,12 +121,13 @@ class ConfigurationController extends Controller
             $linky->setPublic(TRUE); //@TODO Deal with yunohost users
         }
         $data = $linkyForm->getData();
+
         $linky->setName($data['name']);
         $param = [];
         foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $name => $label) {
             $param[$name] = $data[strtolower($name)];
         }
-        $linky->setParam(json($param));
+        $linky->setParam($param);
         $this->createDependentFeedData($linky);
 
         $this->getDoctrine()->getManager()->persist($linky);
@@ -139,22 +140,22 @@ class ConfigurationController extends Controller
      * @param Feed $meteoFrance
      * @param Form $meteoFranceForm
      */
-    private function persistMeteoFrance(Feed &$meteoFrance, Form $meteoFranceForm) {
+    private function persistMeteoFrance(Feed &$meteoFrance = NULL, Form $meteoFranceForm) {
         if(!$meteoFrance) {
-          $meteoFrance = new Feed();
-          $meteoFrance->setFeedType('METEO_FRANCE');
-          $meteoFrance->setCreator('admin'); //@TODO Get yunohost user
-          $meteoFrance->setPublic(TRUE); //@TODO Deal with yunohost users
+            $meteoFrance = new Feed();
+            $meteoFrance->setFeedType('METEO_FRANCE');
+            $meteoFrance->setCreator('admin'); //@TODO Get yunohost user
+            $meteoFrance->setPublic(TRUE); //@TODO Deal with yunohost users
         }
+        $stations = $meteoFranceForm->get('station')->getConfig()->getOption('choices');
         $data = $meteoFranceForm->getData();
         $meteoFrance->setName($data['name']);
         $param = [
-            'STATION_ID' => $data['station_id'],
-            'CITY' => '',
+            'STATION_ID' => $data['station'],
+            'CITY' => array_search($data['station'], $stations),
         ];
-        $meteoFrance->setParam(json_encode($param));
+        $meteoFrance->setParam($param);
         $this->createDependentFeedData($meteoFrance);
-
         $this->getDoctrine()->getManager()->persist($meteoFrance);
         $this->getDoctrine()->getManager()->flush();
     }
@@ -171,13 +172,12 @@ class ConfigurationController extends Controller
 
         // We check, for this feed, if each dataFeedis already created,
         // and create it if not.
-        foreach (Feed::FEED_TYPES[$feed->getFeedType()]['DATA_TYPE'] as $feedDataType) {
-            $feedData = $feedDataRepository->findOneByFeedAndDataType($feed, $feedDataType);
+        foreach (Feed::FEED_TYPES[$feed->getFeedType()]['DATA_TYPE'] as $label => $data) {
+            $feedData = $feedDataRepository->findOneByFeedAndDataType($feed, $label);
             if (!$feedData) {
                 $feedData = new FeedData();
-                $feedData->setDataType($feedDataType);
+                $feedData->setDataType($label);
                 $feedData->setFeed($feed);
-
                 $this->getDoctrine()->getManager()->persist($feedData);
             }
         }

@@ -99,12 +99,12 @@ class MeteoFrance {
               $row = array_combine($header, $row);
 
               // We only keep ID and name for each station.
-              $stations[(int)$row['ID']] = $row['Nom'];
+              $stations[ucwords(strtolower($row['Nom']))] = (int)$row['ID'];
             }
           }
 
           // Sort stations.
-          asort($stations,SORT_STRING);
+          ksort($stations,SORT_STRING);
         }
 
         return $stations;

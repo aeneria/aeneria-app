@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\Feed;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class LinkyType extends AbstractType
 {
@@ -21,14 +22,14 @@ class LinkyType extends AbstractType
     ]);
 
     foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $name => $label) {
-      $builder->add(strtolower($name), TextType::class, [
-          'label' => $label,
-      ]);
+        $type = $name !== 'PASSWORD' ? TextType::class : PasswordType::class;
+        $builder->add(strtolower($name), $type, [
+            'label' => $label,
+        ]);
     }
 
     $builder->add('save', SubmitType::class, [
         'label' => 'Enregistrer',
-        'required' => TRUE,
     ]);
   }
 
