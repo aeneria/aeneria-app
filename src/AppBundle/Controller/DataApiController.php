@@ -12,13 +12,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DataApiController extends Controller
 {
     /**
-     * @Route("/data/{dataType}/repartition/{repartitionType}", name="data-api-repartition")
+     * Get json to build an heatmap graph between to date.
+     *
+     * @Route("/data/{dataType}/repartition/{repartitionType}/{start}/{end}", name="data-api-repartition")
+     *
+     * @param Request $request
+     * @param string $dataType
+     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $repartitionType
+     *     Type of repartition we want (week, year)
+     * @param \DateTime $start
+     * @param \Datetime $end
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getRepartionAction(Request $request, $dataType, $repartitionType)
+    public function getRepartionAction(Request $request, $dataType, $repartitionType, $start, $end)
     {
-        $var = $request->request;
-        $start = $var['start'];
-        $end = $var['end'];
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
 
@@ -72,13 +80,21 @@ class DataApiController extends Controller
     }
 
     /**
-     * @Route("/data/{dataType}/evolution", name="data-api-evolution")
+     * Get json to build an evolution graph between to date.
+     *
+     * @Route("/data/{dataType}/evolution/{frequency}/{start}/{end}", name="data-api-evolution")
+     *
+     * @param Request $request
+     * @param string $dataType
+     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $frequency
+     *     Frequency we want for the evolution (day, week, month)
+     * @param \DateTime $start
+     * @param \Datetime $end
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getEvolutionAction(Request $request, $dataType, $frequency)
+    public function getEvolutionAction(Request $request, $dataType, $frequency, $start, $end)
     {
-        $var = $request->request;
-        $start = $var['start'];
-        $end = $var['end'];
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
 
@@ -106,6 +122,75 @@ class DataApiController extends Controller
                 'showscale' => FALSE,
             ]
         ];
+
+        $jsonData = json_encode($data);
+        return new JsonResponse($jsonData, 200);
+    }
+
+    /**
+     * Get sum between to date.
+     *
+     * @Route("/data/{dataType}/sum/{start}/{end}", name="data-api-evolution")
+     *
+     * @param Request $request
+     * @param string $dataType
+     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $frequency
+     *     Frequency we want for the evolution (day, week, month)
+     * @param \DateTime $start
+     * @param \Datetime $end
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getEvolutionAction(Request $request, $dataType, $start, $end)
+    {
+        $dataType = strtoupper($dataType);
+
+        // Find feedData with the good dataType.
+        $feedData = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataType);
+
+        // Get data between $start & $end for requested frequency.
+        $data = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getSumValue($start, $end, $feedData, DataValue::FREQUENCY['DAY']);
+
+        $jsonData = json_encode($data);
+        return new JsonResponse($jsonData, 200);
+    }
+
+    /**
+     * Get average by <frequency> between to date.
+     *
+     * @Route("/data/{dataType}/avg/{frequency}/{start}/{end}", name="data-api-evolution")
+     *
+     * @param Request $request
+     * @param string $dataType
+     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $frequency
+     *     Frequency we want for the evolution (day, week, month)
+     * @param \DateTime $start
+     * @param \Datetime $end
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getEvolutionAction(Request $request, $dataType, $frequency, $start, $end)
+    {
+        $dataType = strtoupper($dataType);
+        $frequency = strtoupper($frequency);
+
+        // Find feedData with the good dataType.
+        $feedData = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataType);
+
+        // Get data between $start & $end for requested frequency.
+        $data = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getAvgValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
