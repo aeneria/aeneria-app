@@ -39,6 +39,7 @@ class MeteoFrance {
         'PRESSURE' => 'pres',
         'HUMIDITY' => 'u',
         'NEBULOSITY' => 'n',
+        'RAIN' => 'rr3',
         'DJU' => '',
     ];
 
@@ -77,34 +78,34 @@ class MeteoFrance {
         // Declare the http client.
         $client = new Client(['base_uri' => self::SYNOP_BASE_PATH]);
         $clientOption = [
-          'verify' => false,
-          'stream' => true,
+            'verify' => false,
+            'stream' => true,
         ];
 
         // We get the raw CSV.
         $response = $client->get(self::SYNOP_POSTES, $clientOption);
         $stationsData = $response->getBody()->getContents();
         if ($response->getStatusCode() == 200) {
-          // We parse it get a nice table.
-          $rows = array_filter(preg_split('/\R/', $stationsData));
-          $header = NULL;
+            // We parse it get a nice table.
+            $rows = array_filter(preg_split('/\R/', $stationsData));
+            $header = NULL;
 
-          foreach($rows as $row) {
-            $row = str_getcsv ($row, ';');
+            foreach($rows as $row) {
+                $row = str_getcsv ($row, ';');
 
-            if(!$header) {
-              $header = $row;
+                if(!$header) {
+                    $header = $row;
+                }
+                else {
+                    $row = array_combine($header, $row);
+
+                    // We only keep ID and name for each station.
+                    $stations[ucwords(strtolower($row['Nom']))] = (int)$row['ID'];
+                }
             }
-            else {
-              $row = array_combine($header, $row);
 
-              // We only keep ID and name for each station.
-              $stations[ucwords(strtolower($row['Nom']))] = (int)$row['ID'];
-            }
-          }
-
-          // Sort stations.
-          ksort($stations,SORT_STRING);
+            // Sort stations.
+            ksort($stations,SORT_STRING);
         }
 
         return $stations;
@@ -218,12 +219,14 @@ class MeteoFrance {
             'HUMIDITY' => 0,
             'NEBULOSITY' => 0,
             'PRESSURE' => 0,
+            'RAIN' => 0,
         ];
 
         $nbNebulosity = 0;
         $nbHumidity = 0;
         $nbPressure = 0;
         $nbTemperature = 0;
+        $nbRain = 0;
 
         $tempMin = NULL;
         $tempMax = NULL;
@@ -241,7 +244,12 @@ class MeteoFrance {
                 $fastenData['HUMIDITY'] += $hourData[self::SYNOP_DATA_NAME['HUMIDITY']];
                 $nbHumidity++;
             }
-
+            if (isset($hourData[self::SYNOP_DATA_NAME['RAIN']])){
+                if ($fastenData['RAIN'] > 0) {
+                    $fastenData['RAIN'] += $hourData[self::SYNOP_DATA_NAME['RAIN']];
+                }
+                $nbRain++;
+            }
             if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
                 $curTemperature = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;
                 $fastenData['TEMPERATURE'] += $curTemperature;
@@ -262,6 +270,9 @@ class MeteoFrance {
         }
         if ($nbPressure > 0) {
             $fastenData['PRESSURE'] = round($fastenData['PRESSURE'] / $nbPressure, 1);
+        }
+        if ($nbRain > 0) {
+            $fastenData['RAIN'] = round($fastenData['RAIN'], 1);
         }
 
         // Calculate DJU with temperature max and min of the day.
@@ -321,7 +332,7 @@ class MeteoFrance {
 
         /** @var \AppBundle\Entity\FeedData $feedData */
         foreach ($feedDataList as $feedData) {
-            if ($feedData->getDataType() != 'DJU') {
+            if (!in_array($feedData->getDataType(), ['DJU', 'RAIN'])) {
                 $agregateData = $this
                     ->entityManager
                     ->getRepository('AppBundle:DataValue')

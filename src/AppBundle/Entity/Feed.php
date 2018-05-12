@@ -51,6 +51,9 @@ class Feed
                 'NEBULOSITY' => [
                     'UNIT' => '%',
                 ],
+                'RAIN' => [
+                    'UNIT' => 'mm',
+                ],
             ],
             'FETCH_CALLBACK' => 'fetchMeteoFranceData',
         ],
