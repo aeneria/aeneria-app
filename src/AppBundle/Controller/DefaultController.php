@@ -13,7 +13,16 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
+        return $this->render('default/index.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+    /**
+     * @Route("/", name="general")
+     */
+    public function generalAction(Request $request)
+    {
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
@@ -24,7 +33,6 @@ class DefaultController extends Controller
      */
     public function temperatureAction(Request $request)
     {
-        // replace this example code with whatever you need
         return $this->render('default/temperature.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
@@ -35,7 +43,6 @@ class DefaultController extends Controller
      */
     public function meteoAction(Request $request)
     {
-        // replace this example code with whatever you need
         return $this->render('default/meteo.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);

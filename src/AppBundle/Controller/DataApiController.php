@@ -6,7 +6,6 @@ use AppBundle\Entity\DataValue;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DataApiController extends Controller
@@ -141,7 +140,7 @@ class DataApiController extends Controller
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getEvolutionAction(Request $request, $dataType, $start, $end)
+    public function getSumAction(Request $request, $dataType, $start, $end)
     {
         $dataType = strtoupper($dataType);
 
@@ -175,7 +174,7 @@ class DataApiController extends Controller
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getEvolutionAction(Request $request, $dataType, $frequency, $start, $end)
+    public function getAverageAction(Request $request, $dataType, $frequency, $start, $end)
     {
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
