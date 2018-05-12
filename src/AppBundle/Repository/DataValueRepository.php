@@ -4,7 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\DataValue;
 use AppBundle\Entity\FeedData;
-use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * DataValueRepository
@@ -26,10 +26,9 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('AVG(d.value) as average');
+      $queryBuilder->select('AVG(d.value) AS value');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.id');
-
       return $queryBuilder
           ->getQuery()
           ->getScalarResult();
@@ -47,7 +46,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('SUM(d.value) as sum');
+      $queryBuilder->select('SUM(d.value) AS value');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.id');
 
@@ -101,7 +100,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('AVG(d.value) as average, d.' . $axeX . ', d.' . $axeY . '');
+      $queryBuilder->select('AVG(d.value) value, d.' . $axeX . ', d.' . $axeY . '');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.' . $axeX);
       $queryBuilder->groupBy('d.' . $axeY);
@@ -118,9 +117,10 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
           ->setParameter('start', $startDate)
           ->setParameter('end',   $endDate)
           // Add condition on feedData
-          ->andWhere('d.feed_data = :feedData')
+          ->andWhere('d.feedData = :feedData')
           ->setParameter('feedData', $feedData->getId())
           // Add condition on frequency
-          ->andWhere('d.frequency = :frequency');
+        ->andWhere('d.frequency = :frequency')
+        ->setParameter('frequency', $frequency);
   }
 }

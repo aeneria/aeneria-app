@@ -64,10 +64,10 @@ class FetchDataCommand extends ContainerAwareCommand
         $linky = new Linky($param['LOGIN'], $param['PASSWORD']);
 
         // We get the corresponding dataFeed.
-        $feedData = $this->entityManager->getRepository('AppBundle:FeedData')->findByFeed($feed);
+        $feedData = $this->entityManager->getRepository('AppBundle:FeedData')->findOneByFeed($feed);
 
         // Getting hour consumption data
-        $this->fetchLinkyDataHour($feedData, $linky, $yesterday);
+        //$this->fetchLinkyDataHour($feedData, $linky, $yesterday);
 
     }
 

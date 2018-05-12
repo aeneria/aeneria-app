@@ -118,6 +118,7 @@ class MeteoFrance {
         // Get yesterday datetime.
         $yesterday = new \DateTime();
         $yesterday->sub(new \DateInterval('P1D'));
+        $yesterday = new \DateTime($yesterday->format("Y-m-d 00:00:00"));
 
         // Get all 3-hours interval data from yesterday.
         $rawData = $this->getRawData($yesterday);
@@ -140,11 +141,11 @@ class MeteoFrance {
             );
         }
 
-        // Refresh week and month aggregate data.
-        $this->refreshAgregateValue($yesterday);
-
         // Flush all persisted DataValue.
         $this->entityManager->flush();
+
+        // Refresh week and month aggregate data.
+        $this->refreshAgregateValue($yesterday);
     }
 
     /**
@@ -160,6 +161,9 @@ class MeteoFrance {
 
         // Refreshing agregate value for current month.
         $this->refreshMonthValue($date);
+
+        // Flush all persisted DataValue.
+        $this->entityManager->flush();
     }
 
     /**
@@ -248,21 +252,21 @@ class MeteoFrance {
 
         // Calculate averageof each value.
         if ($nbTemperature > 0) {
-            $fastenData['TEMPERATURE'] = $fastenData['TEMPERATURE'] / $nbTemperature;
+            $fastenData['TEMPERATURE'] = round($fastenData['TEMPERATURE'] / $nbTemperature, 1);
         }
         if ($nbHumidity > 0) {
-            $fastenData['HUMIDITY'] = $fastenData['HUMIDITY'] / $nbHumidity;
+            $fastenData['HUMIDITY'] = round($fastenData['HUMIDITY'] / $nbHumidity, 1);
         }
         if ($nbNebulosity > 0) {
-            $fastenData['NEBULOSITY'] = $fastenData['NEBULOSITY'] / $nbNebulosity;
+            $fastenData['NEBULOSITY'] = round($fastenData['NEBULOSITY'] / $nbNebulosity, 1);
         }
         if ($nbPressure > 0) {
-            $fastenData['PRESSURE'] = $fastenData['PRESSURE'] / $nbPressure;
+            $fastenData['PRESSURE'] = round($fastenData['PRESSURE'] / $nbPressure, 1);
         }
 
         // Calculate DJU with temperature max and min of the day.
         if (isset($tempMin) && isset($tempMax)) {
-            $fastenData['DJU'] = $this->calculateDju($tempMin, $tempMax);
+            $fastenData['DJU'] = round($this->calculateDju($tempMin, $tempMax, 1));
         }
 
         return $fastenData;
@@ -278,7 +282,7 @@ class MeteoFrance {
     private function refreshWeekValue(\DateTime $date)
     {
         $firstDayOfWeek = clone $date;
-        $firstDayOfWeek->sub(new \DateInterval('P' . ($date->format('w') - 1) . 'D')); //@TODO atention ça peut devenir negéatif !
+        $firstDayOfWeek->sub(new \DateInterval('P' . $date->format('w') . 'D'));
 
         $lastDayOfWeek = clone $firstDayOfWeek;
         $lastDayOfWeek->add(new \DateInterval('P6D'));
@@ -298,7 +302,7 @@ class MeteoFrance {
         $firstDayOfMonth->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
 
         $lastDayOfMonth = clone $firstDayOfMonth;
-        $lastDayOfMonth->sub(new \DateInterval('P' . ($date->format('t') - 1) . 'D'));
+        $lastDayOfMonth->add(new \DateInterval('P' . ($date->format('t')) . 'D'));
 
         $this->performAgregateValue($firstDayOfMonth, $lastDayOfMonth, DataValue::FREQUENCY['MONTH']);
     }
@@ -342,12 +346,14 @@ class MeteoFrance {
                 ;
             }
 
-            $feedData->updateOrCreateValue(
-                $startDate,
-                $frequency,
-                $agregateData,
-                $this->entityManager
-            );
+            if (isset($agregateData[0]['value'])) {
+                $feedData->updateOrCreateValue(
+                    $startDate,
+                    $frequency,
+                    round($agregateData[0]['value'], 1),
+                    $this->entityManager
+                );
+            }
         }
     }
 
