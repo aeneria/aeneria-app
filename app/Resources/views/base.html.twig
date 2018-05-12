@@ -14,7 +14,7 @@
 <body>
     <nav class="navbar navbar navbar-expand-lg sticky-top navbar-expand">
         <a class="navbar-brand" href="{{ url('homepage') }}">
-            <img src="{{ asset('image/icon/logo.png') }}" alt="Pilea {{ 'Analyser votre consommation d\'électricité' | trans }}" >
+            <img src="{{ asset('image/icon/logo.png') }}" alt="Pilea{{ ' : Analyser votre consommation d\'électricité' | trans }}" >
             Pilea
         </a>
         {% block selection %}
@@ -27,11 +27,17 @@
     </nav>
     <nav class="nav" id="sidebar">
         <div class="nav flex-column">
-            <a href="/">
+            <a href="{{ path('homepage') }}" title="{{ 'Accueil' | trans }}" >
+                <img src="{{ asset('image/icon/home.png') }}" alt="*" >
+            </a>
+            <a href="{{ path('general') }}" title="{{ 'Indicateurs généraux sur la consommation d\'électricité' | trans }}" >
                 <img src="{{ asset('image/icon/general.png') }}" alt="*" >
             </a>
-            <a href="#">
-                <img src="{{ asset('image/icon/meteo1.png') }}" alt="*" >
+            <a href="{{ path('temperature') }}" title="{{ 'Analyse de la consommation d\'électricité via la tempéature extérieure' | trans }}" >
+                <img src="{{ asset('image/icon/temperature.png') }}" alt="*" >
+            </a>
+            <a href="{{ path('meteo') }}" title="{{ 'Indicateurs généraux sur la météo' | trans }}" >
+                <img src="{{ asset('image/icon/meteo.png') }}" alt="*" >
             </a>
         </div>
     </nav>

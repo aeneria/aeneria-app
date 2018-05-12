@@ -28,11 +28,12 @@ body {
 
 #sidebar > div > a {
  min-width: 30px;
- min-height: 34px;
+ min-height: 40px;
 }
 
 #sidebar > div > a > img {
- max-width: 28px;
+ max-width: 24px;
+ height: auto;
 }
 
 .card {
