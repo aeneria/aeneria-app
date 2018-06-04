@@ -1,5 +1,3 @@
-// Week Repartition
-/////////////////////////////////////////
 
 $.ajax({
   url: "data/week-repartition",
@@ -7,32 +5,10 @@ $.ajax({
     test: 97201
   },
   success: function( result ) {
-      var data = JSON.parse(result);
-      var layout = {
-          xaxis: {
-              ticks: '',
-              side: 'top'
-          },
-          yaxis: {
-              ticks: '',
-              ticksuffix: ' '
-          },
-          zaxis: {
-              ticks: ' KWh',
-              ticksuffix: ' '
-          },
-          height: 450,
-          margin: {
-              l: 50,
-              r: 30,
-              b: 10,
-              t: 50,
-              pad: 10
-            }
-      };
+    var data = JSON.parse(result);
+    var colors = ["#CAD7B2", "#97B5A7"]
 
-
-      Plotly.newPlot('week-repartition', data, layout, {displayModeBar: false});
+    displayWeekRepartition(data, 'conso-week-repartition', colors, "kWh");
   }
 });
 
