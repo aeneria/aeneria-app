@@ -50,7 +50,6 @@ class MeteoFrance {
     private $feed;
 
     /**
-     *
      * @var EntityManager
      */
     private $entityManager;
@@ -78,8 +77,8 @@ class MeteoFrance {
         // Declare the http client.
         $client = new Client(['base_uri' => self::SYNOP_BASE_PATH]);
         $clientOption = [
-            'verify' => false,
-            'stream' => true,
+            'verify' => FALSE,
+            'stream' => TRUE,
         ];
 
         // We get the raw CSV.
@@ -118,7 +117,9 @@ class MeteoFrance {
     {
         // Get yesterday datetime.
         $yesterday = new \DateTime();
+
         $yesterday->sub(new \DateInterval('P1D'));
+
         $yesterday = new \DateTime($yesterday->format("Y-m-d 00:00:00"));
 
         // Get all 3-hours interval data from yesterday.
@@ -293,7 +294,8 @@ class MeteoFrance {
     private function refreshWeekValue(\DateTime $date)
     {
         $firstDayOfWeek = clone $date;
-        $firstDayOfWeek->sub(new \DateInterval('P' . $date->format('w') . 'D'));
+        $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+        $firstDayOfWeek->sub(new \DateInterval('P' . $w . 'D'));
 
         $lastDayOfWeek = clone $firstDayOfWeek;
         $lastDayOfWeek->add(new \DateInterval('P6D'));

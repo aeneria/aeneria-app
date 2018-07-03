@@ -113,7 +113,8 @@ class FeedData
                 $date = new \DateTime($date->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['WEEK'] :
-                $date->sub(new \DateInterval('P' . $date->format('w') . 'D'));
+                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+                $date->sub(new \DateInterval('P' . $w . 'D'));
                 $date = new \DateTime($date->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['MONTH'] :
@@ -140,6 +141,13 @@ class FeedData
             $dataValue->setFeedData($this);
             $dataValue->setDate($date);
         }
+
+        if ($frequency <= DataValue::FREQUENCY['HOUR']) $dataValue->setHour($date->format('H'));
+        $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+        if ($frequency <= DataValue::FREQUENCY['DAY']) $dataValue->setWeekDay($w);
+        if ($frequency <= DataValue::FREQUENCY['WEEK']) $dataValue->setWeek($date->format('W'));
+        if ($frequency <= DataValue::FREQUENCY['MONTH']) $dataValue->setMonth($date->format('m'));
+        if ($frequency <= DataValue::FREQUENCY['YEAR']) $dataValue->setYear($date->format('Y'));
 
         $dataValue->setValue($value);
 

@@ -14,6 +14,11 @@ use AppBundle\Entity\FeedData;
 use AppBundle\Entity\DataValue;
 use AppBundle\Object\MeteoFrance;
 
+/**
+ * Defined command to refresh all feeds
+ * @todo Simplify, no need for callbacks, just make Linky and MeteoFrance implements a same interface
+ *
+ */
 class FetchDataCommand extends ContainerAwareCommand
 {
     private $entityManager;
@@ -55,44 +60,8 @@ class FetchDataCommand extends ContainerAwareCommand
 
     private function fetchLinkyData(Feed $feed)
     {
-        // Getting yesterday
-        $today = new \DateTime('NOW');
-        $yesterday = $today->sub(new \DateInterval('P1D'));
-
-        // Declare the Linky object.
-        $param = $feed->getParam();
-        $linky = new Linky($param['LOGIN'], $param['PASSWORD']);
-
-        // We get the corresponding dataFeed.
-        $feedData = $this->entityManager->getRepository('AppBundle:FeedData')->findOneByFeed($feed);
-
-        // Getting hour consumption data
-        //$this->fetchLinkyDataHour($feedData, $linky, $yesterday);
-
-    }
-
-    private function fetchLinkyDataHour(FeedData $feedData, Linky $linky, \DateTime $date)
-    {
-        // We fetch data from last update until now for each frequency
-        $datas = $linky->getData_perhour($date->format('d/m/Y'));
-
-        // Storing data
-        Foreach ($datas as $data){
-            // Création de l'entité
-            $dataValue = new DataValue();
-            $dataValue->setFeedData($feedData);
-            $dataValue->setFrequency(DataApiController::FREQUENCY['HOUR']);
-            $dataValue->setValue($data['valeur']);
-            $dataValue->setDate($data['date']);
-            $dataValue->setHour($data['date']);
-            $dataValue->setWeekDay($data['date']);
-
-            // Étape 1 : On « persiste » l'entité
-            $this->entityManager->persist($dataValue);
-        }
-
-        // Flush all persisted DataValue
-        $this->entityManager->flush();
+        $linky = new Linky($feed, $this->entityManager);
+        $linky->fetchYesterdayData();
     }
 
     private function fetchMeteoFranceData(Feed $feed)
