@@ -163,7 +163,9 @@ class Linky {
         $end = count($data);
         for($i=$end-1; $i>=$end-48; $i--) {
             $valeur = $data[$i]['valeur'];
-            if ($valeur == -2) $valeur = NULL;
+            if ($valeur == -2) {
+              $valeur = NULL;
+            }
 
             $thisHour = clone $startHour;
             $thisHour = $thisHour->format('H:i');
@@ -199,7 +201,9 @@ class Linky {
         $data = $result['graphe']['data'];
         foreach ((array)$data as $day) {
             $valeur = $day['valeur'];
-            if ($valeur == -2) $valeur = NULL;
+            if ($valeur == -2) {
+              $valeur = NULL;
+            }
 
             $date = $date1;
             $date = $date1->format("d/m/Y");
@@ -223,7 +227,9 @@ class Linky {
         $data = $result['graphe']['data'];
         foreach ((array)$data as $month) {
             $valeur = $month['valeur'];
-            if ($valeur == -2) $valeur = NULL;
+            if ($valeur == -2) {
+              $valeur = NULL;
+            }
 
             $thisMonth = $fromMonth;
             $thisMonth = $thisMonth->format('M Y');
@@ -252,8 +258,9 @@ class Linky {
             foreach ((array)$data as $year)
             {
                 $valeur = $year['valeur'];
-                if ($valeur == -2) $valeur = NULL;
-                else $valeur .= 'kW';
+                if ($valeur == -2) {
+                  $valeur = NULL;
+                }
 
                 $thisYear = $fromYear;
                 $thisYear = $thisYear->format('Y');
@@ -301,7 +308,7 @@ class Linky {
      * Standard function handling all get/post request with curl | return string
      * @param string $method
      * @param string $url
-     * @param unknown $postdata
+     * @param array $postdata
      * @return string
      */
     private function request($method, $url, $postdata=NULL) //
@@ -323,7 +330,6 @@ class Linky {
         }
 
         $url = filter_var($url, FILTER_SANITIZE_URL);
-        //echo 'url: ', $url, "<br>";
         curl_setopt($this->curlHdl, CURLOPT_URL, $url);
 
         if ($method == 'POST') {
@@ -341,15 +347,13 @@ class Linky {
 
         $response = curl_exec($this->curlHdl);
 
-        //$info   = curl_getinfo($this->_curlHdl);
-        //echo "<pre>cURL info".json_encode($info, JSON_PRETTY_PRINT)."</pre><br>";
-
         $this->error = NULL;
-        if ($response === FALSE) $this->error = curl_error($this->curlHdl);
+        if ($response === FALSE) {
+          $this->error = curl_error($this->curlHdl);
+        }
 
         if ($this->isAuth) {
             $header_size = curl_getinfo($this->curlHdl, CURLINFO_HEADER_SIZE);
-            $header = substr($response, 0, $header_size);
             $response = substr($response, $header_size);
         }
 
@@ -380,9 +384,8 @@ class Linky {
         }
 
         $response = $this->request('GET', $url, $postdata);
-        $jsonArray = json_decode($response, TRUE);
 
-        return $jsonArray;
+        return json_decode($response, TRUE);
     }
 
     private function auth()
@@ -417,7 +420,9 @@ class Linky {
         $url = 'https://espace-client-particuliers.enedis.fr/group/espace-particuliers/accueil';
         $response = $this->request('GET', $url);
 
-        return TRUE;
+        $this->isAuth = TRUE;
+
+        return $this->isAuth;
     }
 
 }
