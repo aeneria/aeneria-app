@@ -165,12 +165,12 @@ class Linky {
 
         // Format this correctly:
         $returnData = [];
-        $startHour = new \DateTime('23:30');
+        $startHour = new \DateTime('23:00');
 
         $data = $result['graphe']['data'];
         $end = count($data);
-        for($i=$end-1; $i>=$end-48; $i--) {
-            $valeur = $data[$i]['valeur'];
+        for($i=$end-1; $i>=$end-48; $i-=2) {
+            $valeur = $data[$i]['valeur'] + $data[$i - 1]['valeur'];
             if ($valeur == -2) {
               $valeur = NULL;
             }
@@ -179,7 +179,7 @@ class Linky {
             $thisHour = $thisHour->format('H:i');
 
             $returnData[$thisHour] = $valeur;
-            $startHour->modify('-30 min');
+            $startHour->modify('-60 min');
         }
 
         $returnData = array_reverse($returnData);
