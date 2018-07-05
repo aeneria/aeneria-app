@@ -392,7 +392,7 @@ class Linky {
         }
 
         $response = $this->request('GET', $url, $postdata);
-
+        dump($response);
         return json_decode($response, TRUE);
     }
 
