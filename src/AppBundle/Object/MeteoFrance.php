@@ -117,9 +117,7 @@ class MeteoFrance {
     {
         // Get yesterday datetime.
         $yesterday = new \DateTime();
-
         $yesterday->sub(new \DateInterval('P1D'));
-
         $yesterday = new \DateTime($yesterday->format("Y-m-d 00:00:00"));
 
         // Get all 3-hours interval data from yesterday.

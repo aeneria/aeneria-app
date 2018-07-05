@@ -26,7 +26,7 @@ class Linky {
 
 
     /**
-     * Feed correspondingto the MeteoFrance Object
+     * Feed corresponding to the Linky Object.
      * @var Feed
      */
     private $feed;
