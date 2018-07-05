@@ -167,19 +167,24 @@ class Linky {
         $returnData = [];
         $startHour = new \DateTime('23:00');
 
-        $data = $result['graphe']['data'];
-        $end = count($data);
-        for($i=$end-1; $i>=$end-48; $i-=2) {
-            $valeur = $data[$i]['valeur'] + $data[$i - 1]['valeur'];
-            if ($valeur == -2) {
-              $valeur = NULL;
+        if (!empty($result['graphe']['data'])) {
+            $data = $result['graphe']['data'];
+            $end = count($data);
+            for($i=$end-1; $i>=$end-48; $i-=2) {
+
+                if ($data[$i]['valeur'] == -2 || $data[$i - 1]['valeur'] == -2) {
+                    $valeur = NULL;
+                }
+                else {
+                    $valeur = $data[$i]['valeur'] + $data[$i - 1]['valeur'];
+                }
+
+                $thisHour = clone $startHour;
+                $thisHour = $thisHour->format('H:i');
+
+                $returnData[$thisHour] = $valeur;
+                $startHour->modify('-60 min');
             }
-
-            $thisHour = clone $startHour;
-            $thisHour = $thisHour->format('H:i');
-
-            $returnData[$thisHour] = $valeur;
-            $startHour->modify('-60 min');
         }
 
         $returnData = array_reverse($returnData);
@@ -392,7 +397,7 @@ class Linky {
         }
 
         $response = $this->request('GET', $url, $postdata);
-        dump($response);
+
         return json_decode($response, TRUE);
     }
 
