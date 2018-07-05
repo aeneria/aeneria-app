@@ -107,37 +107,45 @@ class Linky {
 
         // Persist hours data.
         foreach (end($this->data['hours']) as $hour => $value) {
+            if ($value) {
+                $feedData->updateOrCreateValue(
+                    new \DateTime($yesterday->format("Y-m-d") . $hour . ':00'),
+                    DataValue::FREQUENCY['HOUR'],
+                    $value,
+                    $this->entityManager
+                );
+            }
+        }
+
+        // Persist day data.
+        if (end($this->data['days'])) {
             $feedData->updateOrCreateValue(
-                new \DateTime($yesterday->format("Y-m-d") . $hour . ':00'),
-                DataValue::FREQUENCY['HOUR'],
-                $value,
+                $yesterday,
+                DataValue::FREQUENCY['DAY'],
+                end($this->data['days']),
+                $this->entityManager
+            );
+        }
+
+        // Persist month data.
+        if (end($this->data['months'])) {
+            $feedData->updateOrCreateValue(
+                $yesterday,
+                DataValue::FREQUENCY['MONTH'],
+                end($this->data['months']),
                 $this->entityManager
             );
         }
 
         // Persist day data.
-        $feedData->updateOrCreateValue(
-            $yesterday,
-            DataValue::FREQUENCY['DAY'],
-            end($this->data['days']),
-            $this->entityManager
-        );
-
-        // Persist day data.
-        $feedData->updateOrCreateValue(
-            $yesterday,
-            DataValue::FREQUENCY['MONTH'],
-            end($this->data['months']),
-            $this->entityManager
-        );
-
-        // Persist day data.
-        $feedData->updateOrCreateValue(
-            $yesterday,
-            DataValue::FREQUENCY['YEAR'],
-            end($this->data['years']),
-            $this->entityManager
-        );
+        if (end($this->data['years'])) {
+            $feedData->updateOrCreateValue(
+                $yesterday,
+                DataValue::FREQUENCY['YEAR'],
+                end($this->data['years']),
+                $this->entityManager
+            );
+        }
 
         // Flush all persisted DataValue.
         $this->entityManager->flush();
