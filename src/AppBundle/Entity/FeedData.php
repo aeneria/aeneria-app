@@ -105,25 +105,7 @@ class FeedData
     public function updateOrCreateValue(\DateTime $date, $frequency, $value , EntityManager &$entityManager)
     {
         // Update date according to frequnecy
-        switch ($frequency) {
-            case DataValue::FREQUENCY['HOUR'] :
-                $date = new \DateTime($date->format("Y-m-d H:00:00"));
-                break;
-            case DataValue::FREQUENCY['DAY'] :
-                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
-                break;
-            case DataValue::FREQUENCY['WEEK'] :
-                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-                $date->sub(new \DateInterval('P' . $w . 'D'));
-                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
-                break;
-            case DataValue::FREQUENCY['MONTH'] :
-                $date = new \DateTime($date->format("Y-m-01 00:00:00"));
-                break;
-            case DataValue::FREQUENCY['YEAR'] :
-                $date = new \DateTime($date->format("Y-01-01 00:00:00"));
-                break;
-        }
+        DataValue::adaptToFrequency($date, $frequency);
 
         $criteria = [
             'feedData' => $this,
@@ -143,8 +125,8 @@ class FeedData
         }
 
         if ($frequency <= DataValue::FREQUENCY['HOUR']) $dataValue->setHour($date->format('H'));
-        $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-        if ($frequency <= DataValue::FREQUENCY['DAY']) $dataValue->setWeekDay($w);
+        $weekDay = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+        if ($frequency <= DataValue::FREQUENCY['DAY']) $dataValue->setWeekDay($weekDay);
         if ($frequency <= DataValue::FREQUENCY['WEEK']) $dataValue->setWeek($date->format('W'));
         if ($frequency <= DataValue::FREQUENCY['MONTH']) $dataValue->setMonth($date->format('m'));
         if ($frequency <= DataValue::FREQUENCY['YEAR']) $dataValue->setYear($date->format('Y'));
@@ -153,5 +135,33 @@ class FeedData
 
         // Persit the dataValue.
         $entityManager->persist($dataValue);
+    }
+
+    /**
+     * Check if there's data in DB for $date for all $frequencies.
+     * @param EntityManager $entityManager
+     * @param \DateTime $date
+     * @param $frequencies array of int from DataValue frequencies
+     */
+    public function isUpToDate(EntityManager $entityManager, \DateTime $date, array $frequencies)
+    {
+        $isUpToDate = TRUE;
+
+        // Foreach frequency we check if we have a value for yesterday.
+        foreach ($frequencies as $frequency) {
+            $criteria = [
+                'feedData' => $this,
+                'date' => DataValue::adaptToFrequency($date, $frequency),
+                'frequency' => $frequency,
+            ];
+
+            // Try to get the corresponding DataValue.
+            $dataValue = $entityManager->getRepository('AppBundle:DataValue')->findBy($criteria);
+
+            // A feed is up to date only if all its feedData are up to date.
+            $isUpToDate = $isUpToDate && isset($dataValue);
+        }
+
+        return $isUpToDate;
     }
 }

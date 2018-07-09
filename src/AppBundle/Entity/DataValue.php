@@ -316,4 +316,28 @@ class DataValue
     {
         return $this->feedData;
     }
+
+    public static function adaptToFrequency(\DateTime &$date, $frequency)
+    {
+        // Update date according to frequnecy
+        switch ($frequency) {
+            case DataValue::FREQUENCY['HOUR'] :
+                $date = new \DateTime($date->format("Y-m-d H:00:00"));
+                break;
+            case DataValue::FREQUENCY['DAY'] :
+                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+                break;
+            case DataValue::FREQUENCY['WEEK'] :
+                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+                $date->sub(new \DateInterval('P' . $w . 'D'));
+                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+                break;
+            case DataValue::FREQUENCY['MONTH'] :
+                $date = new \DateTime($date->format("Y-m-01 00:00:00"));
+                break;
+            case DataValue::FREQUENCY['YEAR'] :
+                $date = new \DateTime($date->format("Y-01-01 00:00:00"));
+                break;
+        }
+    }
 }

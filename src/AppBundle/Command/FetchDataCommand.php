@@ -62,11 +62,8 @@ class FetchDataCommand extends ContainerAwareCommand
         // For each feeds, we call the right method to fetch data.
         /** @var \AppBundle\Entity\Feed $feeds */
         foreach($feeds as $feed) {
-            // We fetch data if force option is true or if the feed is'nt up to date.
-            if ($input->getArgument('force') || !$this->isFeedUpToDate($feed, $yesterday)) {
-                $callback = Feed::FEED_TYPES[$feed->getFeedType()]['FETCH_CALLBACK'];
-                $this->$callback($feed);
-            }
+            $callback = Feed::FEED_TYPES[$feed->getFeedType()]['FETCH_CALLBACK'];
+            $this->$callback($feed, $input->getArgument('force'));
         }
     }
 
@@ -74,49 +71,26 @@ class FetchDataCommand extends ContainerAwareCommand
      * Linky callback for fetching data.
      * @param Feed $feed
      */
-    private function fetchLinkyData(Feed $feed)
+    private function fetchLinkyData(Feed $feed, $force)
     {
-        $linky = new Linky($feed, $this->entityManager);
-        $linky->fetchYesterdayData();
+        // We fetch data if force option is true or if (date('H') >= 9 and the feed isn't up to date).
+        // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
+        if ($force || (date('H') >= 9 && !$feed->isFeedUpToDate($this->entityManager, $yesterday, DataValue::FREQUENCY)) ) {
+            $linky = new Linky($feed, $this->entityManager);
+            $linky->fetchYesterdayData();
+        }
     }
 
     /**
      * MeteoFrance callback for fetching data.
      * @param Feed $feed
      */
-    private function fetchMeteoFranceData(Feed $feed)
+    private function fetchMeteoFranceData(Feed $feed, $force)
     {
-        $meteoFrance = new MeteoFrance($feed, $this->entityManager);
-        $meteoFrance->fetchYesterdayData();
-    }
-
-    /**
-     * Check if there's data in DB for $date forall $feed's feedData.
-     * @param Feed $feed
-     * @param \DateTime $date
-     */
-    private function isFeedUpToDate(Feed $feed, \DateTime $date)
-    {
-        // Get all feedData.
-        $feedDataList = $this->entityManager->getRepository('AppBundle:FeedData')->findByFeed($feed);
-
-        $isUpToDate = TRUE;
-
-        // Foreach feedData we check if we have a value for yesterday.
-        /** @var \AppBundle\Entity\FeedData $feedData */
-        foreach ($feedDataList as $feedData) {
-            $criteria = [
-                'feedData' => $feedData,
-                'date' => $date,
-            ];
-
-            // Try to get the corresponding DataValue.
-            $dataValue = $this->entityManager->getRepository('AppBundle:DataValue')->findBy($criteria);
-
-            // A feed is up to date only if all its feedData are up to date.
-            $isUpToDate = $isUpToDate && isset($dataValue);
+        // We fetch data if force option is true or if the feed isn't up to date.
+        if ($force || !$feed->isFeedUpToDate($this->entityManager, $yesterday, MeteoFrance::FREQUENCY)) {
+            $meteoFrance = new MeteoFrance($feed, $this->entityManager);
+            $meteoFrance->fetchYesterdayData();
         }
-
-        return $isUpToDate;
     }
 }

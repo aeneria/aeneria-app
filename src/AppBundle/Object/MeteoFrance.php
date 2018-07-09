@@ -44,6 +44,17 @@ class MeteoFrance {
     ];
 
     /**
+     * Frequencies for MeteoFrance FeedData.
+     * @var array
+     */
+    const FREQUENCY = [
+        DataValue::FREQUENCY['DAY'],
+        DataValue::FREQUENCY['WEEK'],
+        DataValue::FREQUENCY['MONTH'],
+        DataValue::FREQUENCY['YEAR'],
+    ];
+
+    /**
      * Feed correspondingto the MeteoFrance Object
      * @var Feed
      */

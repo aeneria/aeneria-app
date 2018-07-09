@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Feed
@@ -232,5 +233,28 @@ class Feed
     public function getFeedType()
     {
         return $this->feedType;
+    }
+
+    /**
+     * Check if there's data in DB for $date forall $feed's feedData and for all $frequencies.
+     * @param EntityManager $entityManager
+     * @param \DateTime $date
+     * @param $frequencies array of int from DataValue frequencies
+     */
+    public function isUpToDate(EntityManager $entityManager, \DateTime $date, array $frequencies)
+    {
+        // Get all feedData.
+        $feedDataList = $entityManager->getRepository('AppBundle:FeedData')->findByFeed($this);
+
+        $isUpToDate = TRUE;
+
+        // Foreach feedData we check if we have a value for yesterday.
+        /** @var \AppBundle\Entity\FeedData $feedData */
+        foreach ($feedDataList as $feedData) {
+            // A feed is up to date only if all its feedData are up to date.
+            $isUpToDate = $isUpToDate && $feedData->isUpToDate($entityManager, $date, $frequencies);
+        }
+
+        return $isUpToDate;
     }
 }
