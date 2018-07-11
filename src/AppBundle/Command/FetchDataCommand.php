@@ -63,7 +63,7 @@ class FetchDataCommand extends ContainerAwareCommand
         /** @var \AppBundle\Entity\Feed $feeds */
         foreach($feeds as $feed) {
             $callback = Feed::FEED_TYPES[$feed->getFeedType()]['FETCH_CALLBACK'];
-            $this->$callback($feed, $input->getArgument('force'));
+            $this->$callback($feed, $input->getArgument('force'), $yesterday);
         }
     }
 
@@ -71,7 +71,7 @@ class FetchDataCommand extends ContainerAwareCommand
      * Linky callback for fetching data.
      * @param Feed $feed
      */
-    private function fetchLinkyData(Feed $feed, $force)
+    private function fetchLinkyData(Feed $feed, $force, $date)
     {
         // We fetch data if force option is true or if (date('H') >= 9 and the feed isn't up to date).
         // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
@@ -88,7 +88,7 @@ class FetchDataCommand extends ContainerAwareCommand
      * MeteoFrance callback for fetching data.
      * @param Feed $feed
      */
-    private function fetchMeteoFranceData(Feed $feed, $force)
+    private function fetchMeteoFranceData(Feed $feed, $force, $date)
     {
         // We fetch data if force option is true or if the feed isn't up to date.
         if ($force || !$feed->isFeedUpToDate($this->entityManager, $yesterday, MeteoFrance::FREQUENCY)) {
