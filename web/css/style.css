@@ -40,3 +40,15 @@ body {
  border-radius: 3px;
  margin-top: 30px;
 }
+
+h2 {
+ font-size: 1.50rem;
+}
+
+hr {
+ margin-top: 0.5rem;
+}
+
+.meteo-top {
+ height: 60px;
+}

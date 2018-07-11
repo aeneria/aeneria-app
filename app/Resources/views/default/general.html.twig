@@ -1,22 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'Accueil' | trans }}{% endblock %}
+{% block title %}{{ 'Analyse générale' | trans }}{% endblock %}
 
 {% block body %}
   <div class="container-fluid">
-    <div class="row">
-      <div id="evolution" class="col-9">
+    <div class='row'>
+      <div id='evolution' class='col-9'>
         <div class='card'>
           <div class="card-header">
             <h3>{{ 'Evolution de la consommation sur la période' | trans }}</h3>
           </div>
           <div class="card-content">
-            <div id="conso-global-evolution"></div>
+            <div class="content">Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
           </div>
         </div>
       </div>
-      <div id="repartition" class="col-3">
-        <div class="card">
+      <div id='repartition' class='col-3'>
+        <div class='card'>
           <div class="card-header">
             {{ 'Répartition sur la semaine' | trans }}
           </div>
@@ -26,14 +27,15 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="card">
+    <div class='row'>
+      <div class='col'>
+        <div class='card'>
           <div class="card-header">
             <h3>{{ 'Consommation sur la période' | trans }}</h3>
           </div>
           <div class="card-content">
-            <div id="conso-global-repartition"></div>
+            <div class="content">Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
           </div>
         </div>
       </div>
@@ -46,7 +48,5 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script src={{ asset("js/graph_lib.js") }}></script>
-  <script src={{ asset("js/handle_localStorage.js") }}></script>
   <script src={{ asset("js/index_graph.js") }}></script>
 {% endblock %}

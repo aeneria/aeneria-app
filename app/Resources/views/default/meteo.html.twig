@@ -1,41 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'Analyse de la météo' }}{% endblock %}
+{% block title %}{{ 'Analyse de la météo' | trans }}{% endblock %}
 
 {% block body %}
   <div class="container-fluid">
-    <div class='row'>
-      <div id='evolution' class='col-9'>
-        <div class='card'>
-          <div class="card-header">
-            <h3>{{ 'Evolution de la consommation sur la période' | trans }}</h3>
-          </div>
-          <div class="card-content">
-            <div class="content">Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
+    <div class="row">
+      <div id="temperature" class="col-4">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Température' | trans }}</h2>
+            <hr>
+            <div class="content">
+              <div class="meteo-top">
+                <ul>
+                  <li> {{ 'Max : ' | trans }}<span id="temp-max">--</span></li>
+                  <li> {{ 'Moy : ' | trans }}<span id="temp-avg">--</span></li>
+                  <li> {{ 'Min : ' | trans }}<span id="temp-min">--</span></li>
+                </ul>
+              </div>
+              <div id="temp-repartition" class="col-10">
+                {# Will be fill by plotly #}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div id='repartition' class='col-3'>
-        <div class='card'>
-          <div class="card-header">
-            {{ 'Répartition sur la semaine' | trans }}
-          </div>
-          <div class="card-content">
-            <div id="week-repartition"></div>
+      <div id="nebulosity" class="col-4">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Nébulosité' | trans }}</h2>
+            <hr>
+            <div class="content">
+              <div class="meteo-top">
+                <b>80 {{ 'jours' | trans }}</b><br>
+                {{ 'sans nuage' | trans }}
+              </div>
+              <div id="neb-repartition" class="col-10">
+                {# Will be fill by plotly #}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class='row'>
-      <div class='col'>
-        <div class='card'>
-          <div class="card-header">
-            <h3>{{ 'Consommation sur la période' | trans }}</h3>
-          </div>
-          <div class="card-content">
-            <div class="content">Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
+      <div id="rain" class="col-4">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Précipitations' | trans }}</h2>
+            <hr>
+            <div class="content">
+                <div class="meteo-top">
+                  <b>56 {{ 'jours' | trans }}</b><br>
+                  {{ 'sans pluie' | trans }}
+                </div>
+                <div id="rain-repartition" class="col-10">
+                  {# Will be fill by plotly #}
+                </div>
+            </div>
           </div>
         </div>
       </div>

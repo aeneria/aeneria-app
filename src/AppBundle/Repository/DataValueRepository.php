@@ -81,26 +81,12 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
    * @param \DateTime $endDate
    * @param string $frequency
    */
-  public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $repartitionType)
+  public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $axeX, $axeY, $frequency)
   {
-      if ($repartitionType === 'WEEK') {
-          $axeX = 'week_day';
-          $axeY = 'hour';
-          $frequency = DataValue::FREQUENCY['HOUR'];
-      }
-      elseif ($repartitionType === 'YEAR') {
-          $axeX = 'week';
-          $axeY = 'week_day';
-          $frequency = DataValue::FREQUENCY['DAY'];
-      }
-      else {
-        return NULL;
-      }
-
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('AVG(d.value) value, d.' . $axeX . ', d.' . $axeY . '');
+      $queryBuilder->select('AVG(d.value) value, d.' . $axeX . ' AS axeX, d.' . $axeY . ' AS axeY');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.' . $axeX);
       $queryBuilder->groupBy('d.' . $axeY);

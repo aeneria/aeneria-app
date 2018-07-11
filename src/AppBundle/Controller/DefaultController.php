@@ -19,17 +19,17 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/", name="general")
+     * @Route("/general", name="general")
      */
     public function generalAction(Request $request)
     {
-        return $this->render('default/index.html.twig', [
+        return $this->render('default/general.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
 
     /**
-     * @Route("/", name="temperature")
+     * @Route("/conso_vs_temperature", name="temperature")
      */
     public function temperatureAction(Request $request)
     {
@@ -39,7 +39,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/", name="meteo")
+     * @Route("/meteo", name="meteo")
      */
     public function meteoAction(Request $request)
     {

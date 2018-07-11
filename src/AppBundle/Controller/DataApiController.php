@@ -19,15 +19,92 @@ class DataApiController extends Controller
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $repartitionType
-     *     Type of repartition we want (week, year)
+     *     Type of repartition we want (week, year_h, year_v)
      * @param \DateTime $start
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getRepartionAction(Request $request, $dataType, $repartitionType, $start, $end)
+    public function getRepartionAction(Request $request, $dataType, $repartitionType, $start = NULL, $end = NULL)
     {
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
+        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
+        $end = $end ? new \DateTime($end) : new \DateTime();
+
+        // Set and build axes's type & frequency according to repartitionType.
+        if ($repartitionType === 'WEEK') {
+            $axeX = 'weekDay';
+            $axeY = 'hour';
+            $frequency = DataValue::FREQUENCY['HOUR'];
+
+            // Build axes.
+            $xValues = [
+                $this->get('translator')->trans('Lun.'),
+                $this->get('translator')->trans('Mar.'),
+                $this->get('translator')->trans('Mer.'),
+                $this->get('translator')->trans('Jeu.'),
+                $this->get('translator')->trans('Ven.'),
+                $this->get('translator')->trans('Sam.'),
+                $this->get('translator')->trans('Dim.'),
+            ];
+
+            $yValues = [];
+            for($i = 0; $i<24; $i++) {
+                $yValues[$i] = sprintf("%02d", $i) . 'h';
+            }
+            $yValues = array_reverse($yValues);
+        }
+        elseif ($repartitionType === 'YEAR_H') {
+            $axeX = 'week';
+            $axeY = 'weekDay';
+            $frequency = DataValue::FREQUENCY['DAY'];
+
+            // Build axes.
+            $yValues = [
+                $this->get('translator')->trans('Lun.'),
+                $this->get('translator')->trans('Mar.'),
+                $this->get('translator')->trans('Mer.'),
+                $this->get('translator')->trans('Jeu.'),
+                $this->get('translator')->trans('Ven.'),
+                $this->get('translator')->trans('Sam.'),
+                $this->get('translator')->trans('Dim.'),
+            ];
+
+            $xValues = [];
+            $currentDate = clone $start;
+            while($currentDate <= $end) {
+                $xValues[] = $currentDate->format('W');
+                $currentDate->add(new \DateInterval('P1W'));
+            }
+            $xValues = array_reverse($xValues);
+        }
+        elseif ($repartitionType === 'YEAR_V') {
+            $axeX = 'weekDay';
+            $axeY = 'week';
+            $frequency = DataValue::FREQUENCY['DAY'];
+
+            // Build axes.
+            $xValues = [
+                $this->get('translator')->trans('Lun.'),
+                $this->get('translator')->trans('Mar.'),
+                $this->get('translator')->trans('Mer.'),
+                $this->get('translator')->trans('Jeu.'),
+                $this->get('translator')->trans('Ven.'),
+                $this->get('translator')->trans('Sam.'),
+                $this->get('translator')->trans('Dim.'),
+            ];
+
+            $yValues = [];
+            $currentDate = clone $start;
+            while($currentDate <= $end) {
+                $yValues[] = $currentDate->format('W');
+                $currentDate->add(new \DateInterval('P1W'));
+            }
+            $yValues = array_reverse($yValues);
+        }
+        else {
+            return NULL;
+        }
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -39,22 +116,20 @@ class DataApiController extends Controller
         $data = $this
             ->getDoctrine()
             ->getRepository('AppBundle:DataValue')
-            ->getValueRepartition($start, $end, $feedData, $repartitionType);
+            ->getRepartitionValue($start, $end, $feedData, $axeX, $axeY, $frequency);
 
-        //@TODO build xValues, yValues & zValues.
-
-        $xValues = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'];
-
-        $yValues = [];
-        for($i = 0; $i<24; $i++) {
-            $yValues[2*$i] = sprintf("%02d", $i) . 'h';
-            $yValues[2*$i + 1] = sprintf("%02d", $i) . 'h30';
-        }
         $zValues = [];
-        foreach($xValues as $xKey => $xValue) {
-            foreach($yValues as $yKey => $yValue){
-                $zValues[$yKey][$xKey] = random_int(0, 50);
+        foreach ($xValues as $xKey => $xValue) {
+            foreach ($yValues as $yKey => $yValue) {
+                if (!isset($zValues[$xKey][$yValue])) {
+                    $zValues[$xKey][$yKey] = NULL;
+                }
             }
+        }
+
+        foreach ($data as $value) {
+            $y = array_keys($yValues, $value['axeY'])[0];
+            $zValues[$value['axeX']][$y]= $value['value'];
         }
 
         $data = [
@@ -66,7 +141,7 @@ class DataApiController extends Controller
                 'showscale' => FALSE,
                 'mode' => 'markers',
                 'hoverinfo' => 'z',
-                'marker' => (Object)['size' => 16],
+                'marker' => (Object)['size' => 4],
                 'colorscale' => [
                     [0, '#f6ffcd'],
                     [1, '#6ba083']
@@ -92,10 +167,12 @@ class DataApiController extends Controller
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getEvolutionAction(Request $request, $dataType, $frequency, $start, $end)
+    public function getEvolutionAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
     {
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
+        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
+        $end = $end ? new \DateTime($end) : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -140,9 +217,11 @@ class DataApiController extends Controller
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getSumAction(Request $request, $dataType, $start, $end)
+    public function getSumAction(Request $request, $dataType, $start = NULL, $end = NULL)
     {
         $dataType = strtoupper($dataType);
+        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
+        $end = $end ? new \DateTime($end) : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -174,10 +253,12 @@ class DataApiController extends Controller
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getAverageAction(Request $request, $dataType, $frequency, $start, $end)
+    public function getAverageAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
     {
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
+        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
+        $end = $end ? new \DateTime($end) : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this

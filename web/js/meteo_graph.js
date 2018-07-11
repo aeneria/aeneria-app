@@ -2,10 +2,7 @@
 /////////////////////////////////////////
 
 $.ajax({
-  url: "data/week-repartition",
-  data: {
-    test: 97201
-  },
+  url: "data/temperature/repartition/year_v",
   success: function( result ) {
       var data = JSON.parse(result);
       var layout = {
@@ -32,7 +29,7 @@ $.ajax({
       };
 
 
-      Plotly.newPlot('week-repartition', data, layout, {displayModeBar: false});
+      Plotly.newPlot('temp-repartition', data, layout, {displayModeBar: false});
   }
 });
 
