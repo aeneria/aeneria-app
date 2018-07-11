@@ -75,6 +75,9 @@ class FetchDataCommand extends ContainerAwareCommand
     {
         // We fetch data if force option is true or if (date('H') >= 9 and the feed isn't up to date).
         // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
+        dump(date('H'));
+        dump($yesterday);
+        dump($feed->isFeedUpToDate($this->entityManager, $yesterday, DataValue::FREQUENCY));
         if ($force || (date('H') >= 9 && !$feed->isFeedUpToDate($this->entityManager, $yesterday, DataValue::FREQUENCY)) ) {
             $linky = new Linky($feed, $this->entityManager);
             $linky->fetchYesterdayData();
