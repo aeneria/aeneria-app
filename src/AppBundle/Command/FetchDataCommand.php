@@ -77,8 +77,8 @@ class FetchDataCommand extends ContainerAwareCommand
         // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
         dump(date('H'));
         dump($date);
-        dump($feed->isFeedUpToDate($this->entityManager, $date, DataValue::FREQUENCY));
-        if ($force || (date('H') >= 9 && !$feed->isFeedUpToDate($this->entityManager, $date, DataValue::FREQUENCY)) ) {
+        dump($feed->isUpToDate($this->entityManager, $date, DataValue::FREQUENCY));
+        if ($force || (date('H') >= 9 && !$feed->isUpToDate($this->entityManager, $date, DataValue::FREQUENCY)) ) {
             $linky = new Linky($feed, $this->entityManager);
             $linky->fetchYesterdayData();
         }
@@ -91,7 +91,7 @@ class FetchDataCommand extends ContainerAwareCommand
     private function fetchMeteoFranceData(Feed $feed, $force, $date)
     {
         // We fetch data if force option is true or if the feed isn't up to date.
-        if ($force || !$feed->isFeedUpToDate($this->entityManager, $date, MeteoFrance::FREQUENCY)) {
+        if ($force || !$feed->isUpToDate($this->entityManager, $date, MeteoFrance::FREQUENCY)) {
             $meteoFrance = new MeteoFrance($feed, $this->entityManager);
             $meteoFrance->fetchYesterdayData();
         }
