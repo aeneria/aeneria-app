@@ -8,7 +8,7 @@
 var refreshGraph = function (startDate, endDate, frequency, colors) {
   // Refresh week repartition.
   $.ajax({
-    url: "/data/conso/repartition/week/" + startDate + "/" + endDate + "",
+    url: appRoute + "data/conso_elec/repartition/week/" + startDate + "/" + endDate + "",
     success: function(result) {
       var data = JSON.parse(result);
       displayWeekRepartition(data, 'conso-week-repartition', colors, "kWh");
@@ -17,7 +17,7 @@ var refreshGraph = function (startDate, endDate, frequency, colors) {
 
   // Refresh global repartition.
   $.ajax({
-    url: "/data/conso/repartition/year/" + startDate + "/" + endDate + "",
+    url: appRoute + "data/conso_elec/repartition/year_h/" + startDate + "/" + endDate + "",
     success: function(result) {
       var data = JSON.parse(result);
       displayGlobalRepartition(data, 'conso-global-repartition', colors, "kWh");
@@ -26,7 +26,7 @@ var refreshGraph = function (startDate, endDate, frequency, colors) {
 
   // Refresh global evolution.
   $.ajax({
-    url: "/data/conso/evolution/" + frequency + "/" + startDate + "/" + endDate + "",
+    url: appRoute + "data/conso_elec/evolution/" + frequency + "/" + startDate + "/" + endDate + "",
     success: function( result ) {
       var data = JSON.parse(result);
       displayGlobalEvolution(data, 'conso-global-evolution', colors[1], "kWh");

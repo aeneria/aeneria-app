@@ -113,7 +113,7 @@ class DataApiController extends Controller
             ->findOneByDataType($dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
+            $data = $this
             ->getDoctrine()
             ->getRepository('AppBundle:DataValue')
             ->getRepartitionValue($start, $end, $feedData, $axeX, $axeY, $frequency);
@@ -128,8 +128,7 @@ class DataApiController extends Controller
         }
 
         foreach ($data as $value) {
-            $y = array_keys($yValues, $value['axeY'])[0];
-            $zValues[$value['axeX']][$y]= $value['value'];
+            $zValues[$value['axeX']][$value['axeY']]= $value['value'];
         }
 
         $data = [
@@ -163,8 +162,8 @@ class DataApiController extends Controller
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
      *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
+     * @param string $start
+     * @param string $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getEvolutionAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
@@ -206,7 +205,7 @@ class DataApiController extends Controller
     /**
      * Get sum between to date.
      *
-     * @Route("/data/{dataType}/sum/{start}/{end}", name="data-api-evolution")
+     * @Route("/data/{dataType}/sum/{start}/{end}", name="data-api-sum")
      *
      * @param Request $request
      * @param string $dataType
@@ -242,7 +241,7 @@ class DataApiController extends Controller
     /**
      * Get average by <frequency> between to date.
      *
-     * @Route("/data/{dataType}/avg/{frequency}/{start}/{end}", name="data-api-evolution")
+     * @Route("/data/{dataType}/avg/{frequency}/{start}/{end}", name="data-api-average")
      *
      * @param Request $request
      * @param string $dataType

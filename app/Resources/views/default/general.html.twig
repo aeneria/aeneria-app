@@ -11,8 +11,9 @@
             <h3>{{ 'Evolution de la consommation sur la période' | trans }}</h3>
           </div>
           <div class="card-content">
-            <div class="content">Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
+            <div class="content">
+                <div id="conso-global-evolution"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -22,7 +23,7 @@
             {{ 'Répartition sur la semaine' | trans }}
           </div>
           <div class="card-content">
-            <div id="week-repartition"></div>
+            <div id="conso-week-repartition"></div>
           </div>
         </div>
       </div>
@@ -34,8 +35,9 @@
             <h3>{{ 'Consommation sur la période' | trans }}</h3>
           </div>
           <div class="card-content">
-            <div class="content">Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
+            <div class="content">
+                <div id="conso-global-repartition"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -48,5 +50,7 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script src={{ asset("js/index_graph.js") }}></script>
+  <script src={{ asset("js/handle_localStorage.js") }}></script>
+  <script src={{ asset("js/graph_lib.js") }}></script>
+  <script src={{ asset("js/general.js") }}></script>
 {% endblock %}
