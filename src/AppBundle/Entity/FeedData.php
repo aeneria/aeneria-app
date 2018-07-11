@@ -157,7 +157,7 @@ class FeedData
 
             // Try to get the corresponding DataValue.
             $dataValue = $entityManager->getRepository('AppBundle:DataValue')->findBy($criteria);
-            dump($dataValue);
+
             // A feed is up to date only if all its feedData are up to date.
             $isUpToDate = $isUpToDate && !empty($dataValue);
         }
