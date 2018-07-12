@@ -304,8 +304,8 @@ class DataApiController extends Controller
         foreach ($axe->x as $xKey => $xValue) {
             foreach ($axe->y as $yKey => $yValue) {
                 $index = $xKey * count($axe->y) + $yKey;
-                $data->values[$index] = NULL;
-                $data->dates[$index] = NULL;
+                $data->values[$index] = '';
+                $data->dates[$index] = '';
             }
         }
 
@@ -337,5 +337,7 @@ class DataApiController extends Controller
                 $data->dates[$index] = $currentDate->format('d/m/y');
             }
         }
+
+        return $data;
     }
 }

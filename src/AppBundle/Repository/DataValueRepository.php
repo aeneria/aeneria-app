@@ -100,7 +100,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       return $queryBuilder
           ->getQuery()
-          ->getResult() ;
+          ->getResult();
   }
 
   public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
