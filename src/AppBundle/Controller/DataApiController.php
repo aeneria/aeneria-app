@@ -44,11 +44,9 @@ class DataApiController extends Controller
         // Build data object.
         $data = $this->buildRepartitionDataObject($axe, $values, $repartitionType);
 
-        $result = [
-            (Object)[
-                'axe' => $axe,
-                'data' => $data,
-            ]
+        $result =(Object)[
+            'axe' => $axe,
+            'data' => $data,
         ];
 
         $jsonResult = json_encode($result);
