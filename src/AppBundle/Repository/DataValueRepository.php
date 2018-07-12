@@ -87,15 +87,15 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('AVG(d.value) value, d.' . $axeX . ' AS axeX, d.' . $axeY . ' AS axeY');
+      $queryBuilder->select('AVG(d.value) AS value, d.' . $axeX . ' AS axeX, d.' . $axeY . ' AS axeY');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.' . $axeX);
-      $queryBuilder->groupBy('d.' . $axeY);
+      $queryBuilder->addGroupBy('d.' . $axeY);
 
       // If this is a year repartition, we also group by year.
       if (in_array($repartitionType, [DataApiController::YEAR_HORIZONTAL_REPARTITION, DataApiController::YEAR_VERTICAL_REPARTITION])) {
-        $queryBuilder->addSelect('d.year year');
-        $queryBuilder->groupBy('d.year');
+          $queryBuilder->addSelect('d.year AS year');
+          $queryBuilder->addGroupBy('d.year');
       }
 
       return $queryBuilder
