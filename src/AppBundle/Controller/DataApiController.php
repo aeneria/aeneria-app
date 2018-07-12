@@ -267,7 +267,7 @@ class DataApiController extends Controller
                 return NULL;
         }
 
-        return (object)[$axe, $axeX, $axeY, $frequency];
+        return [$axe, $axeX, $axeY, $frequency];
     }
 
     /**
