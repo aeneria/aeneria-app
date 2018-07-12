@@ -94,8 +94,8 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       // If this is a year repartition, we also group by year.
       if (in_array($repartitionType, [DataApiController::YEAR_HORIZONTAL_REPARTITION, DataApiController::YEAR_VERTICAL_REPARTITION])) {
+        $queryBuilder->addSelect('d.year year');
         $queryBuilder->groupBy('d.year');
-        $queryBuilder->addSelect('year');
       }
 
       return $queryBuilder
