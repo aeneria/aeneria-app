@@ -303,7 +303,7 @@ class DataApiController extends Controller
         // Initialize data object with NULL.
         foreach ($axe->x as $xKey => $xValue) {
             foreach ($axe->y as $yKey => $yValue) {
-                $index = $xKey * length($axe->y) + $yKey;
+                $index = $xKey * count($axe->y) + $yKey;
                 $data->values[$index] = NULL;
                 $data->dates[$index] = NULL;
             }
@@ -313,7 +313,7 @@ class DataApiController extends Controller
         foreach ($values as $value) {
             $xKey = array_search($value['axeX'], $axe->x);
             $yKey = array_search($value['axeY'], $axe->y);
-            $index = $xKey * length($axe->y) + $yKey;
+            $index = $xKey * count($axe->y) + $yKey;
 
             // We store the value in the object.
             $data->values[$index] = $value['value'];
