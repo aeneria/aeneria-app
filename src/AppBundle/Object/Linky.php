@@ -67,7 +67,6 @@ class Linky {
      *
      * @param Feed $feed
      * @param EntityManager $entityManager
-     * @param boolean $getAll
      * @return boolean error
      */
     public function __construct($feed, $entityManager)
@@ -86,20 +85,21 @@ class Linky {
 
     /**
      * Fetch ENEDIS data for yesterday and persist its in database.
+     *
+     * @param \DateTime $date
      */
-    public function fetchYesterdayData() {
-        $this->getAll();
-        $this->persistData();
+    public function fetchData(\DateTime $date) {
+        $this->getAll($date);
+        $this->persistData($date);
     }
 
     /**
      * Persist data in database.
+     *
+     * @param \DateTime $date
      */
-    private function persistData() {
-        // Get yesterday datetime.
-        $yesterday = new \DateTime();
-        $yesterday->sub(new \DateInterval('P1D'));
-        $yesterday = new \DateTime($yesterday->format("Y-m-d 00:00:00"));
+    private function persistData(\DateTime $date) {
+        $date = new \DateTime($date->format("Y-m-d 00:00:00"));
 
         // Get feedData.
         /** @var \AppBundle\Entity\FeedData $feedData */
@@ -109,7 +109,7 @@ class Linky {
         foreach (end($this->data['hours']) as $hour => $value) {
             if ($value) {
                 $feedData->updateOrCreateValue(
-                    new \DateTime($yesterday->format("Y-m-d") . $hour . ':00'),
+                    new \DateTime($date->format("Y-m-d") . $hour . ':00'),
                     DataValue::FREQUENCY['HOUR'],
                     $value,
                     $this->entityManager
@@ -120,7 +120,7 @@ class Linky {
         // Persist day data.
         if (end($this->data['days'])) {
             $feedData->updateOrCreateValue(
-                $yesterday,
+                $date,
                 DataValue::FREQUENCY['DAY'],
                 end($this->data['days']),
                 $this->entityManager
@@ -130,7 +130,7 @@ class Linky {
         // Persist month data.
         if (end($this->data['months'])) {
             $feedData->updateOrCreateValue(
-                $yesterday,
+                $date,
                 DataValue::FREQUENCY['MONTH'],
                 end($this->data['months']),
                 $this->entityManager
@@ -140,7 +140,7 @@ class Linky {
         // Persist day data.
         if (end($this->data['years'])) {
             $feedData->updateOrCreateValue(
-                $yesterday,
+                $date,
                 DataValue::FREQUENCY['YEAR'],
                 end($this->data['years']),
                 $this->entityManager
@@ -288,28 +288,29 @@ class Linky {
         return $returnData;
     }
 
-    public function getAll()
+    /**
+     * Get data for all frequencies for $date.
+     *
+     * @param \DateTime $date
+     * @return array of data.
+     */
+    public function getAll(\DateTime $date)
     {
-        // Initialize datas:
-        $timezone = 'Europe/Paris';
-        $today = new \DateTime('NOW', new \DateTimeZone($timezone));
-        $today->sub(new \DateInterval('P1D')); //Enedis last data are yesterday
-
-        // Get per hour for yesterday:
-        $yesterday = $today->format('d/m/Y');
-        $this->getDataPerHour($yesterday);
+        // Get per hour for date:
+        $formattedDate = $date->format('d/m/Y');
+        $this->getDataPerHour($formattedDate);
 
         // Get per day:
-        $var = clone $today;
+        $var = clone $date;
         $fromMonth = $var->sub(new \DateInterval('P30D'));
         $fromMonth = $fromMonth->format('d/m/Y');
-        $this->getDataPerDay($fromMonth, $yesterday);
+        $this->getDataPerDay($fromMonth, $formattedDate);
 
         // Get per month:
         $var = clone $today;
         $fromYear = $var->sub(new \DateInterval('P1Y'));
         $fromYear = $fromYear->format('01/'.'m/Y');
-        $this->getDataPerMonth($fromYear, $yesterday);
+        $this->getDataPerMonth($fromYear, $formattedDate);
 
         // Get per year:
         $this->getDataPerYear();

@@ -27,7 +27,6 @@ class FetchDataCommand extends ContainerAwareCommand
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager= $entityManager;
-
         parent::__construct();
     }
 
@@ -77,7 +76,7 @@ class FetchDataCommand extends ContainerAwareCommand
         // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
         if ($force || (date('H') >= 7 && !$feed->isUpToDate($this->entityManager, $date, DataValue::FREQUENCY)) ) {
             $linky = new Linky($feed, $this->entityManager);
-            $linky->fetchYesterdayData();
+            $linky->fetchData($date);
         }
     }
 
@@ -90,7 +89,7 @@ class FetchDataCommand extends ContainerAwareCommand
         // We fetch data if force option is true or if the feed isn't up to date.
         if ($force || !$feed->isUpToDate($this->entityManager, $date, MeteoFrance::FREQUENCY)) {
             $meteoFrance = new MeteoFrance($feed, $this->entityManager);
-            $meteoFrance->fetchYesterdayData();
+            $meteoFrance->fetchData($date);
         }
     }
 }

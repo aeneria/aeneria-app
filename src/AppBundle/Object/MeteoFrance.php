@@ -123,16 +123,16 @@ class MeteoFrance {
 
     /**
      * Fetch SYNOP data for yesterday and persist its in database.
+     *
+     * @param \DateTime $date
      */
-    public function fetchYesterdayData()
+    public function fetchData(\DateTime $date)
     {
-        // Get yesterday datetime.
-        $yesterday = new \DateTime();
-        $yesterday->sub(new \DateInterval('P1D'));
-        $yesterday = new \DateTime($yesterday->format("Y-m-d 00:00:00"));
+        // Get datetime.
+        $date = new \DateTime($date->format("Y-m-d 00:00:00"));
 
         // Get all 3-hours interval data from yesterday.
-        $rawData = $this->getRawData($yesterday);
+        $rawData = $this->getRawData($date);
 
         // Get 1 value for yesterday for each type of data.
         $fastenData = $this->fastenRawData($rawData);
@@ -145,7 +145,7 @@ class MeteoFrance {
         foreach ($feedDataList as $feedData) {
             $dataType = $feedData->getDataType();
             $feedData->updateOrCreateValue(
-                $yesterday,
+                $date,
                 DataValue::FREQUENCY['DAY'],
                 $fastenData[$dataType],
                 $this->entityManager
@@ -156,7 +156,7 @@ class MeteoFrance {
         $this->entityManager->flush();
 
         // Refresh week and month aggregate data.
-        $this->refreshAgregateValue($yesterday);
+        $this->refreshAgregateValue($date);
     }
 
     /**
