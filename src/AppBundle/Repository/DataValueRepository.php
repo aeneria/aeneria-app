@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\DataValue;
 use AppBundle\Entity\FeedData;
 use Doctrine\ORM\QueryBuilder;
+use AppBundle\Controller\DataApiController;
 
 /**
  * DataValueRepository
@@ -81,7 +82,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
    * @param \DateTime $endDate
    * @param string $frequency
    */
-  public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $axeX, $axeY, $frequency)
+  public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $axeX, $axeY, $frequency, $repartitionType)
   {
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
@@ -90,6 +91,12 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.' . $axeX);
       $queryBuilder->groupBy('d.' . $axeY);
+
+      // If this is a year repartition, we also group by year.
+      if (in_array($repartitionType, [DataApiController::YEAR_HORIZONTAL_REPARTITION, DataApiController::YEAR_VERTICAL_REPARTITION])) {
+        $queryBuilder->groupBy('d.year');
+        $queryBuilder->addSelect('year');
+      }
 
       return $queryBuilder
           ->getQuery()

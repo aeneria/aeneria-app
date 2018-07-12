@@ -5,8 +5,7 @@
  *     - axe.x : axeX labels
  *     - axe.y : axeY labels
  *     - data.values : values to display
- *     - data.x : corresponding axe.y elements
- *     - data.y : corresponding axe.x elements
+ *     - data.dates : corresponding dates
  *   target : id of the targetted DIV element
  *   colors : a tab with 2 elements for the color scale
  *   unit : a string, the unit of the displayed data
@@ -97,9 +96,7 @@ var displayWeekRepartition = function(result, target, colors, unit) {
   .on("mouseover", function(d, i) {
     div.transition().duration(200).style("opacity", 1);
     div.html(
-      result.axe.x[result.data.x[i] - 1] + " "
-      + result.axe.y[result.data.y[i]] + " ⇀ "
-      + result.axe.y[result.data.y[i] + 1] + "</br> "
+      result.data.dates[i] + "</br> "
       + parseFloat(d).toFixed(2) + " " + unit).style("left",
       (d3.event.pageX) + "px").style("top",
       (d3.event.pageY - 28) + "px"
@@ -116,7 +113,7 @@ var displayWeekRepartition = function(result, target, colors, unit) {
  *   result : an object containing :
  *     - axe.x : axeX labels
  *     - axe.y : axeY labels
- *     - data.value : values to display
+ *     - data.values : values to display
  *     - data.dates : corresponding dates
  *   target : id of the targetted DIV element
  *   colors : a tab with 2 elements for the color scale
