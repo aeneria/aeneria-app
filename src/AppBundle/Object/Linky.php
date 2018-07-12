@@ -307,7 +307,7 @@ class Linky {
         $this->getDataPerDay($fromMonth, $formattedDate);
 
         // Get per month:
-        $var = clone $today;
+        $var = clone $date;
         $fromYear = $var->sub(new \DateInterval('P1Y'));
         $fromYear = $fromYear->format('01/'.'m/Y');
         $this->getDataPerMonth($fromYear, $formattedDate);
