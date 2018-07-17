@@ -12,6 +12,7 @@ var refreshGraph = function (startDate, endDate, frequency, colors) {
     success: function(result) {
       var data = JSON.parse(result);
       displayWeekRepartition(data, 'conso-week-repartition', colors, "kWh");
+      $('[data-toggle="tooltip"]').tooltip();
     }
   });
 
@@ -21,6 +22,7 @@ var refreshGraph = function (startDate, endDate, frequency, colors) {
     success: function(result) {
       var data = JSON.parse(result);
       displayGlobalRepartition(data, 'conso-global-repartition', colors, "kWh");
+      $('[data-toggle="tooltip"]').tooltip();
     }
   });
 
@@ -29,17 +31,17 @@ var refreshGraph = function (startDate, endDate, frequency, colors) {
     url: appRoute + "data/conso_elec/evolution/" + frequency + "/" + startDate + "/" + endDate + "",
     success: function( result ) {
       var data = JSON.parse(result);
-      displayGlobalEvolution(data, 'conso-global-evolution', colors[1], "kWh");
+      displayGlobalEvolution(data, 'conso-global-evolution', colors[8], "kWh");
     }
   });
 }
 
 $(document).ready(function () {
   // Defines color scale.
-  var colors = ["#CAD7B2", "#97B5A7"];
+  var colors = ["#ebedf0", "#196127"];
 
+  refreshGraph(localStorage.startDate, localStorage.endDate, localStorage.frequency, d3.schemeGnBu[9]);
 
-  refreshGraph(localStorage.startDate, localStorage.endDate, localStorage.frequency, colors);
 });
 
 

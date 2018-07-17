@@ -12,7 +12,7 @@
  *
  */
 var displayWeekRepartition = function(result, target, colors, unit) {
-  var rows = 23; // Number of hours in a day
+  var rows = 24; // Number of hours in a day
   var cols = 7; // Number of days in a week
   var row_height = 20;
   var col_width = 20;
@@ -36,8 +36,8 @@ var displayWeekRepartition = function(result, target, colors, unit) {
     .attr("height", total_height);
 
   var color = d3
-    .scaleLinear()
-    .domain([ d3.min(result.data.values), 1 ])
+    .scaleQuantile()
+    .domain([ d3.min(result.data.values), d3.max(result.data.values) ])
     .range(colors);
 
   // Define the div for the tooltip
@@ -93,17 +93,11 @@ var displayWeekRepartition = function(result, target, colors, unit) {
   .attr("width", col_width)
   .attr("height", row_height)
   .attr("fill", color)
-  .on("mouseover", function(d, i) {
-    div.transition().duration(200).style("opacity", 1);
-    div.html(
-      result.data.dates[i] + "</br> "
-      + parseFloat(d).toFixed(2) + " " + unit).style("left",
-      (d3.event.pageX) + "px").style("top",
-      (d3.event.pageY - 28) + "px"
-    );
-  })
-  .on("mouseout", function(d) {
-    div.transition().duration(500).style("opacity", 0);
+  .attr("data-toggle", "tooltip")
+  .attr("data-placement", "left")
+  .attr("data-html", "true")
+  .attr("title", function(d, i) {
+      return result.data.dates[i] + "</br> " + parseFloat(d).toFixed(2) + " " + unit;
   });
 }
 
@@ -144,8 +138,8 @@ var displayGlobalRepartition = function(result, target, colors, unit) {
     .attr("height", total_height);
 
   var color = d3
-    .scaleLinear()
-    .domain([ d3.min(result.data.values), 1 ])
+    .scaleQuantile()
+    .domain([ d3.min(result.data.values), d3.max(result.data.values) ])
     .range(colors);
 
   // Define the div for the tooltip
@@ -201,36 +195,31 @@ var displayGlobalRepartition = function(result, target, colors, unit) {
     .attr("width", col_width)
     .attr("height", row_height)
     .attr("fill", color)
-    .on( "mouseover", function(d, i) {
-      div.transition().duration(200).style("opacity", 1);
-      div
-       .html(result.data.dates[i] + "</br> " + parseFloat(d).toFixed(2) + " " + unit)
-       .style("left", (d3.event.pageX) + "px")
-       .style( "top", (d3.event.pageY - 28) + "px");
-    })
-    .on("mouseout", function(d) {
-      div.transition().duration(500).style("opacity", 0);
+    .attr("data-toggle", "tooltip")
+    .attr("data-placement", "left")
+    .attr("data-html", "true")
+    .attr("title", function(d, i) {
+        return result.data.dates[i] + "</br> " + parseFloat(d).toFixed(2) + " " + unit;
     });
 }
 
 /**
  * Display a histogram.
  *
- *   result : an tab of object containing
- *     - result[i].value : values to display
- *     - result[i].axeX : corresponding dates
+ *   result : an object containing :
+ *     - axe.x : values to display
+ *     - axe.y : axeY labels
  *   target : id of the targetted DIV element
  *   color :  hexadecimal color for bar
  *   unit : a string, the unit of the displayed data
  */
 var displayGlobalEvolution = function(result, target, color, unit) {
-
   var margin_top = 20;
   var margin_left = 60;
-  var margin_bottom = 60;
+  var margin_bottom = 80;
   var margin_right = 20;
-  var height = 420;
-  var width = 700;
+  var height = 415;
+  var width = 800;
 
   var svg = d3
     .select("#" + target)
@@ -241,13 +230,13 @@ var displayGlobalEvolution = function(result, target, color, unit) {
 
   var xScale = d3
     .scaleBand()
-    .range([ 0, width ])
+    .range([0, width])
     .padding(0.4)
-    .domain(result.map(function(d) { return d.axeX; })),
+    .domain(result.axeX.map(function(d) { return d;})),
   yScale = d3
     .scaleLinear()
-    .range([ height, 0 ])
-    .domain([0, d3.max(result, function(d) { return d.axeY; })]);
+    .range([0, height])
+    .domain([0, d3.max(result.axeY)]);
 
   var chart = svg
     .append("g")
@@ -255,15 +244,15 @@ var displayGlobalEvolution = function(result, target, color, unit) {
 
   chart
     .selectAll(".bar")
-    .data(result)
+    .data(result.axeX)
     .enter()
     .append("rect")
     .attr("class", "bar")
     .attr("fill", color)
-    .attr("x", function(d) { return xScale(d.axeX); })
-    .attr("y", function(d) { return yScale(d.axeY); })
+    .attr("x", function(d, i) { return xScale(d); })
+    .attr("y", function(d, i) { return yScale(result.axeY[i]); })
     .attr("width", xScale.bandwidth())
-    .attr("height", function(d) { return height - yScale(d.axeY); });
+    .attr("height", function(d, i) { return height - yScale(result.axeY[i]); });
 
   chart
     .append("g")

@@ -81,23 +81,12 @@ class DataApiController extends Controller
             ->findOneByDataType($dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
+        $result = $this
             ->getDoctrine()
             ->getRepository('AppBundle:DataValue')
             ->getValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
-        //@TODO build xValues & yValues
-        $xValues = [];
-        $yValues = [];
-
-        $data = [
-            (Object)[
-                'x' => $xValues,
-                'y' => $yValues,
-                'type' => 'bar',
-                'showscale' => FALSE,
-            ]
-        ];
+        $data = $this->buildEvolutionDataObject($result, $frequency);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -177,14 +166,15 @@ class DataApiController extends Controller
     }
 
     /**
-     * Build axes for a reparttition graph
+     * Build axes for a repartition graph
      *
      * @param string $repartitionType
      * @param DateTime $start
      * @param DateTime $end
      * @return array of values [$axe, $axeX, $axeY, $frequency]
      */
-    private function buildRepartitionAxes($repartitionType, $start, $end) {
+    private function buildRepartitionAxes($repartitionType, $start, $end)
+    {
         $axe = (object)[
             'x' => [],
             'y' => [],
@@ -210,10 +200,12 @@ class DataApiController extends Controller
                 for($i = 0; $i<=24; $i++) {
                   $axe->y[$i] = sprintf("%02d", $i) . 'h';
                 }
-                $axe->y = array_reverse($axe->y);
+                //$axe->y = array_reverse($axe->y);
                 break;
 
             case self::YEAR_HORIZONTAL_REPARTITION:
+                // We also store year for future treatment.
+                $axe->year = [];
                 $axeX = 'week';
                 $axeY = 'weekDay';
                 $frequency = DataValue::FREQUENCY['DAY'];
@@ -231,13 +223,16 @@ class DataApiController extends Controller
 
                 $currentDate = clone $start;
                 while($currentDate <= $end) {
-                  $axe->x[] = $currentDate->format('W');
+                  $axe->x[] = (int)$currentDate->format('W');
+                  $axe->year[] = (int)$currentDate->format('Y');
                   $currentDate->add(new \DateInterval('P1W'));
                 }
-                $axe->x = array_reverse($axe->x);
+                //$axe->x = array_reverse($axe->x);
                 break;
 
             case self::YEAR_VERTICAL_REPARTITION:
+                // We also store year for future treatment.
+                $axe->year = [];
                 $axeX = 'weekDay';
                 $axeY = 'week';
                 $frequency = DataValue::FREQUENCY['DAY'];
@@ -256,9 +251,10 @@ class DataApiController extends Controller
                 $currentDate = clone $start;
                 while($currentDate <= $end) {
                   $axe->y[] = $currentDate->format('W');
+                  $axe->year[] = (int)$currentDate->format('Y');
                   $currentDate->add(new \DateInterval('P1W'));
                 }
-                $axe->y = array_reverse($axe->y);
+                //$axe->y = array_reverse($axe->y);
                 break;
 
             default:
@@ -278,7 +274,8 @@ class DataApiController extends Controller
      * @param string $frequency
      * @param string $repartitionType
      */
-    private function getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType) {
+    private function getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType)
+    {
         // Find feedData with the good dataType.
         $feedData = $this
             ->getDoctrine()
@@ -292,48 +289,115 @@ class DataApiController extends Controller
             ->getRepartitionValue($start, $end, $feedData, $axeX, $axeY, $frequency, $repartitionType);
     }
 
-    private function buildRepartitionDataObject($axe, $values, $repartitionType) {
+    private function buildRepartitionDataObject($axe, $values, $repartitionType)
+    {
+        switch ($repartitionType) {
+            case self::WEEK_REPARTITION:
+                return $this->buildWeekRepartitionDataObject($axe, $values);
+                break;
+
+            case self::YEAR_HORIZONTAL_REPARTITION:
+                return $this->buildYearRepartitionDataObject($axe, $values);
+                break;
+
+            default:
+                $axeX = $axe->x;
+                $axe->x = $axe->y;
+                $axe->y = $axeX;
+                return $this->buildYearRepartitionDataObject($axe, $values);
+        }
+    }
+
+    private function buildWeekRepartitionDataObject($axe, $values)
+    {
         $data = (object)[
             'values' => [],
             'dates' => [],
         ];
 
-        // Initialize data object with NULL.
+        // Initialize data object with empty values and build dates.
         foreach ($axe->x as $xKey => $xValue) {
             foreach ($axe->y as $yKey => $yValue) {
-                $index = $xKey * count($axe->y) + $yKey;
-                $data->values[$index] = '';
-                $data->dates[$index] = '';
+                $index = $xKey * (count($axe->y)-1) + $yKey;
+                if ($yKey<24) {
+                    $data->values[$index] = '';
+                    // Date will be for example 'monday 12h->13h'.
+                    $data->dates[$index] = $xValue . ' ' . $yValue . ' -> ' . $axe->y[$yKey + 1];
+                }
             }
         }
 
         // Fill data object with values from database.
         foreach ($values as $value) {
-            $xKey = array_search($value['axeX'], $axe->x);
-            $yKey = array_search($value['axeY'], $axe->y);
-            $index = $xKey * count($axe->y) + $yKey;
-
+            $xKey = $value['axeX'];
+            $yKey = $value['axeY'];
+            $index = $xKey * (count($axe->y) - 1) + $yKey;
             // We store the value in the object.
             $data->values[$index] = $value['value'];
+        }
 
-            // And the date according to the repartion type :
-            //  for a week repartion, date will be for example 'monday 12h->13h'.
-            //  for a year repartion, date will be for example '13/02/2018'.
-            if ($repartitionType === self::WEEK_REPARTITION) {
-                $data->dates[$index] = $axe->x[$xKey] . ' ' . $axe->x[$xKey] . ' -> ' . $axe->x[$xKey + 1];
-            }
-            elseif ($repartitionType === self::YEAR_HORIZONTAL_REPARTITION) {
-                // We rebuild the datetime
+        return $data;
+    }
+
+    private function buildYearRepartitionDataObject($axe, $values)
+    {
+        $data = (object)[
+            'values' => [],
+            'dates' => [],
+        ];
+
+        // Initialize data object with empty values and build dates.
+        foreach ($axe->x as $xKey => $xValue) {
+            foreach ($axe->y as $yKey => $yValue) {
+                $index = $xKey * count($axe->y) + $yKey;
+                $data->values[$index] = '';
+                // We rebuild the datetime, will be for example '13/02/2018'.
                 $currentDate = new \DateTime();
-                $currentDate->setISODate($value['year'], $value['axeX'], $value['axeY'] + 1);
+                $currentDate->setISODate($axe->year[$xKey], $xValue, $yKey + 1);
                 $data->dates[$index] = $currentDate->format('d/m/y');
             }
-            elseif ($repartitionType === self::YEAR_VERTICAL_REPARTITION) {
-                // We rebuild the datetime
-                $currentDate = new \DateTime();
-                $currentDate->setISODate($value['year'], $value['axeY'], $value['axeX'] + 1);
-                $data->dates[$index] = $currentDate->format('d/m/y');
-            }
+        }
+
+        // Fill data object with values from database.
+        foreach ($values as $value) {
+            $xValue = $value['axeX'];
+            $xKey = array_search($value['axeX'], $axe->x);
+            $yKey = $value['axeY'];
+            $index = $xKey * count($axe->y) + $yKey;
+            // We store the value in the object.
+            $data->values[$index] = $value['value'];
+        }
+
+        return $data;
+    }
+
+    private function buildEvolutionDataObject($results, $frequency)
+    {
+        $data = (object)[
+            'axeX' => [],
+            'axeY' => [],
+        ];
+
+        switch ($frequency) {
+          case 'HOUR':
+             $axeFormat = 'd/m/Y H:i';
+             break;
+          case 'DAY':
+              $axeFormat = 'd/m/Y';
+              break;
+          case 'WEEK':
+              $axeFormat = 'd/m/Y';
+              break;
+          case 'MONTH':
+              $axeFormat = 'M Y';
+              break;
+          case 'YEAR':
+              $axeFormat = 'Y';
+        }
+
+        foreach ($results as $result) {
+            $data->axeY[] = $result->getValue();
+            $data->axeX[] = $result->getDate()->format($axeFormat);
         }
 
         return $data;

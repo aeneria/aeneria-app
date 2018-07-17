@@ -41,6 +41,10 @@ body {
  margin-top: 30px;
 }
 
+.card-content {
+  padding: 15px;
+}
+
 h2 {
  font-size: 1.50rem;
 }
@@ -51,4 +55,23 @@ hr {
 
 .meteo-top {
  height: 60px;
+}
+
+.chart {
+ margin-left: auto;
+ margin-right: auto;
+ display: block;
+}
+
+.chart rect {
+ stroke: white;
+
+ text {
+  fill: #000;
+ }
+}
+
+.tooltip-inner {
+    min-width: 100px;
+    max-width: 100%;
 }
