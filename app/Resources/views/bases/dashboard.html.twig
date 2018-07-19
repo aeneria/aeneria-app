@@ -1,0 +1,21 @@
+{% extends "bases/base.html.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block selection %}
+  <div class="mx-auto">
+    {% include "misc/selection.html.twig" %}
+  </div>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+  <script src={{ asset("js/selection.js") }}></script>
+  {% block js %}
+  {% endblock %}
+{% endblock %}

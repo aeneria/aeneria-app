@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "bases/dashboard.html.twig" %}
 
 {% block title %}{{ "Analyse générale" | trans }}{% endblock %}
 
@@ -39,11 +39,9 @@
 {% endblock %}
 
 {% block stylesheets %}
-
 {% endblock %}
 
-{% block javascripts %}
-  <script src={{ asset("js/handle_localStorage.js") }}></script>
+{% block js %}
   <script src={{ asset("js/graph_lib.js") }}></script>
   <script src={{ asset("js/general.js") }}></script>
 {% endblock %}

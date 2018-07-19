@@ -1,44 +1,51 @@
 body {
- background: #f6ffcd;
+  background: #f6ffcd;
 }
 
 .navbar {
- background: #4f323b;
- box-shadow: 0 4px 3px rgba(10, 10, 10, .1), 0 0 0 2px
-  rgba(10, 10, 10, .1);
- height: 50px;
+  background: #4f323b;
+  box-shadow: 0 4px 3px rgba(10, 10, 10, .1), 0 0 0 2px
+    rgba(10, 10, 10, .1);
+  height: 60px;
 }
 
 .navbar-item {
- color: #2e3436;
+  color: #2e3436;
+}
+
+.navbar-brand > span{
+  color: #ffffff;
+  margin-left: 7px;
+  vertical-align: middle;
+  font-size: 1.5em;
 }
 
 #body {
- height: 100%;
- padding-left: 50px;
+  height: 100%;
+  padding-left: 50px;
 }
 
 #sidebar {
- background: #4e4e4e;
- width: 45px;
- height: 100%;
- padding: 10px;
- position: fixed;
+  background: #4e4e4e;
+  width: 45px;
+  height: 100%;
+  padding: 10px;
+  position: fixed;
 }
 
-#sidebar > div > a {
- min-width: 30px;
- min-height: 40px;
+#sidebar>div>a {
+  min-width: 30px;
+  min-height: 40px;
 }
 
-#sidebar > div > a > img {
- max-width: 24px;
- height: auto;
+#sidebar>div>a>img {
+  max-width: 24px;
+  height: auto;
 }
 
 .card {
- border-radius: 3px;
- margin-top: 30px;
+  border-radius: 3px;
+  margin-top: 30px;
 }
 
 .card-content {
@@ -46,32 +53,43 @@ body {
 }
 
 h2 {
- font-size: 1.50rem;
+  font-size: 1.50rem;
 }
 
 hr {
- margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .meteo-top {
- height: 60px;
+  height: 60px;
 }
 
 .chart {
- margin-left: auto;
- margin-right: auto;
- display: block;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .chart rect {
- stroke: white;
-
- text {
-  fill: #000;
- }
+  stroke: white;
+  text
+  {
+  fill
+  :
+  #000;
 }
 
+}
 .tooltip-inner {
-    min-width: 100px;
-    max-width: 100%;
+  min-width: 100px;
+  max-width: 100%;
+}
+
+nav input, nav button {
+  border-radius: 20px !important;
+  border: none !important;
+}
+
+nav button {
+  background-color: #084081;
 }

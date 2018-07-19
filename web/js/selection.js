@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * Handles localStorage elements.
+ * Handles selection in localStorage elements.
  */
 
 $(document).ready(function () {
@@ -24,4 +24,24 @@ $(document).ready(function () {
     frequency = 'month';
     localStorage.setItem('frequency', frequency);
   }
+
+  // Initiate datepicker.
+  $('#start-date').val(startDate);
+  $('#end-date').val(endDate);
+  $('.input-daterange').datepicker({
+    format: 'dd/mm/yyyy',
+    endDate: '-1d',
+    language: 'fr'
+  });
+
+  $('#selection-form').submit(function(e) {
+    // Store new vlaue in localStorage.
+    localStorage.setItem('startDate', $("#start-date").val());
+    localStorage.setItem('endDate', $("#end-date").val());
+
+    // Tell the world we have new values.
+    document.dispatchEvent(new Event('selection'));
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+  });
 })

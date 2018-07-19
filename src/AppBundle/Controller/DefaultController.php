@@ -13,7 +13,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('default/index.html.twig', [
+        return $this->render('dashboards/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
@@ -23,7 +23,7 @@ class DefaultController extends Controller
      */
     public function generalAction(Request $request)
     {
-        return $this->render('default/general.html.twig', [
+        return $this->render('dashboards/general.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
@@ -33,7 +33,7 @@ class DefaultController extends Controller
      */
     public function temperatureAction(Request $request)
     {
-        return $this->render('default/temperature.html.twig', [
+        return $this->render('dashboards/temperature.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
@@ -43,7 +43,7 @@ class DefaultController extends Controller
      */
     public function meteoAction(Request $request)
     {
-        return $this->render('default/meteo.html.twig', [
+        return $this->render('dashboards/meteo.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }

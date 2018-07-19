@@ -9,14 +9,15 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('image/icon/favicon.png') }}" />
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" integrity="sha256-JDBcnYeV19J14isGd3EtnsCQK05d8PczJ5+fvEvBJvI=" crossorigin="anonymous" />
     <link rel="stylesheet" href={{ asset("css/style.css") }}></link>
 </head>
 <body>
-    <nav class="navbar navbar navbar-expand-lg sticky-top navbar-expand">
-        <a class="navbar-brand" href="{{ url('homepage') }}">
-            <img src="{{ asset('image/icon/logo.png') }}" alt="Pilea{{ ' : Analyser votre consommation d\'électricité' | trans }}" >
-            Pilea
-        </a>
+    <nav class="navbar navbar navbar-expand-lg sticky-top navbar-expand" title="Pilea{{ ' : Analyser votre consommation d\'électricité' | trans }}" >
+        <div class="navbar-brand">
+            <img src="{{ asset('image/icon/logo.png') }}" alt='logo'>
+            <span>Pilea</span>
+        </div>
         {% block selection %}
         {% endblock %}
         <div class="ml-auto">
@@ -59,6 +60,13 @@
     <script
         src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"
+        integrity="sha256-tW5LzEC7QjhG0CiAvxlseMTs2qJS7u3DRPauDjFJ3zo="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.fr.min.js"
+        integrity="sha256-IRibTuqtDv2uUUN/0iTrhnrvvygNczxRRAbPgCbs+LE="
         crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     {% block javascripts %}

@@ -22,18 +22,28 @@ var displayWeekRepartition = function(result, target, colors, unit) {
   var total_height = margin_top + rows * row_height + margin_bottom;
   var total_width = margin_left + cols * col_width;
 
-  var svg = d3
-    .select("#" + target)
-    .append("svg")
-    .attr("class", "chart")
-    .attr("width", total_width)
-    .attr("height", total_height);
+  var element = d3
+    .select('#' + target);
+
+  element
+  .selectAll('svg')
+  .remove();
+
+  element
+  .selectAll('div')
+  .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
 
   var chart = svg
-    .append("g")
-    .attr("class", "chart")
-    .attr("width", total_width)
-    .attr("height", total_height);
+    .append('g')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
 
   var color = d3
     .scaleQuantile()
@@ -41,64 +51,65 @@ var displayWeekRepartition = function(result, target, colors, unit) {
     .range(colors);
 
   // Define the div for the tooltip
-  var div = d3
-    .select("#" + target)
-    .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+  var div = element
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
 
   chart
-    .selectAll(".dayLabel")
+    .selectAll('.dayLabel')
     .data(result.axe.x)
     .enter()
-    .append("text")
+    .append('text')
     .text(function(d) { return d;})
-    .style("text-anchor", "left")
-    .attr("transform", function(d, i) {
-        return "rotate(-90)translate(-20," + (i * col_width + margin_left + 15) + ")"
+    .style('text-anchor', 'left')
+    .attr('transform', function(d, i) {
+        return 'rotate(-90)translate(-20,' + (i * col_width + margin_left + 15) + ')'
     })
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 10);
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
 
   chart
-    .selectAll(".timeLabel")
+    .selectAll('.timeLabel')
     .data(result.axe.y)
     .enter()
-    .append("text")
+    .append('text')
     .text(function(d, i) {
         if (i % 3 == 0) {
           return d;
         } else {
-          return "";
+          return '';
         }
     })
-    .style("text-anchor", "left")
-    .attr("transform", function(d, i) {
-      return "translate(0," + (i * row_height + margin_top + 4) + ")"
+    .style('text-anchor', 'left')
+    .attr('transform', function(d, i) {
+      return 'translate(0,' + (i * row_height + margin_top + 4) + ')'
     })
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 10);
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
 
   chart
-    .selectAll("rect")
+    .selectAll('rect')
     .data(result.data.values)
     .enter()
-    .append("rect")
-    .attr("x", function(d, i) {
+    .append('rect')
+    .attr('x', function(d, i) {
       return Math.floor(i / rows) * col_width + margin_left;
     })
-   .attr("y", function(d, i) {
+   .attr('y', function(d, i) {
       return i % rows * row_height + margin_top;
     })
-  .attr("width", col_width)
-  .attr("height", row_height)
-  .attr("fill", color)
-  .attr("data-toggle", "tooltip")
-  .attr("data-placement", "left")
-  .attr("data-html", "true")
-  .attr("title", function(d, i) {
-      return result.data.dates[i] + "</br> " + parseFloat(d).toFixed(2) + " " + unit;
+  .attr('width', col_width)
+  .attr('height', row_height)
+  .attr('fill', color)
+  .attr('data-toggle', 'tooltip')
+  .attr('data-placement', 'left')
+  .attr('data-html', 'true')
+  .attr('title', function(d, i) {
+      return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
   });
+
+  $('[data-toggle=\'tooltip\']').tooltip();
 }
 
 /**
@@ -124,18 +135,28 @@ var displayGlobalRepartition = function(result, target, colors, unit) {
   var total_height = margin_top + rows * row_height + margin_bottom;
   var total_width = margin_left + cols * col_width;
 
-  var svg = d3
-    .select("#" + target)
-    .append("svg")
-    .attr("class", "chart")
-    .attr("width", total_width)
-    .attr("height", total_height);
+  var element = d3
+    .select('#' + target);
+
+  element
+    .selectAll('svg')
+    .remove();
+
+  element
+    .selectAll('div')
+    .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
 
   var chart = svg
-    .append("g")
-    .attr("class", "chart")
-    .attr("width", total_width)
-    .attr("height", total_height);
+    .append('g')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
 
   var color = d3
     .scaleQuantile()
@@ -143,64 +164,65 @@ var displayGlobalRepartition = function(result, target, colors, unit) {
     .range(colors);
 
   // Define the div for the tooltip
-  var div = d3
-    .select("#" + target)
-    .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+  var div = element
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
 
   chart
-    .selectAll(".weekLabel")
+    .selectAll('.weekLabel')
     .data(result.axe.x)
     .enter()
-    .append("text")
+    .append('text')
     .text( function(d, i) {
       if (i % 3 == 1) {
         return d;
       } else {
-        return "";
+        return '';
       }
     })
-    .style("text-anchor", "left")
-    .attr("transform", function(d, i) {
-        return "translate(" + (i * col_width + margin_left - 10) + ",45)rotate(-45)"
+    .style('text-anchor', 'left')
+    .attr('transform', function(d, i) {
+        return 'translate(' + (i * col_width + margin_left - 10) + ',45)rotate(-45)'
     })
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 10);
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
 
   chart
-    .selectAll(".dayLabel")
+    .selectAll('.dayLabel')
     .data(result.axe.y)
     .enter()
-    .append("text")
+    .append('text')
     .text(function(d) { return d; })
-    .style("text-anchor", "left")
-    .attr("transform", function(d, i) {
-      return "translate(0," + (i * row_height + margin_top + 14) + ")"
+    .style('text-anchor', 'left')
+    .attr('transform', function(d, i) {
+      return 'translate(0,' + (i * row_height + margin_top + 14) + ')'
     })
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 10);
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
 
   chart
-    .selectAll("rect")
+    .selectAll('rect')
     .data(result.data.values)
     .enter()
-    .append("rect")
-    .attr("x", function(d, i) {
+    .append('rect')
+    .attr('x', function(d, i) {
       return Math.floor(i / rows) * col_width + margin_left;
     })
-    .attr("y", function(d, i) {
+    .attr('y', function(d, i) {
       return i % rows * row_height + margin_top;
     })
-    .attr("width", col_width)
-    .attr("height", row_height)
-    .attr("fill", color)
-    .attr("data-toggle", "tooltip")
-    .attr("data-placement", "left")
-    .attr("data-html", "true")
-    .attr("title", function(d, i) {
-        return result.data.dates[i] + "</br> " + parseFloat(d).toFixed(2) + " " + unit;
+    .attr('width', col_width)
+    .attr('height', row_height)
+    .attr('fill', color)
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'left')
+    .attr('data-html', 'true')
+    .attr('title', function(d, i) {
+        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
     });
+
+  $('[data-toggle=\'tooltip\']').tooltip();
 }
 
 /**
@@ -221,12 +243,24 @@ var displayGlobalEvolution = function(result, target, color, unit) {
   var height = 415;
   var width = 800;
 
-  var svg = d3
-    .select("#" + target)
-    .append("svg")
-    .attr("class", "chart")
-    .attr("width", margin_left + width + margin_right)
-    .attr("height", margin_top + height + margin_bottom);
+  var element = d3
+    .select('#' + target);
+
+  width = document.getElementById(target).clientWidth - margin_right - margin_left;
+
+  element
+    .selectAll('svg')
+    .remove();
+
+  element
+    .selectAll('div')
+    .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', margin_left + width + margin_right)
+    .attr('height', margin_top + height + margin_bottom);
 
   var xScale = d3
     .scaleBand()
@@ -236,44 +270,44 @@ var displayGlobalEvolution = function(result, target, color, unit) {
   yScale = d3
     .scaleLinear()
     .range([0, height])
-    .domain([0, d3.max(result.axeY)]);
+    .domain([d3.max(result.axeY), 0]);
 
   var chart = svg
-    .append("g")
-    .attr("transform","translate(" + margin_left + "," + margin_top + ")");
+    .append('g')
+    .attr('transform','translate(' + margin_left + ',' + margin_top + ')');
 
   chart
-    .selectAll(".bar")
+    .selectAll('.bar')
     .data(result.axeX)
     .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("fill", color)
-    .attr("x", function(d, i) { return xScale(d); })
-    .attr("y", function(d, i) { return yScale(result.axeY[i]); })
-    .attr("width", xScale.bandwidth())
-    .attr("height", function(d, i) { return height - yScale(result.axeY[i]); });
+    .append('rect')
+    .attr('class', 'bar')
+    .attr('fill', color)
+    .attr('x', function(d, i) { return xScale(d); })
+    .attr('y', function(d, i) { return yScale(result.axeY[i]); })
+    .attr('width', xScale.bandwidth())
+    .attr('height', function(d, i) { return height - yScale(result.axeY[i]); });
 
   chart
-    .append("g")
-    .attr("transform", "translate(0," + height + ")")
+    .append('g')
+    .attr('transform', 'translate(0,' + height + ')')
     .call(d3.axisBottom(xScale))
-    .selectAll("text")
-    .style("text-anchor", "end")
-    .attr("dx", "-.8em")
-    .attr("dy", ".15em")
-    .attr("transform", "rotate(-65)");
+    .selectAll('text')
+    .style('text-anchor', 'end')
+    .attr('dx', '-.8em')
+    .attr('dy', '.15em')
+    .attr('transform', 'rotate(-65)');
 
   chart
-    .append("g")
+    .append('g')
     .call(d3.axisLeft(yScale)
     .tickFormat(function(d) { return d; })
     .ticks(10))
-    .append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", "-5.1em")
-    .attr("text-anchor", "end")
-    .attr("stroke", "black")
+    .append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('y', 6)
+    .attr('dy', '-5.1em')
+    .attr('text-anchor', 'end')
+    .attr('stroke', 'black')
     .text(unit);
 }

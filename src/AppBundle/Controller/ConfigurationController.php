@@ -39,7 +39,7 @@ class ConfigurationController extends Controller
             }
         }
 
-        return $this->render('default/config.html.twig', array(
+        return $this->render('bases/config.html.twig', array(
             'form_linky' => $linkyForm->createView(),
             'form_meteo_france' => $meteoFranceForm->createView(),
         ));
@@ -58,7 +58,7 @@ class ConfigurationController extends Controller
             ->getRepository('AppBundle:Feed')
             ->findOneByFeedType('LINKY');
 
-        // We set defaultValue if there's alreadya linky feed.
+        // We set defaultValue if there's already a linky feed.
         $defaultValue= [];
         if ($linky) {
             $defaultValue['name'] = $linky->getName();

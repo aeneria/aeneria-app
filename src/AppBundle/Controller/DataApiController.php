@@ -34,6 +34,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end) : new \DateTime();
+        $end->add(new \DateInterval('P1D'));
 
         // Set and build axes's type & frequency according to repartitionType.
         list($axe, $axeX, $axeY, $frequency) = $this->buildRepartitionAxes($repartitionType, $start, $end);
@@ -73,6 +74,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end) : new \DateTime();
+        $end->add(new \DateInterval('P1D'));
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -111,6 +113,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end) : new \DateTime();
+        $end->add(new \DateInterval('P1D'));
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -147,7 +150,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();
+        $end = $end ? new \DateTime($end) : new \DateTime();        $end->add(new \DateInterval('P1D'));
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -222,12 +225,13 @@ class DataApiController extends Controller
                 ];
 
                 $currentDate = clone $start;
-                while($currentDate <= $end) {
+                $endYear =  (int)$end->format('Y');
+                $endWeek =  (int)$end->format('W');
+                while((int)$currentDate->format('W') <= $endWeek && (int)$currentDate->format('Y') == $endYear) {
                   $axe->x[] = (int)$currentDate->format('W');
                   $axe->year[] = (int)$currentDate->format('Y');
                   $currentDate->add(new \DateInterval('P1W'));
                 }
-                //$axe->x = array_reverse($axe->x);
                 break;
 
             case self::YEAR_VERTICAL_REPARTITION:
@@ -249,12 +253,13 @@ class DataApiController extends Controller
                 ];
 
                 $currentDate = clone $start;
-                while($currentDate <= $end) {
+                $endYear =  (int)$end->format('Y');
+                $endWeek =  (int)$end->format('W');
+                while((int)$currentDate->format('W') <= $endWeek && (int)$currentDate->format('Y') == $endYear) {
                   $axe->y[] = $currentDate->format('W');
                   $axe->year[] = (int)$currentDate->format('Y');
                   $currentDate->add(new \DateInterval('P1W'));
                 }
-                //$axe->y = array_reverse($axe->y);
                 break;
 
             default:
@@ -276,6 +281,8 @@ class DataApiController extends Controller
      */
     private function getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType)
     {
+
+        dump($end);
         // Find feedData with the good dataType.
         $feedData = $this
             ->getDoctrine()
@@ -359,15 +366,20 @@ class DataApiController extends Controller
         }
 
         // Fill data object with values from database.
+        dump($values);
+        dump($axe);
         foreach ($values as $value) {
-            $xValue = $value['axeX'];
-            $xKey = array_search($value['axeX'], $axe->x);
-            $yKey = $value['axeY'];
-            $index = $xKey * count($axe->y) + $yKey;
+            $currentDate = new \DateTime();
+            $currentDate->setISODate($value['year'], $value['axeX'], $value['axeY'] + 1);
+            $currentDate = $currentDate->format('d/m/y');
+            dump($currentDate);
+            $index = array_search($currentDate, $data->dates);
+            dump($index);
+
             // We store the value in the object.
             $data->values[$index] = $value['value'];
         }
-
+        dump($data);
         return $data;
     }
 
