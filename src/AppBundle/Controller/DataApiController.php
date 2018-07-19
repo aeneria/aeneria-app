@@ -281,8 +281,6 @@ class DataApiController extends Controller
      */
     private function getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType)
     {
-
-        dump($end);
         // Find feedData with the good dataType.
         $feedData = $this
             ->getDoctrine()
@@ -366,20 +364,15 @@ class DataApiController extends Controller
         }
 
         // Fill data object with values from database.
-        dump($values);
-        dump($axe);
         foreach ($values as $value) {
             $currentDate = new \DateTime();
             $currentDate->setISODate($value['year'], $value['axeX'], $value['axeY'] + 1);
             $currentDate = $currentDate->format('d/m/y');
-            dump($currentDate);
             $index = array_search($currentDate, $data->dates);
-            dump($index);
 
             // We store the value in the object.
             $data->values[$index] = $value['value'];
         }
-        dump($data);
         return $data;
     }
 
