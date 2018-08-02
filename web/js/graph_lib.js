@@ -124,7 +124,7 @@ var displayWeekRepartition = function(result, target, colors, unit) {
  *   colors : a tab with 2 elements for the color scale
  *   unit : a string, the unit of the displayed data
  */
-var displayGlobalRepartition = function(result, target, colors, unit) {
+var displayGlobalRepartitionH = function(result, target, colors, unit, min = null, max = null) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
   var row_height = 20;
@@ -160,7 +160,7 @@ var displayGlobalRepartition = function(result, target, colors, unit) {
 
   var color = d3
     .scaleQuantile()
-    .domain([ d3.min(result.data.values), d3.max(result.data.values) ])
+    .domain([ min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values) ])
     .range(colors);
 
   // Define the div for the tooltip
@@ -224,6 +224,122 @@ var displayGlobalRepartition = function(result, target, colors, unit) {
 
   $('[data-toggle=\'tooltip\']').tooltip();
 }
+
+/**
+ * Display a weekDay/week heatmap repartition.
+ *
+ *   result : an object containing :
+ *     - axe.x : axeX labels
+ *     - axe.y : axeY labels
+ *     - data.values : values to display
+ *     - data.dates : corresponding dates
+ *   target : id of the targetted DIV element
+ *   colors : a tab with 2 elements for the color scale
+ *   unit : a string, the unit of the displayed data
+ */
+var displayGlobalRepartitionV = function(result, target, colors, unit, min = null, max = null) {
+  var rows = result.axe.y.length; // Number of days in a week
+  var cols = result.axe.x.length; // Number of weeks we want to display
+  var row_height = 20;
+  var col_width = 20;
+  var margin_top = 50;
+  var margin_left = 25;
+  var margin_bottom = 10;
+  var total_height = margin_top + rows * row_height + margin_bottom;
+  var total_width = margin_left + cols * col_width;
+
+  var element = d3
+    .select('#' + target);
+
+  element
+    .selectAll('svg')
+    .remove();
+
+  element
+    .selectAll('div')
+    .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
+
+  var chart = svg
+    .append('g')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
+
+  var color = d3
+    .scaleQuantile()
+    .domain([ min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values) ])
+    .range(colors);
+
+  // Define the div for the tooltip
+  var div = element
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+
+  chart
+    .selectAll('.weekLabel')
+    .data(result.axe.x)
+    .enter()
+    .append('text')
+    .text( function(d, i) { return d; })
+    .style('text-anchor', 'left')
+    .attr('transform', function(d, i) {
+      return 'rotate(-90)translate(-45,' + (i * col_width + margin_left + 15) + ')'
+    })
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
+
+  chart
+    .selectAll('.dayLabel')
+    .data(result.axe.y)
+    .enter()
+    .append('text')
+    .text( function(d, i) {
+      if (i % 3 == 1) {
+        return d;
+      } else {
+        return '';
+      }
+    })
+    .style('text-anchor', 'left')
+    .attr('transform', function(d, i) {
+      return 'translate(0,' + (i * row_height + margin_top + 14) + ')'
+    })
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
+
+  chart
+    .selectAll('rect')
+    .data(result.data.values)
+    .enter()
+    .append('rect')
+    .attr('x', function(d, i) {
+      return i % cols * col_width + margin_left;
+//      return Math.floor(i / rows) * col_width + margin_left;
+    })
+    .attr('y', function(d, i) {
+//      return i % rows * row_height + margin_top;
+      return Math.floor(i / cols) * row_height + margin_top;
+    })
+    .attr('width', col_width)
+    .attr('height', row_height)
+    .attr('fill', color)
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'left')
+    .attr('data-html', 'true')
+    .attr('title', function(d, i) {
+        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
+    });
+
+  $('[data-toggle=\'tooltip\']').tooltip();
+}
+
 
 /**
  * Display a histogram.

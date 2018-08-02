@@ -32,8 +32,8 @@
             <hr>
             <div class="content">
               <div class="meteo-top">
-                <b>80 {{ 'jours' | trans }}</b><br>
-                {{ 'sans nuage' | trans }}
+                <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b><br>
+                {{ 'sans nuages' | trans }}
               </div>
               <div id="neb-repartition" class="col-10">
                 {# Will be fill by plotly #}
@@ -49,7 +49,7 @@
             <hr>
             <div class="content">
                 <div class="meteo-top">
-                  <b>56 {{ 'jours' | trans }}</b><br>
+                  <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b><br>
                   {{ 'sans pluie' | trans }}
                 </div>
                 <div id="rain-repartition" class="col-10">
@@ -67,6 +67,7 @@
 
 {% endblock %}
 
-{% block javascripts %}
+{% block js %}
+  <script src={{ asset("js/graph_lib.js") }}></script>
   <script src={{ asset("js/meteo_graph.js") }}></script>
 {% endblock %}

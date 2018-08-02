@@ -27,7 +27,7 @@ var refreshGraph = function (colors) {
     url: appRoute + 'data/conso_elec/repartition/year_h/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartition(data, 'conso-global-repartition', colors, 'kWh');
+      displayGlobalRepartitionH(data, 'conso-global-repartition', colors, 'kWh');
     }
   });
 

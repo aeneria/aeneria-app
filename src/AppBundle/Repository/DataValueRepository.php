@@ -29,10 +29,50 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       $queryBuilder->select('AVG(d.value) AS value');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.id');
+      $queryBuilder->groupBy('d.feedData');
       return $queryBuilder
           ->getQuery()
           ->getScalarResult();
+  }
+
+  /**
+   * Get an minimum value
+   *
+   * @param \DateTime $startDate
+   * @param \DateTime $endDate
+   * @param int $frequency
+   */
+  public function getMinValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+  {
+      // Create the query builder
+      $queryBuilder = $this->createQueryBuilder('d');
+
+      $queryBuilder->select('MIN(d.value) AS value');
+      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+      $queryBuilder->groupBy('d.feedData');
+      return $queryBuilder
+      ->getQuery()
+      ->getScalarResult();
+  }
+
+  /**
+   * Get an maximum value
+   *
+   * @param \DateTime $startDate
+   * @param \DateTime $endDate
+   * @param int $frequency
+   */
+  public function getMaxValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+  {
+      // Create the query builder
+      $queryBuilder = $this->createQueryBuilder('d');
+
+      $queryBuilder->select('MAX(d.value) AS value');
+      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+      $queryBuilder->groupBy('d.feedData');
+      return $queryBuilder
+      ->getQuery()
+      ->getScalarResult();
   }
 
   /**
@@ -49,11 +89,34 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
       $queryBuilder->select('SUM(d.value) AS value');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.id');
+      $queryBuilder->groupBy('d.feedData');
 
       return $queryBuilder
           ->getQuery()
           ->getScalarResult();
+  }
+
+  /**
+   * Get number of item inferior than value
+   *
+   * @param \DateTime $startDate
+   * @param \DateTime $endDate
+   * @param string $frequency
+   */
+  public function getNumberInfValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, $value)
+  {
+      // Create the query builder
+      $queryBuilder = $this->createQueryBuilder('d');
+
+      $queryBuilder->select('COUNT(d.date) AS value');
+      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+      $queryBuilder->andWhere('d.value <= :value');
+      $queryBuilder->setParameter('value', $value);
+      $queryBuilder->groupBy('d.feedData');
+
+      return $queryBuilder
+      ->getQuery()
+      ->getScalarResult();
   }
 
   /**
@@ -113,7 +176,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
           ->andWhere('d.feedData = :feedData')
           ->setParameter('feedData', $feedData->getId())
           // Add condition on frequency
-        ->andWhere('d.frequency = :frequency')
-        ->setParameter('frequency', $frequency);
+          ->andWhere('d.frequency = :frequency')
+          ->setParameter('frequency', $frequency);
   }
 }

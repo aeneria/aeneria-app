@@ -5,40 +5,7 @@
 {% block body %}
   <div class="container-fluid">
     <div class='row'>
-      <div id='evolution' class='col-9'>
-        <div class='card'>
-          <div class="card-header">
-            <h3>{{ 'Evolution de la consommation sur la période' | trans }}</h3>
-          </div>
-          <div class="card-content">
-            <div class="content">Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
-          </div>
-        </div>
-      </div>
-      <div id='repartition' class='col-3'>
-        <div class='card'>
-          <div class="card-header">
-            {{ 'Répartition sur la semaine' | trans }}
-          </div>
-          <div class="card-content">
-            <div id="week-repartition"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='col'>
-        <div class='card'>
-          <div class="card-header">
-            <h3>{{ 'Consommation sur la période' | trans }}</h3>
-          </div>
-          <div class="card-content">
-            <div class="content">Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
-          </div>
-        </div>
-      </div>
+      <h1>/!\ En construction...</h1>
     </div>
   </div>
 {% endblock %}
@@ -47,6 +14,6 @@
 
 {% endblock %}
 
-{% block javascripts %}
+{% block js %}
   <script src={{ asset("js/temperature_graph.js") }}></script>
 {% endblock %}
