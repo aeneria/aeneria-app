@@ -255,7 +255,7 @@ class MeteoFrance {
                 $nbHumidity++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['RAIN']])){
-                if ($fastenData['RAIN'] > 0) {
+                if ($hourData[self::SYNOP_DATA_NAME['RAIN']] >= 0) {
                     $fastenData['RAIN'] += $hourData[self::SYNOP_DATA_NAME['RAIN']];
                 }
                 $nbRain++;
