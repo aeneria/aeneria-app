@@ -11,7 +11,7 @@
  *   unit : a string, the unit of the displayed data
  *
  */
-var displayWeekRepartition = function(result, target, colors, unit) {
+var displayWeekRepartition = function(result, target, colors, unit, min = null, max = null) {
   var rows = 24; // Number of hours in a day
   var cols = 7; // Number of days in a week
   var row_height = 20;
@@ -47,7 +47,7 @@ var displayWeekRepartition = function(result, target, colors, unit) {
 
   var color = d3
     .scaleQuantile()
-    .domain([ d3.min(result.data.values), d3.max(result.data.values) ])
+    .domain([min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values)])
     .range(colors);
 
   // Define the div for the tooltip
@@ -96,18 +96,23 @@ var displayWeekRepartition = function(result, target, colors, unit) {
     .attr('x', function(d, i) {
       return Math.floor(i / rows) * col_width + margin_left;
     })
-   .attr('y', function(d, i) {
+    .attr('y', function(d, i) {
       return i % rows * row_height + margin_top;
     })
-  .attr('width', col_width)
-  .attr('height', row_height)
-  .attr('fill', color)
-  .attr('data-toggle', 'tooltip')
-  .attr('data-placement', 'left')
-  .attr('data-html', 'true')
-  .attr('title', function(d, i) {
+    .attr('width', col_width)
+    .attr('height', row_height)
+    .attr('display', function(d, i) {
+      if (d === "") {
+        return 'none';
+      }
+    })
+    .attr('fill', color)
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'left')
+    .attr('data-html', 'true')
+    .attr('title', function(d, i) {
       return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
-  });
+    });
 
   $('[data-toggle=\'tooltip\']').tooltip();
 }
@@ -160,7 +165,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
 
   var color = d3
     .scaleQuantile()
-    .domain([ min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values) ])
+    .domain([min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values)])
     .range(colors);
 
   // Define the div for the tooltip
@@ -215,6 +220,11 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
     .attr('width', col_width)
     .attr('height', row_height)
     .attr('fill', color)
+    .attr('display', function(d, i) {
+      if (d === "") {
+        return 'none';
+      }
+    })
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
@@ -321,14 +331,17 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
     .append('rect')
     .attr('x', function(d, i) {
       return i % cols * col_width + margin_left;
-//      return Math.floor(i / rows) * col_width + margin_left;
     })
     .attr('y', function(d, i) {
-//      return i % rows * row_height + margin_top;
       return Math.floor(i / cols) * row_height + margin_top;
     })
     .attr('width', col_width)
     .attr('height', row_height)
+    .attr('display', function(d, i) {
+      if (d === "") {
+        return 'none';
+      }
+    })
     .attr('fill', color)
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'left')

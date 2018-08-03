@@ -12,6 +12,7 @@ use AppBundle\Entity\DataValue;
  *
  * @see https://github.com/KiboOst/php-LinkyAPI
  * @todo simply curl request by guzzle ones
+ * @todo week data
  */
 class Linky {
 

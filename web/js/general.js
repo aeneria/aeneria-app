@@ -18,7 +18,7 @@ var refreshGraph = function (colors) {
     url: appRoute + 'data/conso_elec/repartition/week/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayWeekRepartition(data, 'conso-week-repartition', colors, 'kWh');
+      displayWeekRepartition(data, 'conso-week-repartition', colors, 'kWh', 0);
     }
   });
 
@@ -27,7 +27,7 @@ var refreshGraph = function (colors) {
     url: appRoute + 'data/conso_elec/repartition/year_h/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionH(data, 'conso-global-repartition', colors, 'kWh');
+      displayGlobalRepartitionH(data, 'conso-global-repartition', colors, 'kWh', 0);
     }
   });
 

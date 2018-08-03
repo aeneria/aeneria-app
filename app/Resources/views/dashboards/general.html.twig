@@ -5,7 +5,7 @@
 {% block body %}
   <div class="container-fluid">
     <div class="row">
-      <div class="col">
+      <div class="col-9">
         <div class="card">
           <div class="card-body">
             <div class="row">
@@ -18,6 +18,15 @@
             </div>
             <hr>
                 <div id="conso-global-evolution"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ "Répartition sur la semaine" | trans }}</h2>
+            <hr>
+            <div id="conso-week-repartition"></div>
           </div>
         </div>
       </div>
