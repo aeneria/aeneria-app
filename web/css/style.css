@@ -1,11 +1,10 @@
 body {
-  background: #f6ffcd;
+  background: #f4f4f4;
 }
 
 .navbar {
   background: #4f323b;
-  box-shadow: 0 4px 3px rgba(10, 10, 10, .1), 0 0 0 2px
-    rgba(10, 10, 10, .1);
+  box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
   height: 60px;
 }
 
@@ -44,8 +43,11 @@ body {
 }
 
 .card {
-  border-radius: 3px;
+  border-radius: 5px;
   margin-top: 30px;
+  background:  "eae5d0";
+  border: none;
+  box-shadow:  0 2px 4px rgba(0,0,0,0.1);
 }
 
 .card-content {
@@ -72,11 +74,6 @@ hr {
 
 .chart rect {
   stroke: white;
-  text
-  {
-  fill
-  :
-  #000;
 }
 
 }

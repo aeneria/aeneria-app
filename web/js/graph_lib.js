@@ -1,3 +1,5 @@
+var AXE_COLOR = '#6d6d6d';
+
 /**
  * Display a hour/weekDay heatmap repartition graphic.
  *
@@ -63,6 +65,7 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
     .append('text')
     .text(function(d) { return d;})
     .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
         return 'rotate(-90)translate(-20,' + (i * col_width + margin_left + 15) + ')'
     })
@@ -82,6 +85,7 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
         }
     })
     .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
       return 'translate(0,' + (i * row_height + margin_top + 4) + ')'
     })
@@ -187,6 +191,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
       }
     })
     .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
         return 'translate(' + (i * col_width + margin_left - 10) + ',45)rotate(-45)'
     })
@@ -200,6 +205,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
     .append('text')
     .text(function(d) { return d; })
     .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
       return 'translate(0,' + (i * row_height + margin_top + 14) + ')'
     })
@@ -299,6 +305,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
     .append('text')
     .text( function(d, i) { return d; })
     .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
       return 'rotate(-90)translate(-45,' + (i * col_width + margin_left + 15) + ')'
     })
@@ -318,6 +325,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
       }
     })
     .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
       return 'translate(0,' + (i * row_height + margin_top + 14) + ')'
     })
@@ -358,15 +366,15 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
  * Display a histogram.
  *
  *   result : an object containing :
- *     - axe.x : values to display
- *     - axe.y : axeY labels
+ *     - axeX : values to display
+ *     - axeY : axeY labels
  *   target : id of the targetted DIV element
  *   color :  hexadecimal color for bar
  *   unit : a string, the unit of the displayed data
  */
 var displayGlobalEvolution = function(result, target, color, unit) {
   var margin_top = 20;
-  var margin_left = 60;
+  var margin_left = 20;
   var margin_bottom = 80;
   var margin_right = 20;
   var height = 415;
@@ -415,28 +423,34 @@ var displayGlobalEvolution = function(result, target, color, unit) {
     .attr('x', function(d, i) { return xScale(d); })
     .attr('y', function(d, i) { return yScale(result.axeY[i]); })
     .attr('width', xScale.bandwidth())
-    .attr('height', function(d, i) { return height - yScale(result.axeY[i]); });
+    .attr('height', function(d, i) { return height - yScale(result.axeY[i]); })
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'top')
+    .attr('data-html', 'true')
+    .attr('title', function(d, i) {
+        return result.axeY[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
+    });
 
-  chart
+  $('[data-toggle=\'tooltip\']').tooltip();
+
+  var xAxe = chart
     .append('g')
     .attr('transform', 'translate(0,' + height + ')')
-    .call(d3.axisBottom(xScale))
+    .call(d3.axisBottom(xScale));
+
+  xAxe
     .selectAll('text')
     .style('text-anchor', 'end')
     .attr('dx', '-.8em')
     .attr('dy', '.15em')
+    .style('fill', AXE_COLOR)
     .attr('transform', 'rotate(-65)');
 
-  chart
-    .append('g')
-    .call(d3.axisLeft(yScale)
-    .tickFormat(function(d) { return d; })
-    .ticks(10))
-    .append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('y', 6)
-    .attr('dy', '-5.1em')
-    .attr('text-anchor', 'end')
-    .attr('stroke', 'black')
-    .text(unit);
+  xAxe
+    .select('.domain')
+    .attr('stroke', AXE_COLOR);
+
+  xAxe
+  .selectAll('line')
+  .attr('stroke', AXE_COLOR);
 }
