@@ -3,6 +3,9 @@
 {% block title %}{{ 'Accueil' | trans }}{% endblock %}
 
 {% block body %}
+
+  {% import "dashboards/month_summary.html.twig" as month %}
+
   <div class="container-fluid">
     <div class="row">
       <div id="evolution" class="col">
@@ -10,7 +13,7 @@
           <div class="card-body">
             <h2 class="card-title">{{ "Mois en cours" | trans }}</h2>
             <hr>
-            <div id="conso-week-repartition"></div>
+            {{ month.summary('current') }}
           </div>
         </div>
       </div>
@@ -21,7 +24,7 @@
           <div class="card-body">
             <h2 class="card-title">{{ "Mois précédent" | trans }}</h2>
             <hr>
-            <div id="conso-week-repartition"></div>
+            {{ month.summary('previous') }}
           </div>
         </div>
       </div>
@@ -35,5 +38,5 @@
 
 {% block js %}
   <script src={{ asset("js/graph_lib.js") }}></script>
-  <script src={{ asset("js/index_graph.js") }}></script>
+  <script src={{ asset("js/index.js") }}></script>
 {% endblock %}

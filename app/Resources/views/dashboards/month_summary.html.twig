@@ -1,0 +1,38 @@
+{% macro summary(month) %}
+
+    <div class="row month-summary" data-month="{{ month }}" >
+      <div class="col-2">
+        <h3>{{ 'Conso. totale' | trans }}</h3>
+        <div id="conso-total-{{ month }}" class="dash-index-total"></div>
+      </div>
+      <div class="col-2">
+        <h3>{{ 'Répartition de la conso.' | trans }}</h3>
+        <div id="conso-repartition-{{ month }}"></div>
+      </div>
+      <div class="col-2">
+        <h3>{{ 'Conso. par jour' | trans }}</h3>
+        <ul class="dash-index-avg vert-sep">
+            <li> {{ 'Max : ' | trans }}<span id="conso-max-{{ month }}">--</span></li>
+            <li> {{ 'Moy : ' | trans }}<span id="conso-avg-{{ month }}">--</span></li>
+            <li> {{ 'Min : ' | trans }}<span id="conso-min-{{ month }}">--</span></li>
+        </ul>
+      </div>
+
+      <div class="col-2">
+        <h3>{{ 'Nombre de DJU' | trans }}</h3>
+        <div id="dju-total-{{ month }}" class="dash-index-total"></div>
+      </div>
+      <div class="col-2">
+        <h3>{{ 'Répartition de la temp.' | trans }}</h3>
+        <div id="temp-repartition-{{ month }}"></div>
+      </div>
+      <div class="col-2">
+        <h3>{{ 'Temp. par jour' | trans }}</h3>
+        <ul class="dash-index-avg">
+            <li> {{ 'Max : ' | trans }}<span id="temp-max-{{ month }}">--</span></li>
+            <li> {{ 'Moy : ' | trans }}<span id="temp-avg-{{ month }}">--</span></li>
+            <li> {{ 'Min : ' | trans }}<span id="temp-min-{{ month }}">--</span></li>
+        </ul>
+      </div>
+    </div>
+{% endmacro %}

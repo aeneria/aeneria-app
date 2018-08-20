@@ -5,7 +5,9 @@
  */
 
 // Refresh all graph on the page base on start and end dates.
-var refreshGraph = function (colors) {
+var refreshGraph = function () {
+
+  var colors = d3.schemeGnBu[9];
 
   var startArray = localStorage.startDate.split('/');
   var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
@@ -43,10 +45,10 @@ var refreshGraph = function (colors) {
 
 $(document).ready(function () {
 
-  refreshGraph(d3.schemeGnBu[9]);
+  refreshGraph();
 
   document.addEventListener('selection', function() {
-    refreshGraph(d3.schemeGnBu[9]);
+    refreshGraph();
   });
 });
 

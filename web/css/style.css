@@ -1,15 +1,35 @@
-body {
+/* GENERAL //////////////////////////////////////////////////////////////////*/
+
+#body {
+  height: 100%;
+  padding-left: 50px;
   background: #f4f4f4;
 }
 
+h2 {
+  font-size: 1.50rem;
+}
+
+h3 {
+  font-size: 1rem;
+  text-align: center;
+}
+
+hr {
+  margin-top: 0.5rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* BRAND NAVBAR */
 .navbar {
   background: #4f323b;
   box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
   height: 60px;
-}
-
-.navbar-item {
-  color: #2e3436;
 }
 
 .navbar-brand > span{
@@ -19,10 +39,16 @@ body {
   font-size: 1.5em;
 }
 
-#body {
-  height: 100%;
-  padding-left: 50px;
+nav input, nav button {
+  border-radius: 20px !important;
+  border: none !important;
 }
+
+nav button {
+  background-color: #084081;
+}
+
+/* SIDEBAR */
 
 #sidebar {
   background: #4e4e4e;
@@ -42,6 +68,8 @@ body {
   height: auto;
 }
 
+/* CARD */
+
 .card {
   border-radius: 5px;
   margin-top: 30px;
@@ -54,17 +82,7 @@ body {
   padding: 15px;
 }
 
-h2 {
-  font-size: 1.50rem;
-}
-
-hr {
-  margin-top: 0.5rem;
-}
-
-.meteo-top {
-  height: 60px;
-}
+/* CHART ////////////////////////////////////////////////////////////////////*/
 
 .chart {
   margin-left: auto;
@@ -82,11 +100,8 @@ hr {
   max-width: 100%;
 }
 
-nav input, nav button {
-  border-radius: 20px !important;
-  border: none !important;
-}
+/* METEO DASH ///////////////////////////////////////////////////////////////*/
 
-nav button {
-  background-color: #084081;
+.meteo-top {
+  height: 60px;
 }
