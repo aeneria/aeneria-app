@@ -18,7 +18,7 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
   var cols = 7; // Number of days in a week
   var row_height = 20;
   var col_width = 20;
-  var margin_top = 25;
+  var margin_top = 50;
   var margin_left = 25;
   var margin_bottom = 10;
   var total_height = margin_top + rows * row_height + margin_bottom;
@@ -67,7 +67,7 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-        return 'rotate(-90)translate(-20,' + (i * col_width + margin_left + 15) + ')'
+        return 'rotate(-90)translate(-45,' + (i * col_width + margin_left + 15) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -377,7 +377,7 @@ var displayGlobalEvolution = function(result, target, color, unit) {
   var margin_left = 20;
   var margin_bottom = 80;
   var margin_right = 20;
-  var height = 415;
+  var height = 460;
   var width = 800;
 
   var element = d3
@@ -428,7 +428,7 @@ var displayGlobalEvolution = function(result, target, color, unit) {
     .attr('data-placement', 'top')
     .attr('data-html', 'true')
     .attr('title', function(d, i) {
-        return result.axeY[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
+        return d + '</br> ' + parseFloat(result.axeY[i]).toFixed(2) + ' ' + unit;
     });
 
   $('[data-toggle=\'tooltip\']').tooltip();
@@ -444,6 +444,7 @@ var displayGlobalEvolution = function(result, target, color, unit) {
     .attr('dx', '-.8em')
     .attr('dy', '.15em')
     .style('fill', AXE_COLOR)
+    .style('font-size', '1.3em')
     .attr('transform', 'rotate(-65)');
 
   xAxe

@@ -42,7 +42,7 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('conso-total-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh';
+      document.getElementById('conso-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(1) + ' kWh</b>';
     }
   });
 
@@ -51,7 +51,8 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/min/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('conso-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh';
+      var date = new Date(data[0].date);
+      document.getElementById('conso-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh (' + date.toLocaleDateString() + ')';
     }
   });
 
@@ -60,7 +61,7 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/avg/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('conso-avg-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh';
+      document.getElementById('conso-avg-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh/jour';
     }
   });
 
@@ -69,7 +70,7 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/max/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('conso-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh';
+      document.getElementById('conso-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh (' + data[0].date + ')';
     }
   });
 
@@ -89,7 +90,7 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('dju-total-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(0) + ' DJU';
+      document.getElementById('dju-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(0) + ' DJU</b>';
     }
   });
 
@@ -98,7 +99,7 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/temperature/min/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('temp-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
+      document.getElementById('temp-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + data[0].date + ')';
     }
   });
 
@@ -116,7 +117,7 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/temperature/max/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('temp-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
+      document.getElementById('temp-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + data[0].date + ')';
     }
   });
 }
@@ -127,12 +128,6 @@ $(document).ready(function () {
   for (var j in monthSummaries) {
     refreshGraph(monthSummaries[j]);
   }
-
-  document.addEventListener('selection', function() {
-    for (var j in monthSummaries) {
-      refreshGraph(monthSummaries[j]);
-    }
-  });
 });
 
 

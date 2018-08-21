@@ -4,9 +4,9 @@
 
 {% block body %}
   <div class="container-fluid">
-    <div class="row">
+    <div class="row dash-gen-row-1">
       <div class="col-9">
-        <div class="card">
+        <div class="card d">
           <div class="card-body">
             <div class="row">
               <div class="col">
@@ -16,8 +16,7 @@
                 {% include "misc/frequency.html.twig" %}
               </div>
             </div>
-            <hr>
-                <div id="conso-global-evolution"></div>
+            <div id="conso-global-evolution"></div>
           </div>
         </div>
       </div>
@@ -25,18 +24,16 @@
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ "Répartition sur la semaine" | trans }}</h2>
-            <hr>
             <div id="conso-week-repartition"></div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row dash-gen-row-2">
       <div class="col">
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ "Consommation sur la période" | trans }}</h2>
-            <hr>
             <div id="conso-global-repartition"></div>
           </div>
         </div>

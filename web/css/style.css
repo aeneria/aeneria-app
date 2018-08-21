@@ -1,5 +1,30 @@
 /* GENERAL //////////////////////////////////////////////////////////////////*/
 
+@font-face {
+  font-family: Confortaa;
+  src: url('../font/Comfortaa-Regular.ttf');
+}
+
+@font-face {
+  font-family: CodeNew;
+  src: url('../font/code-new-roman.otf');
+}code-new-roman.otf
+
+@font-face {
+  font-family: Indulta;
+  src: url('../font/Indulta-SemiSerif-boldFFP.otf');
+}
+
+@font-face {
+  font-family: Kingsmen;
+  src: url('../font/Kingsmen_D.otf');
+}
+
+body {
+  font-family: CodeNew;
+  background: #f4f4f4;
+}
+
 #body {
   height: 100%;
   padding-left: 50px;
@@ -7,6 +32,7 @@
 }
 
 h2 {
+  font-family: Confortaa;
   font-size: 1.50rem;
 }
 
@@ -33,15 +59,35 @@ ul {
 }
 
 .navbar-brand > span{
+  font-family: Kingsmen;
   color: #ffffff;
   margin-left: 7px;
   vertical-align: middle;
-  font-size: 1.5em;
+  font-size: 1.7em;
 }
 
 nav input, nav button {
-  border-radius: 20px !important;
   border: none !important;
+}
+
+.pilea-start-date {
+  border-radius: 20px 0 0 20px !important;
+  margin-right: 0  !important;
+}
+
+.pilea-end-date {
+  border-left: #6d6d6d solid 1px !important;
+  border-radius: 0   0 !important;
+  margin-left: 0  !important;
+  margin-right: 0  !important;
+}
+
+.pilea-refresh {
+  border-radius: 0 20px 20px 0 !important;
+  margin-left: 0  !important;
+  height: 32px !important;
+  width: 32px !important;
+  vertical-align: center !important;
 }
 
 nav button {
@@ -72,7 +118,8 @@ nav button {
 
 .card {
   border-radius: 5px;
-  margin-top: 30px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   background:  "eae5d0";
   border: none;
   box-shadow:  0 2px 4px rgba(0,0,0,0.1);
@@ -94,14 +141,55 @@ nav button {
   stroke: white;
 }
 
-}
 .tooltip-inner {
+  font-family: CodeNew;
   min-width: 100px;
   max-width: 100%;
 }
 
+text {
+  font-family: CodeNew;
+  font-size: 0.8em;
+}
+
+/* INDEX DASH ///////////////////////////////////////////////////////////////*/
+
+.month-summary>div>div>div {
+  margin: 10px;
+}
+
+.vert-sep {
+  border-right: #6d6d6d solid 1px;
+}
+
+.dash-index-total {
+  font-size: 2.2em;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.dash-index-avg {
+  margin-top: 50px;
+}
+
+/* GENERAL DASH /////////////////////////////////////////////////////////////*/
+
+.dash-gen-row-1 .card {
+  height: 650px;
+}
+
+.dash-gen-row-2 .card {
+  height: 280px;
+}
+
 /* METEO DASH ///////////////////////////////////////////////////////////////*/
 
-.meteo-top {
+.meteo-top>p,u {
   height: 60px;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+#neb-day, #rain-day {
+  font-size: 2.3em;
 }

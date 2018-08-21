@@ -9,7 +9,6 @@
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Température' | trans }}</h2>
-            <hr>
             <div class="content">
               <div class="meteo-top">
                 <ul>
@@ -18,7 +17,7 @@
                   <li> {{ 'Min : ' | trans }}<span id="temp-min">--</span></li>
                 </ul>
               </div>
-              <div id="temp-repartition" class="col-10">
+              <div id="temp-repartition" class="">
                 {# Will be fill by plotly #}
               </div>
             </div>
@@ -29,13 +28,15 @@
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Nébulosité' | trans }}</h2>
-            <hr>
             <div class="content">
               <div class="meteo-top">
-                <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b><br>
-                {{ 'sans nuages' | trans }}
+                <p>
+                    <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b>
+                    <br>
+                    {{ 'sans nuages' | trans }}
+               </p>
               </div>
-              <div id="neb-repartition" class="col-10">
+              <div id="neb-repartition" class="">
                 {# Will be fill by plotly #}
               </div>
             </div>
@@ -46,13 +47,15 @@
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Précipitations' | trans }}</h2>
-            <hr>
             <div class="content">
                 <div class="meteo-top">
-                  <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b><br>
-                  {{ 'sans pluie' | trans }}
+                  <p>
+                      <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b>
+                      <br>
+                      {{ 'sans pluie' | trans }}
+                  </p>
                 </div>
-                <div id="rain-repartition" class="col-10">
+                <div id="rain-repartition" class="">
                   {# Will be fill by plotly #}
                 </div>
             </div>

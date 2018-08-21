@@ -28,7 +28,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/temperature/min/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('temp-min').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
+      var date = new Date(data[0].date);
+      document.getElementById('temp-min').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + date.toLocaleDateString() + ')';
     }
   });
 
@@ -46,7 +47,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/temperature/max/day/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('temp-max').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
+      var date = new Date(data[0].date);
+      document.getElementById('temp-max').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + date.toLocaleDateString() + ')';
     }
   });
 
