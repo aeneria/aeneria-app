@@ -141,7 +141,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
   var cols = result.axe.x.length; // Number of weeks we want to display
   var row_height = 20;
   var col_width = 20;
-  var margin_top = 50;
+  var margin_top = 30;
   var margin_left = 25;
   var margin_bottom = 10;
   var total_height = margin_top + rows * row_height + margin_bottom;
@@ -199,7 +199,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-        return 'translate(' + (i * col_width + margin_left - 10) + ',45)rotate(-45)'
+        return 'translate(' + (i * col_width + margin_left - 10) + ',25)rotate(-45)'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
