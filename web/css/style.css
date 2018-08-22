@@ -154,18 +154,20 @@ text {
 
 /* INDEX DASH ///////////////////////////////////////////////////////////////*/
 
-.month-summary>div>div>div {
-  margin: 10px;
-}
-
 .vert-sep {
   border-right: #6d6d6d solid 1px;
 }
 
+.index-logo {
+  margin-top: 30px;
+  max-height: 100px;
+  vertical-align: middle;
+}
+
 .dash-index-total {
-  font-size: 2.2em;
+  font-size: 2.1em;
   text-align: center;
-  margin-top: 50px;
+  margin-top: 55px;
 }
 
 .dash-index-avg {
@@ -175,11 +177,24 @@ text {
 /* GENERAL DASH /////////////////////////////////////////////////////////////*/
 
 .dash-gen-row-1 .card {
-  height: 650px;
+  height: 280px;
 }
 
 .dash-gen-row-2 .card {
-  height: 280px;
+  height: 650px;
+}
+
+.dash-gen-card-1 {
+  display: flex;
+}
+
+#conso-global-repartition-legend {
+  margin-top: 30px;
+  margin-left: 60px;
+}
+
+#conso-global-repartition {
+  margin-left: 30px;
 }
 
 /* METEO DASH ///////////////////////////////////////////////////////////////*/

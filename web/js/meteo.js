@@ -19,7 +19,7 @@ var refreshGraph = function () {
     success: function(result) {
       var data = JSON.parse(result);
       var color = d3.schemeRdYlBu[9].slice();
-      displayGlobalRepartitionV(data, 'temp-repartition', color.reverse(), '°C', -5, 25);
+      displayGlobalRepartitionV(data, 'temp-repartition', color.reverse(), '°C', 1, -5, 25);
     }
   });
 
@@ -58,7 +58,7 @@ var refreshGraph = function () {
     success: function(result) {
       var data = JSON.parse(result);
       var color = ['#5de2ff', '#62ddf7', '#67d7ef', '#6cd1e6', '#71cbde', '#76c6d6', '#7bbfce', '#80b9c6', '#84b4be', '#89afb6', '#89afb6'];
-      displayGlobalRepartitionV(data, 'neb-repartition', color, '%', 0, 100);
+      displayGlobalRepartitionV(data, 'neb-repartition', color, '%', 1, 0, 100);
     }
   });
 
@@ -76,7 +76,7 @@ var refreshGraph = function () {
     url: appRoute + 'data/rain/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionV(data, 'rain-repartition', d3.schemeGnBu[9], 'mm');
+      displayGlobalRepartitionV(data, 'rain-repartition', d3.schemeGnBu[9], 'mm', 1, 0);
     }
   });
 

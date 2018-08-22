@@ -13,7 +13,7 @@ var AXE_COLOR = '#6d6d6d';
  *   unit : a string, the unit of the displayed data
  *
  */
-var displayWeekRepartition = function(result, target, colors, unit, min = null, max = null) {
+var displayWeekRepartition = function(result, target, colors, unit, precision, min, max) {
   var rows = 24; // Number of hours in a day
   var cols = 7; // Number of days in a week
   var row_height = 20;
@@ -49,7 +49,10 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
 
   var color = d3
     .scaleQuantile()
-    .domain([min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values)])
+    .domain([
+        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
+        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+      ])
     .range(colors);
 
   // Define the div for the tooltip
@@ -115,7 +118,7 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
     .attr('title', function(d, i) {
-      return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
+      return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
     });
 
   $('[data-toggle=\'tooltip\']').tooltip();
@@ -133,7 +136,7 @@ var displayWeekRepartition = function(result, target, colors, unit, min = null, 
  *   colors : a tab with 2 elements for the color scale
  *   unit : a string, the unit of the displayed data
  */
-var displayGlobalRepartitionH = function(result, target, colors, unit, min = null, max = null) {
+var displayGlobalRepartitionH = function(result, target, colors, unit, precision, min, max) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
   var row_height = 20;
@@ -169,7 +172,10 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
 
   var color = d3
     .scaleQuantile()
-    .domain([min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values)])
+    .domain([
+        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
+        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+      ])
     .range(colors);
 
   // Define the div for the tooltip
@@ -235,7 +241,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
     .attr('title', function(d, i) {
-        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
+        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
     });
 
   $('[data-toggle=\'tooltip\']').tooltip();
@@ -253,7 +259,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, min = nul
  *   colors : a tab with 2 elements for the color scale
  *   unit : a string, the unit of the displayed data
  */
-var displayGlobalRepartitionV = function(result, target, colors, unit, min = null, max = null) {
+var displayGlobalRepartitionV = function(result, target, colors, unit, precision, min, max) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
   var row_height = 20;
@@ -289,7 +295,10 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
 
   var color = d3
     .scaleQuantile()
-    .domain([ min ? min : d3.min(result.data.values), max ? max : d3.max(result.data.values) ])
+    .domain([
+        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
+        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+      ])
     .range(colors);
 
   // Define the div for the tooltip
@@ -355,7 +364,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
     .attr('title', function(d, i) {
-        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(2) + ' ' + unit;
+        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
     });
 
   $('[data-toggle=\'tooltip\']').tooltip();
@@ -372,7 +381,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, min = nul
  *   color :  hexadecimal color for bar
  *   unit : a string, the unit of the displayed data
  */
-var displayGlobalEvolution = function(result, target, color, unit) {
+var displayGlobalEvolution = function(result, target, color, unit, precision) {
   var margin_top = 20;
   var margin_left = 20;
   var margin_bottom = 80;
@@ -428,7 +437,7 @@ var displayGlobalEvolution = function(result, target, color, unit) {
     .attr('data-placement', 'top')
     .attr('data-html', 'true')
     .attr('title', function(d, i) {
-        return d + '</br> ' + parseFloat(result.axeY[i]).toFixed(2) + ' ' + unit;
+        return d + '</br> ' + parseFloat(result.axeY[i]).toFixed(precision) + ' ' + unit;
     });
 
   $('[data-toggle=\'tooltip\']').tooltip();
@@ -454,4 +463,166 @@ var displayGlobalEvolution = function(result, target, color, unit) {
   xAxe
   .selectAll('line')
   .attr('stroke', AXE_COLOR);
+}
+
+/**
+ * Display a legend heatmap repartition.
+ *
+ *   result : an object containing :
+ *     - axe.x : axeX labels
+ *     - axe.y : axeY labels
+ *     - data.values : values to display
+ *     - data.dates : corresponding dates
+ *   target : id of the targetted DIV element
+ *   colors : a tab with 2 elements for the color scale
+ *   unit : a string, the unit of the displayed data
+ */
+var displayLegend = function(result, target, colors, unit, precision, min, max) {
+  var row_height = 20;
+  var col_width = 20;
+  var total_height = colors.length * row_height;
+  var total_width = 150;
+  var eps_y = 15;
+  var eps_value = 25;
+  var margin_left = 25;
+
+  var element = d3
+  .select('#' + target);
+
+  element
+  .selectAll('svg')
+  .remove();
+
+  element
+    .selectAll('div')
+    .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
+
+  var chart = svg
+    .append('g')
+    .attr('class', 'chart')
+    .attr('width', total_width)
+    .attr('height', total_height);
+
+  var color = d3
+    .scaleQuantile()
+    .domain([
+        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
+        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+      ])
+    .range(colors);
+
+  // Define the div for the tooltip
+  var div = element
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+
+  chart
+    .selectAll('rect')
+    .data(colors)
+    .enter()
+    .append('rect')
+    .attr('x', margin_left)
+    .attr('y', function(d, i) {
+      return i * row_height;
+    })
+    .attr('width', col_width)
+    .attr('height', row_height)
+    .attr('fill', function(d, i) {return colors[colors.length - 1 - i];})
+    .attr('display', function(d, i) {
+      if (d === "") {
+        return 'none';
+      }
+    })
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'left')
+    .attr('data-html', 'true')
+    .attr('title', function(d, i) {
+        var inf, sup;
+        var lastIndex = colors.length - 1;
+        switch (i) {
+          case 0:
+            sup = (typeof max !== 'undefined') ? max : d3.max(result.data.values);
+            inf = color.quantiles()[lastIndex - 1];
+            break;
+          case lastIndex:
+            sup = color.quantiles()[0];
+            inf = (typeof min !== 'undefined') ? min : d3.min(result.data.values);
+            break;
+          default:
+            sup = color.quantiles()[colors.length - 1 - i];
+            inf = color.quantiles()[colors.length - 2 - i];
+            break;
+        }
+        return parseFloat(inf).toFixed(precision) + unit + ' -> ' + parseFloat(sup).toFixed(precision) + unit;
+    });
+
+  // Get min, max, avg.
+  var valuesArray = result.data.values;
+  var datesArray = result.data.dates;
+  var avgValue = 0;
+  for( var i = valuesArray.length-1; i >= 0; i--){
+    if ( valuesArray[i] === "") {
+      valuesArray.splice(i, 1);
+      datesArray.splice(i, 1);
+    }
+    else {
+      valuesArray[i] = parseFloat(valuesArray[i]);
+      avgValue = avgValue + valuesArray[i];
+    }
+  }
+
+  // Calculate & display average.
+  if (valuesArray.length>0) {
+    avgValue = avgValue / valuesArray.length;
+  }
+  var avgIndex = color.range().length - 1 - color.range().indexOf(color(avgValue));
+
+  chart.append("text")
+  .attr("x", 0)
+  .attr("y", avgIndex * row_height + eps_y)
+  .text('Moy');
+
+  chart.append("text")
+  .attr("x", margin_left + eps_value)
+  .attr("y", avgIndex * row_height + eps_y)
+  .text(avgValue.toFixed(precision) + unit);
+
+  // Calculate & display in value.
+  var minValue = Math.min(...valuesArray);
+  var minDate = datesArray[valuesArray.indexOf(minValue)];
+  var minIndex = color.range().length - 1 - color.range().indexOf(color(minValue));
+
+  chart.append("text")
+  .attr("x", 0)
+  .attr("y", minIndex * row_height + eps_y)
+  .text('Min');
+
+  chart.append("text")
+  .attr("x", margin_left + eps_value)
+  .attr("y", minIndex * row_height + eps_y)
+  .text(minValue.toFixed(precision) + unit);
+
+  // Calucltate & display max value.
+  var maxValue  = Math.max(...valuesArray);
+  var maxDate = datesArray[valuesArray.indexOf(maxValue)];
+  var maxIndex = color.range().length - 1 - color.range().indexOf(color(maxValue));
+
+  chart.append("text")
+  .attr("x", 0)
+  .attr("y", maxIndex * row_height + eps_y)
+  .text('Max');
+
+  chart.append("text")
+  .attr("x", margin_left + eps_value)
+  .attr("y", maxIndex * row_height + eps_y)
+  .text(maxValue.toFixed(precision) + unit);
+
+  $('[data-toggle=\'tooltip\']').tooltip();
 }

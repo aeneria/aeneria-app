@@ -33,7 +33,8 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, d3.schemeGnBu[9], 'kWh', 0);
+      displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, d3.schemeGnBu[9], 'kWh', 1, 0);
+      displayLegend(data, 'conso-repartition-legend-' + targetMonth, d3.schemeGnBu[9], 'kWh', 1, 0);
     }
   });
 
@@ -45,34 +46,34 @@ var refreshGraph = function (target) {
       document.getElementById('conso-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(1) + ' kWh</b>';
     }
   });
-
-  // Refresh conso min.
-  $.ajax({
-    url: appRoute + 'data/conso_elec/min/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      var date = new Date(data[0].date);
-      document.getElementById('conso-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh (' + date.toLocaleDateString() + ')';
-    }
-  });
-
-  // Refresh conso moy.
-  $.ajax({
-    url: appRoute + 'data/conso_elec/avg/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      document.getElementById('conso-avg-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh/jour';
-    }
-  });
-
-  // Refresh conso max.
-  $.ajax({
-    url: appRoute + 'data/conso_elec/max/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      document.getElementById('conso-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh (' + data[0].date + ')';
-    }
-  });
+//
+//  // Refresh conso min.
+//  $.ajax({
+//    url: appRoute + 'data/conso_elec/min/day/' + startDate + '/' + endDate + '',
+//    success: function(result) {
+//      var data = JSON.parse(result);
+//      var date = new Date(data[0].date);
+//      document.getElementById('conso-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh (' + date.toLocaleDateString() + ')';
+//    }
+//  });
+//
+//  // Refresh conso moy.
+//  $.ajax({
+//    url: appRoute + 'data/conso_elec/avg/day/' + startDate + '/' + endDate + '',
+//    success: function(result) {
+//      var data = JSON.parse(result);
+//      document.getElementById('conso-avg-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh/jour';
+//    }
+//  });
+//
+//  // Refresh conso max.
+//  $.ajax({
+//    url: appRoute + 'data/conso_elec/max/day/' + startDate + '/' + endDate + '',
+//    success: function(result) {
+//      var data = JSON.parse(result);
+//      document.getElementById('conso-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + ' kWh (' + data[0].date + ')';
+//    }
+//  });
 
 
   // Refresh global temp repartition.
@@ -81,7 +82,8 @@ var refreshGraph = function (target) {
     success: function(result) {
       var data = JSON.parse(result);
       var color = d3.schemeRdYlBu[9].slice();
-      displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, color.reverse(), '°C', -5, 25);
+      displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, color.reverse(), '°C', 1, -5, 25);
+      displayLegend(data, 'temp-repartition-legend-' + targetMonth, color, '°C', 1, -5, 25);
     }
   });
 
@@ -94,32 +96,32 @@ var refreshGraph = function (target) {
     }
   });
 
-  // Refresh temperature min.
-  $.ajax({
-    url: appRoute + 'data/temperature/min/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      document.getElementById('temp-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + data[0].date + ')';
-    }
-  });
-
-  // Refresh temperature moy.
-  $.ajax({
-    url: appRoute + 'data/temperature/avg/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      document.getElementById('temp-avg-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
-    }
-  });
-
-  // Refresh temperature max.
-  $.ajax({
-    url: appRoute + 'data/temperature/max/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      document.getElementById('temp-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + data[0].date + ')';
-    }
-  });
+//  // Refresh temperature min.
+//  $.ajax({
+//    url: appRoute + 'data/temperature/min/day/' + startDate + '/' + endDate + '',
+//    success: function(result) {
+//      var data = JSON.parse(result);
+//      document.getElementById('temp-min-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + data[0].date + ')';
+//    }
+//  });
+//
+//  // Refresh temperature moy.
+//  $.ajax({
+//    url: appRoute + 'data/temperature/avg/day/' + startDate + '/' + endDate + '',
+//    success: function(result) {
+//      var data = JSON.parse(result);
+//      document.getElementById('temp-avg-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
+//    }
+//  });
+//
+//  // Refresh temperature max.
+//  $.ajax({
+//    url: appRoute + 'data/temperature/max/day/' + startDate + '/' + endDate + '',
+//    success: function(result) {
+//      var data = JSON.parse(result);
+//      document.getElementById('temp-max-' + targetMonth).innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + data[0].date + ')';
+//    }
+//  });
 }
 
 $(document).ready(function () {

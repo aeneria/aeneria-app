@@ -5,6 +5,27 @@
 {% block body %}
   <div class="container-fluid">
     <div class="row dash-gen-row-1">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ "Consommation sur la période" | trans }}</h2>
+            <div class="row">
+              <div class="col-1">
+                <img alt="electicity" src="{{ asset('image/electricity.svg') }}" class="index-logo">
+              </div>
+              <div class="col-2">
+                <div id="conso-total" class="dash-index-total"></div>
+              </div>
+                <div class="col-3 dash-gen-card-1">
+                    <div id="conso-global-repartition"></div>
+                    <div id="conso-global-repartition-legend"></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row dash-gen-row-2">
       <div class="col-9">
         <div class="card d">
           <div class="card-body">
@@ -25,16 +46,6 @@
           <div class="card-body">
             <h2 class="card-title">{{ "Répartition sur la semaine" | trans }}</h2>
             <div id="conso-week-repartition"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row dash-gen-row-2">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="card-title">{{ "Consommation sur la période" | trans }}</h2>
-            <div id="conso-global-repartition"></div>
           </div>
         </div>
       </div>

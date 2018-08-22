@@ -47,7 +47,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('MIN(d.value) AS value');
+      $queryBuilder->select('MIN(d.value) AS value, d.date');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.feedData');
       return $queryBuilder
@@ -67,7 +67,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
       // Create the query builder
       $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('MAX(d.value) AS value');
+      $queryBuilder->select('MAX(d.value) AS value, d.date');
       $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
       $queryBuilder->groupBy('d.feedData');
       return $queryBuilder
