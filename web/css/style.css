@@ -91,7 +91,7 @@ nav input, nav button {
 }
 
 nav button {
-  background-color: #084081;
+  background-color: #007bff;
 }
 
 /* SIDEBAR */
@@ -104,12 +104,12 @@ nav button {
   position: fixed;
 }
 
-#sidebar>div>a {
+#sidebar > div > a {
   min-width: 30px;
   min-height: 40px;
 }
 
-#sidebar>div>a>img {
+#sidebar > div > a > img {
   max-width: 24px;
   height: auto;
 }
@@ -152,6 +152,15 @@ text {
   font-size: 0.8em;
 }
 
+.global-repartition-legend {
+  margin-top: 5px;
+  margin-left: 60px;
+}
+
+.global-repartition {
+  margin-left: 30px;
+}
+
 /* INDEX DASH ///////////////////////////////////////////////////////////////*/
 
 .vert-sep {
@@ -174,6 +183,21 @@ text {
   margin-top: 50px;
 }
 
+#load-more > .col{
+  display: flex;
+  justify-content: center;
+}
+
+#load-more > .col > .card{
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.month-summary > div > div > div {
+  justify-content: center;
+  display: flex;
+}
+
 /* GENERAL DASH /////////////////////////////////////////////////////////////*/
 
 .dash-gen-row-1 .card {
@@ -188,23 +212,20 @@ text {
   display: flex;
 }
 
-#conso-global-repartition-legend {
-  margin-top: 5px;
-  margin-left: 60px;
-}
-
-#conso-global-repartition {
-  margin-left: 30px;
-}
-
 /* METEO DASH ///////////////////////////////////////////////////////////////*/
 
-.meteo-top>p,u {
+.meteo-top {
   height: 60px;
   text-align: center;
-  padding-bottom: 20px;
+  margin-bottom: 50px;
 }
 
-#neb-day, #rain-day {
+#neb-day, #rain-day, #dju {
   font-size: 2.3em;
 }
+
+.meteo-card-1 {
+  display: flex;
+  justify-content: center;
+}
+

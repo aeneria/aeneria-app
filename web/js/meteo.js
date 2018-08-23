@@ -20,35 +20,16 @@ var refreshGraph = function () {
       var data = JSON.parse(result);
       var color = d3.schemeRdYlBu[9].slice();
       displayGlobalRepartitionV(data, 'temp-repartition', color.reverse(), '°C', 1, -5, 25);
+      displayLegend(data, 'temp-repartition-legend', color, '°C', 1, -5, 25);
     }
   });
 
-  // Refresh temperature min.
+  //Refresh DJU total.
   $.ajax({
-    url: appRoute + 'data/temperature/min/day/' + startDate + '/' + endDate + '',
+    url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      var date = new Date(data[0].date);
-      document.getElementById('temp-min').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + date.toLocaleDateString() + ')';
-    }
-  });
-
-  // Refresh temperature moy.
-  $.ajax({
-    url: appRoute + 'data/temperature/avg/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      document.getElementById('temp-avg').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C';
-    }
-  });
-
-  // Refresh temperature max.
-  $.ajax({
-    url: appRoute + 'data/temperature/max/day/' + startDate + '/' + endDate + '',
-    success: function(result) {
-      var data = JSON.parse(result);
-      var date = new Date(data[0].date);
-      document.getElementById('temp-max').innerHTML = parseFloat(data[0].value).toFixed(1) + '°C (' + date.toLocaleDateString() + ')';
+      document.getElementById('dju').innerHTML = parseFloat(data[0].value).toFixed(0);
     }
   });
 
@@ -57,8 +38,9 @@ var refreshGraph = function () {
     url: appRoute + 'data/nebulosity/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      var color = ['#5de2ff', '#62ddf7', '#67d7ef', '#6cd1e6', '#71cbde', '#76c6d6', '#7bbfce', '#80b9c6', '#84b4be', '#89afb6', '#89afb6'];
+      var color = ['#62ddf7', '#67d7ef', '#6cd1e6', '#71cbde', '#76c6d6', '#7bbfce', '#80b9c6', '#84b4be', '#89afb6'];
       displayGlobalRepartitionV(data, 'neb-repartition', color, '%', 1, 0, 100);
+      displayLegend(data, 'neb-repartition-legend', color, '%', 1, 0, 100);
     }
   });
 
@@ -77,9 +59,9 @@ var refreshGraph = function () {
     success: function(result) {
       var data = JSON.parse(result);
       displayGlobalRepartitionV(data, 'rain-repartition', d3.schemeGnBu[9], 'mm', 1, 0);
+      displayLegend(data, 'rain-repartition-legend', d3.schemeGnBu[9], 'mm', 1, 0);
     }
   });
-
 
   // Refresh day without rain.
   $.ajax({

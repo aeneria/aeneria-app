@@ -1,5 +1,7 @@
 {% macro summary(month) %}
-
+<div class="card">
+  <div class="card-body">
+    <h2 id="title-{{ month }}" class="card-title">--</h2>
     <div class="row month-summary" data-month="{{ month }}" >
       <div class="col-6 vert-sep">
         <div class="row">
@@ -14,13 +16,13 @@
           </div>
           <div class="col-3">
             <div id="conso-repartition-legend-{{ month }}"></div>
-            <!--
+            {#
             <ul class="dash-index-avg">
                 <li> {{ 'Max : ' | trans }}<span id="conso-max-{{ month }}">--</span></li>
                 <li> {{ 'Moy : ' | trans }}<span id="conso-avg-{{ month }}">--</span></li>
                 <li> {{ 'Min : ' | trans }}<span id="conso-min-{{ month }}">--</span></li>
             </ul>
-            -->
+           #}
           </div>
         </div>
       </div>
@@ -37,16 +39,18 @@
           </div>
           <div class="col-3">
             <div id="temp-repartition-legend-{{ month }}"></div>
-          <!--
+            {#
             <ul class="dash-index-avg">
                 <li> {{ 'Max : ' | trans }}<span id="temp-max-{{ month }}">--</span></li>
                 <li> {{ 'Moy : ' | trans }}<span id="temp-avg-{{ month }}">--</span></li>
                 <li> {{ 'Min : ' | trans }}<span id="temp-min-{{ month }}">--</span></li>
             </ul>
-             -->
+            #}
           </div>
         </div>
       </div>
 
     </div>
+  </div>
+</div>
 {% endmacro %}

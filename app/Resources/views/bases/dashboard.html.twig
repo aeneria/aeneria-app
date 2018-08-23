@@ -15,6 +15,22 @@
 {% endblock %}
 
 {% block javascripts %}
+  <script>
+  var MONTHS_NAME = [
+    '{{ 'Janvier' | trans }}',
+    '{{ 'Février' | trans }}',
+    '{{ 'Mars' | trans }}',
+    '{{ 'Avril' | trans }}',
+    '{{ 'Mai' | trans }}',
+    '{{ 'Juin' | trans }}',
+    '{{ 'Juillet' | trans }}',
+    '{{ 'Aout' | trans }}',
+    '{{ 'Septembre' | trans }}',
+    '{{ 'Octobre' | trans }}',
+    '{{ 'Novembre' | trans }}',
+    '{{ 'Décembre' | trans }}',
+    ];
+  </script>
   <script src={{ asset("js/selection.js") }}></script>
   {% block js %}
   {% endblock %}

@@ -11,14 +11,15 @@
             <h2 class="card-title">{{ 'Température' | trans }}</h2>
             <div class="content">
               <div class="meteo-top">
-                <ul>
-                  <li> {{ 'Max : ' | trans }}<span id="temp-max">--</span></li>
-                  <li> {{ 'Moy : ' | trans }}<span id="temp-avg">--</span></li>
-                  <li> {{ 'Min : ' | trans }}<span id="temp-min">--</span></li>
-                </ul>
+                <p>
+                  <b><span id="dju">--</span> {{ ' DJU' | trans }}</b>
+                  <br>
+                  {{ '(degrés jour unifié)' | trans }}
+                </p>
               </div>
-              <div id="temp-repartition" class="">
-                {# Will be fill by plotly #}
+              <div class="meteo-card-1">
+                <div id="temp-repartition" class="global-repartition"></div>
+                <div id="temp-repartition-legend" class="global-repartition-legend"></div>
               </div>
             </div>
           </div>
@@ -31,13 +32,14 @@
             <div class="content">
               <div class="meteo-top">
                 <p>
-                    <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b>
-                    <br>
-                    {{ 'sans nuages' | trans }}
-               </p>
+                  <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b>
+                  <br>
+                  {{ 'sans nuages' | trans }}
+                </p>
               </div>
-              <div id="neb-repartition" class="">
-                {# Will be fill by plotly #}
+              <div class="meteo-card-1">
+                <div id="neb-repartition" class="global-repartition"></div>
+                <div id="neb-repartition-legend" class="global-repartition-legend"></div>
               </div>
             </div>
           </div>
@@ -48,16 +50,17 @@
           <div class="card-body">
             <h2 class="card-title">{{ 'Précipitations' | trans }}</h2>
             <div class="content">
-                <div class="meteo-top">
-                  <p>
-                      <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b>
-                      <br>
-                      {{ 'sans pluie' | trans }}
-                  </p>
-                </div>
-                <div id="rain-repartition" class="">
-                  {# Will be fill by plotly #}
-                </div>
+              <div class="meteo-top">
+                <p>
+                  <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b>
+                  <br>
+                  {{ 'sans pluie' | trans }}
+                </p>
+              </div>
+              <div class="meteo-card-1">
+                <div id="rain-repartition" class="global-repartition"></div>
+                <div id="rain-repartition-legend" class="global-repartition-legend"></div>
+              </div>
             </div>
           </div>
         </div>

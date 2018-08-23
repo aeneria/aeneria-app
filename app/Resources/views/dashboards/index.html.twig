@@ -8,26 +8,30 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div id="evolution" class="col">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="card-title">{{ "Mois en cours" | trans }}</h2>
-            {{ month.summary('current') }}
-          </div>
-        </div>
+      <div class="col">
+        {{ month.summary('0') }}
       </div>
     </div>
+
     <div class="row">
       <div class="col">
+        {{ month.summary('-1') }}
+      </div>
+    </div>
+
+    <div id="load-more" class="row">
+      <div class="col">
         <div class="card">
-          <div class="card-body">
-            <h2 class="card-title">{{ "Mois précédent" | trans }}</h2>
-            {{ month.summary('previous') }}
+          <button class="btn-secondary btn">
+            <h3>{{ 'Afficher le mois précédent' | trans }}</h3>
           </div>
         </div>
       </div>
     </div>
+
   </div>
+
+
 {% endblock %}
 
 {% block stylesheets %}
