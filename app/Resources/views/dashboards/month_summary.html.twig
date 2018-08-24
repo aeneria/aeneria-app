@@ -9,13 +9,13 @@
             <img alt="electicity" src="{{ asset('image/electricity.svg') }}" class="index-logo">
           </div>
           <div class="col-3">
-            <div id="conso-total-{{ month }}" class="dash-index-total"></div>
+            <div id="conso-total-{{ month }}" class="dash-index-total conso-total"></div>
           </div>
           <div class="col-4">
-            <div id="conso-repartition-{{ month }}"></div>
+            <div id="conso-repartition-{{ month }}" class="conso-repartition"></div>
           </div>
           <div class="col-3">
-            <div id="conso-repartition-legend-{{ month }}"></div>
+            <div id="conso-repartition-legend-{{ month }}" class="conso-repartition-legend"></div>
             {#
             <ul class="dash-index-avg">
                 <li> {{ 'Max : ' | trans }}<span id="conso-max-{{ month }}">--</span></li>
@@ -32,13 +32,13 @@
           <div class="col-2">
             <img alt="temperature" src="{{ asset('image/temperature.svg') }}" class="index-logo"></div>
           <div class="col-3">
-            <div id="dju-total-{{ month }}" class="dash-index-total"></div>
+            <div id="dju-total-{{ month }}" class="dash-index-total dju-total"></div>
           </div>
           <div class="col-4">
-            <div id="temp-repartition-{{ month }}"></div>
+            <div id="temp-repartition-{{ month }}" class="temp-repartition"></div>
           </div>
           <div class="col-3">
-            <div id="temp-repartition-legend-{{ month }}"></div>
+            <div id="temp-repartition-legend-{{ month }}" class="temp-repartition-legend"></div>
             {#
             <ul class="dash-index-avg">
                 <li> {{ 'Max : ' | trans }}<span id="temp-max-{{ month }}">--</span></li>

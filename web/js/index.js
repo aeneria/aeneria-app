@@ -41,7 +41,12 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('conso-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(1) + ' kWh</b>';
+      if (data.length > 0) {
+        document.getElementById('conso-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(1) + ' kWh</b>';
+      }
+      else {
+        document.getElementById('conso-total-' + targetMonth).innerHTML = '<b>-- kWh</b>';
+      }
     }
   });
 
@@ -61,10 +66,37 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('dju-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(0) + ' DJU</b>';
+      if (data.length > 0) {
+        document.getElementById('dju-total-' + targetMonth).innerHTML = '<b>' + parseFloat(data[0].value).toFixed(0) + ' DJU</b>';
+      }
+      else {
+        document.getElementById('dju-total-' + targetMonth).innerHTML = '<b>-- DJU</b>';
+      }
     }
   });
 }
+
+document.getElementById('load-more').onclick = function(event) {
+  var newMonthSummary = this.previousElementSibling.cloneNode(true);
+
+  var monthDiv = newMonthSummary.getElementsByClassName('month-summary')[0];
+  var oldId = monthDiv.getAttribute('data-month');
+  var newId = parseInt(oldId)-1;
+
+  monthDiv.setAttribute('data-month', newId);
+  newMonthSummary.getElementsByClassName('card-title')[0].setAttribute('id', 'title-' + newId);
+
+  newMonthSummary.getElementsByClassName('conso-total')[0].setAttribute('id', 'conso-total-' + newId);
+  newMonthSummary.getElementsByClassName('conso-repartition')[0].setAttribute('id', 'conso-repartition-' + newId);
+  newMonthSummary.getElementsByClassName('conso-repartition-legend')[0].setAttribute('id', 'conso-repartition-legend-' + newId);
+
+  newMonthSummary.getElementsByClassName('dju-total')[0].setAttribute('id', 'dju-total-' + newId);
+  newMonthSummary.getElementsByClassName('temp-repartition')[0].setAttribute('id', 'temp-repartition-' + newId);
+  newMonthSummary.getElementsByClassName('temp-repartition-legend')[0].setAttribute('id', 'temp-repartition-legend-' + newId);
+
+  this.parentNode.insertBefore(newMonthSummary, this);
+  refreshGraph(monthDiv);
+};
 
 $(document).ready(function () {
   var monthSummaries = document.getElementsByClassName('month-summary');
