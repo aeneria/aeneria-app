@@ -1,4 +1,5 @@
 var AXE_COLOR = '#6d6d6d';
+var DAY_SIZE = 15;
 
 /**
  * Display a hour/weekDay heatmap repartition graphic.
@@ -16,13 +17,11 @@ var AXE_COLOR = '#6d6d6d';
 var displayWeekRepartition = function(result, target, colors, unit, precision, min, max) {
   var rows = 24; // Number of hours in a day
   var cols = 7; // Number of days in a week
-  var row_height = 20;
-  var col_width = 20;
   var margin_top = 50;
   var margin_left = 25;
   var margin_bottom = 10;
-  var total_height = margin_top + rows * row_height + margin_bottom;
-  var total_width = margin_left + cols * col_width;
+  var total_height = margin_top + rows * DAY_SIZE + margin_bottom;
+  var total_width = margin_left + cols * DAY_SIZE;
 
   var element = d3
     .select('#' + target);
@@ -70,7 +69,7 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-        return 'rotate(-90)translate(-45,' + (i * col_width + margin_left + 15) + ')'
+        return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 15) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -90,7 +89,7 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-      return 'translate(0,' + (i * row_height + margin_top + 4) + ')'
+      return 'translate(0,' + (i * DAY_SIZE + margin_top + 4) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -101,13 +100,13 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .enter()
     .append('rect')
     .attr('x', function(d, i) {
-      return Math.floor(i / rows) * col_width + margin_left;
+      return Math.floor(i / rows) * DAY_SIZE + margin_left;
     })
     .attr('y', function(d, i) {
-      return i % rows * row_height + margin_top;
+      return i % rows * DAY_SIZE + margin_top;
     })
-    .attr('width', col_width)
-    .attr('height', row_height)
+    .attr('width', DAY_SIZE)
+    .attr('height', DAY_SIZE)
     .attr('display', function(d, i) {
       if (d === "") {
         return 'none';
@@ -139,13 +138,11 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
 var displayGlobalRepartitionH = function(result, target, colors, unit, precision, min, max) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
-  var row_height = 20;
-  var col_width = 20;
   var margin_top = 30;
   var margin_left = 25;
   var margin_bottom = 10;
-  var total_height = margin_top + rows * row_height + margin_bottom;
-  var total_width = margin_left + cols * col_width;
+  var total_height = margin_top + rows * DAY_SIZE + margin_bottom;
+  var total_width = margin_left + cols * DAY_SIZE;
 
   var element = d3
     .select('#' + target);
@@ -199,7 +196,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-        return 'translate(' + (i * col_width + margin_left - 10) + ',25)rotate(-45)'
+        return 'translate(' + (i * DAY_SIZE + margin_left - 10) + ',25)rotate(-45)'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -213,7 +210,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-      return 'translate(0,' + (i * row_height + margin_top + 14) + ')'
+      return 'translate(0,' + (i * DAY_SIZE + margin_top + 14) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -224,13 +221,13 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .enter()
     .append('rect')
     .attr('x', function(d, i) {
-      return Math.floor(i / rows) * col_width + margin_left;
+      return Math.floor(i / rows) * DAY_SIZE + margin_left;
     })
     .attr('y', function(d, i) {
-      return i % rows * row_height + margin_top;
+      return i % rows * DAY_SIZE + margin_top;
     })
-    .attr('width', col_width)
-    .attr('height', row_height)
+    .attr('width', DAY_SIZE)
+    .attr('height', DAY_SIZE)
     .attr('fill', color)
     .attr('display', function(d, i) {
       if (d === "") {
@@ -262,13 +259,11 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
 var displayGlobalRepartitionV = function(result, target, colors, unit, precision, min, max) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
-  var row_height = 20;
-  var col_width = 20;
   var margin_top = 50;
   var margin_left = 25;
   var margin_bottom = 10;
-  var total_height = margin_top + rows * row_height + margin_bottom;
-  var total_width = margin_left + cols * col_width;
+  var total_height = margin_top + rows * DAY_SIZE + margin_bottom;
+  var total_width = margin_left + cols * DAY_SIZE;
 
   var element = d3
     .select('#' + target);
@@ -316,7 +311,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-      return 'rotate(-90)translate(-45,' + (i * col_width + margin_left + 15) + ')'
+      return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 15) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -336,7 +331,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-      return 'translate(0,' + (i * row_height + margin_top + 14) + ')'
+      return 'translate(0,' + (i * DAY_SIZE + margin_top + 14) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -347,13 +342,13 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .enter()
     .append('rect')
     .attr('x', function(d, i) {
-      return i % cols * col_width + margin_left;
+      return i % cols * DAY_SIZE + margin_left;
     })
     .attr('y', function(d, i) {
-      return Math.floor(i / cols) * row_height + margin_top;
+      return Math.floor(i / cols) * DAY_SIZE + margin_top;
     })
-    .attr('width', col_width)
-    .attr('height', row_height)
+    .attr('width', DAY_SIZE)
+    .attr('height', DAY_SIZE)
     .attr('display', function(d, i) {
       if (d === "") {
         return 'none';
@@ -384,9 +379,9 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
 var displayGlobalEvolution = function(result, target, color, unit, precision) {
   var margin_top = 20;
   var margin_left = 20;
-  var margin_bottom = 80;
+  var margin_bottom = 90;
   var margin_right = 20;
-  var height = 460;
+  var height = 350;
   var width = 800;
 
   var element = d3
@@ -478,12 +473,8 @@ var displayGlobalEvolution = function(result, target, color, unit, precision) {
  *   unit : a string, the unit of the displayed data
  */
 var displayLegend = function(result, target, colors, unit, precision, min, max) {
-  var row_height = 20;
-  var col_width = 20;
-  var total_height = colors.length * row_height;
+  var total_height = colors.length * DAY_SIZE + 20;
   var total_width = 150;
-  var eps_y = 15;
-  var eps_value = 25;
   var margin_left = 25;
 
   var element = d3
@@ -530,10 +521,10 @@ var displayLegend = function(result, target, colors, unit, precision, min, max) 
     .append('rect')
     .attr('x', margin_left)
     .attr('y', function(d, i) {
-      return i * row_height;
+      return i * DAY_SIZE;
     })
-    .attr('width', col_width)
-    .attr('height', row_height)
+    .attr('width', DAY_SIZE)
+    .attr('height', DAY_SIZE)
     .attr('fill', function(d, i) {return colors[colors.length - 1 - i];})
     .attr('display', function(d, i) {
       if (d === "") {
@@ -584,45 +575,36 @@ var displayLegend = function(result, target, colors, unit, precision, min, max) 
   }
   var avgIndex = color.range().length - 1 - color.range().indexOf(color(avgValue));
 
-  chart.append("text")
-  .attr("x", 0)
-  .attr("y", avgIndex * row_height + eps_y)
-  .text('Moy');
-
-  chart.append("text")
-  .attr("x", margin_left + eps_value)
-  .attr("y", avgIndex * row_height + eps_y)
-  .text(avgValue.toFixed(precision) + unit);
-
   // Calculate & display in value.
   var minValue = Math.min(...valuesArray);
   var minDate = datesArray[valuesArray.indexOf(minValue)];
   var minIndex = color.range().length - 1 - color.range().indexOf(color(minValue));
-
-  chart.append("text")
-  .attr("x", 0)
-  .attr("y", minIndex * row_height + eps_y)
-  .text('Min');
-
-  chart.append("text")
-  .attr("x", margin_left + eps_value)
-  .attr("y", minIndex * row_height + eps_y)
-  .text(minValue.toFixed(precision) + unit);
 
   // Calucltate & display max value.
   var maxValue  = Math.max(...valuesArray);
   var maxDate = datesArray[valuesArray.indexOf(maxValue)];
   var maxIndex = color.range().length - 1 - color.range().indexOf(color(maxValue));
 
-  chart.append("text")
-  .attr("x", 0)
-  .attr("y", maxIndex * row_height + eps_y)
-  .text('Max');
+  // Check overlapping.
+  avgIndex =  (avgIndex === maxIndex) ? avgIndex + 1 : avgIndex;
+  minIndex = (minIndex === avgIndex) ? minIndex + 1 : minIndex;
+  minIndex = (minIndex === maxIndex) ? minIndex + 2 : minIndex;
 
-  chart.append("text")
-  .attr("x", margin_left + eps_value)
-  .attr("y", maxIndex * row_height + eps_y)
-  .text(maxValue.toFixed(precision) + unit);
+  displayLegendTick(chart, margin_left, minIndex, 'Min', minValue.toFixed(precision) + unit);
+  displayLegendTick(chart, margin_left, avgIndex, 'Moy', avgValue.toFixed(precision) + unit);
+  displayLegendTick(chart, margin_left, maxIndex, 'Max', maxValue.toFixed(precision) + unit);
 
   $('[data-toggle=\'tooltip\']').tooltip();
+}
+
+var displayLegendTick = function (target, margin_left, index, label, value) {
+  target.append("text")
+  .attr("x", 0)
+  .attr("y", index * DAY_SIZE + 10)
+  .text(label);
+
+  target.append("text")
+  .attr("x", margin_left + 25)
+  .attr("y", index * DAY_SIZE + 10)
+  .text(value);
 }

@@ -38,7 +38,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/nebulosity/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      var color = ['#62ddf7', '#67d7ef', '#6cd1e6', '#71cbde', '#76c6d6', '#7bbfce', '#80b9c6', '#84b4be', '#89afb6'];
+//      var color = ['#62ddf7', '#67d7ef', '#6cd1e6', '#71cbde', '#76c6d6', '#7bbfce', '#80b9c6', '#84b4be', '#89afb6'];
+      var color = ['#20CFFE', '#48C4EB', '#5BBAD9', '#67AFC7', '#6EA5B7', '#729BA7', '#749198', '#758889', '#747E7C'];
       displayGlobalRepartitionV(data, 'neb-repartition', color, '%', 1, 0, 100);
       displayLegend(data, 'neb-repartition-legend', color, '%', 1, 0, 100);
     }

@@ -1,18 +1,13 @@
 /* GENERAL //////////////////////////////////////////////////////////////////*/
 
 @font-face {
-  font-family: Confortaa;
-  src: url('../font/Comfortaa-Regular.ttf');
+  font-family: Arvo;
+  src: url('../font/Arvo-Regular.ttf');
 }
 
 @font-face {
   font-family: CodeNew;
   src: url('../font/code-new-roman.otf');
-}code-new-roman.otf
-
-@font-face {
-  font-family: Indulta;
-  src: url('../font/Indulta-SemiSerif-boldFFP.otf');
 }
 
 @font-face {
@@ -32,7 +27,7 @@ body {
 }
 
 h2 {
-  font-family: Confortaa;
+  font-family: Arvo;
   font-size: 1.50rem;
 }
 
@@ -174,7 +169,7 @@ text {
 }
 
 .dash-index-total {
-  font-size: 2.1em;
+  font-size: 1.6em;
   text-align: center;
   margin-top: 55px;
 }
@@ -183,14 +178,9 @@ text {
   margin-top: 50px;
 }
 
-#load-more > .col{
+.load-more {
   display: flex;
   justify-content: center;
-}
-
-#load-more > .col > .card{
-  background-color: #007bff;
-  color: #ffffff;
 }
 
 .month-summary > div > div > div {
@@ -201,11 +191,11 @@ text {
 /* GENERAL DASH /////////////////////////////////////////////////////////////*/
 
 .dash-gen-row-1 .card {
-  height: 280px;
+  height: 240px;
 }
 
 .dash-gen-row-2 .card {
-  height: 650px;
+  height: 550px;
 }
 
 .dash-gen-card-1 {
@@ -215,17 +205,31 @@ text {
 /* METEO DASH ///////////////////////////////////////////////////////////////*/
 
 .meteo-top {
-  height: 60px;
   text-align: center;
   margin-bottom: 50px;
+  display: flex;
+}
+
+.meteo-top > p {
+  width: 100%;
+}
+
+.meteo-logo {
+  margin-top: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  max-height: 100px;
 }
 
 #neb-day, #rain-day, #dju {
   font-size: 2.3em;
 }
 
+.global-repartition-legend {
+  align-self: center;
+}
+
 .meteo-card-1 {
   display: flex;
   justify-content: center;
 }
-

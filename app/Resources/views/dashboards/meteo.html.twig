@@ -11,10 +11,11 @@
             <h2 class="card-title">{{ 'Température' | trans }}</h2>
             <div class="content">
               <div class="meteo-top">
+                <img alt="temperature" src="{{ asset('image/temperature.svg') }}" class="meteo-logo">
                 <p>
                   <b><span id="dju">--</span> {{ ' DJU' | trans }}</b>
                   <br>
-                  {{ '(degrés jour unifié)' | trans }}
+                  {{ 'degrés jour unifié' | trans }}
                 </p>
               </div>
               <div class="meteo-card-1">
@@ -31,6 +32,7 @@
             <h2 class="card-title">{{ 'Nébulosité' | trans }}</h2>
             <div class="content">
               <div class="meteo-top">
+                <img alt="cloud" src="{{ asset('image/cloud.svg') }}" class="meteo-logo">
                 <p>
                   <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b>
                   <br>
@@ -51,6 +53,7 @@
             <h2 class="card-title">{{ 'Précipitations' | trans }}</h2>
             <div class="content">
               <div class="meteo-top">
+                <img alt="rain" src="{{ asset('image/rain.svg') }}" class="meteo-logo">
                 <p>
                   <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b>
                   <br>

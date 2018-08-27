@@ -77,7 +77,8 @@ var refreshGraph = function (target) {
 }
 
 document.getElementById('load-more').onclick = function(event) {
-  var newMonthSummary = this.previousElementSibling.cloneNode(true);
+  var rowElement = this.closest('.row');
+  var newMonthSummary = rowElement.previousElementSibling.cloneNode(true);
 
   var monthDiv = newMonthSummary.getElementsByClassName('month-summary')[0];
   var oldId = monthDiv.getAttribute('data-month');
@@ -94,14 +95,14 @@ document.getElementById('load-more').onclick = function(event) {
   newMonthSummary.getElementsByClassName('temp-repartition')[0].setAttribute('id', 'temp-repartition-' + newId);
   newMonthSummary.getElementsByClassName('temp-repartition-legend')[0].setAttribute('id', 'temp-repartition-legend-' + newId);
 
-  this.parentNode.insertBefore(newMonthSummary, this);
+  rowElement.parentElement.insertBefore(newMonthSummary, rowElement);
   refreshGraph(monthDiv);
 };
 
 $(document).ready(function () {
   var monthSummaries = document.getElementsByClassName('month-summary');
 
-  for (var j in monthSummaries) {
+  for (var j = 0; j < monthSummaries.length; j++) {
     refreshGraph(monthSummaries[j]);
   }
 });
