@@ -1,0 +1,40 @@
+{% extends 'bases/base.html.twig' %}
+
+{% block title %}{{ 'A propos' | trans }}{% endblock %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class='row'>
+      <div class='col'>
+        <div class='card'>
+          <div class="card-body">
+            <h2 class="card-title">{{ 'A propos' | trans }}</h2>
+            <div class="content about">
+            {% trans %}
+            <p>
+              Développé par <a href="https://github.com/SimonMellerin">Simon Mellerin</a>
+            </p>
+            <p>
+              Avec l'aide de :
+            </p>
+            <ul>
+                <li>PHP</li>
+                <li>Symfony et son outillage</li>
+                <li>Bootstrap</li>
+                <li>D3 js</li>
+                <li>Des icones de :
+                  <a href="https://thenounproject.com/iconisland/">Icon Island</a>, <a href="https://thenounproject.com/coquet_adrien">Adrien Coquet</a>, <a href="https://thenounproject.com/grega.cresnar">Gregor Cresnar</a>, <a href="https://thenounproject.com/creativestall/"> Creative Stall</a>
+                </li>
+            </ul>
+            {% endtrans %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}

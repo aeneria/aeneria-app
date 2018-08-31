@@ -40,12 +40,6 @@ hr {
   margin-top: 0.5rem;
 }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
 /* BRAND NAVBAR */
 .navbar {
   background: #4f323b;
@@ -85,8 +79,12 @@ nav input, nav button {
   vertical-align: center !important;
 }
 
-nav button {
+.nav button {
   background-color: #007bff;
+}
+
+.navbar-item {
+  margin-left: 10px;
 }
 
 /* SIDEBAR */
@@ -232,4 +230,16 @@ text {
 .meteo-card-1 {
   display: flex;
   justify-content: center;
+}
+
+/* SETTINGS /////////////////////////////////////////////////////////////////*/
+
+.config-form {
+  margin-top: 25px;
+}
+
+/* ABOUT ////////////////////////////////////////////////////////////////////*/
+
+.about {
+  margin-top: 25px;
 }

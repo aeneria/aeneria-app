@@ -43,8 +43,18 @@ class DefaultController extends Controller
      */
     public function meteoAction(Request $request)
     {
-        return $this->render('dashboards/meteo.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+      return $this->render('dashboards/meteo.html.twig', [
+        'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+      ]);
+    }
+
+    /**
+     * @Route("/about", name="about")
+     */
+    public function aboutAction(Request $request)
+    {
+      return $this->render('bases/about.html.twig', [
+        'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+      ]);
     }
 }

@@ -5,23 +5,19 @@
 {% block body %}
   <div class="container-fluid">
     <div class='row'>
-      <div id='evolution' class='col-6'>
+      <div class='col-6'>
         <div class='card'>
-          <div class="card-header">
+          <div class="card-body">
             <h2> {{ 'Compteur Linky' | trans }} </h2>
-          </div>
-          <div class="card-content">
-            <div class="container"> {{ form(form_linky) }} </div>
+            <div class="linky config-form container"> {{ form(form_linky) }} </div>
           </div>
         </div>
       </div>
-      <div id='repartition' class='col-6'>
+      <div class='col-6'>
         <div class='card'>
-          <div class="card-header">
+          <div class="card-body">
             <h2> {{ 'Meteo France' | trans }} </h2>
-          </div>
-          <div class="card-content">
-            <div class="container"> {{ form(form_meteo_france) }} </div>
+            <div class="meteo config-form container"> {{ form(form_meteo_france) }} </div>
           </div>
         </div>
       </div>
