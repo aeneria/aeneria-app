@@ -4,6 +4,7 @@ namespace AppBundle\Object;
 
 
 use AppBundle\Entity\Feed;
+use AppBundle\Entity\FeedData;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\DataValue;
 
@@ -138,7 +139,7 @@ class Linky {
             );
         }
 
-        // Persist day data.
+        // Persist year data.
         if (end($this->data['years'])) {
             $feedData->updateOrCreateValue(
                 $date,
@@ -150,9 +151,55 @@ class Linky {
 
         // Flush all persisted DataValue.
         $this->entityManager->flush();
+
+        // Persist week data.
+        $this->persistWeekValue($date, $feedData);
+        $this->entityManager->flush();
     }
 
-    public function getDataPerHour($date)
+
+    /**
+     * Create or refresh week agregate data for the date.
+     * Persist it in EntityManager
+     *
+     * @param \DateTime $date
+     */
+    private function persistWeekValue(\DateTime $date, FeedData $feedData)
+    {
+        $firstDayOfWeek = clone $date;
+        $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+        $firstDayOfWeek->sub(new \DateInterval('P' . $w . 'D'));
+
+        $lastDayOfWeek = clone $firstDayOfWeek;
+        $lastDayOfWeek->add(new \DateInterval('P6D'));
+
+        dump($firstDayOfWeek);
+
+        dump($lastDayOfWeek);
+
+        $agregateData = $this
+            ->entityManager
+            ->getRepository('AppBundle:DataValue')
+            ->getSumValue(
+                $firstDayOfWeek,
+                $lastDayOfWeek,
+                $feedData,
+                DataValue::FREQUENCY['DAY']
+            )
+        ;
+            dump($agregateData);
+
+        if (isset($agregateData[0]['value'])) {
+          $feedData->updateOrCreateValue(
+              $firstDayOfWeek,
+              DataValue::FREQUENCY['WEEK'],
+              round($agregateData[0]['value'] + end($this->data['days']), 1),
+              $this->entityManager
+          );
+        }
+    }
+
+    private function getDataPerHour($date)
     {
         // Start from date - 2days to date + 1 day...
         $endDate = \DateTime::createFromFormat('d/m/Y', $date)->add(new \DateInterval('P1D'));
@@ -193,7 +240,7 @@ class Linky {
         return [$date=>$returnData];
     }
 
-    public function getDataPerDay($startDate, $endDate)
+    private function getDataPerDay($startDate, $endDate)
     {
         // Max 31 days:
         $date1 = \DateTime::createFromFormat('d/m/Y', $startDate);
@@ -229,7 +276,7 @@ class Linky {
         return $returnData;
     }
 
-    public function getDataPerMonth($startDate, $endDate)
+    private function getDataPerMonth($startDate, $endDate)
     {
         $resource_id = 'urlCdcMois';
         $result = $this->getData($resource_id, $startDate, $endDate);
@@ -256,7 +303,7 @@ class Linky {
         return $returnData;
     }
 
-    public function getDataPerYear()
+    private function getDataPerYear()
     {
         $resource_id = 'urlCdcAn';
         $result = $this->getData($resource_id, NULL, NULL);

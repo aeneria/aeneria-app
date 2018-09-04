@@ -213,7 +213,6 @@ class MeteoFrance {
         return $rawData;
     }
 
-
     /**
      * Extract data for the day from all 3-hours SYNOP for a day.
      * (temperature, humidity, nebulosity, pressure & DJU)
