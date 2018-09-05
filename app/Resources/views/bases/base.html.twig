@@ -31,16 +31,16 @@
     </nav>
     <nav class="nav" id="sidebar">
         <div class="nav flex-column">
-            <a href="{{ path('homepage') }}" title="{{ 'Accueil' | trans }}" >
+            <a href="{{ path('homepage') }}" title="{{ 'Accueil' | trans }}" data-toggle="tooltip" data-placement="left" >
                 <img src="{{ asset('image/icon/home.png') }}" alt="*" >
             </a>
-            <a href="{{ path('general') }}" title="{{ 'Indicateurs généraux sur la consommation d\'électricité' | trans }}" >
+            <a href="{{ path('general') }}" title="{{ 'Indicateurs généraux sur la consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" >
                 <img src="{{ asset('image/icon/general.png') }}" alt="*" >
             </a>
-            <a href="{{ path('temperature') }}" title="{{ 'Analyse de la consommation d\'électricité via la tempéature extérieure' | trans }}" >
+            <a href="{{ path('temperature') }}" title="{{ 'Consommation d\'électricité VS Météo' | trans }}" data-toggle="tooltip" data-placement="left" >
                 <img src="{{ asset('image/icon/temperature.png') }}" alt="*" >
             </a>
-            <a href="{{ path('meteo') }}" title="{{ 'Indicateurs généraux sur la météo' | trans }}" >
+            <a href="{{ path('meteo') }}" title="{{ 'Indicateurs généraux sur la météo' | trans }}" data-toggle="tooltip" data-placement="left" >
                 <img src="{{ asset('image/icon/meteo.png') }}" alt="*" >
             </a>
         </div>

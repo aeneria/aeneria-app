@@ -98,8 +98,10 @@ nav input, nav button {
 }
 
 #sidebar > div > a {
-  min-width: 30px;
-  min-height: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-width: 35px;
+  min-height: auto;
 }
 
 #sidebar > div > a > img {
@@ -135,9 +137,27 @@ nav input, nav button {
 }
 
 .tooltip-inner {
+  box-shadow:  0 2px 4px rgba(0,0,0,0.1);
   font-family: CodeNew;
   min-width: 100px;
   max-width: 100%;
+  background-color: #686868;
+}
+
+.tooltip.bs-tooltip-right .arrow:before {
+  border-right-color: #686868 !important;
+}
+
+.tooltip.bs-tooltip-left .arrow:before {
+  border-left-color: #686868 !important;
+}
+
+.tooltip.bs-tooltip-bottom .arrow:before {
+  border-bottom-color: #686868 !important;
+}
+
+.tooltip.bs-tooltip-top .arrow:before {
+  border-top-color: #686868 !important;
 }
 
 text {
