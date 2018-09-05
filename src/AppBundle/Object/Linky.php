@@ -154,9 +154,9 @@ class Linky {
 
         // Persist week data.
         $this->persistWeekValue($date, $feedData);
+        $this->persistYearValue($date, $feedData);
         $this->entityManager->flush();
     }
-
 
     /**
      * Create or refresh week agregate data for the date.
@@ -173,10 +173,6 @@ class Linky {
         $lastDayOfWeek = clone $firstDayOfWeek;
         $lastDayOfWeek->add(new \DateInterval('P6D'));
 
-        dump($firstDayOfWeek);
-
-        dump($lastDayOfWeek);
-
         $agregateData = $this
             ->entityManager
             ->getRepository('AppBundle:DataValue')
@@ -187,13 +183,46 @@ class Linky {
                 DataValue::FREQUENCY['DAY']
             )
         ;
-            dump($agregateData);
 
         if (isset($agregateData[0]['value'])) {
           $feedData->updateOrCreateValue(
               $firstDayOfWeek,
               DataValue::FREQUENCY['WEEK'],
-              round($agregateData[0]['value'] + end($this->data['days']), 1),
+              round($agregateData[0]['value'], 1),
+              $this->entityManager
+          );
+        }
+    }
+
+    /**
+     * Create or refresh year agregate data for the date.
+     * Persist it in EntityManager
+     *
+     * @param \DateTime $date
+     */
+    private function persistYearValue(\DateTime $date, FeedData $feedData)
+    {
+        $firstDayOfYear = new \DateTime($date->format("Y-1-1 00:00:00"));;
+
+        $lastDayOfYear = clone $firstDayOfYear;
+        $lastDayOfYear->add(new \DateInterval('P1Y'));
+
+        $agregateData = $this
+            ->entityManager
+            ->getRepository('AppBundle:DataValue')
+            ->getSumValue(
+                $firstDayOfYear,
+                $lastDayOfYear,
+                $feedData,
+                DataValue::FREQUENCY['MONTH']
+            )
+        ;
+
+        if (isset($agregateData[0]['value'])) {
+          $feedData->updateOrCreateValue(
+              $firstDayOfYear,
+              DataValue::FREQUENCY['YEAR'],
+              round($agregateData[0]['value'], 1),
               $this->entityManager
           );
         }

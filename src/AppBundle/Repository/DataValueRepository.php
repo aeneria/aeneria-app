@@ -168,6 +168,8 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
 
   public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
   {
+      DataValue::adaptToFrequency($startDate, $frequency);
+
       $queryBuilder
           ->andWhere('d.date BETWEEN :start AND :end')
           ->setParameter('start', $startDate)
@@ -177,6 +179,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
           ->setParameter('feedData', $feedData->getId())
           // Add condition on frequency
           ->andWhere('d.frequency = :frequency')
-          ->setParameter('frequency', $frequency);
+          ->setParameter('frequency', $frequency)
+          ->orderBy('d.date', 'asc');
   }
 }

@@ -319,7 +319,7 @@ class DataValue
 
     public static function adaptToFrequency(\DateTime &$date, $frequency)
     {
-        // Update date according to frequnecy
+        // Update date according to frequency.
         switch ($frequency) {
             case DataValue::FREQUENCY['HOUR'] :
                 $date = new \DateTime($date->format("Y-m-d H:00:00"));
