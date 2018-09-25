@@ -448,11 +448,10 @@ class MeteoFrance {
      */
     private function calculateDju($tempMin, $tempMax) {
         $tempAvg = ($tempMax + $tempMin)/2;
-
         if (self::BASE_DJU > $tempMax) {
           return self::BASE_DJU - $tempAvg;
         }
-        elseif (self::BASE_DJU <= $tempMax) {
+        elseif (self::BASE_DJU <= $tempMin) {
           return 0;
         }
         else {
