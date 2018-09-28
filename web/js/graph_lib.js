@@ -432,7 +432,7 @@ var displayGlobalEvolution = function(result, target, color, unit, precision) {
     .attr('data-placement', 'top')
     .attr('data-html', 'true')
     .attr('title', function(d, i) {
-        return d + '</br> ' + parseFloat(result.axeY[i]).toFixed(precision) + ' ' + unit;
+        return result.label[i] + '</br> ' + parseFloat(result.axeY[i]).toFixed(precision) + ' ' + unit;
     });
 
   $('[data-toggle=\'tooltip\']').tooltip();

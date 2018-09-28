@@ -88,7 +88,8 @@ class DataApiController extends Controller
             ->getRepository('AppBundle:DataValue')
             ->getValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
-        $data = $this->buildEvolutionDataObject($result, $frequency);
+        $axe = $this->buildEvolutionAxes($frequency, $start, $end);
+        $data = $this->buildEvolutionDataObject($result, $frequency, $axe);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -302,17 +303,17 @@ class DataApiController extends Controller
 
                 // Build axes.
                 $axe->x = [
-                  $this->get('translator')->trans('Lun.'),
-                  $this->get('translator')->trans('Mar.'),
-                  $this->get('translator')->trans('Mer.'),
-                  $this->get('translator')->trans('Jeu.'),
-                  $this->get('translator')->trans('Ven.'),
-                  $this->get('translator')->trans('Sam.'),
-                  $this->get('translator')->trans('Dim.'),
+                    $this->get('translator')->trans('Lun.'),
+                    $this->get('translator')->trans('Mar.'),
+                    $this->get('translator')->trans('Mer.'),
+                    $this->get('translator')->trans('Jeu.'),
+                    $this->get('translator')->trans('Ven.'),
+                    $this->get('translator')->trans('Sam.'),
+                    $this->get('translator')->trans('Dim.'),
                 ];
 
                 for($i = 0; $i<=24; $i++) {
-                  $axe->y[$i] = sprintf("%02d", $i) . 'h';
+                    $axe->y[$i] = sprintf("%02d", $i) . 'h';
                 }
                 //$axe->y = array_reverse($axe->y);
                 break;
@@ -326,22 +327,22 @@ class DataApiController extends Controller
 
                 // Build axes.
                 $axe->y = [
-                  $this->get('translator')->trans('Lun.'),
-                  $this->get('translator')->trans('Mar.'),
-                  $this->get('translator')->trans('Mer.'),
-                  $this->get('translator')->trans('Jeu.'),
-                  $this->get('translator')->trans('Ven.'),
-                  $this->get('translator')->trans('Sam.'),
-                  $this->get('translator')->trans('Dim.'),
+                    $this->get('translator')->trans('Lun.'),
+                    $this->get('translator')->trans('Mar.'),
+                    $this->get('translator')->trans('Mer.'),
+                    $this->get('translator')->trans('Jeu.'),
+                    $this->get('translator')->trans('Ven.'),
+                    $this->get('translator')->trans('Sam.'),
+                    $this->get('translator')->trans('Dim.'),
                 ];
 
                 $currentDate = clone $start;
                 $endYear =  (int)$end->format('Y');
                 $endWeek =  (int)$end->format('W');
                 while((int)$currentDate->format('W') <= $endWeek && (int)$currentDate->format('Y') == $endYear) {
-                  $axe->x[] = (int)$currentDate->format('W');
-                  $axe->year[] = (int)$currentDate->format('Y');
-                  $currentDate->add(new \DateInterval('P1W'));
+                    $axe->x[] = (int)$currentDate->format('W');
+                    $axe->year[] = (int)$currentDate->format('Y');
+                    $currentDate->add(new \DateInterval('P1W'));
                 }
                 break;
 
@@ -354,22 +355,22 @@ class DataApiController extends Controller
 
                 // Build axes.
                 $axe->x = [
-                  $this->get('translator')->trans('Lun.'),
-                  $this->get('translator')->trans('Mar.'),
-                  $this->get('translator')->trans('Mer.'),
-                  $this->get('translator')->trans('Jeu.'),
-                  $this->get('translator')->trans('Ven.'),
-                  $this->get('translator')->trans('Sam.'),
-                  $this->get('translator')->trans('Dim.'),
+                    $this->get('translator')->trans('Lun.'),
+                    $this->get('translator')->trans('Mar.'),
+                    $this->get('translator')->trans('Mer.'),
+                    $this->get('translator')->trans('Jeu.'),
+                    $this->get('translator')->trans('Ven.'),
+                    $this->get('translator')->trans('Sam.'),
+                    $this->get('translator')->trans('Dim.'),
                 ];
 
                 $currentDate = clone $start;
                 $endYear =  (int)$end->format('Y');
                 $endWeek =  (int)$end->format('W');
                 while((int)$currentDate->format('W') <= $endWeek && (int)$currentDate->format('Y') == $endYear) {
-                  $axe->y[] = $currentDate->format('W');
-                  $axe->year[] = (int)$currentDate->format('Y');
-                  $currentDate->add(new \DateInterval('P1W'));
+                    $axe->y[] = $currentDate->format('W');
+                    $axe->year[] = (int)$currentDate->format('Y');
+                    $currentDate->add(new \DateInterval('P1W'));
                 }
                 break;
 
@@ -493,35 +494,89 @@ class DataApiController extends Controller
         return $data;
     }
 
-    private function buildEvolutionDataObject($results, $frequency)
+    private function buildEvolutionDataObject($results, $frequency, $axe)
     {
         $data = (object)[
-            'axeX' => [],
+            'label' => $axe->label,
+            'axeX' => $axe->x,
             'axeY' => [],
         ];
 
         switch ($frequency) {
-          case 'HOUR':
-             $axeFormat = 'd/m/Y H:i';
-             break;
-          case 'DAY':
-              $axeFormat = 'd/m/Y';
-              break;
-          case 'WEEK':
-              $axeFormat = 'd/m/Y';
-              break;
-          case 'MONTH':
-              $axeFormat = 'M Y';
-              break;
-          case 'YEAR':
-              $axeFormat = 'Y';
+            case 'HOUR':
+               $axeFormat = 'd/m/Y H:i';
+               break;
+            case 'DAY':
+                $axeFormat = 'd/m/Y';
+                break;
+            case 'WEEK':
+                $axeFormat = 'd/m/Y';
+                break;
+            case 'MONTH':
+                $axeFormat = 'M Y';
+                break;
+            case 'YEAR':
+                $axeFormat = 'Y';
         }
 
         foreach ($results as $result) {
-            $data->axeY[] = $result->getValue();
-            $data->axeX[] = $result->getDate()->format($axeFormat);
+            $index = array_search($result->getDate()->format($axeFormat), $axe->x);
+            $data->axeY[$index] = $result->getValue();
         }
 
+        foreach (array_keys($axe->x) as $key) {
+            if (!isset($data->axeY[$key]))
+                $data->axeY[$key] = 0;
+        }
+
+        ksort($data->axeY);
+
         return $data;
+    }
+
+    private function buildEvolutionAxes($frequency, $start, $end)
+    {
+        $axe = (object)[
+            'x' => [],
+            'label' => [],
+        ];
+        $axeFormat = '';
+        $step = '';
+
+        switch ($frequency) {
+            case 'HOUR':
+                $axeFormat = 'd/m/Y H:i';
+                $labelFormat = 'l d/m/Y H:i';
+                $step = 'P1H';
+                break;
+            case 'DAY':
+                $axeFormat = 'd/m/Y';
+                $labelFormat = 'l d/m/Y';
+                $step = 'P1D';
+                break;
+            case 'WEEK':
+                $axeFormat = 'd/m/Y';
+                $labelFormat = 'd/m/Y';
+                $step = 'P1W';
+                break;
+            case 'MONTH':
+                $axeFormat = 'M Y';
+                $labelFormat = 'M Y';
+                $step = 'P1M';
+                break;
+            case 'YEAR':
+                $axeFormat = 'Y';
+                $labelFormat = 'Y';
+                $step = 'P1Y';
+        }
+
+        $currentDate = clone $start;
+        while($currentDate <= $end) {
+            $axe->x[] = $currentDate->format($axeFormat);
+            $axe->label[] = $currentDate->format($labelFormat);
+            $currentDate->add(new \DateInterval($step));
+        }
+
+        return $axe;
     }
 }
