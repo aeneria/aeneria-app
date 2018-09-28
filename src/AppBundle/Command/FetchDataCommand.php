@@ -44,16 +44,24 @@ class FetchDataCommand extends ContainerAwareCommand
         ->setHelp('This command allows you to fetch yesterday data for all defined feeds')
 
         // argument to know if we want to force refresh.
-        ->addArgument('force', InputArgument::REQUIRED, 'Refresh yesterday data even if it already exists ?')
+        ->addArgument('force', InputArgument::REQUIRED, 'Refresh data for $date even if it already exists ?')
+
+        // argument to know if we want to force refresh.
+        ->addArgument('date', InputArgument::OPTIONAL, 'The date we want to fetch data format Y-m-d, if not given, fetch data for yesterday.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+      if($date=$input->getArgument('date')) {
+        $date = new \DateTime($date);
+      }
+      else {
         // Get yesterday datetime.
-        $yesterday = new \DateTime();
-        $yesterday->sub(new \DateInterval('P1D'));
-        $yesterday = new \DateTime($yesterday->format("Y-m-d 00:00:00"));
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P1D'));
+        $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+      }
 
         // We fetch all Feeds data.
         $feeds = $this->entityManager->getRepository('AppBundle:Feed')->findAll();
@@ -62,7 +70,7 @@ class FetchDataCommand extends ContainerAwareCommand
         /** @var \AppBundle\Entity\Feed $feeds */
         foreach($feeds as $feed) {
             $callback = Feed::FEED_TYPES[$feed->getFeedType()]['FETCH_CALLBACK'];
-            $this->$callback($feed, $input->getArgument('force'), $yesterday);
+            $this->$callback($feed, $input->getArgument('force'), $date);
         }
     }
 

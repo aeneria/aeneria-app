@@ -48,7 +48,7 @@ var refreshGraph = function () {
     url: appRoute + 'data/conso_elec/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
     success: function( result ) {
       var data = JSON.parse(result);
-      displayGlobalEvolution(data, 'conso-global-evolution', colors[8], 'kWh', 1);
+      displayGlobalEvolution(data, 'conso-global-evolution', colors[7], 'kWh', 1);
     }
   });
 }

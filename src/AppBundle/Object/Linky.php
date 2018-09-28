@@ -231,7 +231,7 @@ class Linky {
     private function getDataPerHour($date)
     {
         // Start from date - 2days to date + 1 day...
-        $endDate = \DateTime::createFromFormat('d/m/Y', $date)->add(new \DateInterval('P1D'));
+        $endDate = \DateTime::createFromFormat('d/m/Y', $date);
         $endDate = $endDate->format('d/m/Y');
         $startDate = \DateTime::createFromFormat('d/m/Y', $date);
         $startDate->sub(new \DateInterval('P2D'));
