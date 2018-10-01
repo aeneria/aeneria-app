@@ -232,6 +232,7 @@ class Linky {
     {
         // Start from date - 2days to date + 1 day...
         $endDate = \DateTime::createFromFormat('d/m/Y', $date);
+        $endDate->add(new \DateInterval('P1D'));
         $endDate = $endDate->format('d/m/Y');
         $startDate = \DateTime::createFromFormat('d/m/Y', $date);
         $startDate->sub(new \DateInterval('P2D'));

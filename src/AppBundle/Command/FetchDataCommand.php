@@ -53,15 +53,17 @@ class FetchDataCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      if($date=$input->getArgument('date')) {
-        $date = new \DateTime($date);
-      }
-      else {
-        // Get yesterday datetime.
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P1D'));
-        $date = new \DateTime($date->format("Y-m-d 00:00:00"));
-      }
+        if($date=$input->getArgument('date')) {
+            $date = new \DateTime($date);
+        }
+        else {
+            // Get yesterday datetime.
+            $date = new \DateTime();
+            $date->sub(new \DateInterval('P1D'));
+            $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+        }
+ 
+        $force = filter_var($input->getArgument('force'), FILTER_VALIDATE_BOOLEAN);
 
         // We fetch all Feeds data.
         $feeds = $this->entityManager->getRepository('AppBundle:Feed')->findAll();
@@ -70,7 +72,7 @@ class FetchDataCommand extends ContainerAwareCommand
         /** @var \AppBundle\Entity\Feed $feeds */
         foreach($feeds as $feed) {
             $callback = Feed::FEED_TYPES[$feed->getFeedType()]['FETCH_CALLBACK'];
-            $this->$callback($feed, $input->getArgument('force'), $date);
+            $this->$callback($feed, $force, $date);
         }
     }
 

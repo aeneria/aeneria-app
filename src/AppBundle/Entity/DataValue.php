@@ -339,5 +339,7 @@ class DataValue
                 $date = new \DateTime($date->format("Y-01-01 00:00:00"));
                 break;
         }
+        
+        return $date;
     }
 }

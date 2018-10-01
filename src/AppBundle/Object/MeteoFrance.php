@@ -51,7 +51,6 @@ class MeteoFrance {
         DataValue::FREQUENCY['DAY'],
         DataValue::FREQUENCY['WEEK'],
         DataValue::FREQUENCY['MONTH'],
-        DataValue::FREQUENCY['YEAR'],
     ];
 
     /**
