@@ -33,8 +33,7 @@ class DataApiController extends Controller
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();
-        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Set and build axes's type & frequency according to repartitionType.
         list($axe, $axeX, $axeY, $frequency) = $this->buildRepartitionAxes($repartitionType, $start, $end);
@@ -73,8 +72,7 @@ class DataApiController extends Controller
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();
-        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -113,8 +111,7 @@ class DataApiController extends Controller
     {
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();
-        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -151,7 +148,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -188,7 +185,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -225,7 +222,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
@@ -262,7 +259,7 @@ class DataApiController extends Controller
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end) : new \DateTime();        $end->add(new \DateInterval('P1D'));
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
         $feedData = $this
