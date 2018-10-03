@@ -16,6 +16,10 @@ A dashboard with several tabs :
 * Meteo (T°) and energy consumption (work in progress)
 * Meteo (T°, Nebulosity, Rain)
 
+![pilea startup screen](docs/pilea1.png)
+
+![pilea analyze screen](docs/pilea2.png)
+
 ### Data
 
 Data are daily collected, we get:
@@ -26,7 +30,7 @@ Data are daily collected, we get:
 ### Install
 
 * Get the repo
-* Create a database & set it up in app/config/parameters.yml
-* Update schema: `bin/console doctrine:schema:create`
-* Set up the cron: `echo "0  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
-  (replace [user] and [app_floder] with your config)
+* Copy app/config/parameters.yml.dist to app/config/parameters.yml
+* Set Database name and password in parameters.yml
+* Run install script: `bin/console pilea:install [user]`
+  (where *[user]* is the user who will run the cron)
