@@ -39,7 +39,7 @@ class ConfigurationController extends Controller
             }
         }
 
-        return $this->render('bases/config.html.twig', array(
+        return $this->render('pages/config.html.twig', array(
             'form_linky' => $linkyForm->createView(),
             'form_meteo_france' => $meteoFranceForm->createView(),
         ));

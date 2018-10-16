@@ -53,7 +53,7 @@ class DefaultController extends Controller
      */
     public function aboutAction(Request $request)
     {
-      return $this->render('bases/about.html.twig', [
+      return $this->render('pages/about.html.twig', [
         'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
       ]);
     }
