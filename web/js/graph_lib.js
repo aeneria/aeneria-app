@@ -49,8 +49,8 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
   var color = d3
     .scaleQuantile()
     .domain([
-        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
-        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+        (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
+        (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
       ])
     .range(colors);
 
@@ -170,8 +170,8 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
   var color = d3
     .scaleQuantile()
     .domain([
-        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
-        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+        (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
+        (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
       ])
     .range(colors);
 
@@ -291,8 +291,8 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
   var color = d3
     .scaleQuantile()
     .domain([
-        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
-        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+        (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
+        (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
       ])
     .range(colors);
 
@@ -411,7 +411,7 @@ var displayGlobalEvolution = function(result, target, color, unit, precision) {
   yScale = d3
     .scaleLinear()
     .range([0, height])
-    .domain([d3.max(result.axeY), 0]);
+    .domain([Math.max(...result.axeY), 0]);
 
   var chart = svg
     .append('g')
@@ -503,8 +503,8 @@ var displayLegend = function(result, target, colors, unit, precision, min, max) 
   var color = d3
     .scaleQuantile()
     .domain([
-        (typeof min !== 'undefined') ? min : d3.min(result.data.values),
-        (typeof max !== 'undefined') ? max : d3.max(result.data.values)
+        (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
+        (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
       ])
     .range(colors);
 
@@ -539,12 +539,12 @@ var displayLegend = function(result, target, colors, unit, precision, min, max) 
         var lastIndex = colors.length - 1;
         switch (i) {
           case 0:
-            sup = (typeof max !== 'undefined') ? max : d3.max(result.data.values);
+            sup = (typeof max !== 'undefined') ? max : Math.max(...result.data.values);
             inf = color.quantiles()[lastIndex - 1];
             break;
           case lastIndex:
             sup = color.quantiles()[0];
-            inf = (typeof min !== 'undefined') ? min : d3.min(result.data.values);
+            inf = (typeof min !== 'undefined') ? min : Math.min(...result.data.values);
             break;
           default:
             sup = color.quantiles()[colors.length - 1 - i];
