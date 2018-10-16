@@ -139,7 +139,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
   var margin_top = 30;
-  var margin_left = 25;
+  var margin_left = 30;
   var margin_bottom = 10;
   var total_height = margin_top + rows * DAY_SIZE + margin_bottom;
   var total_width = margin_left + cols * DAY_SIZE;
@@ -604,7 +604,7 @@ var displayLegendTick = function (target, margin_left, index, label, value) {
   .text(label);
 
   target.append("text")
-  .attr("x", margin_left + 25)
+  .attr("x", margin_left + 21)
   .attr("y", index * DAY_SIZE + 10)
   .text(value);
 }

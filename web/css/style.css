@@ -224,8 +224,9 @@ text {
 
 .meteo-top {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   display: flex;
+  height: 120px;
 }
 
 .meteo-top > p {

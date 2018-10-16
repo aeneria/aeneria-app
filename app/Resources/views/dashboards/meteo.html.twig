@@ -15,7 +15,7 @@
                 <p>
                   <b><span id="dju">--</span> {{ ' DJU' | trans }}</b>
                   <br>
-                  {{ 'degrés jour unifié' | trans }}
+                  {{ '(degrés jour unifié)' | trans }}
                 </p>
               </div>
               <div class="meteo-card-1">
@@ -34,7 +34,11 @@
               <div class="meteo-top">
                 <img alt="cloud" src="{{ asset('image/cloud.svg') }}" class="meteo-logo">
                 <p>
-                  <b><span id="neb-day">--</span> {{ ' jours' | trans }}</b>
+                  <b>
+                    <span id="neb-day">--</span>/<span class="nb-day">--</span>
+                    <br>
+                    {{ ' jours' | trans }}
+                    </b>
                   <br>
                   {{ 'sans nuages' | trans }}
                 </p>
@@ -55,7 +59,11 @@
               <div class="meteo-top">
                 <img alt="rain" src="{{ asset('image/rain.svg') }}" class="meteo-logo">
                 <p>
-                  <b><span id="rain-day">--</span> {{ ' jours' | trans }}</b>
+                  <b>
+                    <span id="rain-day">--</span>/<span class="nb-day">--</span>
+                    <br>
+                    {{ ' jours' | trans }}
+                  </b>
                   <br>
                   {{ 'sans pluie' | trans }}
                 </p>

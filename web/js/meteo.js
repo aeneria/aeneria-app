@@ -24,7 +24,7 @@ var refreshGraph = function () {
     }
   });
 
-  //Refresh DJU total.
+  // Refresh DJU total.
   $.ajax({
     url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
@@ -38,7 +38,6 @@ var refreshGraph = function () {
     url: appRoute + 'data/nebulosity/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-//      var color = ['#62ddf7', '#67d7ef', '#6cd1e6', '#71cbde', '#76c6d6', '#7bbfce', '#80b9c6', '#84b4be', '#89afb6'];
       var color = ['#20CFFE', '#48C4EB', '#5BBAD9', '#67AFC7', '#6EA5B7', '#729BA7', '#749198', '#758889', '#747E7C'];
       displayGlobalRepartitionV(data, 'neb-repartition', color, '%', 1, 0, 100);
       displayLegend(data, 'neb-repartition-legend', color, '%', 1, 0, 100);
@@ -72,6 +71,14 @@ var refreshGraph = function () {
       document.getElementById('rain-day').innerHTML = parseFloat(data[0].value).toFixed(0);
     }
   });
+
+  // Refresh total of days.
+  nbDay = (new Date(endDate) - new Date(startDate)) / (1000*60*60*24);
+  var nbDayElement = document.getElementsByClassName('nb-day');
+  for(var i = 0; i < nbDayElement.length; i++) {
+    nbDayElement.item(i).innerHTML = nbDay;
+  }
+
 }
 
 $(document).ready(function () {
