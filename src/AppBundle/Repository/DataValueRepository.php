@@ -15,171 +15,197 @@ use AppBundle\Controller\DataApiController;
  */
 class DataValueRepository extends \Doctrine\ORM\EntityRepository
 {
-  /**
-   * Get an average value
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param int $frequency
-   */
-  public function getAverageValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get an average value
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param int $frequency
+    */
+    public function getAverageValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('AVG(d.value) AS value');
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.feedData');
-      return $queryBuilder
-          ->getQuery()
-          ->getScalarResult();
-  }
+        $queryBuilder->select('AVG(d.value) AS value');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->groupBy('d.feedData');
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
 
-  /**
-   * Get an minimum value
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param int $frequency
-   */
-  public function getMinValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get an minimum value
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param int $frequency
+    */
+    public function getMinValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('MIN(d.value) AS value, d.date');
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.feedData');
-      return $queryBuilder
-      ->getQuery()
-      ->getScalarResult();
-  }
+        $queryBuilder->select('MIN(d.value) AS value, d.date');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->groupBy('d.feedData');
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
 
-  /**
-   * Get an maximum value
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param int $frequency
-   */
-  public function getMaxValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get an maximum value
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param int $frequency
+    */
+    public function getMaxValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('MAX(d.value) AS value, d.date');
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.feedData');
-      return $queryBuilder
-      ->getQuery()
-      ->getScalarResult();
-  }
+        $queryBuilder->select('MAX(d.value) AS value, d.date');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->groupBy('d.feedData');
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
 
-  /**
-   * Get sum of value
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param string $frequency
-   */
-  public function getSumValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get sum of value
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param string $frequency
+    */
+    public function getSumValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('SUM(d.value) AS value');
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->select('SUM(d.value) AS value');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->groupBy('d.feedData');
 
-      return $queryBuilder
-          ->getQuery()
-          ->getScalarResult();
-  }
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
 
-  /**
-   * Get number of item inferior than value
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param string $frequency
-   */
-  public function getNumberInfValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, $value)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get number of item inferior than value
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param string $frequency
+    */
+    public function getNumberInfValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, $value)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('COUNT(d.date) AS value');
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->andWhere('d.value <= :value');
-      $queryBuilder->setParameter('value', $value);
-      $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->select('COUNT(d.date) AS value');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->andWhere('d.value <= :value');
+        $queryBuilder->setParameter('value', $value);
+        $queryBuilder->groupBy('d.feedData');
 
-      return $queryBuilder
-      ->getQuery()
-      ->getScalarResult();
-  }
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
 
-  /**
-   * Get value
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param string $frequency
-   */
-  public function getValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get value
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param string $frequency
+    */
+    public function getValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
 
-      return $queryBuilder
-          ->getQuery()
-          ->getResult();
-  }
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
 
-  /**
-   * Get repartition
-   *
-   * @param \DateTime $startDate
-   * @param \DateTime $endDate
-   * @param string $frequency
-   */
-  public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $axeX, $axeY, $frequency, $repartitionType)
-  {
-      // Create the query builder
-      $queryBuilder = $this->createQueryBuilder('d');
+    /**
+    * Get repartition
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param string $frequency
+    */
+    public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $axeX, $axeY, $frequency, $repartitionType)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
 
-      $queryBuilder->select('AVG(d.value) AS value, d.' . $axeX . ' AS axeX, d.' . $axeY . ' AS axeY');
-      $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-      $queryBuilder->groupBy('d.' . $axeX);
-      $queryBuilder->addGroupBy('d.' . $axeY);
+        $queryBuilder->select('AVG(d.value) AS value, d.' . $axeX . ' AS axeX, d.' . $axeY . ' AS axeY');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->groupBy('d.' . $axeX);
+        $queryBuilder->addGroupBy('d.' . $axeY);
 
-      // If this is a year repartition, we also group by year.
-      if (in_array($repartitionType, [DataApiController::YEAR_HORIZONTAL_REPARTITION, DataApiController::YEAR_VERTICAL_REPARTITION])) {
+        // If this is a year repartition, we also group by year.
+        if (in_array($repartitionType, [DataApiController::YEAR_HORIZONTAL_REPARTITION, DataApiController::YEAR_VERTICAL_REPARTITION])) {
           $queryBuilder->addSelect('d.year AS year');
           $queryBuilder->addGroupBy('d.year');
-      }
+        }
 
-      return $queryBuilder
-          ->getQuery()
-          ->getResult();
-  }
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
 
-  public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
-  {
-      DataValue::adaptToFrequency($startDate, $frequency);
+    /**
+    * Add condition on querybuild on:
+    *    - dates
+    *    - feedData
+    *    - frequency
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param FeedData $feedData
+    * @param unknown $frequency
+    * @param QueryBuilder $queryBuilder
+    */
+    public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
+    {
+        DataValue::adaptToFrequency($startDate, $frequency);
 
-      $queryBuilder
-          ->andWhere('d.date BETWEEN :start AND :end')
-          ->setParameter('start', $startDate)
-          ->setParameter('end',   $endDate)
-          // Add condition on feedData
-          ->andWhere('d.feedData = :feedData')
-          ->setParameter('feedData', $feedData->getId())
-          // Add condition on frequency
-          ->andWhere('d.frequency = :frequency')
-          ->setParameter('frequency', $frequency)
-          ->orderBy('d.date', 'asc');
-  }
+        $queryBuilder
+            ->andWhere('d.date BETWEEN :start AND :end')
+            ->setParameter('start', $startDate)
+            ->setParameter('end',   $endDate)
+            // Add condition on feedData
+            ->andWhere('d.feedData = :feedData')
+            ->setParameter('feedData', $feedData->getId())
+            // Add condition on frequency
+            ->andWhere('d.frequency = :frequency')
+            ->setParameter('frequency', $frequency)
+            ->orderBy('d.date', 'asc');
+    }
+
+
+    public function getPeriodDataAmplitude()
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $queryBuilder->select('MIN(d.date), MAX(d.date)')
+        ->andWhere('d.frequency = :frequency')
+        ->setParameter('frequency', 2);
+
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

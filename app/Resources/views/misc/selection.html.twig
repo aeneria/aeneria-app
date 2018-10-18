@@ -9,3 +9,7 @@
     <button class="btn btn-primary pilea-select-all pilea-refresh">Tout</button>
 </form>
 
+{{ render(controller(
+    'AppBundle:Default:period',
+    { 'max': 3 }
+)) }}

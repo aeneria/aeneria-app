@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\DataValue;
 
 class DefaultController extends Controller
 {
@@ -43,9 +44,9 @@ class DefaultController extends Controller
      */
     public function meteoAction(Request $request)
     {
-      return $this->render('dashboards/meteo.html.twig', [
-        'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-      ]);
+        return $this->render('dashboards/meteo.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
     }
 
     /**
@@ -53,8 +54,20 @@ class DefaultController extends Controller
      */
     public function aboutAction(Request $request)
     {
-      return $this->render('pages/about.html.twig', [
-        'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-      ]);
+        return $this->render('pages/about.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+    public function periodAction()
+    {
+        $period = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getPeriodDataAmplitude();
+
+        return $this->render('misc/period.html.twig', [
+            'period' => $period[0],
+        ]);
     }
 }
