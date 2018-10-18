@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 100 125"
+   x="0px"
+   y="0px"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="humidity.svg"
+   inkscape:version="0.92.3 (d244b95, 2018-08-02)">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2510"
+     inkscape:window-height="1376"
+     id="namedview14"
+     showgrid="false"
+     inkscape:zoom="1.888"
+     inkscape:cx="50"
+     inkscape:cy="62.5"
+     inkscape:window-x="50"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <title
+     id="title2">pix-humidity-half</title>
+  <g
+     id="g6"
+     transform="translate(0,12.5)">
+    <path
+       d="M 59.34,30.93 50,16 40.66,30.93 C 35.93,38.48 28,52.41 28,60.83 28,73.6 37.87,84 50,84 62.13,84 72,73.6 72,60.83 72,52.41 64.07,38.48 59.34,30.93 Z m -13.6,3.18 4.26,-6.8 4.26,6.8 A 127.38,127.38 0 0 1 62.87,50 H 37.13 a 127.38,127.38 0 0 1 8.61,-15.89 z m 2.47,43.77 a 16.07,16.07 0 0 0 3.58,0 13.41,13.41 0 0 1 -3.58,0 z"
+       id="path4"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
