@@ -72,6 +72,25 @@ var refreshGraph = function () {
     }
   });
 
+  // Refresh humidity repartition.
+  $.ajax({
+    url: appRoute + 'data/humidity/repartition/year_v/' + startDate + '/' + endDate + '',
+    success: function(result) {
+      var data = JSON.parse(result);
+      displayGlobalRepartitionV(data, 'humidity-repartition', d3.schemeGnBu[9], '%', 1, 0, 100);
+      displayLegend(data, 'humidity-repartition-legend', d3.schemeGnBu[9], '%', 1, 0, 100);
+    }
+  });
+
+  // Refresh day at less than 70% of humidity.
+  $.ajax({
+    url: appRoute + 'data/humidity/inf/70/day/' + startDate + '/' + endDate + '',
+    success: function(result) {
+      var data = JSON.parse(result);
+      document.getElementById('humidity-day').innerHTML = parseFloat(data[0].value).toFixed(0);
+    }
+  });
+
   // Refresh total of days.
   nbDay = (new Date(endDate) - new Date(startDate)) / (1000*60*60*24);
   var nbDayElement = document.getElementsByClassName('nb-day');

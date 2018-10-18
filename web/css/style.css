@@ -247,7 +247,7 @@ text {
   max-height: 100px;
 }
 
-#neb-day, #rain-day, #dju {
+#neb-day, #rain-day, #dju, #humidity-day {
   font-size: 2.3em;
 }
 

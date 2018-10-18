@@ -5,7 +5,7 @@
 {% block body %}
   <div class="container-fluid">
     <div class="row">
-      <div id="temperature" class="col-4">
+      <div id="temperature" class="col-md-3">
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Température' | trans }}</h2>
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div id="nebulosity" class="col-4">
+      <div id="nebulosity" class="col-md-3">
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Nébulosité' | trans }}</h2>
@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <div id="rain" class="col-4">
+      <div id="rain" class="col-md-3">
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Précipitations' | trans }}</h2>
@@ -71,6 +71,31 @@
               <div class="meteo-card-1">
                 <div id="rain-repartition" class="global-repartition"></div>
                 <div id="rain-repartition-legend" class="global-repartition-legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="humidity" class="col-md-3">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Humidité' | trans }}</h2>
+            <div class="content">
+              <div class="meteo-top">
+                <img alt="humidity" src="{{ asset('image/humidity.svg') }}" class="meteo-logo">
+                <p>
+                  <b>
+                    <span id="humidity-day">--</span>/<span class="nb-day">--</span>
+                    <br>
+                    {{ ' jours' | trans }}
+                  </b>
+                  <br>
+                  {{ 'à moins de 70%' | trans }}
+                </p>
+              </div>
+              <div class="content meteo-card-1">
+                <div id="humidity-repartition" class="global-repartition"></div>
+                <div id="humidity-repartition-legend" class="global-repartition-legend"></div>
               </div>
             </div>
           </div>
