@@ -167,6 +167,27 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
+    * Get XY
+    *
+    * @param \DateTime $startDate
+    * @param \DateTime $endDate
+    * @param string $frequency
+    */
+    public function getSumValueGroupBy(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, $groupBy)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $queryBuilder->select('SUM(d.value) AS value, d.' . $groupBy . ' AS groupBy');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->groupBy('d.' . $groupBy);
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
     * Add condition on querybuild on:
     *    - dates
     *    - feedData

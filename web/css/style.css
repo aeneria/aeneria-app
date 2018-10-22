@@ -215,16 +215,8 @@ text {
 
 /* GENERAL DASH /////////////////////////////////////////////////////////////*/
 
-.dash-gen-row-1 .card {
-  height: 240px;
-}
-
-.dash-gen-row-2 .card {
-  height: 550px;
-}
-
-.dash-gen-card-1 {
-  display: flex;
+.gen-first-col .card {
+  min-height: 820px;
 }
 
 /* METEO DASH ///////////////////////////////////////////////////////////////*/
@@ -247,7 +239,7 @@ text {
   max-height: 100px;
 }
 
-#neb-day, #rain-day, #dju, #humidity-day {
+.dash-index {
   font-size: 2.3em;
 }
 

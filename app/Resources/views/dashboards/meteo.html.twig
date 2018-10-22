@@ -13,7 +13,7 @@
               <div class="meteo-top">
                 <img alt="temperature" src="{{ asset('image/temperature.svg') }}" class="meteo-logo">
                 <p>
-                  <b><span id="dju">--</span> {{ ' DJU' | trans }}</b>
+                  <b><span id="dju" class="dash-index">--</span> {{ ' DJU' | trans }}</b>
                   <br>
                   {{ '(degrés jour unifié)' | trans }}
                 </p>
@@ -35,7 +35,7 @@
                 <img alt="cloud" src="{{ asset('image/cloud.svg') }}" class="meteo-logo">
                 <p>
                   <b>
-                    <span id="neb-day">--</span>/<span class="nb-day">--</span>
+                    <span id="neb-day" class="dash-index">--</span>/<span class="nb-day">--</span>
                     <br>
                     {{ ' jours' | trans }}
                     </b>
@@ -60,7 +60,7 @@
                 <img alt="rain" src="{{ asset('image/rain.svg') }}" class="meteo-logo">
                 <p>
                   <b>
-                    <span id="rain-day">--</span>/<span class="nb-day">--</span>
+                    <span id="rain-day" class="dash-index">--</span>/<span class="nb-day">--</span>
                     <br>
                     {{ ' jours' | trans }}
                   </b>
@@ -85,7 +85,7 @@
                 <img alt="humidity" src="{{ asset('image/humidity.svg') }}" class="meteo-logo">
                 <p>
                   <b>
-                    <span id="humidity-day">--</span>/<span class="nb-day">--</span>
+                    <span id="humidity-day" class="dash-index">--</span>/<span class="nb-day">--</span>
                     <br>
                     {{ ' jours' | trans }}
                   </b>

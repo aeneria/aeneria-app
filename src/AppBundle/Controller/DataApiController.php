@@ -15,7 +15,7 @@ class DataApiController extends Controller
     const YEAR_VERTICAL_REPARTITION = 'YEAR_V';
 
     /**
-     * Get json to build an heatmap graph between to date.
+     * Get json to build an heatmap graph between two date.
      *
      * @Route("/data/{dataType}/repartition/{repartitionType}/{start}/{end}", name="data-api-repartition")
      *
@@ -54,7 +54,7 @@ class DataApiController extends Controller
     }
 
     /**
-     * Get json to build an evolution graph between to date.
+     * Get json to build an evolution graph between two date.
      *
      * @Route("/data/{dataType}/evolution/{frequency}/{start}/{end}", name="data-api-evolution")
      *
@@ -94,7 +94,68 @@ class DataApiController extends Controller
     }
 
     /**
-     * Get sum between to date.
+     * Get json to build an sum of value graph group by a dataValue column between two date.
+     *
+     * @Route("/data/{dataType}/sum-group/{frequency}/{groupBy}/{start}/{end}", name="data-api-sum-group-by")
+     *
+     * @param Request $request
+     * @param string $dataType
+     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $frequency
+     *     Frequency we want for the evolution (day, week, month)
+     * @param string $groupBy
+     *     The column we want to group by (from dataValue table)
+     * @param string $start
+     * @param string $end
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getSumGroupByAction(Request $request, $dataType, $frequency, $groupBy, $start = NULL, $end = NULL)
+    {
+        $frequency = strtoupper($frequency);
+        $dataType = strtoupper($dataType);
+        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+
+        // Find feedData with the good dataType.
+        $feedData = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataType);
+
+        // Get data between $start & $end for requested frequency.
+        $result = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getSumValueGroupBy($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $groupBy);
+
+        $axe = (object)[
+            'x' => [
+                $this->get('translator')->trans('Lun.'),
+                $this->get('translator')->trans('Mar.'),
+                $this->get('translator')->trans('Mer.'),
+                $this->get('translator')->trans('Jeu.'),
+                $this->get('translator')->trans('Ven.'),
+                $this->get('translator')->trans('Sam.'),
+                $this->get('translator')->trans('Dim.'),
+            ],
+            'label' => [
+                $this->get('translator')->trans('Lun.'),
+                $this->get('translator')->trans('Mar.'),
+                $this->get('translator')->trans('Mer.'),
+                $this->get('translator')->trans('Jeu.'),
+                $this->get('translator')->trans('Ven.'),
+                $this->get('translator')->trans('Sam.'),
+                $this->get('translator')->trans('Dim.'),
+            ],
+        ];
+        $data = $this->buildSumGroupByDataObject($result, $axe);
+
+        $jsonData = json_encode($data);
+        return new JsonResponse($jsonData, 200);
+    }
+
+    /**
+     * Get sum between two date.
      *
      * @Route("/data/{dataType}/sum/{start}/{end}", name="data-api-sum")
      *
@@ -130,7 +191,7 @@ class DataApiController extends Controller
     }
 
     /**
-     * Get average by <frequency> between to date.
+     * Get average by <frequency> between two date.
      *
      * @Route("/data/{dataType}/avg/{frequency}/{start}/{end}", name="data-api-average")
      *
@@ -167,7 +228,7 @@ class DataApiController extends Controller
     }
 
     /**
-     * Get max by <frequency> between to date.
+     * Get max by <frequency> between two date.
      *
      * @Route("/data/{dataType}/max/{frequency}/{start}/{end}", name="data-api-max")
      *
@@ -204,7 +265,7 @@ class DataApiController extends Controller
     }
 
     /**
-     * Get minimum by <frequency> between to date.
+     * Get minimum by <frequency> between two date.
      *
      * @Route("/data/{dataType}/min/{frequency}/{start}/{end}", name="data-api-min")
      *
@@ -241,7 +302,7 @@ class DataApiController extends Controller
     }
 
     /**
-     * Get number of value by <frequency> between to date.
+     * Get number of value by <frequency> between two date.
      *
      * @Route("/data/{dataType}/inf/{value}/{frequency}/{start}/{end}", name="data-api-number")
      *
@@ -519,6 +580,29 @@ class DataApiController extends Controller
         foreach ($results as $result) {
             $index = array_search($result->getDate()->format($axeFormat), $axe->x);
             $data->axeY[$index] = $result->getValue();
+        }
+
+        foreach (array_keys($axe->x) as $key) {
+            if (!isset($data->axeY[$key]))
+                $data->axeY[$key] = 0;
+        }
+
+        ksort($data->axeY);
+
+        return $data;
+    }
+
+    private function buildSumGroupByDataObject($results, $axe)
+    {
+        $data = (object)[
+            'label' => $axe->label,
+            'axeX' => $axe->x,
+            'axeY' => [],
+        ];
+
+        foreach ($results as $result) {
+            $index = $result['groupBy'];
+            $data->axeY[$index] = $result['value'];
         }
 
         foreach (array_keys($axe->x) as $key) {

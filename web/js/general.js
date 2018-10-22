@@ -20,7 +20,7 @@ var refreshGraph = function () {
     url: appRoute + 'data/conso_elec/sum/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      document.getElementById('conso-total').innerHTML = '<b>' + parseFloat(data[0].value).toFixed(1) + ' kWh</b>';
+      document.getElementById('conso-total').innerHTML = parseFloat(data[0].value).toFixed(1);
     }
   });
 
@@ -35,10 +35,10 @@ var refreshGraph = function () {
 
   // Refresh global repartition.
   $.ajax({
-    url: appRoute + 'data/conso_elec/repartition/year_h/' + startDate + '/' + endDate + '',
+    url: appRoute + 'data/conso_elec/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionH(data, 'conso-global-repartition', colors, 'kWh', 1, 0);
+      displayGlobalRepartitionV(data, 'conso-global-repartition', colors, 'kWh', 1, 0);
       displayLegend(data, 'conso-global-repartition-legend', colors, 'kWh', 1);
     }
   });
@@ -49,6 +49,15 @@ var refreshGraph = function () {
     success: function( result ) {
       var data = JSON.parse(result);
       displayGlobalEvolution(data, 'conso-global-evolution', colors[7], 'kWh', 1);
+    }
+  });
+
+  // Refresh global week frequency.
+  $.ajax({
+    url: appRoute + 'data/conso_elec/sum-group/day/weekDay/' + startDate + '/' + endDate + '',
+    success: function( result ) {
+      var data = JSON.parse(result);
+      displayGlobalEvolution(data, 'conso-week-frequency', colors[7], 'kWh', 1, 95, 180, 50);
     }
   });
 }

@@ -15,13 +15,14 @@ var DAY_SIZE = 15;
  *
  */
 var displayWeekRepartition = function(result, target, colors, unit, precision, min, max) {
-  var rows = 24; // Number of hours in a day
-  var cols = 7; // Number of days in a week
+  var rows = 7; // Number of hours in a day
+  var cols = 24; // Number of days in a week
   var margin_top = 50;
-  var margin_left = 25;
+  var margin_left = 30;
+  var margin_right = 30;
   var margin_bottom = 10;
   var total_height = margin_top + rows * DAY_SIZE + margin_bottom;
-  var total_width = margin_left + cols * DAY_SIZE;
+  var total_width = margin_left + cols * DAY_SIZE + margin_right;
 
   var element = d3
     .select('#' + target);
@@ -62,6 +63,26 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
 
   chart
     .selectAll('.dayLabel')
+    .data(result.axe.y)
+    .enter()
+    .append('text')
+    .text(function(d, i) {
+      if (i % 3 == 0) {
+        return d;
+      } else {
+        return '';
+      }
+    })
+    .style('text-anchor', 'left')
+    .style('fill', AXE_COLOR)
+    .attr('transform', function(d, i) {
+        return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 4) + ')'
+    })
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10);
+
+  chart
+    .selectAll('.timeLabel')
     .data(result.axe.x)
     .enter()
     .append('text')
@@ -69,27 +90,7 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
     .attr('transform', function(d, i) {
-        return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 15) + ')'
-    })
-    .attr('font-family', 'sans-serif')
-    .attr('font-size', 10);
-
-  chart
-    .selectAll('.timeLabel')
-    .data(result.axe.y)
-    .enter()
-    .append('text')
-    .text(function(d, i) {
-        if (i % 3 == 0) {
-          return d;
-        } else {
-          return '';
-        }
-    })
-    .style('text-anchor', 'left')
-    .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
-      return 'translate(0,' + (i * DAY_SIZE + margin_top + 4) + ')'
+      return 'translate(0,' + (i * DAY_SIZE + margin_top + 15) + ')'
     })
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10);
@@ -100,10 +101,10 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .enter()
     .append('rect')
     .attr('x', function(d, i) {
-      return Math.floor(i / rows) * DAY_SIZE + margin_left;
+      return i % cols * DAY_SIZE + margin_left;
     })
     .attr('y', function(d, i) {
-      return i % rows * DAY_SIZE + margin_top;
+      return Math.floor(i / cols) * DAY_SIZE + margin_top;
     })
     .attr('width', DAY_SIZE)
     .attr('height', DAY_SIZE)
@@ -376,13 +377,10 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
  *   color :  hexadecimal color for bar
  *   unit : a string, the unit of the displayed data
  */
-var displayGlobalEvolution = function(result, target, color, unit, precision) {
+var displayGlobalEvolution = function(result, target, color, unit, precision, height = 350, width = 800, margin_bottom = 90) {
   var margin_top = 20;
   var margin_left = 20;
-  var margin_bottom = 90;
   var margin_right = 20;
-  var height = 350;
-  var width = 800;
 
   var element = d3
     .select('#' + target);
