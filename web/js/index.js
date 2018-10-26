@@ -27,9 +27,9 @@ var refreshGraph = function (target) {
   var end = end.toLocaleDateString();
 
   var startArray = start.split('/');
-  var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
+  var startDate = startArray[2] + '-' + startArray[0] + '-' + startArray[1];
   var endArray = end.split('/');
-  var endDate = endArray[2] + '-' + endArray[1] + '-' + endArray[0];
+  var endDate = endArray[2] + '-' + endArray[0] + '-' + endArray[1];
 
   // Refresh global conso repartition.
   $.ajax({
