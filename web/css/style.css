@@ -207,6 +207,12 @@ text {
 .load-more {
   display: flex;
   justify-content: center;
+  margin: 3px;
+  padding: 3px;
+}
+
+.load-more button {
+  border-radius: 20px 20px 20px 20px !important;
 }
 
 .month-summary > div > div > div {
