@@ -19,6 +19,9 @@
 /var/log/*
 !var/log/.gitkeep
 
+# Composer vendor
+/vendor
+
 # Parameters
 /app/config/parameters.yml
 /app/config/parameters.ini
