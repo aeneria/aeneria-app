@@ -317,6 +317,9 @@ class Feed
      */
     public function fetchDataToDate(EntityManager $entityManager, \DateTime $date) {
         $lastUpdateDate = $this->getLastUpToDate($entityManager);
+        if (empty($lastUpdateDate)) {
+            $lastUpdateDate = new \DateTime();
+        }
         $lastUpdateDate->add(new \DateInterval('P1D'));
 
         while($lastUpdateDate <= $date) {
