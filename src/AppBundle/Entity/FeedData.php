@@ -164,4 +164,24 @@ class FeedData
 
         return $isUpToDate;
     }
+
+    /**
+     * Get Date of last up to date data.
+     * @param EntityManager $entityManager
+     * @param $frequencies array of int from DataValue frequencies
+     *
+     * @return \Datetime
+     */
+    public function getLastUpToDate(EntityManager $entityManager)
+    {
+        // Try to get the corresponding DataValue.
+        $result = $entityManager
+            ->getRepository('AppBundle:DataValue')
+            ->getLastValue($this, DataValue::FREQUENCY['DAY']);
+        if (!empty($result)) {
+            return new \DateTime($result[0]['date']);
+        }
+
+        return NULL;
+    }
 }

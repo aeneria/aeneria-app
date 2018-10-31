@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Object;
+namespace AppBundle\FeedObject;
 
 
 use AppBundle\Entity\Feed;
@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 /**
  * Meteo France API to get SYNOP Observations.
  */
-class MeteoFrance {
+class MeteoFrance implements FeedObject {
 
     /**
      * Different usefull URIs.
@@ -121,41 +121,41 @@ class MeteoFrance {
     }
 
     /**
-     * Fetch SYNOP data for yesterday and persist its in database.
+     * Fetch SYNOP data for $date and persist its in database.
      *
      * @param \DateTime $date
      */
     public function fetchData(\DateTime $date)
     {
-        // Get datetime.
-        $date = new \DateTime($date->format("Y-m-d 00:00:00"));
-
         // Get all 3-hours interval data from yesterday.
         $rawData = $this->getRawData($date);
 
-        // Get 1 value for yesterday for each type of data.
-        $fastenData = $this->fastenRawData($rawData);
+        // If we have data.
+        if (!empty($rawData)) {
+            // Get 1 value for yesterday for each type of data.
+            $fastenData = $this->fastenRawData($rawData);
 
-        // Get all feedData.
-        $feedDataList = $this->entityManager->getRepository('AppBundle:FeedData')->findByFeed($this->feed);
+            // Get all feedData.
+            $feedDataList = $this->entityManager->getRepository('AppBundle:FeedData')->findByFeed($this->feed);
 
-        // Foreach feedData store the value for yesterday.
-        /** @var \AppBundle\Entity\FeedData $feedData */
-        foreach ($feedDataList as $feedData) {
-            $dataType = $feedData->getDataType();
-            $feedData->updateOrCreateValue(
-                $date,
-                DataValue::FREQUENCY['DAY'],
-                $fastenData[$dataType],
-                $this->entityManager
-            );
+            // Foreach feedData store the value for yesterday.
+            /** @var \AppBundle\Entity\FeedData $feedData */
+            foreach ($feedDataList as $feedData) {
+                $dataType = $feedData->getDataType();
+                $feedData->updateOrCreateValue(
+                    $date,
+                    DataValue::FREQUENCY['DAY'],
+                    $fastenData[$dataType],
+                    $this->entityManager
+                );
+            }
+
+            // Flush all persisted DataValue.
+            $this->entityManager->flush();
+
+            // Refresh week and month aggregate data.
+            $this->refreshAgregateValue($date);
         }
-
-        // Flush all persisted DataValue.
-        $this->entityManager->flush();
-
-        // Refresh week and month aggregate data.
-        $this->refreshAgregateValue($date);
     }
 
     /**
@@ -202,10 +202,13 @@ class MeteoFrance {
 
             // We get the raw CSV.
             $response = $client->get($uri, $clientOption);
-            $synopData = $response->getBody()->getContents();
             if ($response->getStatusCode() == 200) {
+                $synopData = $response->getBody()->getContents();
                 // We parse it to only get what we need.
-                $rawData[] = $this->getStationRawData($synopData);
+                $data = $this->getStationRawData($synopData);
+                if ($data) {
+                    $rawData[] = $data;
+                }
             }
         }
 
@@ -395,6 +398,9 @@ class MeteoFrance {
 
             if(!$header) {
                 $header = $row;
+                if ($header[0] != self::SYNOP_DATA_NAME['STATION_ID']) {
+                  return FALSE;
+                }
             }
             else {
                 $row = array_combine($header, $row);

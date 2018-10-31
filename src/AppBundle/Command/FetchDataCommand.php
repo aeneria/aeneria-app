@@ -6,12 +6,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use AppBundle\Controller\DataApiController;
 use AppBundle\Entity\Feed;
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Object\Linky;
-use Symfony\Component\Validator\Constraints\DateTime;
-use AppBundle\Entity\FeedData;
 use AppBundle\Entity\DataValue;
 use AppBundle\Object\MeteoFrance;
 
@@ -26,7 +23,7 @@ class FetchDataCommand extends ContainerAwareCommand
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager= $entityManager;
+        $this->entityManager = $entityManager;
         parent::__construct();
     }
 
@@ -53,53 +50,33 @@ class FetchDataCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if($date=$input->getArgument('date')) {
-            $date = new \DateTime($date);
-        }
-        else {
-            // Get yesterday datetime.
-            $date = new \DateTime();
-            $date->sub(new \DateInterval('P1D'));
-            $date = new \DateTime($date->format("Y-m-d 00:00:00"));
-        }
- 
+
         $force = filter_var($input->getArgument('force'), FILTER_VALIDATE_BOOLEAN);
 
         // We fetch all Feeds data.
         $feeds = $this->entityManager->getRepository('AppBundle:Feed')->findAll();
 
-        // For each feeds, we call the right method to fetch data.
-        /** @var \AppBundle\Entity\Feed $feeds */
-        foreach($feeds as $feed) {
-            $callback = Feed::FEED_TYPES[$feed->getFeedType()]['FETCH_CALLBACK'];
-            $this->$callback($feed, $force, $date);
+        // If a date is given, we update only for this date.
+        if($date=$input->getArgument('date')) {
+            $date = new \DateTime($date);
+            // For each feeds, we call the right method to fetch data.
+            /** @var \AppBundle\Entity\Feed $feeds */
+            foreach($feeds as $feed) {
+                $feed->fetchDataForDate($this->entityManager, $date, $force);
+            }
         }
-    }
+        // Else we update from last data to yesterday.
+        else {
+            // Get yesterday datetime.
+            $date = new \DateTime();
+            $date->sub(new \DateInterval('P1D'));
+            $date = new \DateTime($date->format("Y-m-d 00:00:00"));
 
-    /**
-     * Linky callback for fetching data.
-     * @param Feed $feed
-     */
-    private function fetchLinkyData(Feed $feed, $force, $date)
-    {
-        // We fetch data if force option is true or if (date('H') >= 9 and the feed isn't up to date).
-        // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
-        if ($force || (date('H') >= 7 && !$feed->isUpToDate($this->entityManager, $date, DataValue::FREQUENCY)) ) {
-            $linky = new Linky($feed, $this->entityManager);
-            $linky->fetchData($date);
-        }
-    }
-
-    /**
-     * MeteoFrance callback for fetching data.
-     * @param Feed $feed
-     */
-    private function fetchMeteoFranceData(Feed $feed, $force, $date)
-    {
-        // We fetch data if force option is true or if the feed isn't up to date.
-        if ($force || !$feed->isUpToDate($this->entityManager, $date, MeteoFrance::FREQUENCY)) {
-            $meteoFrance = new MeteoFrance($feed, $this->entityManager);
-            $meteoFrance->fetchData($date);
+            // For each feeds, we call the right method to fetch data.
+            /** @var \AppBundle\Entity\Feed $feeds */
+            foreach($feeds as $feed) {
+                $feed->fetchDataToDate($this->entityManager, $date);
+            }
         }
     }
 }

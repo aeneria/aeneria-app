@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Object;
+namespace AppBundle\FeedObject;
 
 
 use AppBundle\Entity\Feed;
@@ -15,7 +15,7 @@ use AppBundle\Entity\DataValue;
  * @todo simply curl request by guzzle ones
  * @todo week data
  */
-class Linky {
+class Linky implements FeedObject {
 
     /**
      * Differents usefull URIs.
@@ -86,13 +86,16 @@ class Linky {
     }
 
     /**
-     * Fetch ENEDIS data for yesterday and persist its in database.
+     * Fetch ENEDIS data for $date and persist its in database.
      *
      * @param \DateTime $date
      */
     public function fetchData(\DateTime $date) {
-        $this->getAll($date);
-        $this->persistData($date);
+        // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
+        if (date('H') >= 7) {
+            $this->getAll($date);
+            $this->persistData($date);
+        }
     }
 
     /**

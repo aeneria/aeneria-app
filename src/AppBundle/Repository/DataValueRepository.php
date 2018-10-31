@@ -120,6 +120,25 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
+    * Get last date value
+    */
+    public function getLastValue(FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $queryBuilder->select('MAX(d.date) AS date')
+        ->andWhere('d.feedData = :feedData')
+        ->setParameter('feedData', $feedData->getId())
+        ->andWhere('d.frequency = :frequency')
+        ->setParameter('frequency', $frequency);
+
+        return $queryBuilder
+            ->getQuery()
+            ->getScalarResult();
+    }
+
+    /**
     * Get value
     *
     * @param \DateTime $startDate

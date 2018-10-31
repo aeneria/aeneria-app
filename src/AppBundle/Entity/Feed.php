@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
+use AppBundle\FeedObject\FeedObject;
 
 /**
  * Feed
@@ -27,7 +28,7 @@ class Feed
                     'UNIT' => 'KWh',
                 ]
             ],
-            'FETCH_CALLBACK' => 'fetchLinkyData',
+            'CLASS' => 'AppBundle\FeedObject\Linky',
         ],
         'METEO_FRANCE' => [
             'ID' => 2,
@@ -56,7 +57,7 @@ class Feed
                     'UNIT' => 'mm',
                 ],
             ],
-            'FETCH_CALLBACK' => 'fetchMeteoFranceData',
+            'CLASS' => 'AppBundle\FeedObject\MeteoFrance',
         ],
     ];
 
@@ -103,6 +104,12 @@ class Feed
      * @ORM\Column(name="creator", type="integer")
      */
     private $creator;
+
+    /**
+     * Feed Object
+     * @var FeedObject
+     */
+    private $catchedFeedObject = NULL;
 
 
     /**
@@ -240,6 +247,8 @@ class Feed
      * @param EntityManager $entityManager
      * @param \DateTime $date
      * @param $frequencies array of int from DataValue frequencies
+     *
+     * @return bool
      */
     public function isUpToDate(EntityManager $entityManager, \DateTime $date, array $frequencies)
     {
@@ -256,5 +265,68 @@ class Feed
         }
 
         return $isUpToDate;
+    }
+
+    /**
+     * Get Date of last up to date data.
+     * @param EntityManager $entityManager
+     * @param $frequencies array of int from DataValue frequencies
+     *
+     * @return NULL|\DateTime
+     */
+    public function getLastUpToDate(EntityManager $entityManager)
+    {
+        // Get all feedData.
+        $feedDataList = $entityManager->getRepository('AppBundle:FeedData')->findByFeed($this);
+
+        $lastUpToDate = new \DateTime();
+        $lastUpToDate->sub(new \DateInterval('P1D'));
+
+        // Foreach feedData we get the last up to date value.
+        /** @var \AppBundle\Entity\FeedData $feedData */
+        foreach ($feedDataList as $feedData) {
+            // A feed is up to date only if all its feedData are up to date.
+            $feedDataLastUpToDate = $feedData->getLastUpToDate($entityManager);
+            $lastUpToDate = min($lastUpToDate, $feedDataLastUpToDate);
+        }
+
+        return $lastUpToDate;
+    }
+
+    /**
+     * @return \AppBundle\FeedObject\FeedObject
+     */
+    public function getFeedObject(EntityManager $entityManager) {
+        if (empty($this->catchedFeedObject)) {
+            $feedClass = Feed::FEED_TYPES[$this->feedType]['CLASS'];
+            $this->catchedFeedObject = new $feedClass($this, $entityManager);
+        }
+        return $this->catchedFeedObject;
+    }
+
+    /**
+     * Fetch data from last data to $date.
+     * @param \DateTime $date
+     * @param bool $force
+     */
+    public function fetchDataToDate(EntityManager $entityManager, \DateTime $date) {
+        $lastUpdateDate = $this->getLastUpToDate($entityManager);
+        $lastUpdateDate->add(new \DateInterval('P1D'));
+
+        while($lastUpdateDate <= $date) {
+            $this->getFeedObject($entityManager)->fetchData($lastUpdateDate);
+            $lastUpdateDate->add(new \DateInterval('P1D'));
+        }
+    }
+
+    /**
+     * Fetch data from last data for $date
+     * @param \DateTime $date
+     * @param bool $force
+     */
+    public function fetchDataForDate(EntityManager $entityManager, \DateTime $date, $force) {
+        if ($force || !$this->isUpToDate($entityManager, $date, self::FREQUENCY)) {
+            $this->getFeedObject($entityManager)->fetchData($date);
+        }
     }
 }
