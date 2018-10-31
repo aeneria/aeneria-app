@@ -325,7 +325,8 @@ class Feed
      * @param bool $force
      */
     public function fetchDataForDate(EntityManager $entityManager, \DateTime $date, $force) {
-        if ($force || !$this->isUpToDate($entityManager, $date, self::FREQUENCY)) {
+        $test = $this->getFeedObject($entityManager)::FREQUENCY;
+        if ($force || !$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
             $this->getFeedObject($entityManager)->fetchData($date);
         }
     }

@@ -26,6 +26,7 @@ class Linky implements FeedObject {
     const API_HOME_URL = '/home';
     const API_DATA_URL = '/suivi-de-consommation';
 
+    const FREQUENCY = DataValue::FREQUENCY;
 
     /**
      * Feed corresponding to the Linky Object.
