@@ -36,6 +36,8 @@ class MeteoFrance implements FeedObject {
     const SYNOP_DATA_NAME = [
         'STATION_ID' => 'numer_sta',
         'TEMPERATURE' => 't',
+        'TEMPERATURE_MAX' => 'tn3',
+        'TEMPERATURE_MIN' => 'tx3',
         'PRESSURE' => 'pres',
         'HUMIDITY' => 'u',
         'NEBULOSITY' => 'n',
@@ -45,6 +47,7 @@ class MeteoFrance implements FeedObject {
 
     /**
      * Frequencies for MeteoFrance FeedData.
+     * @deprecated use getFrequencies() instead.
      * @var array
      */
     const FREQUENCY = [
@@ -74,6 +77,18 @@ class MeteoFrance implements FeedObject {
     {
         $this->feed = $feed;
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \AppBundle\FeedObject\FeedObject::getFrequencies()
+     */
+    public static function getFrequencies() {
+        return [
+            DataValue::FREQUENCY['DAY'],
+            DataValue::FREQUENCY['WEEK'],
+            DataValue::FREQUENCY['MONTH'],
+        ];
     }
 
     /**
@@ -225,22 +240,23 @@ class MeteoFrance implements FeedObject {
     private function fastenRawData($rawData)
     {
         $fastenData = [
-            'TEMPERATURE' => 0,
-            'DJU' => 0,
-            'HUMIDITY' => 0,
-            'NEBULOSITY' => 0,
-            'PRESSURE' => 0,
-            'RAIN' => 0,
+            'TEMPERATURE' => NULL,
+            'TEMPERATURE_MAX' => NULL,
+            'TEMPERATURE_MIN' => NULL,
+            'DJU' => NULL,
+            'HUMIDITY' => NULL,
+            'NEBULOSITY' => NULL,
+            'PRESSURE' => NULL,
+            'RAIN' => NULL,
         ];
 
         $nbNebulosity = 0;
         $nbHumidity = 0;
         $nbPressure = 0;
         $nbTemperature = 0;
+        $nbTemperatureMax = 0;
+        $nbTemperatureMin = 0;
         $nbRain = 0;
-
-        $tempMin = NULL;
-        $tempMax = NULL;
 
         foreach ($rawData as $hourData) {
             if (isset($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])){
@@ -262,10 +278,28 @@ class MeteoFrance implements FeedObject {
                 $nbRain++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
-                $curTemperature = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;
-                $fastenData['TEMPERATURE'] += $curTemperature;
+                $fastenData['TEMPERATURE'] += $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;;
                 $nbTemperature++;
-                $this->updateExtrema($tempMin, $tempMax, $curTemperature);
+            }
+            if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MAX']])) {
+                $newTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MAX']] - self::KELVIN_TO_CELSIUS;
+
+                if (empty($fastenData['TEMPERATURE_MAX'])) {
+                    $fastenData['TEMPERATURE_MAX'] = $newTemp;
+                }
+
+                $fastenData['TEMPERATURE_MAX'] = max($fastenData['TEMPERATURE_MAX'], $newTemp);
+                $nbTemperatureMax++;
+            }
+            if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MIN']])) {
+                $newTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MIN']] - self::KELVIN_TO_CELSIUS;
+
+                if (empty($fastenData['TEMPERATURE_MIN'])) {
+                    $fastenData['TEMPERATURE_MIN'] = $newTemp;
+                }
+
+                $fastenData['TEMPERATURE_MIN'] = min($fastenData['TEMPERATURE_MIN'], $newTemp);
+                $nbTemperatureMin++;
             }
         }
 
@@ -287,8 +321,8 @@ class MeteoFrance implements FeedObject {
         }
 
         // Calculate DJU with temperature max and min of the day.
-        if (isset($tempMin) && isset($tempMax)) {
-            $fastenData['DJU'] = round($this->calculateDju($tempMin, $tempMax, 1));
+        if (!empty($fastenData['TEMPERATURE_MAX']) && !empty($fastenData['TEMPERATURE_MIN'])) {
+            $fastenData['DJU'] = round($this->calculateDju($fastenData['TEMPERATURE_MIN'], $fastenData['TEMPERATURE_MAX'], 1));
         }
 
         return $fastenData;
@@ -344,29 +378,56 @@ class MeteoFrance implements FeedObject {
 
         /** @var \AppBundle\Entity\FeedData $feedData */
         foreach ($feedDataList as $feedData) {
-            if (!in_array($feedData->getDataType(), ['DJU', 'RAIN'])) {
-                $agregateData = $this
-                    ->entityManager
-                    ->getRepository('AppBundle:DataValue')
-                    ->getAverageValue(
-                        $startDate,
-                        $endDate,
-                        $feedData,
-                        DataValue::FREQUENCY['DAY']
-                    )
-                ;
-            }
-            else {
-                $agregateData = $this
-                    ->entityManager
-                    ->getRepository('AppBundle:DataValue')
-                    ->getSumValue(
-                        $startDate,
-                        $endDate,
-                        $feedData,
-                        DataValue::FREQUENCY['DAY']
-                    )
-                ;
+            switch ($feedData->getDataType()) {
+                case 'DJU':
+                case 'RAIN':
+                    $agregateData = $this
+                        ->entityManager
+                        ->getRepository('AppBundle:DataValue')
+                        ->getSumValue(
+                            $startDate,
+                            $endDate,
+                            $feedData,
+                            DataValue::FREQUENCY['DAY']
+                        )
+                    ;
+                    break;
+                case 'TEMPERATURE_MAX':
+                    $agregateData = $this
+                        ->entityManager
+                        ->getRepository('AppBundle:DataValue')
+                        ->getMaxValue(
+                            $startDate,
+                            $endDate,
+                            $feedData,
+                            DataValue::FREQUENCY['DAY']
+                        )
+                    ;
+                    break;
+                case 'TEMPERATURE_MIN':
+                    $agregateData = $this
+                        ->entityManager
+                        ->getRepository('AppBundle:DataValue')
+                        ->getMinValue(
+                            $startDate,
+                            $endDate,
+                            $feedData,
+                            DataValue::FREQUENCY['DAY']
+                        )
+                    ;
+                    break;
+                default:
+                    $agregateData = $this
+                        ->entityManager
+                        ->getRepository('AppBundle:DataValue')
+                        ->getAverageValue(
+                            $startDate,
+                            $endDate,
+                            $feedData,
+                            DataValue::FREQUENCY['DAY']
+                        )
+                    ;
+                    break;
             }
 
             if (isset($agregateData[0]['value'])) {

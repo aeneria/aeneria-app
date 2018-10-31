@@ -41,6 +41,12 @@ class Feed
                 'TEMPERATURE' => [
                     'UNIT' => '°C',
                 ],
+                'TEMPERATURE_MIN' => [
+                    'UNIT' => '°C',
+                ],
+                'TEMPERATURE_MAX' => [
+                    'UNIT' => '°C',
+                ],
                 'DJU' => [
                     'UNIT' => 'DJU',
                 ],
@@ -325,7 +331,6 @@ class Feed
      * @param bool $force
      */
     public function fetchDataForDate(EntityManager $entityManager, \DateTime $date, $force) {
-        $test = $this->getFeedObject($entityManager)::FREQUENCY;
         if ($force || !$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
             $this->getFeedObject($entityManager)->fetchData($date);
         }

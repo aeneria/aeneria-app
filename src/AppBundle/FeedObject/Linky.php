@@ -26,6 +26,11 @@ class Linky implements FeedObject {
     const API_HOME_URL = '/home';
     const API_DATA_URL = '/suivi-de-consommation';
 
+    /**
+     * Frequencies for Linky FeedData.
+     * @deprecated use getFrequencies() instead.
+     * @var array
+     */
     const FREQUENCY = DataValue::FREQUENCY;
 
     /**
@@ -84,6 +89,14 @@ class Linky implements FeedObject {
         if (!$this->auth()) {
             return $this->error;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \AppBundle\FeedObject\FeedObject::getFrequencies()
+     */
+    public static function getFrequencies() {
+        return DataValue::FREQUENCY;
     }
 
     /**

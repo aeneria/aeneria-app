@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Object\MeteoFrance;
+use AppBundle\FeedObject\MeteoFrance;
 
 class MeteoFranceType extends AbstractType
 {
