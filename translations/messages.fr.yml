@@ -1,0 +1,50 @@
+': Analyser votre consommation d''électricité': ': Analyser votre consommation d''électricité'
+Configuration: Configuration
+'A propos': 'A propos'
+Accueil: Accueil
+'Indicateurs généraux sur la consommation d''électricité': 'Indicateurs généraux sur la consommation d''électricité'
+'Consommation d''électricité VS Météo': 'Consommation d''électricité VS Météo'
+'Indicateurs généraux sur la météo': 'Indicateurs généraux sur la météo'
+"<p>\n              Développé avec l'aide de :\n            </p>\n            <ul>\n                <li>Côté back : PHP, MySQL, Symfony et son outillage</li>\n                <li>Côté front : Bootstrap, jQuery, D3.js, Pooper.js</li>\n                <li>Icones de :\n                  <a href=\"https://thenounproject.com/iconisland/\">Icon Island</a>, <a href=\"https://thenounproject.com/coquet_adrien\">Adrien Coquet</a>, <a href=\"https://thenounproject.com/grega.cresnar\">Gregor Cresnar</a>, <a href=\"https://thenounproject.com/creativestall/\"> Creative Stall</a>\n                </li>\n            </ul>": "<p>\n              Développé avec l'aide de :\n            </p>\n            <ul>\n                <li>Côté back : PHP, MySQL, Symfony et son outillage</li>\n                <li>Côté front : Bootstrap, jQuery, D3.js, Pooper.js</li>\n                <li>Icones de :\n                  <a href=\"https://thenounproject.com/iconisland/\">Icon Island</a>, <a href=\"https://thenounproject.com/coquet_adrien\">Adrien Coquet</a>, <a href=\"https://thenounproject.com/grega.cresnar\">Gregor Cresnar</a>, <a href=\"https://thenounproject.com/creativestall/\"> Creative Stall</a>\n                </li>\n            </ul>"
+'Compteur Linky': 'Compteur Linky'
+'Meteo France': 'Meteo France'
+Janvier: Janvier
+Février: Février
+Mars: Mars
+Avril: Avril
+Mai: Mai
+Juin: Juin
+Juillet: Juillet
+Aout: Aout
+Septembre: Septembre
+Octobre: Octobre
+Novembre: Novembre
+Décembre: Décembre
+'Afficher le mois précédent': 'Afficher le mois précédent'
+'Analyse générale': 'Analyse générale'
+Électricité: Électricité
+kWh: kWh
+'consommés sur la période': 'consommés sur la période'
+'En moyenne sur la semaine': 'En moyenne sur la semaine'
+'Répartition sur la semaine': 'Répartition sur la semaine'
+'Evolution de la consommation': 'Evolution de la consommation'
+'Analyse de la température': 'Analyse de la température'
+'DJU & Conso': 'DJU & Conso'
+kWh/DJU: kWh/DJU
+'Evolution de la consommation & DJU': 'Evolution de la consommation & DJU'
+'Consommation VS DJU': 'Consommation VS DJU'
+'Analyse de la météo': 'Analyse de la météo'
+Température: Température
+DJU: DJU
+'(degrés jour unifié)': '(degrés jour unifié)'
+Nébulosité: Nébulosité
+jours: jours
+'sans nuages': 'sans nuages'
+Précipitations: Précipitations
+'sans pluie': 'sans pluie'
+Humidité: Humidité
+'à moins de 70%': 'à moins de 70%'
+Année: Année
+Mois: Mois
+Semaine: Semaine
+Jour: Jour
