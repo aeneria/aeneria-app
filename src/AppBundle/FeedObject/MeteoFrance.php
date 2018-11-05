@@ -36,8 +36,6 @@ class MeteoFrance implements FeedObject {
     const SYNOP_DATA_NAME = [
         'STATION_ID' => 'numer_sta',
         'TEMPERATURE' => 't',
-        'TEMPERATURE_MAX' => 'tn3',
-        'TEMPERATURE_MIN' => 'tx3',
         'PRESSURE' => 'pres',
         'HUMIDITY' => 'u',
         'NEBULOSITY' => 'n',
@@ -254,8 +252,6 @@ class MeteoFrance implements FeedObject {
         $nbHumidity = 0;
         $nbPressure = 0;
         $nbTemperature = 0;
-        $nbTemperatureMax = 0;
-        $nbTemperatureMin = 0;
         $nbRain = 0;
 
         foreach ($rawData as $hourData) {
@@ -278,28 +274,25 @@ class MeteoFrance implements FeedObject {
                 $nbRain++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
-                $fastenData['TEMPERATURE'] += $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;;
+
+                // Temp avg.
+                $curTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;
+                $fastenData['TEMPERATURE'] += $curTemp;
                 $nbTemperature++;
-            }
-            if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MAX']])) {
-                $newTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MAX']] - self::KELVIN_TO_CELSIUS;
 
+                // Temp max.
                 if (empty($fastenData['TEMPERATURE_MAX'])) {
-                    $fastenData['TEMPERATURE_MAX'] = $newTemp;
+                    $fastenData['TEMPERATURE_MAX'] = $curTemp;
                 }
 
-                $fastenData['TEMPERATURE_MAX'] = max($fastenData['TEMPERATURE_MAX'], $newTemp);
-                $nbTemperatureMax++;
-            }
-            if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MIN']])) {
-                $newTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE_MIN']] - self::KELVIN_TO_CELSIUS;
+                $fastenData['TEMPERATURE_MAX'] = max($fastenData['TEMPERATURE_MAX'], $curTemp);
 
+                // Temp min.
                 if (empty($fastenData['TEMPERATURE_MIN'])) {
-                    $fastenData['TEMPERATURE_MIN'] = $newTemp;
+                    $fastenData['TEMPERATURE_MIN'] = $curTemp;
                 }
 
-                $fastenData['TEMPERATURE_MIN'] = min($fastenData['TEMPERATURE_MIN'], $newTemp);
-                $nbTemperatureMin++;
+                $fastenData['TEMPERATURE_MIN'] = min($fastenData['TEMPERATURE_MIN'], $curTemp);
             }
         }
 
