@@ -7,8 +7,6 @@
 // Refresh all graph on the page base on start and end dates.
 var refreshGraph = function () {
 
-  var colors = d3.schemeGnBu[9];
-
   var startArray = localStorage.startDate.split('/');
   var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
   var endArray = localStorage.endDate.split('/');
@@ -29,7 +27,7 @@ var refreshGraph = function () {
     url: appRoute + 'data/conso_elec/repartition/week/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayWeekRepartition(data, 'conso-week-repartition', colors, 'kWh', 1, 0);
+      displayWeekRepartition(data, 'conso-week-repartition', ELEC_COLOR, 'kWh', 1, 0);
     }
   });
 
@@ -38,8 +36,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/conso_elec/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionV(data, 'conso-global-repartition', colors, 'kWh', 1, 0);
-      displayLegend(data, 'conso-global-repartition-legend', colors, 'kWh', 1);
+      displayGlobalRepartitionV(data, 'conso-global-repartition', ELEC_COLOR, 'kWh', 1, 0);
+      displayLegend(data, 'conso-global-repartition-legend', ELEC_COLOR, 'kWh', 1);
     }
   });
 
@@ -48,7 +46,7 @@ var refreshGraph = function () {
     url: appRoute + 'data/conso_elec/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
     success: function( result ) {
       var data = JSON.parse(result);
-      displayGlobalEvolution(data, 'conso-global-evolution', colors[7], 'kWh', 1);
+      displayGlobalEvolution(data, 'conso-global-evolution', ELEC_COLOR[6], 'kWh', 1);
     }
   });
 
@@ -57,7 +55,7 @@ var refreshGraph = function () {
     url: appRoute + 'data/conso_elec/sum-group/day/weekDay/' + startDate + '/' + endDate + '',
     success: function( result ) {
       var data = JSON.parse(result);
-      displayGlobalEvolution(data, 'conso-week-frequency', colors[7], 'kWh', 1, 95, 180, 50);
+      displayGlobalEvolution(data, 'conso-week-frequency', ELEC_COLOR[6], 'kWh', 1, 95, 180, 50);
     }
   });
 }

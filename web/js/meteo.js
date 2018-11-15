@@ -18,9 +18,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/temperature/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      var color = d3.schemeRdYlBu[9].slice();
-      displayGlobalRepartitionV(data, 'temp-repartition', color.reverse(), '°C', 1, -5, 25);
-      displayLegend(data, 'temp-repartition-legend', color, '°C', 1, -5, 25);
+      displayGlobalRepartitionV(data, 'temp-repartition', TEMP_COLOR, '°C', 1, -5, 25);
+      displayLegend(data, 'temp-repartition-legend', TEMP_COLOR, '°C', 1, -5, 25);
     }
   });
 
@@ -38,9 +37,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/nebulosity/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      var color = ['#20CFFE', '#48C4EB', '#5BBAD9', '#67AFC7', '#6EA5B7', '#729BA7', '#749198', '#758889', '#747E7C'];
-      displayGlobalRepartitionV(data, 'neb-repartition', color, '%', 1, 0, 100);
-      displayLegend(data, 'neb-repartition-legend', color, '%', 1, 0, 100);
+      displayGlobalRepartitionV(data, 'neb-repartition', NEBULOSITY_COLOR, '%', 1, 0, 100);
+      displayLegend(data, 'neb-repartition-legend', NEBULOSITY_COLOR, '%', 1, 0, 100);
     }
   });
 
@@ -58,8 +56,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/rain/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionV(data, 'rain-repartition', d3.schemeGnBu[9], 'mm', 1, 0);
-      displayLegend(data, 'rain-repartition-legend', d3.schemeGnBu[9], 'mm', 1, 0);
+      displayGlobalRepartitionV(data, 'rain-repartition', RAIN_COLOR, 'mm', 1, 0);
+      displayLegend(data, 'rain-repartition-legend', RAIN_COLOR, 'mm', 1, 0);
     }
   });
 
@@ -77,8 +75,8 @@ var refreshGraph = function () {
     url: appRoute + 'data/humidity/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionV(data, 'humidity-repartition', d3.schemeGnBu[9], '%', 1, 0, 100);
-      displayLegend(data, 'humidity-repartition-legend', d3.schemeGnBu[9], '%', 1, 0, 100);
+      displayGlobalRepartitionV(data, 'humidity-repartition', HUMIDITY_COLOR, '%', 1, 0, 100);
+      displayLegend(data, 'humidity-repartition-legend', HUMIDITY_COLOR, '%', 1, 0, 100);
     }
   });
 

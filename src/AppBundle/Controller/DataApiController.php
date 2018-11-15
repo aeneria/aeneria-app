@@ -250,15 +250,15 @@ class DataApiController extends Controller
 
         // Find feedData with the good dataType.
         $feedData = $this
-        ->getDoctrine()
-        ->getRepository('AppBundle:FeedData')
-        ->findOneByDataType($dataType);
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataType);
 
         // Get data between $start & $end for requested frequency.
         $data = $this
-        ->getDoctrine()
-        ->getRepository('AppBundle:DataValue')
-        ->getMaxValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getMaxValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -287,15 +287,15 @@ class DataApiController extends Controller
 
         // Find feedData with the good dataType.
         $feedData = $this
-        ->getDoctrine()
-        ->getRepository('AppBundle:FeedData')
-        ->findOneByDataType($dataType);
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataType);
 
         // Get data between $start & $end for requested frequency.
         $data = $this
-        ->getDoctrine()
-        ->getRepository('AppBundle:DataValue')
-        ->getMinValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getMinValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -324,15 +324,87 @@ class DataApiController extends Controller
 
         // Find feedData with the good dataType.
         $feedData = $this
-        ->getDoctrine()
-        ->getRepository('AppBundle:FeedData')
-        ->findOneByDataType($dataType);
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataType);
 
         // Get data between $start & $end for requested frequency.
         $data = $this
-        ->getDoctrine()
-        ->getRepository('AppBundle:DataValue')
-        ->getNumberInfValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $value);
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getNumberInfValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $value);
+
+        $jsonData = json_encode($data);
+        return new JsonResponse($jsonData, 200);
+    }
+
+    /**
+     * Get XY by <frequency> between two date.
+     *
+     * @Route("/data/xy/{dataTypeX}/{dataTypeY}/{frequency}/{start}/{end}", name="data-api-xy")
+     *
+     * @param Request $request
+     * @param string $dataTypeX
+     *     Type of data we want on x axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $dataTypeY
+     *     Type of data we want on y axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     * @param string $frequency
+     *     Frequency we want for the evolution (day, week, month)
+     * @param \DateTime $start
+     * @param \Datetime $end
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getXY(Request $request, $dataTypeX, $dataTypeY, $frequency, $start = NULL, $end = NULL)
+    {
+        $dataTypeX = strtoupper($dataTypeX);
+        $dataTypeY = strtoupper($dataTypeY);
+        $frequency = strtoupper($frequency);
+        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
+        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+
+        // Find feedData with the good dataType.
+        $feedDataX = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataTypeX);
+
+        $feedDataY = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:FeedData')
+            ->findOneByDataType($dataTypeY);
+
+        // Get data between $start & $end for requested frequency.
+        $results = $this
+            ->getDoctrine()
+            ->getRepository('AppBundle:DataValue')
+            ->getXY($start, $end, $feedDataX, $feedDataY, DataValue::FREQUENCY[$frequency]);
+
+        $data = (object)[
+            'axeX' => [],
+            'axeY' => [],
+            'date' => []
+        ];
+
+        $dateFormat = '';
+        switch ($frequency) {
+            case 'DAY':
+                $dateFormat = 'l d/m/Y';
+                break;
+            case 'WEEK':
+                $dateFormat = 'd/m/Y';
+                break;
+            case 'MONTH':
+                $dateFormat = 'M Y';
+                break;
+            case 'YEAR':
+                $dateFormat = 'Y';
+        }
+
+        foreach ($results as $result) {
+            $data->axeX[] = $result['xValue'];
+            $data->axeY[] = $result['yValue'];
+            $data->date[] = $result['date']->format($dateFormat);
+        }
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -342,8 +414,8 @@ class DataApiController extends Controller
      * Build axes for a repartition graph
      *
      * @param string $repartitionType
-     * @param DateTime $start
-     * @param DateTime $end
+     * @param \DateTime $start
+     * @param \DateTime $end
      * @return array of values [$axe, $axeX, $axeY, $frequency]
      */
     private function buildRepartitionAxes($repartitionType, $start, $end)
@@ -441,8 +513,8 @@ class DataApiController extends Controller
 
     /**
      * Get data for a repartition graph from database
-     * @param Datetime $start
-     * @param Datetime $end
+     * @param \Datetime $start
+     * @param \Datetime $end
      * @param string $dataType
      * @param string $axeX
      * @param string $axeY

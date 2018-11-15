@@ -1,0 +1,45 @@
+{% extends "pages/dashboard.html.twig" %}
+
+{% block title %}{{ 'Analyse DJU vs consommation' | trans }}{% endblock %}
+
+{% block body %}
+
+  <div class="container-fluid dju-vs-conso">
+    <div class="row">
+
+      {# Colonne frise #}
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'DJU & Conso' | trans }}</h2>
+            <div class="content">
+              <div id="conso-vs-dju"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Colonne évolution & diagramme XY #}
+      <div class="col-md-9">
+
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ "Consommation x DJU" | trans }}</h2>
+            <div id="conso-x-dju"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block js %}
+  <script src={{ asset("js/graph_lib.js") }}></script>
+  <script src={{ asset("js/dju_x_conso.js") }}></script>
+{% endblock %}

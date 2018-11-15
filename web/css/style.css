@@ -122,7 +122,6 @@ nav input, nav button {
   border-radius: 5px;
   margin-top: 15px;
   margin-bottom: 15px;
-  background:  "eae5d0";
   border: none;
   box-shadow:  0 2px 4px rgba(0,0,0,0.1);
 }
@@ -226,6 +225,14 @@ text {
   min-height: 820px;
 }
 
+.gen-first-line .card {
+  min-height: 250px;
+}
+
+.gen-second-line {
+  min-height: 540px;
+}
+
 /* METEO DASH ///////////////////////////////////////////////////////////////*/
 
 .meteo-top {
@@ -258,6 +265,12 @@ text {
 .meteo-card-1 {
   display: flex;
   justify-content: center;
+}
+
+/* DJU x Conso //////////////////////////////////////////////////////////////*/
+
+.dju-vs-conso .card {
+  height: 600px;
 }
 
 /* SETTINGS /////////////////////////////////////////////////////////////////*/

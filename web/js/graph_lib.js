@@ -1,20 +1,29 @@
 var AXE_COLOR = '#6d6d6d';
+var GRID_COLOR = '#dddddd';
 var DAY_SIZE = 15;
+var ELEC_COLOR = ['#FFFDE7','#FFECB3','#FFE082','#FFD54F','#FFCA28','#FFC107','#FFB300','#FFA000','#FF8F00'];
+var TEMP_COLOR = d3.schemeRdYlBu[9].slice().reverse();
+var NEBULOSITY_COLOR = ['#20CFFE', '#48C4EB', '#5BBAD9', '#67AFC7', '#6EA5B7', '#729BA7', '#749198', '#758889', '#747E7C'];
+var RAIN_COLOR = d3.schemeGnBu[9];
+var HUMIDITY_COLOR = ['#BBDEFB','#90CAF9','#64B5F6','#42A5F5','#2196F3','#1E88E5','#1976D2','#1565C0', '#0D47A1'];
+var DJU_COLOR = ['#B3E5FC','#81D4FA','#64B5F6','#4FC3F7','#29B6F6','#03A9F4','#039BE5','#0288D1', '#0277BD'];
 
 /**
  * Display a hour/weekDay heatmap repartition graphic.
  *
- *   result : an object containing :
- *     - axe.x : axeX labels
- *     - axe.y : axeY labels
- *     - data.values : values to display
- *     - data.dates : corresponding dates
- *   target : id of the targetted DIV element
- *   colors : a tab with 2 elements for the color scale
- *   unit : a string, the unit of the displayed data
- *
+ *   result: an object containing :
+ *     - axe.x: axeX labels
+ *     - axe.y: axeY labels
+ *     - data.values: values to display
+ *     - data.dates: corresponding dates
+ *   target: id of the targetted DIV element
+ *   colors: a tab with 2 elements for the color scale
+ *   unit: a string, the unit of the displayed data
+ *   precision: float precision for value
+ *   min: min value for scale
+ *   max: max value for scale
  */
-var displayWeekRepartition = function(result, target, colors, unit, precision, min, max) {
+var displayWeekRepartition = function (result, target, colors, unit, precision, min, max) {
   var rows = 7; // Number of hours in a day
   var cols = 24; // Number of days in a week
   var margin_top = 50;
@@ -66,7 +75,7 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .data(result.axe.y)
     .enter()
     .append('text')
-    .text(function(d, i) {
+    .text(function (d, i) {
       if (i % 3 == 0) {
         return d;
       } else {
@@ -75,7 +84,7 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     })
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
+    .attr('transform', function (d, i) {
         return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 4) + ')'
     })
     .attr('font-family', 'sans-serif')
@@ -86,10 +95,10 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .data(result.axe.x)
     .enter()
     .append('text')
-    .text(function(d) { return d;})
+    .text(function (d) { return d;})
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
+    .attr('transform', function (d, i) {
       return 'translate(0,' + (i * DAY_SIZE + margin_top + 15) + ')'
     })
     .attr('font-family', 'sans-serif')
@@ -100,15 +109,15 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .data(result.data.values)
     .enter()
     .append('rect')
-    .attr('x', function(d, i) {
-      return i % cols * DAY_SIZE + margin_left;
+    .attr('x', function (d, i) {
+      return i % cols * DAY_SIZE + margin_left + DAY_SIZE/2;
     })
-    .attr('y', function(d, i) {
-      return Math.floor(i / cols) * DAY_SIZE + margin_top;
+    .attr('y', function (d, i) {
+      return Math.floor(i / cols) * DAY_SIZE + margin_top + DAY_SIZE/2;
     })
-    .attr('width', DAY_SIZE)
-    .attr('height', DAY_SIZE)
-    .attr('display', function(d, i) {
+    .attr('width', 0)
+    .attr('height', 0)
+    .attr('display', function (d, i) {
       if (d === "") {
         return 'none';
       }
@@ -117,9 +126,24 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
-    .attr('title', function(d, i) {
+    .attr('title', function (d, i) {
       return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
     });
+
+    chart
+    .selectAll('rect')
+    .transition()
+    .duration(300)
+    .delay(function (d, i) { return i/24 * 15 + i%24 * 15; })
+    .ease(d3.easeCubic)
+    .attr('x', function (d, i) {
+      return i % cols * DAY_SIZE + margin_left;
+    })
+    .attr('y', function (d, i) {
+      return Math.floor(i / cols) * DAY_SIZE + margin_top;
+    })
+    .attr('width', DAY_SIZE)
+    .attr('height', DAY_SIZE);
 
   $('[data-toggle=\'tooltip\']').tooltip();
 }
@@ -127,16 +151,19 @@ var displayWeekRepartition = function(result, target, colors, unit, precision, m
 /**
  * Display a weekDay/week heatmap repartition.
  *
- *   result : an object containing :
- *     - axe.x : axeX labels
- *     - axe.y : axeY labels
- *     - data.values : values to display
- *     - data.dates : corresponding dates
- *   target : id of the targetted DIV element
- *   colors : a tab with 2 elements for the color scale
- *   unit : a string, the unit of the displayed data
+ *   result: an object containing :
+ *     - axe.x: axeX labels
+ *     - axe.y: axeY labels
+ *     - data.values: values to display
+ *     - data.dates: corresponding dates
+ *   target: id of the targetted DIV element
+ *   colors: a tab with 2 elements for the color scale
+ *   unit: a string, the unit of the displayed data
+ *   precision: float precision for value
+ *   min: min value for scale
+ *   max: max value for scale
  */
-var displayGlobalRepartitionH = function(result, target, colors, unit, precision, min, max) {
+var displayGlobalRepartitionH = function (result, target, colors, unit, precision, min, max) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
   var margin_top = 30;
@@ -187,7 +214,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .data(result.axe.x)
     .enter()
     .append('text')
-    .text( function(d, i) {
+    .text( function (d, i) {
       if (i % 3 == 1) {
         return d;
       } else {
@@ -196,7 +223,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     })
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
+    .attr('transform', function (d, i) {
         return 'translate(' + (i * DAY_SIZE + margin_left - 10) + ',25)rotate(-45)'
     })
     .attr('font-family', 'sans-serif')
@@ -207,10 +234,10 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .data(result.axe.y)
     .enter()
     .append('text')
-    .text(function(d) { return d; })
+    .text(function (d) { return d; })
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
+    .attr('transform', function (d, i) {
       return 'translate(0,' + (i * DAY_SIZE + margin_top + 14) + ')'
     })
     .attr('font-family', 'sans-serif')
@@ -221,16 +248,16 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .data(result.data.values)
     .enter()
     .append('rect')
-    .attr('x', function(d, i) {
+    .attr('x', function (d, i) {
       return Math.floor(i / rows) * DAY_SIZE + margin_left;
     })
-    .attr('y', function(d, i) {
+    .attr('y', function (d, i) {
       return i % rows * DAY_SIZE + margin_top;
     })
     .attr('width', DAY_SIZE)
     .attr('height', DAY_SIZE)
     .attr('fill', color)
-    .attr('display', function(d, i) {
+    .attr('display', function (d, i) {
       if (d === "") {
         return 'none';
       }
@@ -238,7 +265,7 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
-    .attr('title', function(d, i) {
+    .attr('title', function (d, i) {
         return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
     });
 
@@ -248,16 +275,19 @@ var displayGlobalRepartitionH = function(result, target, colors, unit, precision
 /**
  * Display a weekDay/week heatmap repartition.
  *
- *   result : an object containing :
- *     - axe.x : axeX labels
- *     - axe.y : axeY labels
- *     - data.values : values to display
- *     - data.dates : corresponding dates
- *   target : id of the targetted DIV element
- *   colors : a tab with 2 elements for the color scale
- *   unit : a string, the unit of the displayed data
+ *   result: an object containing :
+ *     - axe.x: axeX labels
+ *     - axe.y: axeY labels
+ *     - data.values: values to display
+ *     - data.dates: corresponding dates
+ *   target: id of the targetted DIV element
+ *   colors: a tab with 2 elements for the color scale
+ *   unit: a string, the unit of the displayed data
+ *   precision: float precision for value
+ *   min: min value for scale
+ *   max: max value for scale
  */
-var displayGlobalRepartitionV = function(result, target, colors, unit, precision, min, max) {
+var displayGlobalRepartitionV = function (result, target, colors, unit, precision, min, max) {
   var rows = result.axe.y.length; // Number of days in a week
   var cols = result.axe.x.length; // Number of weeks we want to display
   var margin_top = 50;
@@ -308,10 +338,10 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .data(result.axe.x)
     .enter()
     .append('text')
-    .text( function(d, i) { return d; })
+    .text( function (d, i) { return d; })
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
+    .attr('transform', function (d, i) {
       return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 15) + ')'
     })
     .attr('font-family', 'sans-serif')
@@ -322,7 +352,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .data(result.axe.y)
     .enter()
     .append('text')
-    .text( function(d, i) {
+    .text( function (d, i) {
       if (i % 3 == 1) {
         return d;
       } else {
@@ -331,7 +361,7 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     })
     .style('text-anchor', 'left')
     .style('fill', AXE_COLOR)
-    .attr('transform', function(d, i) {
+    .attr('transform', function (d, i) {
       return 'translate(0,' + (i * DAY_SIZE + margin_top + 14) + ')'
     })
     .attr('font-family', 'sans-serif')
@@ -342,15 +372,15 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .data(result.data.values)
     .enter()
     .append('rect')
-    .attr('x', function(d, i) {
-      return i % cols * DAY_SIZE + margin_left;
+    .attr('x', function (d, i) {
+      return i % cols * DAY_SIZE + margin_left + DAY_SIZE/2;
     })
-    .attr('y', function(d, i) {
-      return Math.floor(i / cols) * DAY_SIZE + margin_top;
+    .attr('y', function (d, i) {
+      return Math.floor(i / cols) * DAY_SIZE + margin_top + DAY_SIZE/2;
     })
-    .attr('width', DAY_SIZE)
-    .attr('height', DAY_SIZE)
-    .attr('display', function(d, i) {
+    .attr('width', 0)
+    .attr('height', 0)
+    .attr('display', function (d, i) {
       if (d === "") {
         return 'none';
       }
@@ -359,28 +389,49 @@ var displayGlobalRepartitionV = function(result, target, colors, unit, precision
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
-    .attr('title', function(d, i) {
+    .attr('title', function (d, i) {
         return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
     });
 
-  $('[data-toggle=\'tooltip\']').tooltip();
+  chart
+    .selectAll('rect')
+    .transition()
+    .duration(300)
+    .delay(function (d, i) { return i * 6; })
+    .ease(d3.easeCubic)
+    .attr('x', function (d, i) {
+      return i % cols * DAY_SIZE + margin_left;
+    })
+    .attr('y', function (d, i) {
+      return Math.floor(i / cols) * DAY_SIZE + margin_top;
+    })
+    .attr('width', DAY_SIZE)
+    .attr('height', DAY_SIZE);
+
+    $('[data-toggle=\'tooltip\']').tooltip();
 }
 
 
 /**
- * Display a histogram.
+ * Display a histogram if there's less than 20 data, curve after.
  *
- *   result : an object containing :
- *     - axeX : values to display
- *     - axeY : axeY labels
- *   target : id of the targetted DIV element
- *   color :  hexadecimal color for bar
- *   unit : a string, the unit of the displayed data
+ *   result: an object containing :
+ *     - axeX: values to display
+ *     - axeY: axeY labels
+ *   target: id of the targetted DIV element
+ *   color:  hexadecimal color for bar
+ *   unit: a string, the unit of the displayed data
+ *   precision: float precision for value
+ *   height: height of graph area
+ *   width: width of graph area
+ *   margin_bottom: place for axe x ticks
  */
-var displayGlobalEvolution = function(result, target, color, unit, precision, height = 350, width = 800, margin_bottom = 90) {
+var displayGlobalEvolution = function (result, target, color, unit, precision, height = 350, width = 800, margin_bottom = 90) {
   var margin_top = 20;
   var margin_left = 20;
   var margin_right = 20;
+  // If there's more than 20 data to dislpay, we display a curve.
+  var type = result.axeX.length < 20 ? 1 : 2;
 
   var element = d3
     .select('#' + target);
@@ -405,7 +456,7 @@ var displayGlobalEvolution = function(result, target, color, unit, precision, he
     .scaleBand()
     .range([0, width])
     .padding(0.4)
-    .domain(result.axeX.map(function(d) { return d;})),
+    .domain(result.axeX.map(function (d) { return d;})),
   yScale = d3
     .scaleLinear()
     .range([0, height])
@@ -415,25 +466,79 @@ var displayGlobalEvolution = function(result, target, color, unit, precision, he
     .append('g')
     .attr('transform','translate(' + margin_left + ',' + margin_top + ')');
 
+  var yGrid = chart
+    .append('g')
+    .call(
+      d3.axisLeft(yScale)
+        .tickSize(-width, 0, 0)
+        .tickFormat("")
+    );
+
+  yGrid
+    .selectAll('line')
+    .attr('stroke', GRID_COLOR);
+
+  yGrid
+    .select('.domain')
+    .attr('stroke-width', 0);
+
+  if (type == 2) {
+    chart.append('path')
+      .datum(result.axeX)
+      .attr('fill', color)
+      .attr('class', 'area')
+      .attr('d', d3.area()
+          .curve(d3.curveMonotoneX)
+          .x(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+          .y0(height)
+          .y1(height)
+      );
+
+    chart
+      .selectAll('.area')
+      .transition()
+      .duration(800)
+      .ease(d3.easeCubic)
+      .attr('d', d3.area()
+          .curve(d3.curveMonotoneX)
+          .x(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+          .y0(height)
+          .y1(function (d, i) { return  yScale(result.axeY[i]); })
+      )
+  }
+
   chart
     .selectAll('.bar')
     .data(result.axeX)
     .enter()
     .append('rect')
     .attr('class', 'bar')
-    .attr('fill', color)
-    .attr('x', function(d, i) { return xScale(d); })
-    .attr('y', function(d, i) { return yScale(result.axeY[i]); })
+    .attr('fill', (type == 1) ? color : 'transparent' )
+    .attr('stroke-width', 0)
+    .attr('x', function (d, i) { return xScale(d) })
+    .attr('y', height)
     .attr('width', xScale.bandwidth())
-    .attr('height', function(d, i) { return height - yScale(result.axeY[i]); })
+    .attr('height', 0)
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'top')
     .attr('data-html', 'true')
-    .attr('title', function(d, i) {
-        return result.label[i] + '</br> ' + parseFloat(result.axeY[i]).toFixed(precision) + ' ' + unit;
+    .attr('title', function (d, i) {
+      return result.label[i] + '</br> ' + parseFloat(result.axeY[i]).toFixed(precision) + ' ' + unit;
     });
 
+  chart
+    .selectAll('.bar')
+    .transition()
+    .duration(600)
+    .delay(function (d, i) { return i * 20; })
+    .ease(d3.easeCubic)
+    .attr('y', function (d, i) { return yScale(result.axeY[i]); })
+    .attr('height', function (d, i) { return height - yScale(result.axeY[i]); })
+
+
   $('[data-toggle=\'tooltip\']').tooltip();
+
+  var tickInterval = result.axeX.length > 15 ? parseInt(result.axeX.length/15) : 1;
 
   var xAxe = chart
     .append('g')
@@ -445,7 +550,7 @@ var displayGlobalEvolution = function(result, target, color, unit, precision, he
     .style('text-anchor', 'end')
     .attr('dx', '-.8em')
     .attr('dy', '.15em')
-    .style('fill', AXE_COLOR)
+    .style('fill', function (d,i) {return i%tickInterval == 0 ? AXE_COLOR : 'transparent';})
     .style('font-size', '1.3em')
     .attr('transform', 'rotate(-65)');
 
@@ -461,18 +566,21 @@ var displayGlobalEvolution = function(result, target, color, unit, precision, he
 /**
  * Display a legend heatmap repartition.
  *
- *   result : an object containing :
- *     - axe.x : axeX labels
- *     - axe.y : axeY labels
- *     - data.values : values to display
- *     - data.dates : corresponding dates
- *   target : id of the targetted DIV element
- *   colors : a tab with 2 elements for the color scale
- *   unit : a string, the unit of the displayed data
+ *   result: an object containing :
+ *     - axe.x: axeX labels
+ *     - axe.y: axeY labels
+ *     - data.values: values to display
+ *     - data.dates: corresponding dates
+ *   target: id of the targetted DIV element
+ *   colors: a tab with 2 elements for the color scale
+ *   unit: a string, the unit of the displayed data
+ *   precision: float precision for value
+ *   min: min value for scale
+ *   max: max value for scale
  */
-var displayLegend = function(result, target, colors, unit, precision, min, max) {
+var displayLegend = function (result, target, colors, unit, precision, min, max) {
   var total_height = colors.length * DAY_SIZE + 20;
-  var total_width = 150;
+  var total_width = 100;
   var margin_left = 25;
 
   var element = d3
@@ -523,8 +631,8 @@ var displayLegend = function(result, target, colors, unit, precision, min, max) 
     })
     .attr('width', DAY_SIZE)
     .attr('height', DAY_SIZE)
-    .attr('fill', function(d, i) {return colors[colors.length - 1 - i];})
-    .attr('display', function(d, i) {
+    .attr('fill', function (d, i) {return colors[colors.length - 1 - i];})
+    .attr('display', function (d, i) {
       if (d === "") {
         return 'none';
       }
@@ -532,7 +640,7 @@ var displayLegend = function(result, target, colors, unit, precision, min, max) 
     .attr('data-toggle', 'tooltip')
     .attr('data-placement', 'left')
     .attr('data-html', 'true')
-    .attr('title', function(d, i) {
+    .attr('title', function (d, i) {
         var inf, sup;
         var lastIndex = colors.length - 1;
         switch (i) {
@@ -606,3 +714,340 @@ var displayLegendTick = function (target, margin_left, index, label, value) {
   .attr("y", index * DAY_SIZE + 10)
   .text(value);
 }
+
+/**
+ * Display a weekDay/week heatmap repartition.
+ *
+ *   result: an object containing :
+ *     - xValue: values for x axe
+ *     - yValue: values for y axe
+ *     - dates: corresponding dates
+ *   target: id of the targetted DIV element
+ *   colors: a tab with 2 elements for the color scale
+ *   unit: a string, the unit of the displayed data
+ *   precision: float precision for value
+ */
+var displayXY = function (result, target, color, unitx, unity, precisionx, precisiony, height = 450, width = 800, margin_bottom = 40) {
+  var margin_top = 20;
+  var margin_left = 50;
+  var margin_right = 20;
+
+  var element = d3
+    .select('#' + target);
+
+  width = document.getElementById(target).clientWidth - margin_right - margin_left;
+
+  element
+    .selectAll('svg')
+    .remove();
+
+  element
+    .selectAll('div')
+    .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', margin_left + width + margin_right)
+    .attr('height', margin_top + height + margin_bottom);
+
+  var xScale = d3
+    .scaleLinear()
+    .range([0, width])
+    .domain([0, Math.max(...result.axeX) * 1.05]);
+  yScale = d3
+    .scaleLinear()
+    .range([0, height])
+    .domain([Math.max(...result.axeY) * 1.05, 0]);
+
+  var chart = svg
+  .append('g')
+  .attr('transform','translate(' + margin_left + ',' + margin_top + ')');
+
+  var xGrid = chart
+  .append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .call(
+      d3.axisBottom(xScale)
+      .tickSize(-height, 0, 0)
+      .tickFormat("")
+  );
+
+  xGrid
+  .selectAll('line')
+  .attr('stroke', GRID_COLOR);
+
+  var yGrid = chart
+    .append('g')
+    .call(
+        d3.axisLeft(yScale)
+        .tickSize(-width, 0, 0)
+        .tickFormat("")
+    );
+
+  yGrid
+    .selectAll('line')
+    .attr('stroke', GRID_COLOR);
+
+  var xAxe = chart
+    .append('g')
+    .attr('transform', 'translate(0,' + height + ')')
+    .call(d3.axisBottom(xScale));
+
+  xAxe
+    .selectAll('text')
+    .style('text-anchor', 'end')
+    .attr('dx', '.3em')
+    .style('fill', AXE_COLOR)
+    .style('font-size', '1.3em')
+
+  xAxe
+    .select('.domain')
+    .attr('stroke', AXE_COLOR);
+
+  xAxe
+    .selectAll('line')
+    .attr('stroke', AXE_COLOR);
+
+  var yAxe = chart
+    .append('g')
+    .call(d3.axisLeft(yScale));
+
+  yAxe
+    .selectAll('text')
+    .style('text-anchor', 'end')
+    .style('fill', AXE_COLOR)
+    .style('font-size', '1.3em')
+
+  yAxe
+    .select('.domain')
+    .attr('stroke', AXE_COLOR);
+
+  yAxe
+    .selectAll('line')
+    .attr('stroke', AXE_COLOR);
+
+  chart
+    .selectAll('.point')
+    .data(result.axeX)
+    .enter()
+    .append('circle')
+    .attr('class', 'point')
+    .attr('fill', color)
+    .attr('cx', function (d, i) { return xScale(d); })
+    .attr('cy', function (d, i) { return yScale(result.axeY[i]); })
+    .attr('r', 0)
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'right')
+    .attr('data-html', 'true')
+    .attr('title', function (d, i) {
+        return result.date[i] + '</br> ' + parseFloat(result.axeY[i]).toFixed(precisiony) + ' ' + unity + ' - ' + parseFloat(d).toFixed(precisionx) + ' ' + unitx;
+    })
+    .on("mouseover", function (d, i) { d3.select(this).attr('r', '8'); })
+    .on("mouseout", function (d, i) { d3.select(this).attr('r', '4'); });
+
+  chart
+    .selectAll('.point')
+    .transition()
+    .duration(400)
+    .delay(function(d, i) { return i * 10; })
+    .ease(d3.easeCubic)
+    .attr('r', 4);
+
+  chart
+    .append('text')
+    .attr("x", width/2 - 10)
+    .attr("y", height + 40)
+    .text(unitx)
+    .style('font-size', '1.1em');
+
+  chart
+  .append('text')
+  .attr("x", - height/2)
+  .attr("y", -35)
+  .attr('transform', 'rotate(-90)')
+  .text(unity)
+  .style('font-size', '1.1em');
+
+  $('[data-toggle=\'tooltip\']').tooltip();
+}
+
+/**
+ * Display a vertical double plain curve.
+ *
+ *   result1: an object containing :
+ *     - axeX: values to display
+ *     - axeY: axeY labels
+ *   result2: an object containing :
+ *     - axeX: values to display
+ *     - axeY: axeY labels
+ *   target: id of the targetted DIV element
+ *   color1:  hexadecimal color for bar
+ *   color2:  hexadecimal color for bar
+ *   unit1: a string, the unit of the displayed data
+ *   unit2: a string, the unit of the displayed data
+ *   precision1: float precision for value
+ *   precision2: float precision for value
+ */
+var displayDoubleEvolution = function (result1, result2, target, color1, color2, unit1, unit2, precision1, precision2, height = 450, width = 200) {
+  var margin_top = 30;
+  var margin_bottom = 20;
+  var margin_left = 5;
+  var margin_right = 5;
+  // If there's more than 20 data to dislpay, we display a curve.
+  var type = result1.axeX.length < 20 ? 1 : 2;
+
+  var element = d3
+    .select('#' + target);
+
+  element
+    .selectAll('svg')
+    .remove();
+
+  element
+    .selectAll('div')
+    .remove();
+
+  var svg = element
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', margin_left + width + margin_right)
+    .attr('height', margin_top + height + margin_bottom);
+
+  var xScale = d3
+    .scaleBand()
+    .range([0, height])
+    .padding(0.4)
+    .domain(result1.axeX.map(function(d) { return d;})),
+  yScale1 = d3
+    .scaleLinear()
+    .range([0, width/2])
+    .domain([0, Math.max(...result1.axeY)]),
+  yScale2 = d3
+    .scaleLinear()
+    .range([0, width/2])
+    .domain([0, Math.max(...result2.axeY)]);
+
+  var chart = svg
+    .append('g')
+    .attr('transform','translate(' + margin_left + ',' + margin_top + ')');
+
+  var yGrid1 = chart
+    .append('g')
+    .call(
+      d3.axisBottom(yScale1)
+        .tickSize(height, 0, 0)
+        .tickFormat("")
+        .ticks(5)
+    );
+
+  yGrid1
+    .selectAll('line')
+    .attr('stroke', GRID_COLOR);
+
+  yGrid1
+    .select('.domain')
+    .attr('stroke-width', 0);
+
+  var yGrid2 = chart
+  .append('g')
+  .attr('transform','translate(' + width/2 + ')')
+  .call(
+      d3.axisBottom(yScale1)
+      .tickSize(height, 0, 0)
+      .tickFormat("")
+      .ticks(5)
+  );
+
+  yGrid2
+    .selectAll('line')
+    .attr('stroke', GRID_COLOR);
+
+  yGrid2
+    .select('.domain')
+    .attr('stroke-width', 0);
+
+  chart.append('path')
+    .datum(result1.axeX)
+    .attr('fill', color1)
+    .attr('class', 'area1')
+    .attr('d', d3.area()
+      .curve(d3.curveMonotoneY)
+      .x0(width/2)
+      .x1(width/2)
+      .y(function(d, i) { return xScale(d) + xScale.bandwidth()/2; })
+    );
+
+  chart
+    .selectAll('.area1')
+    .transition()
+    .duration(800)
+    .ease(d3.easeCubic)
+    .attr('d', d3.area()
+      .curve(d3.curveMonotoneY)
+      .x0(width/2)
+      .x1(function (d, i) { return  width/2 - yScale1(result1.axeY[i]); })
+      .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+    );
+
+  chart.append('path')
+    .datum(result1.axeX)
+    .attr('fill', color2)
+    .attr('class', 'area2')
+    .attr('d', d3.area()
+      .curve(d3.curveMonotoneY)
+      .x0(width/2)
+      .x1(width/2)
+      .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+    );
+
+  chart
+    .selectAll('.area2')
+    .transition()
+    .duration(800)
+    .ease(d3.easeCubic)
+    .attr('d', d3.area()
+      .curve(d3.curveMonotoneY)
+      .x0(width/2)
+      .x1(function (d, i) { return width/2 + yScale2(result2.axeY[i]); })
+      .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+    );
+
+  chart
+    .selectAll('.bar')
+    .data(result1.axeX)
+    .enter()
+    .append('rect')
+    .attr('class', 'bar')
+    .attr('fill', (type == 1) ? color : 'transparent' )
+    .attr('stroke-width', 0)
+    .attr('y', function (d, i) { return xScale(d) })
+    .attr('height', xScale.bandwidth())
+    .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
+    .attr('width', function (d, i) { return yScale1(result1.axeY[i]) + yScale2(result2.axeY[i]); })
+    .attr('data-toggle', 'tooltip')
+    .attr('data-placement', 'right')
+    .attr('data-html', 'true')
+    .attr('title', function (d, i) {
+      return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+    })
+    .on("mouseover", function (d, i) { d3.select(this).attr('fill', AXE_COLOR + '88'); })
+    .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });
+
+  $('[data-toggle=\'tooltip\']').tooltip();
+
+  var xAxe = chart
+    .append('g')
+    .attr('transform', 'translate(' + width/2 + ',0)')
+    .call(d3.axisLeft(xScale).tickFormat(''));
+
+  xAxe
+    .select('.domain')
+    .attr('stroke', AXE_COLOR);
+
+  xAxe
+    .selectAll('line')
+    .attr('transform', 'translate(3,0)')
+    .attr('stroke', AXE_COLOR);
+}
+

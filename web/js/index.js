@@ -36,8 +36,8 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/conso_elec/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, d3.schemeGnBu[9], 'kWh', 1, 0);
-      displayLegend(data, 'conso-repartition-legend-' + targetMonth, d3.schemeGnBu[9], 'kWh', 1, 0);
+      displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
+      displayLegend(data, 'conso-repartition-legend-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
     }
   });
 
@@ -60,9 +60,8 @@ var refreshGraph = function (target) {
     url: appRoute + 'data/temperature/repartition/year_v/' + startDate + '/' + endDate + '',
     success: function(result) {
       var data = JSON.parse(result);
-      var color = d3.schemeRdYlBu[9].slice();
-      displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, color.reverse(), '°C', 1, -5, 25);
-      displayLegend(data, 'temp-repartition-legend-' + targetMonth, color, '°C', 1, -5, 25);
+      displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
+      displayLegend(data, 'temp-repartition-legend-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
     }
   });
 

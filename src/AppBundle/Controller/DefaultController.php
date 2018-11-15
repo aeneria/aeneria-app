@@ -30,11 +30,11 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/conso_vs_temperature", name="temperature")
+     * @Route("/dju_x_conso", name="dju_x_conso")
      */
-    public function temperatureAction(Request $request)
+    public function djuXconsoAction(Request $request)
     {
-        return $this->render('dashboards/temperature.html.twig', [
+        return $this->render('dashboards/dju_x_conso.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }

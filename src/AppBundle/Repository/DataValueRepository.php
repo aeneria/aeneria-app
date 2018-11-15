@@ -6,6 +6,7 @@ use AppBundle\Entity\DataValue;
 use AppBundle\Entity\FeedData;
 use Doctrine\ORM\QueryBuilder;
 use AppBundle\Controller\DataApiController;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * DataValueRepository
@@ -16,12 +17,13 @@ use AppBundle\Controller\DataApiController;
 class DataValueRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
-    * Get an average value
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param int $frequency
-    */
+     * Get an average value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param int $frequency
+     */
     public function getAverageValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
@@ -36,12 +38,13 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get an minimum value
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param int $frequency
-    */
+     * Get an minimum value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param int $frequency
+     */
     public function getMinValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
@@ -56,12 +59,13 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get an maximum value
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param int $frequency
-    */
+     * Get an maximum value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param int $frequency
+     */
     public function getMaxValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
@@ -76,12 +80,14 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get sum of value
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param string $frequency
-    */
+     * Get sum of value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param String $frequency
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     */
     public function getSumValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
@@ -94,6 +100,45 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
         return $queryBuilder
             ->getQuery()
             ->getScalarResult();
+    }
+
+    /**
+     * Get XY
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedDataX
+     * @param FeedData $feedDataY
+     * @param String $frequency
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     */
+    public function getXY(\DateTime $startDate, \DateTime $endDate, FeedData $feedDataX, FeedData $feedDataY, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('dx');
+
+        $queryBuilder
+            ->select('dx.value AS xValue, dy.value AS yValue, dx.date AS date')
+            ->join(DataValue::class, 'dy', Join::WITH, 'dx.date = dy.date')
+            // Add condition on dates
+            ->andWhere('dx.date BETWEEN :start AND :end')
+            ->andWhere('dy.date BETWEEN :start AND :end')
+            ->setParameter('start', $startDate)
+            ->setParameter('end',   $endDate)
+            // Add condition on feedData
+            ->andWhere('dx.feedData = :feedDataX')
+            ->setParameter('feedDataX', $feedDataX->getId())
+            ->andWhere('dy.feedData = :feedDataY')
+            ->setParameter('feedDataY', $feedDataY->getId())
+            // Add condition on frequency
+            ->andWhere('dx.frequency = :frequency')
+            ->andWhere('dy.frequency = :frequency')
+            ->setParameter('frequency', $frequency)
+            ->orderBy('dx.date', 'asc');
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -120,8 +165,12 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get last date value
-    */
+     * Get last date value
+     *
+     * @param FeedData $feedData
+     * @param string $frequency
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     */
     public function getLastValue(FeedData $feedData, $frequency)
     {
         // Create the query builder
@@ -139,12 +188,13 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get value
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param string $frequency
-    */
+     * Get value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param string $frequency
+     */
     public function getValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
@@ -158,12 +208,13 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get repartition
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param string $frequency
-    */
+     * Get repartition
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param string $frequency
+     */
     public function getRepartitionValue(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $axeX, $axeY, $frequency, $repartitionType)
     {
         // Create the query builder
@@ -186,12 +237,14 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Get XY
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param string $frequency
-    */
+     * Get sum of value group by frequency (day, weekDay, week, month, year)
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param string $frequency
+     * @param string $groupBy
+     */
     public function getSumValueGroupBy(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, $groupBy)
     {
         // Create the query builder
@@ -207,15 +260,15 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-    * Add condition on querybuild on:
-    *    - dates
-    *    - feedData
-    *    - frequency
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param FeedData $feedData
-    * @param unknown $frequency
-    * @param QueryBuilder $queryBuilder
+     * Add condition on querybuild on:
+     *    - dates
+     *    - feedData
+     *    - frequency
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param string $frequency
+     * @param QueryBuilder $queryBuilder
     */
     public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
     {
@@ -235,6 +288,11 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
     }
 
 
+    /**
+     * Get date interval of data.
+     *
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     */
     public function getPeriodDataAmplitude()
     {
         // Create the query builder
