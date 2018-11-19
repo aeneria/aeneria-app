@@ -33,7 +33,7 @@ var refreshGraph = function () {
         success: function(result2) {
           var data1 = JSON.parse(result1);
           var data2 = JSON.parse(result2);
-          displayDoubleEvolution(data1, data2, 'conso-vs-dju', ELEC_COLOR[6], DJU_COLOR[6], 'kWh', 'DJU', 1, 0.1);
+          displayDoubleEvolution(data1, data2, 'conso-vs-dju', ELEC_COLOR[6], DJU_COLOR[1], 'kWh', 'DJU', 1, 0.1);
         }
       });
     }

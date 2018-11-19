@@ -1,7 +1,7 @@
 var AXE_COLOR = '#6d6d6d';
 var GRID_COLOR = '#dddddd';
 var DAY_SIZE = 15;
-var ELEC_COLOR = ['#FFFDE7','#FFECB3','#FFE082','#FFD54F','#FFCA28','#FFC107','#FFB300','#FFA000','#FF8F00'];
+var ELEC_COLOR = ['#ECEFF1','#CFD8DC','#B0BEC5','#90A4AE','#78909C','#607D8B','#546E7A','#455A64','#37474F'];
 var TEMP_COLOR = d3.schemeRdYlBu[9].slice().reverse();
 var NEBULOSITY_COLOR = ['#20CFFE', '#48C4EB', '#5BBAD9', '#67AFC7', '#6EA5B7', '#729BA7', '#749198', '#758889', '#747E7C'];
 var RAIN_COLOR = d3.schemeGnBu[9];
@@ -1031,7 +1031,7 @@ var displayDoubleEvolution = function (result1, result2, target, color1, color2,
     .attr('title', function (d, i) {
       return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
     })
-    .on("mouseover", function (d, i) { d3.select(this).attr('fill', AXE_COLOR + '88'); })
+    .on("mouseover", function (d, i) { d3.select(this).attr('fill', '#FFFFFFAA'); })
     .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });
 
   $('[data-toggle=\'tooltip\']').tooltip();
