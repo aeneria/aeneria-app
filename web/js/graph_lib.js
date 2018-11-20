@@ -862,12 +862,12 @@ var displayXY = function (result, target, color, unitx, unity, precisionx, preci
     .style('font-size', '1.1em');
 
   chart
-  .append('text')
-  .attr("x", - height/2)
-  .attr("y", -35)
-  .attr('transform', 'rotate(-90)')
-  .text(unity)
-  .style('font-size', '1.1em');
+    .append('text')
+    .attr("x", - height/2)
+    .attr("y", -35)
+    .attr('transform', 'rotate(-90)')
+    .text(unity)
+    .style('font-size', '1.1em');
 
   $('[data-toggle=\'tooltip\']').tooltip();
 }
@@ -889,13 +889,9 @@ var displayXY = function (result, target, color, unitx, unity, precisionx, preci
  *   precision1: float precision for value
  *   precision2: float precision for value
  */
-var displayDoubleEvolution = function (result1, result2, target, color1, color2, unit1, unit2, precision1, precision2, height = 450, width = 200) {
-  var margin_top = 30;
-  var margin_bottom = 20;
-  var margin_left = 5;
-  var margin_right = 5;
-  // If there's more than 20 data to dislpay, we display a curve.
-  var type = result1.axeX.length < 20 ? 1 : 2;
+var displayDoubleEvolution = function (result1, result2, target, color1, color2, unit1, unit2, precision1, precision2, height = 460, width = 200) {
+  var margin_top = 20;
+  var margin_bottom = 25;
 
   var element = d3
     .select('#' + target);
@@ -911,7 +907,7 @@ var displayDoubleEvolution = function (result1, result2, target, color1, color2,
   var svg = element
     .append('svg')
     .attr('class', 'chart')
-    .attr('width', margin_left + width + margin_right)
+    .attr('width', width)
     .attr('height', margin_top + height + margin_bottom);
 
   var xScale = d3
@@ -930,7 +926,7 @@ var displayDoubleEvolution = function (result1, result2, target, color1, color2,
 
   var chart = svg
     .append('g')
-    .attr('transform','translate(' + margin_left + ',' + margin_top + ')');
+    .attr('transform','translate(0,' + margin_top + ')');
 
   var yGrid1 = chart
     .append('g')
@@ -1019,7 +1015,7 @@ var displayDoubleEvolution = function (result1, result2, target, color1, color2,
     .enter()
     .append('rect')
     .attr('class', 'bar')
-    .attr('fill', (type == 1) ? color : 'transparent' )
+    .attr('fill', 'transparent' )
     .attr('stroke-width', 0)
     .attr('y', function (d, i) { return xScale(d) })
     .attr('height', xScale.bandwidth())
@@ -1049,5 +1045,19 @@ var displayDoubleEvolution = function (result1, result2, target, color1, color2,
     .selectAll('line')
     .attr('transform', 'translate(3,0)')
     .attr('stroke', AXE_COLOR);
+
+  svg
+    .append('text')
+    .attr("x", width/2 - 60)
+    .attr("y", margin_top + height + margin_bottom)
+    .text(unit1)
+    .style('font-size', '1.1em');
+
+  svg
+    .append('text')
+    .attr("x", width/2 + 30)
+    .attr("y", margin_top + height + margin_bottom)
+    .text(unit2)
+    .style('font-size', '1.1em');
 }
 
