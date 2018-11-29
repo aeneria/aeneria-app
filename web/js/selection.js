@@ -57,18 +57,52 @@ $(document).ready(function () {
     e.preventDefault(); // avoid to execute the actual submit of the form.
   });
 
-  // Add event on week selection button.
-  $('.pilea-select-week').click(function(e) {
-    // Store new value in localStorage.
+  $('.pilea-select-period a').click(function(e) {
+
     var now = new Date();
-    var startDate = new Date(new Date().setDate(now.getDate() - 7));
+    var startDate = new Date();
+    var endDate = new Date();
+    switch (e.target.getAttribute('data')) {
+      case 'current-week':
+        startDate.setDate(now.getDate() - (now.getDay() - 1));
+        endDate.setDate(now.getDate() - 1);
+        break;
+      case 'current-month':
+        startDate.setDate(1);
+        endDate.setDate(now.getDate() - 1);
+        break;
+      case 'current-year':
+        startDate.setDate(1);
+        startDate.setMonth(0);
+        endDate.setDate(now.getDate() - 1);
+        break;
+      case 'last-week':
+        startDate.setDate(now.getDate() - (now.getDay() + 6));
+        endDate.setDate(now.getDate() - now.getDay());
+        break;
+      case 'last-month':
+        startDate.setDate(1);
+        startDate.setMonth(now.getMonth() - 1);
+        endDate.setDate(-1);
+        break;
+      case 'last-year':
+        startDate.setDate(1);
+        startDate.setMonth(0);
+        startDate.setFullYear(now.getFullYear() - 1);
+        endDate.setMonth(0);
+        endDate.setDate(-1);
+        break;
+      case 'all':
+        startDate = new Date(period.start);
+        endDate = new Date(period.end);
+    }
+
     var startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
     startString += '/';
     startString += startDate.getMonth() < 9 ? '0' + (startDate.getMonth() + 1) : (startDate.getMonth() + 1);
     startString += '/';
     startString += startDate.getFullYear();
 
-    var endDate = new Date(new Date().setDate(now.getDate() - 1));
     var endString = endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
     endString += '/';
     endString += endDate.getMonth() < 9 ? '0' + (endDate.getMonth() + 1) : (endDate.getMonth() + 1);
@@ -77,8 +111,11 @@ $(document).ready(function () {
 
     localStorage.setItem('startDate', startString);
     localStorage.setItem('endDate', endString);
+
     $('#start-date').val(startString);
     $('#end-date').val(endString);
+
+    $('.input-daterange').datepicker('destroy');
     $('.input-daterange').datepicker({
       format: 'dd/mm/yyyy',
       endDate: maxDate,
@@ -86,100 +123,10 @@ $(document).ready(function () {
       language: 'fr'
     });
 
-    // Tell the world we have new values.
-    document.dispatchEvent(new Event('selection'));
-
     e.preventDefault(); // avoid to execute the actual submit of the form.
-  });
-
-  // Add event on month selection button.
-  $('.pilea-select-month').click(function(e) {
-    // Store new value in localStorage.
-    var now = new Date();
-    var startDate = new Date(new Date().setMonth(now.getMonth() - 1));
-    var startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
-    startString += '/';
-    startString += startDate.getMonth() < 9 ? '0' + (startDate.getMonth() + 1) : (startDate.getMonth() + 1);
-    startString += '/';
-    startString += startDate.getFullYear();
-
-    var endDate = new Date(new Date().setDate(now.getDate() - 1));
-    var endString = endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
-    endString += '/';
-    endString += endDate.getMonth() < 9 ? '0' + (endDate.getMonth() + 1) : (endDate.getMonth() + 1);
-    endString += '/';
-    endString += endDate.getFullYear();
-
-    localStorage.setItem('startDate', startString);
-    localStorage.setItem('endDate', endString);
-    $('#start-date').val(startString);
-    $('#end-date').val(endString);
-    $('.input-daterange').datepicker({
-      format: 'dd/mm/yyyy',
-      endDate: maxDate,
-      startDate: minDate,
-      language: 'fr'
-    });
 
     // Tell the world we have new values.
     document.dispatchEvent(new Event('selection'));
-
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-  });
-
-  // Add event on year selection button.
-  $('.pilea-select-year').click(function(e) {
-    // Store new value in localStorage.
-    var now = new Date();
-    var startDate = new Date(new Date().setFullYear(now.getFullYear() - 1));
-    var startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
-    startString += '/';
-    startString += startDate.getMonth() < 9 ? '0' + (startDate.getMonth() + 1) : (startDate.getMonth() + 1);
-    startString += '/';
-    startString += startDate.getFullYear();
-
-    var endDate = new Date(new Date().setDate(now.getDate() - 1));
-    var endString = endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
-    endString += '/';
-    endString += endDate.getMonth() < 9 ? '0' + (endDate.getMonth() + 1) : (endDate.getMonth() + 1);
-    endString += '/';
-    endString += endDate.getFullYear();
-
-    localStorage.setItem('startDate', startString);
-    localStorage.setItem('endDate', endString);
-    $('#start-date').val(startString);
-    $('#end-date').val(endString);
-    $('.input-daterange').datepicker({
-      format: 'dd/mm/yyyy',
-      endDate: maxDate,
-      startDate: minDate,
-      language: 'fr'
-    });
-
-    // Tell the world we have new values.
-    document.dispatchEvent(new Event('selection'));
-
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-  });
-
-  // Add event on select all button.
-  $('.pilea-select-all').click(function(e) {
-    // Store new value in localStorage.
-    localStorage.setItem('startDate', minDate);
-    localStorage.setItem('endDate', maxDate);
-
-    $('#start-date').val(minDate);
-    $('#end-date').val(maxDate);
-    $('.input-daterange').datepicker({
-      format: 'dd/mm/yyyy',
-      endDate: '-1d',
-      language: 'fr'
-    });
-
-    // Tell the world we have new values.
-    document.dispatchEvent(new Event('selection'));
-
-    e.preventDefault(); // avoid to execute the actual submit of the form.
   });
 
   // Deal with frequency ///////////////////////////////////////////////////
@@ -192,15 +139,16 @@ $(document).ready(function () {
     localStorage.setItem('frequency', frequency);
   }
 
-  // Initiate frequency form
-  $('input:radio[name="frequency"]').val([frequency]);
+  // Initiate frequency button label
+  var frequencyLabel = $('.pilea-select-frequency [data="' + frequency + '"]')[0].innerHTML;
+  $('.pilea-select-frequency button')[0].innerHTML = frequencyLabel;
 
   // Add event on change
-  $('input:radio[name="frequency"]').change(function(e) {
-    localStorage.setItem('frequency', $(this).val());
+  $('.pilea-select-frequency a').click(function(e) {
+    localStorage.setItem('frequency', e.target.getAttribute('data'));
+    $('.pilea-select-frequency button')[0].innerHTML =  e.target.innerHTML;
 
     // Tell the world we have new values.
     document.dispatchEvent(new Event('selection'));
-  })
-
+  });
 })

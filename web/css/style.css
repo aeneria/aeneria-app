@@ -59,31 +59,70 @@ nav input, nav button {
   border: none !important;
 }
 
-.pilea-start-date {
+/* SELECTION */
+
+#selection-form .start-input {
   border-radius: 20px 0 0 20px !important;
-  margin-right: 0  !important;
-  width: 150px !important;
+  background-color: #0868AC !important;
+  height: 32px;
+  margin-right: 0 !important;
+  margin-left: 20px !important;
+  width: 40px!important;
+  padding: .39rem .9rem;
 }
 
-.pilea-end-date {
-  border-left: #6d6d6d solid 1px !important;
-  border-radius: 0   0 !important;
-  margin-left: 0  !important;
-  margin-right: 0  !important;
-  width: 150px !important;
+#selection-form .dropdown-menu {
+  padding: .3rem 0;
+  font-size: 0.8rem;
 }
 
-.pilea-refresh {
+.input-daterange {
+  width: auto;
+}
+
+#selection-form .pilea-start-date,
+#selection-form .pilea-end-date {
+  border-radius: 0 !important;
+  width: 130px !important;
+  height: 32px;
+  margin: 5px 0  !important;
+}
+#selection-form .pilea-inter-date {
+  background: #FFFFFF;
+  height: 32px;
+  margin: 0;
+  width: 7px !important;
+  vertical-align: middle;
+  padding-top: 5px;
+}
+
+#selection-form #period-date {
+  height: 32px;
+  background-color: #FFFFFF !important;
+  border-radius: 0;
+}
+
+#selection-form #period-date::after {
+  display: none;
+}
+
+#selection-form .pilea-refresh {
   border-radius: 20px 20px 20px 20px !important;
   margin: 0 5px 0 5px  !important;
   height: 32px !important;
   vertical-align: middle !important;
 }
 
-.pilea-select-date {
+#selection-form .pilea-select-date {
   border-radius: 0 20px 20px 0 !important;
   margin-left: 0  !important;
   width: 32px !important;
+}
+
+#selection-form #frequency {
+  border-radius: 0 20px 20px 0 !important;
+  margin-left: 0  !important;
+  height: 32px !important;
 }
 
 .btn-primary {
@@ -219,6 +258,10 @@ text {
   display: flex;
 }
 
+.dash-index {
+  font-size: 2.3em;
+}
+
 /* GENERAL DASH /////////////////////////////////////////////////////////////*/
 
 .gen-first-col .card {
@@ -251,10 +294,6 @@ text {
   margin-left: 30px;
   margin-right: 30px;
   max-height: 80px;
-}
-
-.dash-index {
-  font-size: 2.3em;
 }
 
 .meteo-card-1 .global-repartition-legend {
