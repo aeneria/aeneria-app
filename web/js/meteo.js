@@ -23,6 +23,15 @@ var refreshGraph = function () {
     }
   });
 
+  // Refresh dju evolution.
+  $.ajax({
+    url: appRoute + 'data/dju/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+    success: function( result ) {
+      var data = JSON.parse(result);
+      displayGlobalEvolution(data, 'temperature-evolution', DJU_COLOR[6], 'DJU', 0, 200);
+    }
+  });
+
   // Refresh DJU total.
   $.ajax({
     url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
@@ -39,6 +48,15 @@ var refreshGraph = function () {
       var data = JSON.parse(result);
       displayGlobalRepartitionV(data, 'neb-repartition', NEBULOSITY_COLOR, '%', 1, 0, 100);
       displayLegend(data, 'neb-repartition-legend', NEBULOSITY_COLOR, '%', 1, 0, 100);
+    }
+  });
+
+  // Refresh nebulosity evolution.
+  $.ajax({
+    url: appRoute + 'data/nebulosity/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+    success: function( result ) {
+      var data = JSON.parse(result);
+      displayGlobalEvolution(data, 'nebulosity-evolution', NEBULOSITY_COLOR[6], '%', 1, 200);
     }
   });
 
@@ -61,6 +79,15 @@ var refreshGraph = function () {
     }
   });
 
+  // Refresh rain evolution.
+  $.ajax({
+    url: appRoute + 'data/rain/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+    success: function( result ) {
+      var data = JSON.parse(result);
+      displayGlobalEvolution(data, 'rain-evolution', RAIN_COLOR[6], 'mm', 1, 200);
+    }
+  });
+
   // Refresh day without rain.
   $.ajax({
     url: appRoute + 'data/rain/inf/0/day/' + startDate + '/' + endDate + '',
@@ -77,6 +104,15 @@ var refreshGraph = function () {
       var data = JSON.parse(result);
       displayGlobalRepartitionV(data, 'humidity-repartition', HUMIDITY_COLOR, '%', 1, 0, 100);
       displayLegend(data, 'humidity-repartition-legend', HUMIDITY_COLOR, '%', 1, 0, 100);
+    }
+  });
+
+  // Refresh nebulosity evolution.
+  $.ajax({
+    url: appRoute + 'data/humidity/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+    success: function( result ) {
+      var data = JSON.parse(result);
+      displayGlobalEvolution(data, 'humidity-evolution', HUMIDITY_COLOR[6], '%', 1, 200);
     }
   });
 

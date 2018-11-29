@@ -4,7 +4,7 @@
 
 {% block body %}
   <div class="container-fluid">
-    <div class="row">
+    <div class="row repartition">
       <div id="temperature" class="col-lg-3 col-md-6 col-sm-6">
         <div class="card">
           <div class="card-body">
@@ -97,6 +97,49 @@
                 <div id="humidity-repartition" class="global-repartition"></div>
                 <div id="humidity-repartition-legend" class="global-repartition-legend"></div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {# Evolution graph #}
+    <div class="row evolution">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Evolution des DJU' | trans }}</h2>
+            <div class="content">
+              <div id="temperature-evolution" class="global-evolution"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Evolution de la nebulosité' | trans }}</h2>
+            <div class="content">
+              <div id="nebulosity-evolution" class="global-evolution"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Evolution des précipitations' | trans }}</h2>
+            <div class="content">
+              <div id="rain-evolution" class="global-evolution"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Evolution de l\'humidité' | trans }}</h2>
+            <div class="content">
+              <div id="humidity-evolution" class="global-evolution"></div>
             </div>
           </div>
         </div>
