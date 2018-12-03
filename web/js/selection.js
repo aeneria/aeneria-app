@@ -83,14 +83,14 @@ $(document).ready(function () {
       case 'last-month':
         startDate.setDate(1);
         startDate.setMonth(now.getMonth() - 1);
-        endDate.setDate(-1);
+        endDate.setDate(0);
         break;
       case 'last-year':
         startDate.setDate(1);
         startDate.setMonth(0);
         startDate.setFullYear(now.getFullYear() - 1);
         endDate.setMonth(0);
-        endDate.setDate(-1);
+        endDate.setDate(0);
         break;
       case 'all':
         startDate = new Date(period.start);
@@ -126,7 +126,7 @@ $(document).ready(function () {
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
     // Tell the world we have new values.
-    document.dispatchEvent(new Event('selection'));
+    document.dispatchEvent(new Event('selection', {start: startString, end: endString}));
   });
 
   // Deal with frequency ///////////////////////////////////////////////////

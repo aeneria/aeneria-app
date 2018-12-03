@@ -18,7 +18,12 @@ var refreshGraph = function (target) {
   var m = date.getMonth();
 
   var start = new Date(y, m + targetMonth, 1);
-  var end = new Date(y, m + targetMonth + 1, 0);
+  if (targetMonth == 0) {
+    var end = date;
+  }
+  else {
+    var end = new Date(y, m + targetMonth + 1, 0);
+  }
 
   document.getElementById('title-' + targetMonth).innerHTML = MONTHS_NAME[start.getMonth()] + ' ' + start.getFullYear();
 
