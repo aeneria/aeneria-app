@@ -139,20 +139,25 @@ nav input, nav button {
   background: #4e4e4e;
   width: 45px;
   height: 100%;
-  padding: 10px;
   position: fixed;
 }
 
 #sidebar > div > a {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  min-width: 35px;
+  margin: 4px;
+  padding: 6px;
   min-height: auto;
 }
 
 #sidebar > div > a > img {
   max-width: 24px;
   height: auto;
+}
+
+#sidebar .active,
+.navbar .active {
+  background-color: #0868AC;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow:  0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* CARD */

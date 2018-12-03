@@ -92,7 +92,7 @@ $(document).ready(function () {
         endDate.setMonth(0);
         endDate.setDate(0);
         break;
-      case 'all':
+      default:
         startDate = new Date(period.start);
         endDate = new Date(period.end);
     }
