@@ -286,7 +286,7 @@ class Feed
         $feedDataList = $entityManager->getRepository('AppBundle:FeedData')->findByFeed($this);
 
         $lastUpToDate = new \DateTime();
-        $lastUpToDate->sub(new \DateInterval('P1D'));
+        $lastUpToDate->sub(new \DateInterval('P2D'));
 
         // Foreach feedData we get the last up to date value.
         /** @var \AppBundle\Entity\FeedData $feedData */
@@ -295,6 +295,8 @@ class Feed
             $feedDataLastUpToDate = $feedData->getLastUpToDate($entityManager);
             $lastUpToDate = min($lastUpToDate, $feedDataLastUpToDate);
         }
+
+        $lastUpToDate->add(new \DateInterval('P1D'));
 
         return $lastUpToDate;
     }
@@ -316,15 +318,12 @@ class Feed
      * @param bool $force
      */
     public function fetchDataToDate(EntityManager $entityManager, \DateTime $date) {
-        $lastUpdateDate = $this->getLastUpToDate($entityManager);
-        if (empty($lastUpdateDate)) {
-            $lastUpdateDate = new \DateTime();
-        }
-        $lastUpdateDate->add(new \DateInterval('P1D'));
+        $lastUpToDate = $this->getLastUpToDate($entityManager);
+        $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
-        while($lastUpdateDate <= $date) {
-            $this->getFeedObject($entityManager)->fetchData($lastUpdateDate);
-            $lastUpdateDate->add(new \DateInterval('P1D'));
+        while($lastUpToDate <= $date) {
+            $this->getFeedObject($entityManager)->fetchData($lastUpToDate);
+            $lastUpToDate->add(new \DateInterval('P1D'));
         }
     }
 
