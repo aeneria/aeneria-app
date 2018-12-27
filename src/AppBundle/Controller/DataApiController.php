@@ -497,7 +497,7 @@ class DataApiController extends Controller
                 $currentDate = clone $start;
                 $endYear =  (int)$end->format('Y');
                 $endWeek =  (int)$end->format('W');
-                while((int)$currentDate->format('W') <= $endWeek || (int)$currentDate->format('Y') < $endYear) {
+                while((int)$currentDate->format('W') <= $endWeek && (int)$currentDate->format('Y') <= $endYear) {
                     $axe->y[] = $currentDate->format('W');
                     $axe->year[] = (int)$currentDate->format('Y');
                     $currentDate->add(new \DateInterval('P1W'));
