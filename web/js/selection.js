@@ -16,7 +16,7 @@ $(document).ready(function () {
   var maxDate = period.end.substring(0,10).split('-') ;
   maxDate = maxDate[2] + '/' + maxDate[1] + '/' + maxDate[0];
 
-  if (startString == null || startString == null) {
+  if (startString == null || endString == null) {
     var now = new Date();
     startDate = new Date(new Date().setMonth(now.getMonth() - 6));
     startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
@@ -26,13 +26,12 @@ $(document).ready(function () {
     startString += startDate.getFullYear();
     localStorage.setItem('startDate', startString);
 
-    endDate = now;
-    endString = endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
-    endString = '/';
-    endString += endDate.getMonth() < 9 ? '0' + (endDate.getMonth() + 1) : (endDate.getMonth() + 1);
-    endString = '/';
-    endString += endDate.getFullYear();
-    localStorage.setItem('endDate', endDate);
+    endString = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
+    endString += '/';
+    endString += now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1);
+    endString += '/';
+    endString += now.getFullYear();
+    localStorage.setItem('endDate', endString);
   }
 
   // Initiate datepicker.
