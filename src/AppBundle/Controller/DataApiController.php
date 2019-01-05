@@ -467,11 +467,11 @@ class DataApiController extends Controller
                 ];
 
                 $currentDate = clone $start;
-                $endYear =  (int)$end->format('Y');
-                $endWeek =  (int)$end->format('W');
-                while((int)$currentDate->format('W') <= $endWeek || (int)$currentDate->format('Y') < $endYear) {
+                $endWeek = clone $end;
+                $endWeek->add(new \DateInterval('P'.(7-$end->format('w')).'D'));
+                while($currentDate <= $endWeek) {
                     $axe->x[] = (int)$currentDate->format('W');
-                    $axe->year[] = (int)$currentDate->format('Y');
+                    $axe->year[] = (int)$currentDate->format('o');
                     $currentDate->add(new \DateInterval('P1W'));
                 }
                 break;
@@ -495,11 +495,11 @@ class DataApiController extends Controller
                 ];
 
                 $currentDate = clone $start;
-                $endYear =  (int)$end->format('Y');
-                $endWeek =  (int)$end->format('W');
-                while((int)$currentDate->format('W') <= $endWeek && (int)$currentDate->format('Y') <= $endYear) {
+                $endWeek = clone $end;
+                $endWeek->add(new \DateInterval('P'.(7-$end->format('w')).'D'));
+                while($currentDate <= $endWeek) {
                     $axe->y[] = $currentDate->format('W');
-                    $axe->year[] = (int)$currentDate->format('Y');
+                    $axe->year[] = (int)$currentDate->format('o');
                     $currentDate->add(new \DateInterval('P1W'));
                 }
                 break;
@@ -619,7 +619,9 @@ class DataApiController extends Controller
             $index = array_search($currentDate, $data->dates);
 
             // We store the value in the object.
-            $data->values[$index] = $value['value'];
+            if ($index !== FALSE) {
+                $data->values[$index] = $value['value'];
+            }
         }
         return $data;
     }
