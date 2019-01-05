@@ -155,12 +155,14 @@ class MeteoFrance implements FeedObject {
             /** @var \AppBundle\Entity\FeedData $feedData */
             foreach ($feedDataList as $feedData) {
                 $dataType = $feedData->getDataType();
-                $feedData->updateOrCreateValue(
-                    $date,
-                    DataValue::FREQUENCY['DAY'],
-                    $fastenData[$dataType],
-                    $this->entityManager
-                );
+                if(!empty($fastenData[$dataType])) {
+                    $feedData->updateOrCreateValue(
+                        $date,
+                        DataValue::FREQUENCY['DAY'],
+                        $fastenData[$dataType],
+                        $this->entityManager
+                    );
+                }
             }
 
             // Flush all persisted DataValue.
@@ -255,25 +257,30 @@ class MeteoFrance implements FeedObject {
         $nbRain = 0;
 
         foreach ($rawData as $hourData) {
-            if (isset($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])){
+            if (isset($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])
+            && is_numeric($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])){
                 $fastenData['NEBULOSITY'] += $hourData[self::SYNOP_DATA_NAME['NEBULOSITY']];
                 $nbNebulosity++;
             }
-            if (isset($hourData[self::SYNOP_DATA_NAME['PRESSURE']])){
+            if (isset($hourData[self::SYNOP_DATA_NAME['PRESSURE']])
+            && is_numeric($hourData[self::SYNOP_DATA_NAME['PRESSURE']])){
                 $fastenData['PRESSURE'] += $hourData[self::SYNOP_DATA_NAME['PRESSURE']];
                 $nbPressure++;
             }
-            if (isset($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])){
+            if (isset($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])
+            && is_numeric($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])){
                 $fastenData['HUMIDITY'] += $hourData[self::SYNOP_DATA_NAME['HUMIDITY']];
                 $nbHumidity++;
             }
-            if (isset($hourData[self::SYNOP_DATA_NAME['RAIN']])){
+            if (isset($hourData[self::SYNOP_DATA_NAME['RAIN']])
+            && is_numeric($hourData[self::SYNOP_DATA_NAME['RAIN']])){
                 if ($hourData[self::SYNOP_DATA_NAME['RAIN']] >= 0) {
                     $fastenData['RAIN'] += $hourData[self::SYNOP_DATA_NAME['RAIN']];
                 }
                 $nbRain++;
             }
-            if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
+            if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])
+            && is_numeric($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
 
                 // Temp avg.
                 $curTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;
