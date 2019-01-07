@@ -1,0 +1,28 @@
+monolog:
+    handlers:
+        main:
+            type: rotating_file
+            action_level: error
+            handler: nested
+            max_files: 10
+            excluded_404s:
+                # regex: exclude all 404 errors from the logs
+                - ^/
+        nested:
+            type: rotating_file
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            max_files: 10
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine"]
+        deprecation:
+            type: rotating_file
+            path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
+            max_files: 10
+        deprecation_filter:
+            type: filter
+            handler: deprecation
+            max_level: info
+            channels: ["php"]

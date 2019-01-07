@@ -1,0 +1,73 @@
+{% extends "pages/dashboard.html.twig" %}
+
+{% block title %}{{ "Analyse de la consommation d'électricité" | trans }}{% endblock %}
+
+{% block body %}
+
+  <div id="electricity_tab" class="container-fluid">
+    <div class="row">
+
+      {# Colonne répartition sur la période #}
+      <div class="col-md-3 gen-first-col">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Électricité' | trans }}</h2>
+            <div class="content">
+              <div class="meteo-top">
+                <img alt="electicity" src="{{ asset('image/electricity.svg') }}" class="meteo-logo">
+                <p>
+                  <b><span id="conso-total" class="dash-index"></span> {{ ' kWh' | trans }}</b>
+                  </br>
+                  {{ 'consommés sur la période' | trans }}
+                </p>
+              </div>
+              <div class="meteo-card-1">
+                <div id="conso-global-repartition" class="global-repartition"></div>
+                <div id="conso-global-repartition-legend" class="global-repartition-legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Colonne répartitoin semaine & évolution #}
+      <div class="col-md-9">
+        <div class="row gen-first-line">
+          <div class="col-md-7">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">{{ "En moyenne sur la semaine" | trans }}</h2>
+                <div id="conso-week-repartition"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">{{ "Répartition sur la semaine" | trans }}</h2>
+                <div id="conso-week-frequency"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card gen-second-line">
+          <div class="card-body">
+            <h2 class="card-title">{{ "Evolution de la consommation" | trans }}</h2>
+            <div id="conso-global-evolution"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block js %}
+  <script src={{ asset("js/graph_lib.js") }}></script>
+  <script src={{ asset("js/general.js") }}></script>
+{% endblock %}
