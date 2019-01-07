@@ -1,0 +1,42 @@
+/* HOMEPAGE DASH ///////////////////////////////////////////////////////////////*/
+
+.vert-sep {
+    border-right: #6d6d6d solid 1px;
+}
+
+.index-logo {
+    margin-top: 30px;
+    max-height: 100px;
+    vertical-align: middle;
+}
+
+.dash-index-total {
+    font-size: 1.6em;
+    text-align: center;
+    margin-top: 55px;
+}
+
+.dash-index-avg {
+    margin-top: 50px;
+}
+
+.load-more {
+    display: flex;
+    justify-content: center;
+    margin: 3px;
+    padding: 3px;
+
+    button {
+        border-radius: 20px 20px 20px 20px !important;
+    }
+}
+
+
+.month-summary > div > div > div {
+    justify-content: center;
+    display: flex;
+}
+
+.dash-index {
+    font-size: 2.3em;
+}

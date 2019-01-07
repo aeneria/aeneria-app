@@ -11,12 +11,16 @@
         </button>
         <div class="dropdown-menu">
             <a class="dropdown-item" href="#" data="current-week">{{ 'Semaine en cours'|trans }}</a>
-            <a class="dropdown-item" href="#" data="current-month">{{ 'Mois en cours'|trans }}</a>
-            <a class="dropdown-item" href="#" data="current-year">{{ 'Année en cours'|trans }}</a>
-            <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" data="last-week">{{ 'Semaine précédente'|trans }}</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" data="current-month">{{ 'Mois en cours'|trans }}</a>
             <a class="dropdown-item" href="#" data="last-month">{{ 'Mois précédent'|trans }}</a>
+            <a class="dropdown-item" href="#" data="last-3-months">{{ 'Les 3 derniers mois'|trans }}</a>
+            <a class="dropdown-item" href="#" data="last-6-months">{{ 'Les 6 derniers mois'|trans }}</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" data="current-year">{{ 'Année en cours'|trans }}</a>
             <a class="dropdown-item" href="#" data="last-year">{{ 'Année précédente'|trans }}</a>
+            <a class="dropdown-item" href="#" data="sliding-year">{{ 'Année glissante'|trans }}</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" data="all"><b>{{ 'Tout'|trans }}</b></a>
         </div>
@@ -35,8 +39,3 @@
         </div>
     </div>
 </form>
-
-{{ render(controller(
-    'AppBundle:Default:period',
-    { 'max': 3 }
-)) }}
