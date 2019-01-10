@@ -31,7 +31,7 @@ class FeedData
     /**
      * @var string
      *
-     * @ORM\Column(name="data_type", type="string", length=255, unique=true)
+     * @ORM\Column(name="data_type", type="string", length=150, unique=true)
      */
     private $dataType;
 
