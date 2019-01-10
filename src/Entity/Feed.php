@@ -79,14 +79,14 @@ class Feed
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @ORM\Column(name="name", type="string", length=150, unique=true)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="feed_type", type="string", length=255, unique=true)
+     * @ORM\Column(name="feed_type", type="string", length=150, unique=true)
      */
     private $feedType;
 
