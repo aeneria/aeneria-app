@@ -1,0 +1,23 @@
+{
+  "build/app.css": "./app.css",
+  "build/app.js": "./app.js",
+  "build/runtime.js": "./runtime.js",
+  "build/fonts/Arvo-Regular.ttf": "./fonts/Arvo-Regular.31c017da.ttf",
+  "build/fonts/Kingsmen_D.otf": "./fonts/Kingsmen_D.5144c290.otf",
+  "build/fonts/code-new-roman.otf": "./fonts/code-new-roman.8c7880d8.otf",
+  "build/fonts/fa-brands-400.ttf": "./fonts/fa-brands-400.50a544b5.ttf",
+  "build/fonts/fa-brands-400.eot": "./fonts/fa-brands-400.7d43b9ae.eot",
+  "build/fonts/fa-brands-400.woff2": "./fonts/fa-brands-400.b89c6c51.woff2",
+  "build/fonts/fa-brands-400.woff": "./fonts/fa-brands-400.dd4ff119.woff",
+  "build/fonts/fa-regular-400.eot": "./fonts/fa-regular-400.8e9f0ee6.eot",
+  "build/fonts/fa-regular-400.ttf": "./fonts/fa-regular-400.deb8619e.ttf",
+  "build/fonts/fa-regular-400.woff2": "./fonts/fa-regular-400.e65d96d0.woff2",
+  "build/fonts/fa-regular-400.woff": "./fonts/fa-regular-400.fc5252e5.woff",
+  "build/fonts/fa-solid-900.ttf": "./fonts/fa-solid-900.1709a281.ttf",
+  "build/fonts/fa-solid-900.woff": "./fonts/fa-solid-900.52b8345b.woff",
+  "build/fonts/fa-solid-900.woff2": "./fonts/fa-solid-900.8086e197.woff2",
+  "build/fonts/fa-solid-900.eot": "./fonts/fa-solid-900.f72d546a.eot",
+  "build/images/fa-brands-400.svg": "./images/fa-brands-400.fef43c1f.svg",
+  "build/images/fa-regular-400.svg": "./images/fa-regular-400.734248d0.svg",
+  "build/images/fa-solid-900.svg": "./images/fa-solid-900.27603739.svg"
+}
