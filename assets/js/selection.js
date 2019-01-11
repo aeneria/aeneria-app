@@ -5,16 +5,20 @@
  */
 
 $(document).ready(function () {
+
+  // Get min and max dates.
+  var minDate = period.start.substring(0,10).split('-') ;
+  minDate = minDate[2] + '/' + minDate[1] + '/' + minDate[0];
+  periodStart = new Date(period.start);
+  var maxDate = period.end.substring(0,10).split('-') ;
+  maxDate = maxDate[2] + '/' + maxDate[1] + '/' + maxDate[0];
+  periodEnd = new Date(period.end);
+
   // Deal with start and end date ///////////////////////////////////////////////////
 
   // If we can't retrieve start or end date from localStorage, we create them.
   var startString = localStorage.getItem('startDate');
   var endString = localStorage.getItem('endDate');
-
-  var minDate = period.start.substring(0,10).split('-') ;
-  minDate = minDate[2] + '/' + minDate[1] + '/' + minDate[0];
-  var maxDate = period.end.substring(0,10).split('-') ;
-  maxDate = maxDate[2] + '/' + maxDate[1] + '/' + maxDate[0];
 
   if (startString == null || endString == null) {
     var now = new Date();
@@ -109,6 +113,14 @@ $(document).ready(function () {
       default:
         startDate = new Date(period.start);
         endDate = new Date(period.end);
+    }
+
+    if (+startDate < +periodStart) {
+      startDate = new Date(period.start);
+    }
+
+    if (+endDate > +periodEnd) {
+      endDate = new Date(period.end);
     }
 
     var startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
