@@ -8,22 +8,27 @@
       <div class='col'>
         <div class='card'>
           <div class="card-body">
-            <h2 class="card-title">{{ 'A propos' | trans }}</h2>
+            <h2 class="card-title">{{ 'À propos' | trans }}</h2>
             <div class="content about">
-            <a href="https://github.com/SimonMellerin/pilea"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-            {% trans %}
-            <p>
-              Développé avec l'aide de :
-            </p>
-            <ul>
-                <li>Côté back : PHP, MySQL, Symfony et son outillage</li>
-                <li>Côté front : Bootstrap, jQuery, D3.js, Pooper.js</li>
-                <li>Icones de :
-                  <a href="https://thenounproject.com/iconisland/">Icon Island</a>, <a href="https://thenounproject.com/coquet_adrien">Adrien Coquet</a>, <a href="https://thenounproject.com/grega.cresnar">Gregor Cresnar</a>, <a href="https://thenounproject.com/creativestall/"> Creative Stall</a>
-                </li>
-            </ul>
+              <a href="https://github.com/SimonMellerin/Pilea"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
-            {% endtrans %}
+              <p>Pilea - {{ 'Un petit talbeau de bord pour analyser sa consommation d\'énergie :' | trans }}</p>
+              <ul>
+                <li>Version : <a href="https://github.com/SimonMellerin/Pilea/releases/tag/{{version}}">{{version}}</a></li>
+                <li>License : <a href="https://en.wikipedia.org/wiki/MIT_License">MIT</a></li>
+                <li>Documentation : à venir !</li>
+              </ul>
+              <br>
+              {% trans %}
+              <p>Développé avec <i class="fas fa-heart"></i> par Simon Mellerin, avec l'aide de :</p>
+              <ul>
+                  <li>Côté back : PHP, MySQL, Symfony et son outillage</li>
+                  <li>Côté front : Webpack, Bootstrap, jQuery, D3.js, Popper.js, Fontawesome</li>
+                  <li>Icones de :
+                    <a href="https://thenounproject.com/iconisland/">Icon Island</a>, <a href="https://thenounproject.com/coquet_adrien">Adrien Coquet</a>, <a href="https://thenounproject.com/grega.cresnar">Gregor Cresnar</a>, <a href="https://thenounproject.com/creativestall/"> Creative Stall</a>
+                  </li>
+              </ul>
+              {% endtrans %}
             </div>
           </div>
         </div>
