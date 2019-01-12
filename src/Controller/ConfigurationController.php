@@ -7,8 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Feed;
-use App\Form\LinkyType;
-use App\Form\MeteoFranceType;
+use App\Form\ConfigurationType;
 use App\Entity\FeedData;
 
 class ConfigurationController extends Controller
@@ -18,45 +17,41 @@ class ConfigurationController extends Controller
      */
     public function configAction(Request $request)
     {
-        /** @var \Symfony\Component\Form\Form $linkyForm */
-        list($linkyForm, $linky) = $this->prepareLinkyForm();
 
-        /** @var \Symfony\Component\Form\Form $meteoFranceForm */
-        list($meteoFranceForm, $meteoFrance) = $this->prepareMeteoFranceForm();
+        /** @var \Symfony\Component\Form\Form $configForm */
+        list($configForm, $linky, $meteoFrance) = $this->prepareConfigForm();
 
         if('POST' === $request->getMethod()) {
-            if ($request->request->has('form_linky')) {
-                $linkyForm->handleRequest($request);
-                if ($linkyForm->isValid()) {
-                    $this->persistLinky($linky, $linkyForm);
-                }
-            }
-            elseif ($request->request->has('form_meteo_france')) {
-                $meteoFranceForm->handleRequest($request);
-                if ($meteoFranceForm->isValid()) {
-                    $this->persistMeteoFrance($meteoFrance, $meteoFranceForm);
-                }
+            $configForm->handleRequest($request);
+            if ($configForm->isValid()) {
+                $this->persistConfig($linky, $meteoFrance, $configForm);
             }
         }
 
-        return $this->render('pages/config.html.twig', array(
-            'form_linky' => $linkyForm->createView(),
-            'form_meteo_france' => $meteoFranceForm->createView(),
+        return $this->render('pages/configuration.html.twig', array(
+            'form_config' => $configForm->createView(),
         ));
     }
 
     /**
-     * Prepare the Linky form & get existing Linky feed.
+     * Prepare the Config form & get existing Linky & MeteoFrance feed.
      *
-     * @return [\Symfony\Component\Form\FormBuilder, \App\Entity\Feed]
+     * @return [\Symfony\Component\Form\FormBuilder, \App\Entity\Feed, \App\Entity\Feed]
      */
-    private function prepareLinkyForm() {
+    private function prepareConfigForm() {
         // We get the Linky Feed if it already exists.
         /** @var \App\Entity\Feed $linky */
         $linky = $this
             ->getDoctrine()
             ->getRepository('App:Feed')
             ->findOneByFeedType('LINKY');
+
+        // We get the Linky Feed if it already exists.
+        /** @var \App\Entity\Feed $linky */
+        $meteoFrance = $this
+            ->getDoctrine()
+            ->getRepository('App:Feed')
+            ->findOneByFeedType('METEO_FRANCE');
 
         // We set defaultValue if there's already a linky feed.
         $defaultValue= [];
@@ -67,89 +62,58 @@ class ConfigurationController extends Controller
                 $defaultValue[strtolower($paramName)] = $param[$paramName];
             }
         }
-
-        /** @var \Symfony\Component\Form\FormBuilder $linkyForm */
-        $linkyForm = $this
-            ->get('form.factory')
-            ->createNamedBuilder('form_linky', LinkyType::class, $defaultValue)
-            ->getForm();
-
-        return [$linkyForm, $linky];
-    }
-
-    /**
-     * Prepare the MeteoFrance form & get existing MeteoFrance feed.
-     *
-     * @return [\Symfony\Component\Form\FormBuilder, \App\Entity\Feed]
-     */
-    private function prepareMeteoFranceForm() {
-        // We get the Linky Feed if it already exists.
-        /** @var \App\Entity\Feed $linky */
-        $meteoFrance = $this
-            ->getDoctrine()
-            ->getRepository('App:Feed')
-            ->findOneByFeedType('METEO_FRANCE');
-
-        // We set defaultValue if there's alreadya linky feed.
-        $defaultValue= [];
         if ($meteoFrance) {
-            $defaultValue['name'] = $meteoFrance->getName();
             $param = $meteoFrance->getParam();
             $defaultValue['station'] = (int)$param['STATION_ID'];
         }
 
         /** @var \Symfony\Component\Form\FormBuilder $linkyForm */
-        $meteoFranceForm = $this
+        $configForm = $this
             ->get('form.factory')
-            ->createNamedBuilder('form_meteo_france', MeteoFranceType::class, $defaultValue)
+            ->createNamedBuilder('form_config', ConfigurationType::class, $defaultValue)
             ->getForm();
 
-        return [$meteoFranceForm, $meteoFrance];
+        return [$configForm, $linky, $meteoFrance];
     }
 
+
+
     /**
-     * Persist the Liny Feed in DB and create dependent FeedData
+     * Persist the Liny & MeteoFrance Feed in DB and create dependent FeedData
      *
      * @param Feed $linky
-     * @param Form $linkyForm
+     * @param Feed $meteoFrance
+     * @param Form $vonfigForm
      */
-    private function persistLinky(Feed &$linky = NULL, Form $linkyForm) {
+    private function persistConfig(Feed &$linky = NULL, Feed &$meteoFrance, Form $configForm) {
+        $data = $configForm->getData();
+
+        // Create/update Linky.
         if(!$linky) {
             $linky = new Feed();
             $linky->setFeedType('LINKY');
             $linky->setCreator('admin'); //@TODO Get yunohost user
             $linky->setPublic(TRUE); //@TODO Deal with yunohost users
         }
-        $data = $linkyForm->getData();
 
-        $linky->setName($data['name']);
+        $linky->setName('linky');
         $param = [];
         foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $name => $label) {
             $param[$name] = $data[strtolower($name)];
         }
         $linky->setParam($param);
         $this->createDependentFeedData($linky);
-
         $this->getDoctrine()->getManager()->persist($linky);
-        $this->getDoctrine()->getManager()->flush();
-    }
 
-    /**
-     * Persist the MeteoFrance Feed in DB and create dependent FeedData
-     *
-     * @param Feed $meteoFrance
-     * @param Form $meteoFranceForm
-     */
-    private function persistMeteoFrance(Feed &$meteoFrance = NULL, Form $meteoFranceForm) {
+        // Create/update MeteoFrance.
         if(!$meteoFrance) {
             $meteoFrance = new Feed();
             $meteoFrance->setFeedType('METEO_FRANCE');
             $meteoFrance->setCreator('admin'); //@TODO Get yunohost user
             $meteoFrance->setPublic(TRUE); //@TODO Deal with yunohost users
         }
-        $stations = $meteoFranceForm->get('station')->getConfig()->getOption('choices');
-        $data = $meteoFranceForm->getData();
-        $meteoFrance->setName($data['name']);
+        $stations = $configForm->get('station')->getConfig()->getOption('choices');
+        $meteoFrance->setName('meteo');
         $param = [
             'STATION_ID' => $data['station'],
             'CITY' => array_search($data['station'], $stations),
@@ -157,6 +121,7 @@ class ConfigurationController extends Controller
         $meteoFrance->setParam($param);
         $this->createDependentFeedData($meteoFrance);
         $this->getDoctrine()->getManager()->persist($meteoFrance);
+
         $this->getDoctrine()->getManager()->flush();
     }
 
