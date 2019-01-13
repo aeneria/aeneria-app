@@ -25,12 +25,14 @@ class ConfigurationController extends Controller
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
                 $this->persistConfig($linky, $meteoFrance, $configForm);
+                $message = 'Votre configuration a bien été enregistrée !';
             }
         }
 
-        return $this->render('pages/configuration.html.twig', array(
+        return $this->render('pages/configuration.html.twig', [
             'form_config' => $configForm->createView(),
-        ));
+            'message' => !empty($message) ? $message : NULL,
+        ]);
     }
 
     /**

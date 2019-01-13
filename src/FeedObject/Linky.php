@@ -86,9 +86,7 @@ class Linky implements FeedObject {
 
         $this->entityManager = $entityManager;
 
-        if (!$this->auth()) {
-            return $this->error;
-        }
+        $this->auth();
     }
 
     /**
@@ -100,13 +98,19 @@ class Linky implements FeedObject {
     }
 
     /**
+     * Is the connexion with Enedis ok.
+     */
+    public function isAuth() {
+        return $this->isAuth;
+    }
+
+    /**
      * Fetch ENEDIS data for $date and persist its in database.
      *
      * @param \DateTime $date
      */
     public function fetchData(\DateTime $date) {
-        // The ENEDIS site isn't stable before 9am... and we want to be sure to have yesterday data..
-        if (date('H') >= 7) {
+        if ($this->isAuth()) {
             $this->getAll($date);
             $this->persistData($date);
         }
@@ -497,7 +501,7 @@ class Linky implements FeedObject {
         return json_decode($response, TRUE);
     }
 
-    private function auth()
+    public function auth()
     {
         $postdata = http_build_query(
             [
@@ -530,7 +534,6 @@ class Linky implements FeedObject {
         $response = $this->request('GET', $url);
 
         $this->isAuth = TRUE;
-
         return $this->isAuth;
     }
 
