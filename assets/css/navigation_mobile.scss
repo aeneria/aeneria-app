@@ -17,18 +17,27 @@
         z-index: $zindex-sticky;
         padding-bottom: 10px;
         box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
+        width: 100%;
+        justify-content: center;
 
         .selection-form {
             margin: 0 10px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+
             .start-input {
                 margin-left: 0;
+                &.fa-calendar-alt { order: 1; }
+                &.fa-filter {
+                    order: 5;
+                    margin-left: 5px;
+                }
             }
 
             .input-daterange {
                 display: inline-flex;
+                order: 2;
                 span {
                     position: relative;
                     top: 5px;
@@ -44,20 +53,42 @@
                     padding: 5px 4px;
                 }
             }
+            .pilea-refresh {
+                order: 3;
+                border-radius: 20px;
+                margin-left: 5px;
+                margin-right: 0px;
+            }
 
             > div, > span, > button {
                 margin-top: 10px;
             }
 
-            .pilea-select-period > button {
-                border-radius: 20px 0 0 20px;
-                background-color: $button-color;
-                color: white;
-                height: 32px;
-                margin-right: 0;
-                margin-left: 20px;
-                width: 40px;
-                padding: .39rem .9rem;
+            .pilea-select-period {
+                order: 4;
+                margin-left: 5px;
+                margin-right: 0px;
+                > button {
+                    border-radius: 20px;
+                    background-color: $button-color;
+                    color: white;
+                    height: 32px;
+                    width: 66px;
+                    padding: .39rem .9rem;
+                    :before {
+                        content: '\f271';
+                        font-size: 1.2em;
+                        font-family: 'Font Awesome 5 Free';
+                        font-weight: 900;
+                    }
+                    &.dropdown-toggle:after {
+                        display: inline-block !important;
+                    }
+                }
+            }
+
+            .pilea-select-frequency {
+                order: 6;
             }
         }
     }
