@@ -1,0 +1,135 @@
+
+/* BRAND NAVBAR */
+.navbar {
+  background: $primary-color;
+  box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
+  height: 60px;
+}
+
+.navbar-brand > span{
+  font-family: Kingsmen;
+  color: $white;
+  margin-left: 7px;
+  vertical-align: middle;
+  font-size: 1.7em;
+}
+
+nav {
+  input, button {
+    border: none;
+  }
+  .nav-icon {
+    font-size: 1.5em;
+    color: White;
+  }
+}
+
+.navbar-item {
+  margin-left: 10px;
+}
+
+/* SELECTION */
+.selection-form {
+  .start-input {
+    border-radius: 20px 0 0 20px;
+    background-color: $button-color;
+    height: 32px;
+    margin-right: 0;
+    margin-left: 20px;
+    width: 40px;
+    padding: .39rem .9rem;
+  }
+
+  .dropdown-menu {
+    padding: .3rem 0;
+    font-size: 0.8rem;
+  }
+
+  .input-daterange {
+    width: auto;
+  }
+
+  .datepicker {
+    border-radius: 0 !important;
+  }
+
+  .pilea-start-date,
+  .pilea-end-date {
+    border-radius: 0;
+    border: none;
+    width: 130px;
+    height: 32px;
+    margin: 5px 0 !important;
+  }
+
+  .pilea-inter-date {
+    background: $white;
+    height: 32px;
+    margin: 0;
+    width: 7px ;
+    vertical-align: middle;
+    padding-top: 5px;
+  }
+
+  .pilea-select-period button {
+    height: 32px;
+    background-color: $white;
+    border-radius: 0;
+    color: black;
+  }
+
+  .pilea-select-period .dropdown-toggle::after {
+    display: none !important;
+  }
+
+  .pilea-refresh {
+    border-radius: 20px 20px 20px 20px;
+    margin: 0 5px 0 5px;
+    height: 32px;
+    vertical-align: middle;
+  }
+
+  .pilea-select-date {
+    border-radius: 0 20px 20px 0;
+    margin-left: 0 ;
+    width: 32px;
+  }
+
+  .pilea-select-frequency button {
+    border-radius: 0 20px 20px 0;
+    margin-left: 0;
+    height: 32px;
+  }
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: $sidebar-bg-color;
+  width: 45px;
+  height: 100%;
+  position: fixed;
+
+  > div > a {
+    margin: 4px;
+    padding: 6px;
+    min-height: auto;
+  }
+
+  > div > a > img {
+    max-width: 24px;
+    height: auto;
+  }
+
+  .active,
+  .navbar .active {
+    background-color: $button-color;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow:  0 2px 4px rgba(0,0,0,0.1);
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .desktop {
+    display: none;
+  }
+}

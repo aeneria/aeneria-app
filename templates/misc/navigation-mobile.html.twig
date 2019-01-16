@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg sticky-top navbar-expand mobile" >
+    <div class="mr-auto">
+        <a data-toggle="collapse" data-target="#sideBar" type="button" aria-expanded="false" aria-controls="sideBar">
+            <i class="fas fa-bars nav-icon"></i>
+        </a>
+    </div>
+
+    <div class="navbar-brand" title="Pilea :{{ ' Analyser votre consommation d\'électricité' | trans }}">
+        <img src="{{ asset('image/icon/logo.png') }}" alt='logo'>
+        <span>Pilea</span>
+    </div>
+
+    <div class="ml-auto">
+        <a data-toggle="collapse" data-target="#selection" type="button" aria-expanded="false" aria-controls="sideBar">
+            <i class="fas fa-filter nav-icon"></i>
+        </a>
+    </div>
+</nav>
+<div class="collapse mobile" id="sideBar">
+    <nav class="nav sidebar">
+        <div class="nav flex-column">
+            <a href="{{ path('homepage') }}" class="{% if app.request.attributes.get('_route') == 'homepage' %}active{% endif %}">
+                <img src="{{ asset('image/icon/home.png') }}" alt="*"> {{ 'Accueil' | trans }}
+            </a>
+            <a href="{{ path('general') }}" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
+                <img src="{{ asset('image/icon/general.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
+            </a>
+            <a href="{{ path('dju_x_conso') }}" class="{% if app.request.attributes.get('_route') == 'dju_x_conso' %}active{% endif %}">
+                <img src="{{ asset('image/icon/temperature.png') }}" alt="*" > {{ 'Électricité VS DJU' | trans }}
+            </a>
+            <a href="{{ path('meteo') }}" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
+                <img src="{{ asset('image/icon/meteo.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
+            </a>
+            <a href="{{ path('config') }}" class="{% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
+                <img src="{{ asset('image/icon/config.png') }}" alt="*" > {{ 'Configuration' | trans }}
+            </a>
+            <a href="{{ path('about') }}" class="{% if app.request.attributes.get('_route') == 'about' %}active{% endif %}">
+                <img src="{{ asset('image/icon/about.png') }}" alt="*" > {{ 'A propos' | trans }}
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="collapse mobile selection" id="selection">
+    {% include "misc/selection.html.twig" %}
+</div>

@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg sticky-top navbar-expand desktop" >
+    <div class="navbar-brand" title="Pilea :{{ ' Analyser votre consommation d\'électricité' | trans }}">
+        <img src="{{ asset('image/icon/logo.png') }}" alt='logo'>
+        <span>Pilea</span>
+    </div>
+    {{ selection | raw }}
+    <div class="ml-auto">
+        <a class="navbar-item" title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" >
+                <img src="{{ asset('image/icon/config.png') }}" height=20 alt="*" >
+        </a>
+        <a class="navbar-item" title="{{ 'A propos' | trans }}" href="{{ path('about') }}" >
+                <img src="{{ asset('image/icon/about.png') }}" height=20 alt="*" >
+        </a>
+    </div>
+</nav>
+<nav class="nav sidebar desktop">
+    <div class="nav flex-column">
+        <a href="{{ path('homepage') }}" title="{{ 'Accueil' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'homepage' %}active{% endif %}">
+            <img src="{{ asset('image/icon/home.png') }}" alt="*">
+        </a>
+        <a href="{{ path('general') }}" title="{{ 'Consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
+            <img src="{{ asset('image/icon/general.png') }}" alt="*" >
+        </a>
+        <a href="{{ path('dju_x_conso') }}" title="{{ 'Électricité VS DJU' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'dju_x_conso' %}active{% endif %}">
+            <img src="{{ asset('image/icon/temperature.png') }}" alt="*" >
+        </a>
+        <a href="{{ path('meteo') }}" title="{{ 'Analyse de la météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
+            <img src="{{ asset('image/icon/meteo.png') }}" alt="*" >
+        </a>
+    </div>
+</nav>

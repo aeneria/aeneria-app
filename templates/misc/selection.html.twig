@@ -1,15 +1,15 @@
-<form class="form-inline" id="selection-form">
+<form class="form-inline selection-form">
 
     {# Date selection #}
     <span class="fas fa-calendar-alt start-input" aria-hidden="true" style="font-size: 1.2em; color: white"></span>
     <div class="input-daterange">
-        <input type="text" class="form-control mr-sm-2 datepicker pilea-start-date" name="start-date" id="start-date"><span class="fas fa-caret-right pilea-inter-date" aria-hidden="true" style="font-size: 1.2em; color: black"></span><input type="text" class="form-control mr-sm-2 datepicker pilea-end-date"  name="end-date" id="end-date">
+        <input type="text" class="form-control mr-sm-2 datepicker pilea-start-date" name="start-date"><span class="fas fa-caret-right pilea-inter-date" aria-hidden="true" style="font-size: 1.2em; color: black"></span><input type="text" class="form-control mr-sm-2 datepicker pilea-end-date"  name="end-date">
     </div>
     <div class="btn-group pilea-select-period">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="period-date">
-            <span class="fas fa-ellipsis-h" aria-hidden="true" style="font-size: 0.8em; color: black"></span>
+            <span class="fas fa-ellipsis-h" aria-hidden="true" style="font-size: 0.8em;"></span>
         </button>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="#" data="current-week">{{ 'Semaine en cours'|trans }}</a>
             <a class="dropdown-item" href="#" data="last-week">{{ 'Semaine précédente'|trans }}</a>
             <div class="dropdown-divider"></div>
@@ -31,7 +31,7 @@
     <span class="fas fa-filter start-input" aria-hidden="true" style="font-size: 1.1em; color: white"></span>
     <div class="btn-group pilea-select-frequency">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="frequency"></button>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="#" data="day">{{ 'Jour'|trans }}</a>
             <a class="dropdown-item" href="#" data="week">{{ 'Semaine'|trans }}</a>
             <a class="dropdown-item" href="#" data="month">{{ 'Mois'|trans }}</a>

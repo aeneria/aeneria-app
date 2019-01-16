@@ -39,8 +39,8 @@ $(document).ready(function () {
   }
 
   // Initiate datepicker.
-  $('#start-date').val(startString);
-  $('#end-date').val(endString);
+  $('.pilea-start-date').val(startString);
+  $('.pilea-end-date').val(endString);
   $('.input-daterange').datepicker({
     format: 'dd/mm/yyyy',
     endDate: maxDate,
@@ -50,9 +50,12 @@ $(document).ready(function () {
 
   // Add event on refresh button.
   $('.pilea-select-date').click(function(e) {
+    var startDate = $(e.target).parent().find(".pilea-start-date");
+    var endDate = $(e.target).parent().find(".pilea-end-date");
+
     // Store new value in localStorage.
-    localStorage.setItem('startDate', $("#start-date").val());
-    localStorage.setItem('endDate', $("#end-date").val());
+    localStorage.setItem('startDate', startDate.val());
+    localStorage.setItem('endDate', endDate.val());
 
     // Tell the world we have new values.
     document.dispatchEvent(new Event('selection'));
@@ -138,8 +141,8 @@ $(document).ready(function () {
     localStorage.setItem('startDate', startString);
     localStorage.setItem('endDate', endString);
 
-    $('#start-date').val(startString);
-    $('#end-date').val(endString);
+    $('.pilea-start-date').val(startString);
+    $('.pilea-end-date').val(endString);
 
     $('.input-daterange').datepicker('destroy');
     $('.input-daterange').datepicker({
@@ -167,16 +170,18 @@ $(document).ready(function () {
 
 
   // Initiate frequency button label
-  var frequencyButton = $('.pilea-select-frequency button');
-  if (frequencyButton.length > 0) {
-    var frequencyLabel = $('.pilea-select-frequency [data="' + frequency + '"]')[0].innerHTML;
-    frequencyButton[0].innerHTML = frequencyLabel;
-  }
+  $('.pilea-select-frequency').each((index, element) => {
+    var button = $(element).children('button');
+    var frequencyLabel = $(element).find('[data="' + frequency + '"]')[0].innerHTML;
+    button[0].innerHTML = frequencyLabel;
+  });
 
   // Add event on change
   $('.pilea-select-frequency a').click(function(e) {
     localStorage.setItem('frequency', e.target.getAttribute('data'));
     $('.pilea-select-frequency button')[0].innerHTML =  e.target.innerHTML;
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
 
     // Tell the world we have new values.
     document.dispatchEvent(new Event('selection'));
