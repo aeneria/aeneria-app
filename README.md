@@ -63,9 +63,13 @@ First of all:
 
 ### Hard way - Doing it all by hand
 
+**Requirements:**
+* PHP 7.2 or higher
+* MySQL 5.5 or higher
+
+**Installation:**
 * Get the repo
-* Copy app/config/parameters.yml.dist to app/config/parameters.yml
-* Set Database name and password in parameters.yml
+* Set Database name and password in `.env` file
 * Install [Composer](https://getcomposer.org/) dependencies: `composer install`
 * Run install script: `bin/console pilea:install`
 * Set up cron: `echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
