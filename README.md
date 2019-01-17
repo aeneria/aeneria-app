@@ -17,7 +17,7 @@ And I can say that dispite what Enedis says: `Linky is great opportunoity for us
 They do nothing to help individuals to use their data in their own (and not just visualize it on their website or on their partner's one).
 There's no API (or maybe there's one but any documentation can't be found) to programmaticly get our own data.
 
-I want to thanks [KibOost](https://github.com/KiboOst/) for [the retroengineering he have done](https://github.com/KiboOst/php-LinkyAPI).
+I want to thanks [KibOost](https://github.com/KiboOst/) for [the retroengineering he has done](https://github.com/KiboOst/php-LinkyAPI).
 
 ## Interface
 
