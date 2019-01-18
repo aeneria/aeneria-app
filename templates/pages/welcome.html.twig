@@ -1,0 +1,32 @@
+{% extends 'bases/base.html.twig' %}
+
+{% block title %}{{ 'Bienvenue' | trans }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class='card welcome'>
+        <div class="card-body text-center">
+            <span class='logo'><img src="{{ asset('image/icon/pilea.svg') }}" alt="*"></span>
+            <h1 class="card-title">{{ 'Bienvenue sur' | trans }} Pilea</h1>
+            <hr>
+            <br>
+            <i class="fas fa-sad-tear"></i>
+            <p> {{ 'Il n\'y a pas encore de données disponibles !' | trans}}</p>
+            <br>
+            <div class="starting">
+              <h2>{{ 'Pour commencer à en acquérir' | trans }}</h2>
+              <ul class="text-left">
+                <li>{{ 'Commence par te connecter à <a target="_blank" href="https://espace-client-particuliers.enedis.fr/group/espace-particuliers/accueil">ton compte Enedis</a> et vérifie que <a target="_blank" href="https://espace-client-particuliers.enedis.fr/group/espace-particuliers/courbe-de-charge">l\'option <i>Courbe de charge</i></a> est bien activée.' | trans | raw}}</li>
+                <li>{{ 'Ensuite, va renseigner ton compte Enedis et choisir ta station météo de référence sur' | trans }} <a href="{{ path('config') }}">{{ 'la page de configuration' | trans }}</a>.</li>
+                <li>{{ 'Et voilà ! Les premières données devraient apparaitre d\'ici une dizaine de minutes.' | trans}}</li>
+              </ul>
+            </div>
+        </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}

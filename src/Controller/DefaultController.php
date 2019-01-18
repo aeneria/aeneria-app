@@ -14,6 +14,16 @@ class DefaultController extends Controller
      */
     public function homepageAction(Request $request)
     {
+        $linky = $this
+            ->getDoctrine()
+            ->getRepository('App:Feed')
+            ->findOneByFeedType('LINKY');
+        if (!$linky) {
+            return $this->render('pages/welcome.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            ]);
+        }
+
         return $this->render('dashboards/homepage.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
@@ -45,16 +55,6 @@ class DefaultController extends Controller
     public function meteoAction(Request $request)
     {
         return $this->render('dashboards/meteo.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
-    }
-
-    /**
-     * @Route("/about", name="about")
-     */
-    public function aboutAction(Request $request)
-    {
-        return $this->render('pages/about.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }

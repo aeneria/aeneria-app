@@ -1,15 +1,12 @@
 <nav class="navbar navbar-expand-lg sticky-top navbar-expand desktop" >
     <div class="navbar-brand" title="Pilea :{{ ' Analyser votre consommation d\'électricité' | trans }}">
-        <img src="{{ asset('image/icon/logo.png') }}" alt='logo'>
+        <img src="{{ asset('image/icon/pilea.svg') }}" alt='logo' class="logo">
         <span>Pilea</span>
     </div>
     {{ selection | raw }}
     <div class="ml-auto">
         <a class="navbar-item" title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" >
                 <img src="{{ asset('image/icon/config.png') }}" height=20 alt="*" >
-        </a>
-        <a class="navbar-item" title="{{ 'A propos' | trans }}" href="{{ path('about') }}" >
-                <img src="{{ asset('image/icon/about.png') }}" height=20 alt="*" >
         </a>
     </div>
 </nav>

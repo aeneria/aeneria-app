@@ -6,7 +6,7 @@
     </div>
 
     <div class="navbar-brand" title="Pilea :{{ ' Analyser votre consommation d\'électricité' | trans }}">
-        <img src="{{ asset('image/icon/logo.png') }}" alt='logo'>
+        <img src="{{ asset('image/icon/pilea.svg') }}" alt='logo' class='logo'>
         <span>Pilea</span>
     </div>
 
@@ -33,9 +33,6 @@
             </a>
             <a href="{{ path('config') }}" class="{% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
                 <img src="{{ asset('image/icon/config.png') }}" alt="*" > {{ 'Configuration' | trans }}
-            </a>
-            <a href="{{ path('about') }}" class="{% if app.request.attributes.get('_route') == 'about' %}active{% endif %}">
-                <img src="{{ asset('image/icon/about.png') }}" alt="*" > {{ 'A propos' | trans }}
             </a>
         </div>
     </nav>
