@@ -12,7 +12,6 @@ interface FeedObject {
     /**
      * Get frequencies for this type of feed.
      *
-     * @param \Datetime $date
      * @return array
      */
     public static function getFrequencies();

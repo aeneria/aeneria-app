@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\DataValue;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class DataApiController extends Controller
+class DataController extends AbstractController
 {
     const WEEK_REPARTITION = 'WEEK';
     const YEAR_HORIZONTAL_REPARTITION = 'YEAR_H';
@@ -28,7 +29,7 @@ class DataApiController extends Controller
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getRepartionAction(Request $request, $dataType, $repartitionType, $start = NULL, $end = NULL)
+    public function getRepartionAction(Request $request, $dataType, $repartitionType, $start = NULL, $end = NULL, TranslatorInterface $translator)
     {
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
@@ -36,7 +37,7 @@ class DataApiController extends Controller
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Set and build axes's type & frequency according to repartitionType.
-        list($axe, $axeX, $axeY, $frequency) = $this->buildRepartitionAxes($repartitionType, $start, $end);
+        list($axe, $axeX, $axeY, $frequency) = $this->buildRepartitionAxes($repartitionType, $start, $end, $translator);
 
         // Get values from Database.
         $values = $this->getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType);
@@ -109,7 +110,7 @@ class DataApiController extends Controller
      * @param string $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getSumGroupByAction(Request $request, $dataType, $frequency, $groupBy, $start = NULL, $end = NULL)
+    public function getSumGroupByAction(Request $request, $dataType, $frequency, $groupBy, $start = NULL, $end = NULL, TranslatorInterface $translator)
     {
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
@@ -130,22 +131,22 @@ class DataApiController extends Controller
 
         $axe = (object)[
             'x' => [
-                $this->get('translator')->trans('Lun.'),
-                $this->get('translator')->trans('Mar.'),
-                $this->get('translator')->trans('Mer.'),
-                $this->get('translator')->trans('Jeu.'),
-                $this->get('translator')->trans('Ven.'),
-                $this->get('translator')->trans('Sam.'),
-                $this->get('translator')->trans('Dim.'),
+                $translator->trans('Lun.'),
+                $translator->trans('Mar.'),
+                $translator->trans('Mer.'),
+                $translator->trans('Jeu.'),
+                $translator->trans('Ven.'),
+                $translator->trans('Sam.'),
+                $translator->trans('Dim.'),
             ],
             'label' => [
-                $this->get('translator')->trans('Lun.'),
-                $this->get('translator')->trans('Mar.'),
-                $this->get('translator')->trans('Mer.'),
-                $this->get('translator')->trans('Jeu.'),
-                $this->get('translator')->trans('Ven.'),
-                $this->get('translator')->trans('Sam.'),
-                $this->get('translator')->trans('Dim.'),
+                $translator->trans('Lun.'),
+                $translator->trans('Mar.'),
+                $translator->trans('Mer.'),
+                $translator->trans('Jeu.'),
+                $translator->trans('Ven.'),
+                $translator->trans('Sam.'),
+                $translator->trans('Dim.'),
             ],
         ];
         $data = $this->buildSumGroupByDataObject($result, $axe);
@@ -418,7 +419,7 @@ class DataApiController extends Controller
      * @param \DateTime $end
      * @return array of values [$axe, $axeX, $axeY, $frequency]
      */
-    private function buildRepartitionAxes($repartitionType, $start, $end)
+    private function buildRepartitionAxes($repartitionType, $start, $end, TranslatorInterface $translator)
     {
         $axe = (object)[
             'x' => [],
@@ -433,13 +434,13 @@ class DataApiController extends Controller
 
                 // Build axes.
                 $axe->x = [
-                    $this->get('translator')->trans('Lun.'),
-                    $this->get('translator')->trans('Mar.'),
-                    $this->get('translator')->trans('Mer.'),
-                    $this->get('translator')->trans('Jeu.'),
-                    $this->get('translator')->trans('Ven.'),
-                    $this->get('translator')->trans('Sam.'),
-                    $this->get('translator')->trans('Dim.'),
+                    $translator->trans('Lun.'),
+                    $translator->trans('Mar.'),
+                    $translator->trans('Mer.'),
+                    $translator->trans('Jeu.'),
+                    $translator->trans('Ven.'),
+                    $translator->trans('Sam.'),
+                    $translator->trans('Dim.'),
                 ];
 
                 for($i = 0; $i<=24; $i++) {
@@ -457,13 +458,13 @@ class DataApiController extends Controller
 
                 // Build axes.
                 $axe->y = [
-                    $this->get('translator')->trans('Lun.'),
-                    $this->get('translator')->trans('Mar.'),
-                    $this->get('translator')->trans('Mer.'),
-                    $this->get('translator')->trans('Jeu.'),
-                    $this->get('translator')->trans('Ven.'),
-                    $this->get('translator')->trans('Sam.'),
-                    $this->get('translator')->trans('Dim.'),
+                    $translator->trans('Lun.'),
+                    $translator->trans('Mar.'),
+                    $translator->trans('Mer.'),
+                    $translator->trans('Jeu.'),
+                    $translator->trans('Ven.'),
+                    $translator->trans('Sam.'),
+                    $translator->trans('Dim.'),
                 ];
 
                 $currentDate = clone $start;
@@ -485,13 +486,13 @@ class DataApiController extends Controller
 
                 // Build axes.
                 $axe->x = [
-                    $this->get('translator')->trans('Lun.'),
-                    $this->get('translator')->trans('Mar.'),
-                    $this->get('translator')->trans('Mer.'),
-                    $this->get('translator')->trans('Jeu.'),
-                    $this->get('translator')->trans('Ven.'),
-                    $this->get('translator')->trans('Sam.'),
-                    $this->get('translator')->trans('Dim.'),
+                    $translator->trans('Lun.'),
+                    $translator->trans('Mar.'),
+                    $translator->trans('Mer.'),
+                    $translator->trans('Jeu.'),
+                    $translator->trans('Ven.'),
+                    $translator->trans('Sam.'),
+                    $translator->trans('Dim.'),
                 ];
 
                 $currentDate = clone $start;

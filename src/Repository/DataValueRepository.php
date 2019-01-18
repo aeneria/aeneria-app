@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\DataValue;
 use App\Entity\FeedData;
 use Doctrine\ORM\QueryBuilder;
-use App\Controller\DataApiController;
+use App\Controller\DataController;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
@@ -226,7 +226,7 @@ class DataValueRepository extends \Doctrine\ORM\EntityRepository
         $queryBuilder->addGroupBy('d.' . $axeY);
 
         // If this is a year repartition, we also group by year.
-        if (in_array($repartitionType, [DataApiController::YEAR_HORIZONTAL_REPARTITION, DataApiController::YEAR_VERTICAL_REPARTITION])) {
+        if (in_array($repartitionType, [DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION])) {
           $queryBuilder->addSelect('d.year AS year');
           $queryBuilder->addGroupBy('d.year');
         }

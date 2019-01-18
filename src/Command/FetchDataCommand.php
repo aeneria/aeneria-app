@@ -5,7 +5,7 @@ namespace App\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use App\Entity\Feed;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Object\Linky;
@@ -17,7 +17,7 @@ use App\Object\MeteoFrance;
  * @todo Simplify, no need for callbacks, just make Linky and MeteoFrance implements a same interface
  *
  */
-class FetchDataCommand extends ContainerAwareCommand
+class FetchDataCommand extends Command
 {
     private $entityManager;
 

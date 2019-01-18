@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -10,11 +10,13 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 
 /***
  * Inspired by Wallabag install command.
  */
-class InstallCommand extends ContainerAwareCommand
+class InstallCommand extends Command
 {
     /**
      * @var InputInterface
@@ -26,13 +28,24 @@ class InstallCommand extends ContainerAwareCommand
      */
     protected $io;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
-        ->setName('pilea:install')
-        ->setDescription('Pilea installer.')
-        ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'User who will run pilea cron')
-        ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database');
+            ->setName('pilea:install')
+            ->setDescription('Pilea installer.')
+            ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'User who will run pilea cron')
+            ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -44,10 +57,8 @@ class InstallCommand extends ContainerAwareCommand
         $this->io->title('Pilea installer');
 
         $this
-        ->checkRequirements()
-        ->setupDatabase()
-        ->setupCron()
-        ;
+            ->checkRequirements()
+            ->setupDatabase();
 
         $this->io->success('Pilea has been successfully installed.');
     }
@@ -56,7 +67,7 @@ class InstallCommand extends ContainerAwareCommand
     {
         $this->io->section('Step 1 of 4: Checking system requirements.');
 
-        $doctrineManager = $this->getContainer()->get('doctrine')->getManager();
+        $doctrineManager = $this->entityManager;
 
         $rows = [];
 
@@ -72,15 +83,12 @@ class InstallCommand extends ContainerAwareCommand
         $help = '';
 
         try {
-            $conn = $this->getContainer()->get('doctrine')->getManager()->getConnection();
+            $conn = $this->entityManager->getConnection();
             $conn->connect();
         } catch (\Exception $e) {
-            if (false === strpos($e->getMessage(), 'Unknown database')
-                && false === strpos($e->getMessage(), 'database "' . $this->getContainer()->getParameter('database_name') . '" does not exist')) {
-                    $fulfilled = false;
-                    $status = '<error>ERROR!</error>';
-                    $help = 'Can\'t connect to the database: ' . $e->getMessage();
-                }
+            $fulfilled = false;
+            $status = '<error>ERROR!</error>';
+            $help = 'Can\'t connect to the database: ' . $e->getMessage();
         }
 
         $rows[] = [$label, $status, $help];
@@ -138,11 +146,10 @@ class InstallCommand extends ContainerAwareCommand
             $this->io->text('Dropping database, creating database and schema, clearing the cache');
 
             $this
-            ->runCommand('doctrine:database:drop', ['--force' => true])
-            ->runCommand('doctrine:database:create')
-            ->runCommand('doctrine:schema:create')
-            ->runCommand('cache:clear')
-            ;
+                ->runCommand('doctrine:database:drop', ['--force' => true])
+                ->runCommand('doctrine:database:create')
+                ->runCommand('doctrine:schema:create')
+                ->runCommand('cache:clear');
 
             $this->io->newLine();
 
@@ -153,10 +160,9 @@ class InstallCommand extends ContainerAwareCommand
             $this->io->text('Creating database and schema, clearing the cache');
 
             $this
-            ->runCommand('doctrine:database:create')
-            ->runCommand('doctrine:schema:create')
-            ->runCommand('cache:clear')
-            ;
+                ->runCommand('doctrine:database:create')
+                ->runCommand('doctrine:schema:create')
+                ->runCommand('cache:clear');
 
             $this->io->newLine();
 
@@ -167,18 +173,17 @@ class InstallCommand extends ContainerAwareCommand
             $this->io->text('Dropping database, creating database and schema...');
 
             $this
-            ->runCommand('doctrine:database:drop', ['--force' => true])
-            ->runCommand('doctrine:database:create')
-            ->runCommand('doctrine:schema:create')
-            ;
+                ->runCommand('doctrine:database:drop', ['--force' => true])
+                ->runCommand('doctrine:database:create')
+                ->runCommand('doctrine:schema:create');
+
         } elseif ($this->isSchemaPresent()) {
             if ($this->io->confirm('Seems like your database contains schema. Do you want to reset it?', false)) {
                 $this->io->text('Dropping schema and creating schema...');
 
                 $this
-                ->runCommand('doctrine:schema:drop', ['--force' => true])
-                ->runCommand('doctrine:schema:create')
-                ;
+                    ->runCommand('doctrine:schema:drop', ['--force' => true])
+                    ->runCommand('doctrine:schema:create');
             }
         } else {
             $this->io->text('Creating schema...');
@@ -191,16 +196,6 @@ class InstallCommand extends ContainerAwareCommand
 
         $this->io->newLine();
         $this->io->text('<info>Database successfully setup.</info>');
-
-        return $this;
-    }
-
-    protected function setupCron()
-    {
-        $cron = '0  *  *  *  * ' . $this->defaultInput->getArgument('user') . ' ' . $this->getContainer()->get('kernel')->getProjectDir() . '/bin/console pilea:fetch-data false';
-        file_put_contents ('/etc/cron.d/pilea' , $cron);
-
-        $this->io->text('<info>Cron successfully setup.</info>');
 
         return $this;
     }
@@ -233,7 +228,7 @@ class InstallCommand extends ContainerAwareCommand
 
         // PDO does not always close the connection after Doctrine commands.
         // See https://github.com/symfony/symfony/issues/11750.
-        $this->getContainer()->get('doctrine')->getManager()->getConnection()->close();
+        $this->entityManager->getConnection()->close();
 
         if (0 !== $exitCode) {
             $this->getApplication()->setAutoExit(true);
@@ -253,7 +248,7 @@ class InstallCommand extends ContainerAwareCommand
      */
     private function isDatabasePresent()
     {
-        $connection = $this->getContainer()->get('doctrine')->getManager()->getConnection();
+        $connection = $this->entityManager->getConnection();
         $databaseName = $connection->getDatabase();
 
         try {
@@ -274,7 +269,7 @@ class InstallCommand extends ContainerAwareCommand
 
         // custom verification for sqlite, since `getListDatabasesSQL` doesn't work for sqlite
         if ('sqlite' === $schemaManager->getDatabasePlatform()->getName()) {
-            $params = $this->getContainer()->get('doctrine.dbal.default_connection')->getParams();
+            $params = $this->entityManager->get('doctrine.dbal.default_connection')->getParams();
 
             if (isset($params['path']) && file_exists($params['path'])) {
                 return true;
@@ -300,7 +295,7 @@ class InstallCommand extends ContainerAwareCommand
      */
     private function isSchemaPresent()
     {
-        $schemaManager = $this->getContainer()->get('doctrine')->getManager()->getConnection()->getSchemaManager();
+        $schemaManager = $this->entityManager->getConnection()->getSchemaManager();
 
         return \count($schemaManager->listTableNames()) > 0 ? true : false;
     }
