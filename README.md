@@ -74,9 +74,9 @@ First of all:
 * Run install script: `bin/console pilea:install`
 * Set up cron: `echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
   (replace *[user]* and *[app_floder]* with your config)
-* Config NGINX or Apache as you would do for any Symfony 3 application
+* Config [NGINX](https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx) or [Apache](https://symfony.com/doc/current/setup/web_server_configuration.html) as you would do for any Symfony 4 application
 
-Be aware that there's no security provide with this app for now, no login, nothing.
+Be aware that there's no security provided with this app for now, no login, no users, nothing.
 So if you install it on a server, set it accessible only on your local network.
 
 ### Easy way - Using YunoHost
@@ -86,12 +86,9 @@ So if you install it on a server, set it accessible only on your local network.
 
 ## Todo
 
-- [ ] Migrate to Symfony 4
-- [ ] Better handle front assets (Webpack maybe)
 - [ ] Add DJU trentenaire (average DJU on last 30 years) for comparision
-- [ ] Handle users
-- [ ] Add Adress entity
-- [ ] Be more responsive
-- [ ] Handle multi linkys/energies feeds support for one adress
-- [ ] Handle other kind of feeds for other energies (Generic CSV ?)
 - [ ] Add a *compare period* tab
+- [ ] Handle users
+- [ ] Be more responsive
+- [ ] Handle multi linkys feeds support
+- [ ] Handle other kind of feeds for other energies (Generic CSV ?)
