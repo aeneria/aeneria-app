@@ -3,24 +3,23 @@
     <h1 class="card-title">{{ 'À propos' | trans }}</h1>
     <div class="content">
 
-      <a target="_blank" href="https://github.com/SimonMellerin/Pilea"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+      <a target="_blank" href="{{ constant('App\\Constants::GITHUB') }}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
       <p><b>Pilea</b> - {{ 'Un petit tableau de bord pour analyser sa consommation d\'énergie&nbsp;:' | trans | raw }}</p>
       <ul>
-        <li>Version : <a target="_blank" href="https://github.com/SimonMellerin/Pilea/releases/tag/{{version}}">{{version}}</a></li>
+        <li>Version : <a target="_blank" href="{{ constant('App\\Constants::GITHUB') }}/releases/tag/{{constant('App\\Constants::VERSION')}}">{{ constant('App\\Constants::VERSION') }}</a></li>
         <li>License : <a target="_blank" href="https://en.wikipedia.org/wiki/MIT_License">MIT</a></li>
         <li>Documentation : à venir !</li>
       </ul>
       <hr>
-      {% trans %}
-      <h2>Un bug ou une proposition d'amélioration ?</h2>
+      <h2>{{ 'Un bug ou une proposition d\'amélioration ?' | trans }}</h2>
       <br>
-      <p>Faites-le savoir un ouvrant une issue sur <a target="_blank" href="https://github.com/SimonMellerin/Pilea/issues">le dépôt <i class="fab fa-github"></i> de Pilea</a> !</p>
+      <p>{{ 'Faites-le savoir un ouvrant une issue sur' | trans }} <a target="_blank" href="{{ constant('App\\Constants::GITHUB') }}/issues">{{ 'le dépôt <i class="fab fa-github"></i> de Pilea ' | trans | raw }}</a>!</p>
       <hr>
-      <p>Développé avec <i class="fas fa-heart"></i> par Simon Mellerin, avec l'aide de&nbsp;:</p>
+      <p>{{ 'Développé avec <i class="fas fa-heart"></i> par Simon Mellerin, avec l\'aide de&nbsp;:' | trans | raw }}</p>
       <ul>
-          <li>Côté back : PHP, MySQL, Symfony et son outillage</li>
-          <li>Côté front : Webpack, Bootstrap, jQuery, D3.js, Popper.js, Fontawesome</li>
-          <li>Icones issues de <a target="_blank" href="https://thenounproject.com/" >the Noun Project</a>:
+          <li>{{ 'Côté back : PHP, MySQL, Symfony et son outillage' | trans }}</li>
+          <li>{{ 'Côté front : Webpack, Bootstrap, jQuery, D3.js, Popper.js, Fontawesome' | trans }}</li>
+          <li>{{ 'Icones issues de' | trans }} <a target="_blank" href="https://thenounproject.com/" >the Noun Project</a>:
             <ul>
               <li><a target="_blank" href="https://thenounproject.com/iconisland/">Icon Island</a></li>
               <li><a target="_blank" href="https://thenounproject.com/coquet_adrien">Adrien Coquet</a></li>
@@ -29,7 +28,6 @@
             </ul>
           </li>
       </ul>
-      {% endtrans %}
     </div>
   </div>
 </div>
