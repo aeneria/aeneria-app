@@ -39,7 +39,7 @@ A dashboard with several tabs :
 ### DJU vs Electricity consumption
 
 [DJU (Degré jour unifié or Degree day in english) [fr]](https://fr.wikipedia.org/wiki/Degr%C3%A9_jour_unifi%C3%A9) defines the gap between outdoor temperature and a reference temperature (18°C).
-It's used to define rigor of a winter. Basicly, more there are DJU during a day, more it's cold outside.
+It's used to define rigor of a winter. Basicly, the more there are DJU during a day, the colder it gets outside.
 
 ![pilea dju x electricity](docs/dju_x_conso_pilea.png)
 
@@ -66,10 +66,11 @@ First of all:
 **Requirements:**
 * PHP 7.2 or higher
 * MySQL 5.5 or higher
+  (PostgreSQL & SQLite should work but you'll have to adapt `.env` & `config/packages/doctrine.yaml`)
 
 **Installation:**
 * Get the repo
-* Set Database name and password in `.env` file
+* Set Database name, user and password in `.env` file
 * Install [Composer](https://getcomposer.org/) dependencies: `composer install`
 * Run install script: `bin/console pilea:install`
 * Set up cron: `echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
@@ -83,6 +84,8 @@ So if you install it on a server, set it accessible only on your local network.
 
 * Get a [YunoHost](https://yunohost.org/) instance
 * Install Pilea with its [package](https://github.com/SimonMellerin/pilea_ynh)
+
+[![Install pilea with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=pilea)
 
 ## Todo
 
