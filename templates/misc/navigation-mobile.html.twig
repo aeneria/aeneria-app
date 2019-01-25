@@ -23,13 +23,13 @@
                 <img src="{{ asset('image/icon/home.png') }}" alt="*"> {{ 'Accueil' | trans }}
             </a>
             <a href="{{ path('general') }}" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
-                <img src="{{ asset('image/icon/general.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
-            </a>
-            <a href="{{ path('dju_x_conso') }}" class="{% if app.request.attributes.get('_route') == 'dju_x_conso' %}active{% endif %}">
-                <img src="{{ asset('image/icon/temperature.png') }}" alt="*" > {{ 'Électricité VS DJU' | trans }}
+                <img src="{{ asset('image/icon/electricity.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
             </a>
             <a href="{{ path('meteo') }}" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
                 <img src="{{ asset('image/icon/meteo.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
+            </a>
+            <a href="{{ path('energy_x_meteo') }}" class="{% if app.request.attributes.get('_route') == 'energy_x_meteo' %}active{% endif %}">
+                <img src="{{ asset('image/icon/analyse.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
             </a>
             <a href="{{ path('config') }}" class="{% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
                 <img src="{{ asset('image/icon/config.png') }}" alt="*" > {{ 'Configuration' | trans }}

@@ -525,7 +525,7 @@
       .delay(function (d, i) { return i * 20; })
       .ease(d3.easeCubic)
       .attr('y', function (d, i) { return yScale(result.axeY[i]); })
-      .attr('height', function (d, i) { return height - yScale(result.axeY[i]); })
+      .attr('height', function (d, i) { return height - yScale(result.axeY[i]); });
 
 
     $('[data-toggle=\'tooltip\']').tooltip();
@@ -719,7 +719,7 @@
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    */
-  var displayXY = function (result, target, color, unitx, unity, precisionx, precisiony, height = 450, width = 800, margin_bottom = 40) {
+  var displayXY = function (result, target, color, unitx, unity, precisionx, precisiony, height = 525, width = 800, margin_bottom = 40) {
     var margin_top = 20;
     var margin_left = 50;
     var margin_right = 20;
@@ -728,7 +728,6 @@
       .select('#' + target);
 
     width = document.getElementById(target).clientWidth - margin_right - margin_left;
-
     element
       .selectAll('svg')
       .remove();
@@ -885,6 +884,9 @@
     var margin_top = 20;
     var margin_bottom = 25;
 
+    // If there's more than 20 data to dislpay, we display a curve.
+    var type = result1.axeX.length < 20 ? 1 : 2;
+
     var element = d3
       .select('#' + target);
 
@@ -955,72 +957,107 @@
       .select('.domain')
       .attr('stroke-width', 0);
 
-    chart.append('path')
-      .datum(result1.axeX)
-      .attr('fill', color1)
-      .attr('class', 'area1')
-      .attr('d', d3.area()
-        .curve(d3.curveMonotoneY)
-        .x0(width/2)
-        .x1(width/2)
-        .y(function(d, i) { return xScale(d) + xScale.bandwidth()/2; })
-      );
+    if (type == 2) {
+      chart.append('path')
+        .datum(result1.axeX)
+        .attr('fill', color1)
+        .attr('class', 'area1')
+        .attr('d', d3.area()
+          .curve(d3.curveMonotoneY)
+          .x0(width/2)
+          .x1(width/2)
+          .y(function(d, i) { return xScale(d) + xScale.bandwidth()/2; })
+        );
 
-    chart
-      .selectAll('.area1')
-      .transition()
-      .duration(800)
-      .ease(d3.easeCubic)
-      .attr('d', d3.area()
-        .curve(d3.curveMonotoneY)
-        .x0(width/2)
-        .x1(function (d, i) { return  width/2 - yScale1(result1.axeY[i]); })
-        .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
-      );
+      chart
+        .selectAll('.area1')
+        .transition()
+        .duration(800)
+        .ease(d3.easeCubic)
+        .attr('d', d3.area()
+          .curve(d3.curveMonotoneY)
+          .x0(width/2)
+          .x1(function (d, i) { return  width/2 - yScale1(result1.axeY[i]); })
+          .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+        );
 
-    chart.append('path')
-      .datum(result1.axeX)
-      .attr('fill', color2)
-      .attr('class', 'area2')
-      .attr('d', d3.area()
-        .curve(d3.curveMonotoneY)
-        .x0(width/2)
-        .x1(width/2)
-        .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
-      );
+      chart.append('path')
+        .datum(result1.axeX)
+        .attr('fill', color2)
+        .attr('class', 'area2')
+        .attr('d', d3.area()
+          .curve(d3.curveMonotoneY)
+          .x0(width/2)
+          .x1(width/2)
+          .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+        );
 
-    chart
-      .selectAll('.area2')
-      .transition()
-      .duration(800)
-      .ease(d3.easeCubic)
-      .attr('d', d3.area()
-        .curve(d3.curveMonotoneY)
-        .x0(width/2)
-        .x1(function (d, i) { return width/2 + yScale2(result2.axeY[i]); })
-        .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
-      );
+      chart
+        .selectAll('.area2')
+        .transition()
+        .duration(800)
+        .ease(d3.easeCubic)
+        .attr('d', d3.area()
+          .curve(d3.curveMonotoneY)
+          .x0(width/2)
+          .x1(function (d, i) { return width/2 + yScale2(result2.axeY[i]); })
+          .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
+        );
 
-    chart
-      .selectAll('.bar')
-      .data(result1.axeX)
-      .enter()
-      .append('rect')
-      .attr('class', 'bar')
-      .attr('fill', 'transparent' )
-      .attr('stroke-width', 0)
-      .attr('y', function (d, i) { return xScale(d) })
-      .attr('height', xScale.bandwidth())
-      .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
-      .attr('width', function (d, i) { return yScale1(result1.axeY[i]) + yScale2(result2.axeY[i]); })
-      .attr('data-toggle', 'tooltip')
-      .attr('data-placement', 'right')
-      .attr('data-html', 'true')
-      .attr('title', function (d, i) {
-        return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
-      })
-      .on("mouseover", function (d, i) { d3.select(this).attr('fill', '#FFFFFFAA'); })
-      .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });
+        chart
+          .selectAll('.bar')
+          .data(result1.axeX)
+          .enter()
+          .append('rect')
+          .attr('class', 'bar')
+          .attr('fill', 'transparent')
+          .attr('stroke-width', 0)
+          .attr('y', function (d, i) { return xScale(d) })
+          .attr('height', xScale.bandwidth())
+          .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
+          .attr('width', function (d, i) { return yScale1(result1.axeY[i]) + yScale2(result2.axeY[i]); })
+          .attr('data-toggle', 'tooltip')
+          .attr('data-placement', 'right')
+          .attr('data-html', 'true')
+          .attr('title', function (d, i) {
+            return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+          })
+          .on("mouseover", function (d, i) { d3.select(this).attr('fill', '#FFFFFFAA'); })
+          .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });
+    }
+    else {
+      chart
+          .selectAll('.bar1')
+          .data(result1.axeX)
+          .enter()
+          .append('rect')
+          .attr('class', 'bar1')
+          .attr('fill', color1)
+          .attr('stroke-width', 0)
+          .attr('y', function (d, i) { return xScale(d) })
+          .attr('height', xScale.bandwidth())
+          .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
+          .attr('width', function (d, i) { return yScale1(result1.axeY[i]); });
+
+      chart
+          .selectAll('.bar2')
+          .data(result1.axeX)
+          .enter()
+          .append('rect')
+          .attr('class', 'bar2')
+          .attr('fill', color2)
+          .attr('stroke-width', 0)
+          .attr('y', function (d, i) { return xScale(d) })
+          .attr('height', xScale.bandwidth())
+          .attr('x', width/2)
+          .attr('width', function (d, i) { return yScale2(result2.axeY[i]); })
+          .attr('data-toggle', 'tooltip')
+          .attr('data-placement', 'right')
+          .attr('data-html', 'true')
+          .attr('title', function (d, i) {
+            return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+          })
+    }
 
     $('[data-toggle=\'tooltip\']').tooltip();
 

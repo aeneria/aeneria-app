@@ -1,0 +1,58 @@
+{% extends "pages/dashboard.html.twig" %}
+
+{% block title %}{{ 'Analyse DJU vs consommation' | trans }}{% endblock %}
+
+{% block body %}
+
+  <div id="dju_x_conso_tab" class="container-fluid dju-vs-conso">
+    <div class="row">
+
+      {# Colonne frise #}
+      <div class="col-md-3">
+        <div class="card selection">
+          <div class="card-body">
+            <h2 class="card-title">Energie VS
+              <div class="btn-group pilea-select-meteo">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="frequency">Précipitation</button>
+                <div class="dropdown-menu dropdown-menu-left">
+                  <a class="dropdown-item" href="#" data="dju" unit="DJU">{{ 'DJU'|trans }}</a>
+                  <a class="dropdown-item" href="#" data="nebulosity" unit="%">{{ 'Nebulosité'|trans }}</a>
+                  <a class="dropdown-item" href="#" data="rain" unit="mm">{{ 'Précipitations'|trans }}</a>
+                  <a class="dropdown-item" href="#" data="humidity" unit="%">{{ 'Humidité'|trans }}</a>
+                </div>
+              </div>
+            </h2>
+          </div>
+        </div>
+        <div class="card evolution">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Analyse temporelle' | trans }}</h2>
+            <div class="content">
+              <div id="conso-vs-dju"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Colonne évolution & diagramme XY #}
+      <div class="col-md-9">
+
+        <div class="card distribution">
+          <div class="card-body">
+            <h2 class="card-title">{{ "Analyse croisée" | trans }}</h2>
+            <div id="conso-x-dju"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block js %}
+{% endblock %}

@@ -186,4 +186,33 @@ $(document).ready(function () {
     // Tell the world we have new values.
     document.dispatchEvent(new Event('selection'));
   });
+
+  // Deal with meteo ///////////////////////////////////////////////////
+
+  //If we can't retrieve meteo from localStorage, we create it.
+  var meteo = localStorage.getItem('meteo');
+
+  if (meteo == null) {
+    meteo = 'dju';
+    localStorage.setItem('meteo', meteo);
+  }
+
+
+  // Initiate frequency button label
+  $('.pilea-select-meteo').each((index, element) => {
+    var button = $(element).children('button');
+    var meteoLabel = $(element).find('[data="' + meteo + '"]')[0].innerHTML;
+    button[0].innerHTML = meteoLabel;
+  });
+
+  // Add event on change
+  $('.pilea-select-meteo a').click(function(e) {
+    localStorage.setItem('meteo', e.target.getAttribute('data'));
+    $('.pilea-select-meteo button')[0].innerHTML =  e.target.innerHTML;
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    // Tell the world we have new values.
+    document.dispatchEvent(new Event('selection'));
+  });
 })

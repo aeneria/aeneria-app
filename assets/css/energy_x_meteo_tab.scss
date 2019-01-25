@@ -1,0 +1,32 @@
+/* Energy x Meteo //////////////////////////////////////////////////////////////*/
+
+.dju-vs-conso {
+    .card {
+        &.selection {
+            height: 70px;
+            h2 {
+                font-size: 1.1rem;
+            }
+            .pilea-select-meteo {
+                button {
+                    border-radius: 20px 20px 20px 20px;
+                    margin: 0 5px 0 5px;
+                    height: 32px;
+                    padding-top: 3px;
+                    position: relative;
+                    top: -1px;
+                }
+                .dropdown-menu {
+                    font-family: CodeNew;
+                    font-size: 0.8rem;
+                }
+            }
+        }
+        &.evolution {
+            height: 590px;
+        }
+        &.distribution {
+            height: 675px;
+        }
+    }
+}

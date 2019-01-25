@@ -58,14 +58,15 @@ class InstallCommand extends Command
 
         $this
             ->checkRequirements()
-            ->setupDatabase();
+            ->setupDatabase()
+            ->setupMigration();
 
         $this->io->success('Pilea has been successfully installed.');
     }
 
     protected function checkRequirements()
     {
-        $this->io->section('Step 1 of 4: Checking system requirements.');
+        $this->io->section('Step 1 of 3: Checking system requirements.');
 
         $doctrineManager = $this->entityManager;
 
@@ -132,14 +133,14 @@ class InstallCommand extends Command
             throw new \RuntimeException('Some system requirements are not fulfilled. Please check output messages and fix them.');
         }
 
-        $this->io->success('Success! Seems that your system can run pilea properly.');
+        $this->io->text('<info>Success! Seems that your system can run pilea properly.</info>');
 
         return $this;
     }
 
     protected function setupDatabase()
     {
-        $this->io->section('Step 2 of 4: Setting up database.');
+        $this->io->section('Step 2 of 3: Setting up database.');
 
         // user want to reset everything? Don't care about what is already here
         if (true === $this->defaultInput->getOption('reset')) {
@@ -198,6 +199,14 @@ class InstallCommand extends Command
         $this->io->text('<info>Database successfully setup.</info>');
 
         return $this;
+    }
+
+    protected function setupMigration()
+    {
+        $this->io->section('Step 3 of 3: Setting up migration mechanism.');
+        $this->runCommand('doctrine:migrations:version', ['--add' => true, '--all' => true, '--no-interaction' => true]);
+        $this->io->text('<info>Migration mechanism successfully setup.</info>');
+
     }
 
     /**

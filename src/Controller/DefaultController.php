@@ -40,11 +40,11 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/dju_x_conso", name="dju_x_conso")
+     * @Route("/energy_x_meteo", name="energy_x_meteo")
      */
-    public function djuXconsoAction(Request $request)
+    public function energymeteoAction(Request $request)
     {
-        return $this->render('dashboards/dju_x_conso.html.twig', [
+        return $this->render('dashboards/energy_x_meteo.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }

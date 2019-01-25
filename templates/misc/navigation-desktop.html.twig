@@ -16,13 +16,13 @@
             <img src="{{ asset('image/icon/home.png') }}" alt="*">
         </a>
         <a href="{{ path('general') }}" title="{{ 'Consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
-            <img src="{{ asset('image/icon/general.png') }}" alt="*" >
-        </a>
-        <a href="{{ path('dju_x_conso') }}" title="{{ 'Électricité VS DJU' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'dju_x_conso' %}active{% endif %}">
-            <img src="{{ asset('image/icon/temperature.png') }}" alt="*" >
+            <img src="{{ asset('image/icon/electricity.png') }}" alt="*" >
         </a>
         <a href="{{ path('meteo') }}" title="{{ 'Analyse de la météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
             <img src="{{ asset('image/icon/meteo.png') }}" alt="*" >
+        </a>
+        <a href="{{ path('energy_x_meteo') }}" title="{{ 'Analyse croisée Energie/Météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'energy_x_meteo' %}active{% endif %}">
+            <img src="{{ asset('image/icon/analyse.png') }}" alt="*" >
         </a>
     </div>
 </nav>
