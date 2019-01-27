@@ -59,7 +59,8 @@ class InstallCommand extends Command
         $this
             ->checkRequirements()
             ->setupDatabase()
-            ->setupMigration();
+            ->setupMigration()
+            ->clearCache();
 
         $this->io->success('Pilea has been successfully installed.');
     }
@@ -149,8 +150,7 @@ class InstallCommand extends Command
             $this
                 ->runCommand('doctrine:database:drop', ['--force' => true])
                 ->runCommand('doctrine:database:create')
-                ->runCommand('doctrine:schema:create')
-                ->runCommand('cache:clear');
+                ->runCommand('doctrine:schema:create');
 
             $this->io->newLine();
 
@@ -162,8 +162,7 @@ class InstallCommand extends Command
 
             $this
                 ->runCommand('doctrine:database:create')
-                ->runCommand('doctrine:schema:create')
-                ->runCommand('cache:clear');
+                ->runCommand('doctrine:schema:create');
 
             $this->io->newLine();
 
@@ -192,9 +191,6 @@ class InstallCommand extends Command
 
         }
 
-        $this->io->text('Clearing the cache...');
-        $this->runCommand('cache:clear');
-
         $this->io->newLine();
         $this->io->text('<info>Database successfully setup.</info>');
 
@@ -207,6 +203,15 @@ class InstallCommand extends Command
         $this->runCommand('doctrine:migrations:version', ['--add' => true, '--all' => true, '--no-interaction' => true]);
         $this->io->text('<info>Migration mechanism successfully setup.</info>');
 
+        return $this;
+    }
+
+    protected function clearCache()
+    {
+        $this->io->text('Clearing the cache...');
+        $this->runCommand('cache:clear');
+
+        return $this;
     }
 
     /**
