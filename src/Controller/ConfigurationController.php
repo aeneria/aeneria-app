@@ -87,7 +87,7 @@ class ConfigurationController extends AbstractController
      * @param Feed $meteoFrance
      * @param Form $vonfigForm
      */
-    private function persistConfig(Feed &$linky = NULL, Feed &$meteoFrance, Form $configForm) {
+    private function persistConfig(Feed &$linky = NULL, Feed &$meteoFrance = NULL, Form $configForm) {
         $data = $configForm->getData();
 
         // Create/update Linky.
