@@ -3,34 +3,34 @@
   <div class="card-body">
     <h2 id="title-{{ month }}" class="card-title">--</h2>
     <div class="row month-summary" data-month="{{ month }}" >
-      <div class="col-lg-6 vert-sep">
-        <div class="row">
-          <div class="col-sm-2 col-6">
+      <div class="col-xl-6 vert-sep">
+        <div class="row align-items-center">
+          <div class="col-sm-2 col-4">
             <img alt="electicity" src="{{ asset('image/electricity.svg') }}" class="index-logo">
           </div>
-          <div class="col-sm-3 col-6">
+          <div class="col-sm-3 col-8">
             <div id="conso-total-{{ month }}" class="dash-index-total conso-total"></div>
           </div>
-          <div class="col-sm-4 col-xs-6 col-12">
+          <div class="col-sm-4 col-6">
             <div id="conso-repartition-{{ month }}" class="conso-repartition"></div>
           </div>
-          <div class="col-sm-3 col-xs-6 col-12">
+          <div class="col-sm-3 col-6">
             <div id="conso-repartition-legend-{{ month }}" class="conso-repartition-legend"></div>
           </div>
         </div>
       </div>
 
-      <div class="col-lg-6">
-        <div class="row">
-          <div class="col-sm-2  col-6">
+      <div class="col-xl-6">
+        <div class="row align-items-center">
+          <div class="col-sm-2 col-4">
             <img alt="temperature" src="{{ asset('image/temperature.svg') }}" class="index-logo"></div>
-          <div class="col-sm-3  col-6">
+          <div class="col-sm-3 col-8">
             <div id="dju-total-{{ month }}" class="dash-index-total dju-total"></div>
           </div>
-          <div class="col-sm-4 col-xs-6 col-12">
+          <div class="col-sm-4 col-6">
             <div id="temp-repartition-{{ month }}" class="temp-repartition"></div>
           </div>
-          <div class="col-sm-3 col-xs-6 col-12">
+          <div class="col-sm-3 col-6">
             <div id="temp-repartition-legend-{{ month }}" class="temp-repartition-legend"></div>
           </div>
         </div>
