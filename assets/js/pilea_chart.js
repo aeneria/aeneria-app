@@ -1036,8 +1036,8 @@
           .attr('stroke-width', 0)
           .attr('y', function (d, i) { return xScale(d) })
           .attr('height', xScale.bandwidth())
-          .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
-          .attr('width', function (d, i) { return yScale1(result1.axeY[i]); });
+          .attr('x', width / 2)
+          .attr('width', 0);
 
       chart
           .selectAll('.bar2')
@@ -1050,13 +1050,30 @@
           .attr('y', function (d, i) { return xScale(d) })
           .attr('height', xScale.bandwidth())
           .attr('x', width/2)
-          .attr('width', function (d, i) { return yScale2(result2.axeY[i]); })
+          .attr('width', 0)
           .attr('data-toggle', 'tooltip')
           .attr('data-placement', 'right')
           .attr('data-html', 'true')
           .attr('title', function (d, i) {
             return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
           })
+
+      chart
+          .selectAll('.bar1')
+          .transition()
+          .duration(600)
+          .delay(function (d, i) { return i * 20; })
+          .ease(d3.easeCubic)
+          .attr('x', function (d, i) { return width / 2 - yScale1(result1.axeY[i]); })
+          .attr('width', function (d, i) { return yScale1(result1.axeY[i]); });
+
+      chart
+          .selectAll('.bar2')
+          .transition()
+          .duration(600)
+          .delay(function (d, i) { return i * 20; })
+          .ease(d3.easeCubic)
+          .attr('width', function (d, i) { return yScale2(result2.axeY[i]); });
     }
 
     $('[data-toggle=\'tooltip\']').tooltip();
