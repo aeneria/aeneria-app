@@ -18,7 +18,7 @@ class MeteoFrance implements FeedObject {
      */
     const SYNOP_BASE_PATH = 'https://donneespubliques.meteofrance.fr/';
     const SYNOP_DATA = 'donnees_libres/Txt/Synop/synop.'; // exemple synop.2018040800.csv
-    const SYNOP_POSTES = 'donnees_libres/Txt/Synop/postesSynop.csv';
+    const SYNOP_POSTES = '/postesSynop.csv';
 
     /**
      * Reference Temperature for DJU calculation.
@@ -81,7 +81,8 @@ class MeteoFrance implements FeedObject {
      * {@inheritDoc}
      * @see \App\FeedObject\FeedObject::getFrequencies()
      */
-    public static function getFrequencies() {
+    public static function getFrequencies()
+    {
         return [
             DataValue::FREQUENCY['DAY'],
             DataValue::FREQUENCY['WEEK'],
@@ -96,39 +97,27 @@ class MeteoFrance implements FeedObject {
     public static function getAvailableStations()
     {
         $stations = [];
+        $header = NULL;
 
-        // Declare the http client.
-        $client = new Client(['base_uri' => self::SYNOP_BASE_PATH]);
-        $clientOption = [
-            'verify' => FALSE,
-            'stream' => TRUE,
-        ];
+        // Reads csv files containing stations info.
+        $stationsData = \file(\getcwd() . self::SYNOP_POSTES);
 
-        // We get the raw CSV.
-        $response = $client->get(self::SYNOP_POSTES, $clientOption);
-        $stationsData = $response->getBody()->getContents();
-        if ($response->getStatusCode() == 200) {
-            // We parse it get a nice table.
-            $rows = array_filter(preg_split('/\R/', $stationsData));
-            $header = NULL;
+        foreach($stationsData as $row) {
+            $row = \str_getcsv ($row, ';');
 
-            foreach($rows as $row) {
-                $row = str_getcsv ($row, ';');
-
-                if(!$header) {
-                    $header = $row;
-                }
-                else {
-                    $row = array_combine($header, $row);
-
-                    // We only keep ID and name for each station.
-                    $stations[ucwords(strtolower($row['Nom']))] = (int)$row['ID'];
-                }
+            if(!$header) {
+                $header = $row;
             }
+            else {
+                $row = \array_combine($header, $row);
 
-            // Sort stations.
-            ksort($stations,SORT_STRING);
+                // We only keep ID and name for each station.
+                $stations[\ucwords(\strtolower($row['Nom']))] = (int)$row['ID'];
+            }
         }
+
+        // Sort stations.
+        \ksort($stations,SORT_STRING);
 
         return $stations;
     }
@@ -213,7 +202,7 @@ class MeteoFrance implements FeedObject {
         // We get data foreach 3 hours intervall from 00 to 21h.
         for ($hour = 0; $hour < 24; $hour += 3) {
             // We build the path to the date's file (ex: synop.2018040800.csv).
-            $uri= self::SYNOP_DATA . $dateFormated . sprintf("%02d", $hour) . '.csv';
+            $uri= self::SYNOP_DATA . $dateFormated . \sprintf("%02d", $hour) . '.csv';
 
             // We get the raw CSV.
             $response = $client->get($uri, $clientOption);
@@ -258,29 +247,29 @@ class MeteoFrance implements FeedObject {
 
         foreach ($rawData as $hourData) {
             if (isset($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])
-                && is_numeric($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])){
+                && \is_numeric($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])){
                 $fastenData['NEBULOSITY'] += $hourData[self::SYNOP_DATA_NAME['NEBULOSITY']];
                 $nbNebulosity++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['PRESSURE']])
-            && is_numeric($hourData[self::SYNOP_DATA_NAME['PRESSURE']])){
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['PRESSURE']])){
                 $fastenData['PRESSURE'] += $hourData[self::SYNOP_DATA_NAME['PRESSURE']];
                 $nbPressure++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])
-            && is_numeric($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])){
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])){
                 $fastenData['HUMIDITY'] += $hourData[self::SYNOP_DATA_NAME['HUMIDITY']];
                 $nbHumidity++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['RAIN']])
-            && is_numeric($hourData[self::SYNOP_DATA_NAME['RAIN']])){
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['RAIN']])){
                 if ($hourData[self::SYNOP_DATA_NAME['RAIN']] >= 0) {
                     $fastenData['RAIN'] += $hourData[self::SYNOP_DATA_NAME['RAIN']];
                 }
                 $nbRain++;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])
-            && is_numeric($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
 
                 // Temp avg.
                 $curTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;
@@ -292,37 +281,37 @@ class MeteoFrance implements FeedObject {
                     $fastenData['TEMPERATURE_MAX'] = $curTemp;
                 }
 
-                $fastenData['TEMPERATURE_MAX'] = max($fastenData['TEMPERATURE_MAX'], $curTemp);
+                $fastenData['TEMPERATURE_MAX'] = \max($fastenData['TEMPERATURE_MAX'], $curTemp);
 
                 // Temp min.
                 if (empty($fastenData['TEMPERATURE_MIN'])) {
                     $fastenData['TEMPERATURE_MIN'] = $curTemp;
                 }
 
-                $fastenData['TEMPERATURE_MIN'] = min($fastenData['TEMPERATURE_MIN'], $curTemp);
+                $fastenData['TEMPERATURE_MIN'] = \min($fastenData['TEMPERATURE_MIN'], $curTemp);
             }
         }
 
         // Calculate averageof each value.
         if ($nbTemperature > 0) {
-            $fastenData['TEMPERATURE'] = round($fastenData['TEMPERATURE'] / $nbTemperature, 1);
+            $fastenData['TEMPERATURE'] = \round($fastenData['TEMPERATURE'] / $nbTemperature, 1);
         }
         if ($nbHumidity > 0) {
-            $fastenData['HUMIDITY'] = round($fastenData['HUMIDITY'] / $nbHumidity, 1);
+            $fastenData['HUMIDITY'] = \round($fastenData['HUMIDITY'] / $nbHumidity, 1);
         }
         if ($nbNebulosity > 0) {
-            $fastenData['NEBULOSITY'] = round($fastenData['NEBULOSITY'] / $nbNebulosity, 1);
+            $fastenData['NEBULOSITY'] = \round($fastenData['NEBULOSITY'] / $nbNebulosity, 1);
         }
         if ($nbPressure > 0) {
-            $fastenData['PRESSURE'] = round($fastenData['PRESSURE'] / $nbPressure, 1);
+            $fastenData['PRESSURE'] = \round($fastenData['PRESSURE'] / $nbPressure, 1);
         }
         if ($nbRain > 0) {
-            $fastenData['RAIN'] = round($fastenData['RAIN'], 1);
+            $fastenData['RAIN'] = \round($fastenData['RAIN'], 1);
         }
 
         // Calculate DJU with temperature max and min of the day.
         if (!empty($fastenData['TEMPERATURE_MAX']) && !empty($fastenData['TEMPERATURE_MIN'])) {
-            $fastenData['DJU'] = round($this->calculateDju($fastenData['TEMPERATURE_MIN'], $fastenData['TEMPERATURE_MAX'], 1));
+            $fastenData['DJU'] = \round($this->calculateDju($fastenData['TEMPERATURE_MIN'], $fastenData['TEMPERATURE_MAX'], 1));
         }
 
         return $fastenData;
@@ -434,7 +423,7 @@ class MeteoFrance implements FeedObject {
                 $feedData->updateOrCreateValue(
                     $startDate,
                     $frequency,
-                    round($agregateData[0]['value'], 1),
+                    \round($agregateData[0]['value'], 1),
                     $this->entityManager
                 );
             }
@@ -450,12 +439,12 @@ class MeteoFrance implements FeedObject {
     private function getStationRawData($synopData)
     {
         $stationId = $this->feed->getParam()['STATION_ID'];
-        $rows = array_filter(preg_split('/\R/', $synopData));
+        $rows = \array_filter(\preg_split('/\R/', $synopData));
         $header = NULL;
         $data = [];
 
         foreach($rows as $row) {
-            $row = str_getcsv ($row, ';');
+            $row = \str_getcsv ($row, ';');
 
             if(!$header) {
                 $header = $row;
@@ -464,7 +453,7 @@ class MeteoFrance implements FeedObject {
                 }
             }
             else {
-                $row = array_combine($header, $row);
+                $row = \array_combine($header, $row);
                 if ($row[self::SYNOP_DATA_NAME['STATION_ID']] == $stationId) {
                     $data = $row;
                 }
@@ -487,7 +476,7 @@ class MeteoFrance implements FeedObject {
             $curMin = $newValue;
         }
         else {
-            $curMin = min([
+            $curMin = \min([
                 $curMin,
                 $newValue,
             ]);
@@ -496,7 +485,7 @@ class MeteoFrance implements FeedObject {
             $curMax = $newValue;
         }
         else {
-            $curMax = max([
+            $curMax = \max([
                 $curMax,
                 $newValue,
             ]);
@@ -512,7 +501,8 @@ class MeteoFrance implements FeedObject {
      * @param float $tempMax
      * @return float DJU
      */
-    private function calculateDju($tempMin, $tempMax) {
+    private function calculateDju($tempMin, $tempMax)
+    {
         $tempAvg = ($tempMax + $tempMin)/2;
         if (self::BASE_DJU > $tempMax) {
           return self::BASE_DJU - $tempAvg;
