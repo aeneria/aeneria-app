@@ -1,7 +1,7 @@
 /* HOMEPAGE DASH ///////////////////////////////////////////////////////////////*/
 
 .index-logo {
-    max-height: 100px;
+    height: 80px;
     vertical-align: middle;
 }
 
@@ -21,13 +21,8 @@
     }
 }
 
-// .month-summary > div > div > div {
-//     justify-content: center;
-//     display: flex;
-// }
-
 .dash-index {
-    font-size: 2.3em;
+    font-size: 1.6em;
 }
 
 @include media-breakpoint-up(xl) {

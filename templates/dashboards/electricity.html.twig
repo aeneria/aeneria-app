@@ -8,22 +8,30 @@
     <div class="row">
 
       {# Colonne répartition sur la période #}
-      <div class="col-md-3 gen-first-col">
+      <div class="col-md-4 col-lg-3 gen-first-col">
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Électricité' | trans }}</h2>
             <div class="content">
-              <div class="meteo-top">
-                <img alt="electicity" src="{{ asset('image/electricity.svg') }}" class="meteo-logo">
-                <p>
-                  <b><span id="conso-total" class="dash-index"></span> {{ ' kWh' | trans }}</b>
-                  </br>
-                  {{ 'consommés sur la période' | trans }}
-                </p>
+              <div class="row index-top">
+                <div class="col-4 col-sm-4">
+                  <img alt="electicity" src="{{ asset('image/electricity.svg') }}" class="index-logo">
+                </div>
+                <div class="col-8 col-sm-8">
+                  <p>
+                    <b><span id="conso-total" class="dash-index"></span> {{ ' kWh' | trans }}</b>
+                    </br>
+                    {{ 'consommés sur la période' | trans }}
+                  </p>
+                </div>
               </div>
-              <div class="meteo-card-1">
-                <div id="conso-global-repartition" class="global-repartition"></div>
-                <div id="conso-global-repartition-legend" class="global-repartition-legend"></div>
+              <div class="row">
+                <div class="col-6">
+                  <div id="conso-global-repartition" class="col-6"></div>
+                </div>
+                <div class="col-6">
+                  <div id="conso-global-repartition-legend" class="col-6"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -31,17 +39,17 @@
       </div>
 
       {# Colonne répartitoin semaine & évolution #}
-      <div class="col-md-9">
+      <div class="col-md-8 col-lg-9">
         <div class="row gen-first-line">
-          <div class="col-md-7">
-            <div class="card">
+          <div class="col-sm-12 col-xl-7">
+            <div class="card week-repartition">
               <div class="card-body">
                 <h2 class="card-title">{{ "En moyenne sur la semaine" | trans }}</h2>
                 <div id="conso-week-repartition"></div>
               </div>
             </div>
           </div>
-          <div class="col-md-5">
+          <div class="col-sm-12 col-xl-5">
             <div class="card">
               <div class="card-body">
                 <h2 class="card-title">{{ "Répartition sur la semaine" | trans }}</h2>
