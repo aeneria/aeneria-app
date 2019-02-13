@@ -85,7 +85,6 @@ class Linky implements FeedObject {
         $this->password = $feedParam['PASSWORD'];
 
         $this->entityManager = $entityManager;
-
         $this->auth();
     }
 

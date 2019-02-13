@@ -337,4 +337,24 @@ class Feed
             $this->getFeedObject($entityManager)->fetchData($date);
         }
     }
+
+    /**
+     * Create and persist Feed dependent FeedData according to it type.
+     */
+    public function createDependentFeedData(EntityManager $entityManager) {
+        $feedDataRepository = $entityManager
+            ->getRepository('App:FeedData');
+
+        // We check, for this feed, if each dataFeedis already created,
+        // and create it if not.
+        foreach (Feed::FEED_TYPES[$this->getFeedType()]['DATA_TYPE'] as $label => $data) {
+            $feedData = $feedDataRepository->findOneByFeedAndDataType($this, $label);
+            if (!$feedData) {
+                $feedData = new FeedData();
+                $feedData->setDataType($label);
+                $feedData->setFeed($this);
+                $entityManager->persist($feedData);
+            }
+        }
+    }
 }
