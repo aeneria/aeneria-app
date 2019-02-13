@@ -17,7 +17,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class EnedisFeedType extends AbstractType
 {

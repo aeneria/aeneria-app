@@ -17,7 +17,6 @@ final class Version20190123165610 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
-        $this->abortIf(true, 'Always move forward.');
-
+        $this->throwIrreversibleMigrationException("Always move forward.");
     }
 }

@@ -112,11 +112,17 @@ class Feed
     private $creator;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Place")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $place;
+
+
+    /**
      * Feed Object
      * @var FeedObject
      */
     private $catchedFeedObject = NULL;
-
 
     /**
      * Get id
@@ -246,6 +252,30 @@ class Feed
     public function getFeedType()
     {
         return $this->feedType;
+    }
+
+    /**
+     * Set place
+     *
+     * @param \App\Entity\Place $place
+     *
+     * @return Feed
+     */
+    public function setPlace(\App\Entity\Place $place)
+    {
+        $this->place = $place;
+
+        return $this;
+    }
+
+    /**
+     * Get place
+     *
+     * @return \App\Entity\Palce
+     */
+    public function getPlace()
+    {
+        return $this->place;
     }
 
     /**
