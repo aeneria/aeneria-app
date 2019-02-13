@@ -103,13 +103,6 @@ class EnedisFeedType extends AbstractType
     public static function enedisValidation($object, ExecutionContextInterface $context)
     {
         $data = $context->getRoot()->getData();
-
-        // $linkyFeed = new Feed();
-        // $param = [];
-        // foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $name => $label) {
-        //     $param[$name] = $data[strtolower($name)];
-        // }
-        // $linkyFeed->setParam($param);
         $linky = new Linky($data[0], NULL);
 
         if (!$linky->isAuth()) {
