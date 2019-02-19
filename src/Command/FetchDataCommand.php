@@ -62,7 +62,7 @@ class FetchDataCommand extends Command
             // For each feeds, we call the right method to fetch data.
             /** @var \App\Entity\Feed $feeds */
             foreach($feeds as $feed) {
-                $feed->fetchDataForDate($this->entityManager, $date, $force);
+                $feed->fetchDataFor($this->entityManager, $date, $force);
             }
         }
         // Else we update from last data to yesterday.
@@ -75,7 +75,7 @@ class FetchDataCommand extends Command
             // For each feeds, we call the right method to fetch data.
             /** @var \App\Entity\Feed $feeds */
             foreach($feeds as $feed) {
-                $feed->fetchDataToDate($this->entityManager, $date);
+                $feed->fetchDataUntilLastUpdateTo($this->entityManager, $date);
             }
         }
     }

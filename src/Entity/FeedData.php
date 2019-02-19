@@ -147,7 +147,7 @@ class FeedData
     {
         $isUpToDate = TRUE;
 
-        // Foreach frequency we check if we have a value for yesterday.
+        // Foreach frequency we check if we have a value for date.
         foreach ($frequencies as $frequency) {
             $criteria = [
                 'feedData' => $this,
@@ -161,7 +161,6 @@ class FeedData
             // A feed is up to date only if all its feedData are up to date.
             $isUpToDate = $isUpToDate && !empty($dataValue);
         }
-
         return $isUpToDate;
     }
 

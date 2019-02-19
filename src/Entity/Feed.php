@@ -269,14 +269,16 @@ class Feed
     /**
      * Fetch data from last data to $date.
      */
-    public function fetchDataToDate(EntityManager $entityManager, \DateTime $date): void
+    public function fetchDataUntilLastUpdateTo(EntityManager $entityManager, \DateTime $date): void
     {
         $lastUpToDate = $this->getLastUpToDate($entityManager);
         $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
         while($lastUpToDate <= $date) {
-            $this->getFeedObject($entityManager)->fetchData($lastUpToDate);
-            $lastUpToDate->add(new \DateInterval('P1D'));
+            if (!$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
+                $this->getFeedObject($entityManager)->fetchData($lastUpToDate);
+                $lastUpToDate->add(new \DateInterval('P1D'));
+            }
         }
     }
 
@@ -284,7 +286,7 @@ class Feed
      * Fetch data from last data for $date,
      * if $force is set to true, update data even if there are already ones.
      */
-    public function fetchDataForDate(EntityManager $entityManager, \DateTime $date, $force): void
+    public function fetchDataFor(EntityManager $entityManager, \DateTime $date, $force): void
     {
         if ($force || !$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
             $this->getFeedObject($entityManager)->fetchData($date);
