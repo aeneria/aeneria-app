@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\EntityManager;
+use App\Entity\Feed;
 use App\FeedObject\FeedObject;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Feed
@@ -112,7 +113,7 @@ class Feed
     private $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Place")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Place", inversedBy="feeds")
      * @ORM\JoinColumn(nullable=false)
      */
     private $place;
@@ -124,48 +125,31 @@ class Feed
      */
     private $catchedFeedObject = NULL;
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Feed
-     */
-    public function setName($name)
+    public function setId(int $id): Feed
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function setName(string $name): Feed
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set param
-     *
-     * @param array $param
-     *
-     * @return Feed
-     */
-    public function setParam($param)
+    public function setParam(array $param): Feed
     {
         $this->param = $param;
 
@@ -177,116 +161,63 @@ class Feed
      *
      * @return array
      */
-    public function getParam()
+    public function getParam(): array
     {
         return $this->param;
     }
 
-    /**
-     * Set public
-     *
-     * @param boolean $public
-     *
-     * @return Feed
-     */
-    public function setPublic($public)
+    public function setPublic(bool $public): Feed
     {
         $this->public = $public;
 
         return $this;
     }
 
-    /**
-     * Get public
-     *
-     * @return boolean
-     */
-    public function getPublic()
+    public function isPublic(): ?bool
     {
         return $this->public;
     }
 
-    /**
-     * Set creator
-     *
-     * @param integer $creator
-     *
-     * @return Feed
-     */
-    public function setCreator($creator)
+    public function setCreator(string $creator): Feed
     {
         $this->creator = $creator;
 
         return $this;
     }
 
-    /**
-     * Get creator
-     *
-     * @return integer
-     */
-    public function getCreator()
+    public function getCreator(): int
     {
         return $this->creator;
     }
 
-    /**
-     * Set feedType
-     *
-     * @param string $feedType
-     *
-     * @return Feed
-     */
-    public function setFeedType($feedType)
+    public function setFeedType(string $feedType): Feed
     {
         $this->feedType = $feedType;
 
         return $this;
     }
 
-    /**
-     * Get feedType
-     *
-     * @return string
-     */
-    public function getFeedType()
+    public function getFeedType(): string
     {
         return $this->feedType;
     }
 
-    /**
-     * Set place
-     *
-     * @param \App\Entity\Place $place
-     *
-     * @return Feed
-     */
-    public function setPlace(\App\Entity\Place $place)
+    public function setPlace(Place $place): Feed
     {
         $this->place = $place;
 
         return $this;
     }
 
-    /**
-     * Get place
-     *
-     * @return \App\Entity\Palce
-     */
-    public function getPlace()
+    public function getPlace(): Place
     {
         return $this->place;
     }
 
     /**
-     * Check if there's data in DB for $date forall $feed's feedData and for all $frequencies.
-     * @param EntityManager $entityManager
-     * @param \DateTime $date
-     * @param $frequencies array of int from DataValue frequencies
-     *
-     * @return bool
+     * Check if there's data in DB for $date for all $feed's feedData and for all $frequencies.
      */
-    public function isUpToDate(EntityManager $entityManager, \DateTime $date, array $frequencies)
+    public function isUpToDate(EntityManager $entityManager, \DateTime $date, array $frequencies): bool
     {
         // Get all feedData.
         $feedDataList = $entityManager->getRepository('App:FeedData')->findByFeed($this);
@@ -305,18 +236,13 @@ class Feed
 
     /**
      * Get Date of last up to date data.
-     * @param EntityManager $entityManager
-     * @param $frequencies array of int from DataValue frequencies
-     *
-     * @return NULL|\DateTime
      */
-    public function getLastUpToDate(EntityManager $entityManager)
+    public function getLastUpToDate(EntityManager $entityManager): ?\DateTime
     {
         // Get all feedData.
         $feedDataList = $entityManager->getRepository('App:FeedData')->findByFeed($this);
 
-        $lastUpToDate = new \DateTime();
-        $lastUpToDate->sub(new \DateInterval('P2D'));
+        $lastUpToDate = new \DateTime("2 days ago");
 
         // Foreach feedData we get the last up to date value.
         /** @var \App\Entity\FeedData $feedData */
@@ -331,10 +257,8 @@ class Feed
         return $lastUpToDate;
     }
 
-    /**
-     * @return \App\FeedObject\FeedObject
-     */
-    public function getFeedObject(EntityManager $entityManager) {
+    public function getFeedObject(EntityManager $entityManager): FeedObject
+    {
         if (empty($this->catchedFeedObject)) {
             $feedClass = Feed::FEED_TYPES[$this->feedType]['CLASS'];
             $this->catchedFeedObject = new $feedClass($this, $entityManager);
@@ -344,10 +268,9 @@ class Feed
 
     /**
      * Fetch data from last data to $date.
-     * @param \DateTime $date
-     * @param bool $force
      */
-    public function fetchDataToDate(EntityManager $entityManager, \DateTime $date) {
+    public function fetchDataToDate(EntityManager $entityManager, \DateTime $date): void
+    {
         $lastUpToDate = $this->getLastUpToDate($entityManager);
         $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
@@ -358,11 +281,11 @@ class Feed
     }
 
     /**
-     * Fetch data from last data for $date
-     * @param \DateTime $date
-     * @param bool $force
+     * Fetch data from last data for $date,
+     * if $force is set to true, update data even if there are already ones.
      */
-    public function fetchDataForDate(EntityManager $entityManager, \DateTime $date, $force) {
+    public function fetchDataForDate(EntityManager $entityManager, \DateTime $date, $force): void
+    {
         if ($force || !$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
             $this->getFeedObject($entityManager)->fetchData($date);
         }
@@ -371,7 +294,8 @@ class Feed
     /**
      * Create and persist Feed dependent FeedData according to it type.
      */
-    public function createDependentFeedData(EntityManager $entityManager) {
+    public function createDependentFeedData(EntityManager $entityManager): void
+    {
         $feedDataRepository = $entityManager
             ->getRepository('App:FeedData');
 

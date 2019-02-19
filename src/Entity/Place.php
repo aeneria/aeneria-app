@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * Pace
@@ -43,86 +44,76 @@ class Place
      */
     private $creator;
 
-
     /**
-     * Get id
-     *
-     * @return integer
+     * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="place")
      */
-    public function getId()
+    private $feeds;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Feed
-     */
-    public function setName($name)
+    public function setId(int $id): Place
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function setName(string $name): Place
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set public
-     *
-     * @param boolean $public
-     *
-     * @return Feed
-     */
-    public function setPublic($public)
+    public function setPublic(bool $public): Place
     {
         $this->public = $public;
 
         return $this;
     }
 
-    /**
-     * Get public
-     *
-     * @return boolean
-     */
-    public function getPublic()
+    public function isPublic(): ?bool
     {
         return $this->public;
     }
 
-    /**
-     * Set creator
-     *
-     * @param integer $creator
-     *
-     * @return Feed
-     */
-    public function setCreator($creator)
+    public function setCreator(int $creator): Place
     {
         $this->creator = $creator;
 
         return $this;
     }
 
-    /**
-     * Get creator
-     *
-     * @return integer
-     */
-    public function getCreator()
+    public function getCreator(): ?int
     {
         return $this->creator;
+    }
+
+    public function addFeed(Feed $feed)
+    {
+        $this->feeds[] = $feed;
+        $feed->setPlace($this);
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed)
+    {
+        $this->feeds->removeElement($feed);
+
+        return $this;
+    }
+
+    public function getFeeds(): iterable
+    {
+        return $this->feeds;
     }
 }

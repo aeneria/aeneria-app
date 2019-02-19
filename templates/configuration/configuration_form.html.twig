@@ -1,0 +1,40 @@
+{% from "configuration/linky_form.twig" import form as linkyForm %}
+{% from "configuration/meteo_france_form.twig" import form as meteoFranceForm %}
+
+<div class='card config-form'>
+  <div class="card-body">
+    <h1> {{ 'Configuration' | trans }} </h1>
+
+    {% if message %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {{ form_start(form_config) }}
+    {{ form_errors(form_config) }}
+
+    <h2><i class="fas fa-clipboard-check"></i> {{ 'Informations générales' | trans }}</h2>
+    <div class="form-group row">
+      <div class="col-sm-5 col-form-label">
+        {{ form_label(form_config.name) }}
+      </div>
+      <div class="col-sm-7">
+        {{ form_widget(form_config.name) }}
+        {{ form_errors(form_config.name) }}
+        {{ form_help(form_config.name) }}
+      </div>
+    </div>
+
+    <hr>
+
+    {{ linkyForm(form_config.linky) }}
+
+    <hr>
+
+    {{ meteoFranceForm(form_config.meteo_france)}}
+
+    {{ form_end(form_config) }}
+  </div>
+</div>
+

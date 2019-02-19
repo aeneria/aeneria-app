@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Feed;
-use App\Entity\FeedData;
-use App\Form\EnedisFeedType;
+use App\Form\PlaceType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,30 +15,31 @@ class ConfigurationController extends AbstractController
     public function configAction(Request $request)
     {
 
-        // We get the Linky Feed if it already exists.
-        /** @var \App\Entity\Feed $linky */
-        $linky = $this
+        // We get a Place if it already exists.
+        /** @var \App\Entity\Place $place */
+        $places = $this
             ->getDoctrine()
-            ->getRepository('App:Feed')
-            ->findOneByFeedType('LINKY');
+            ->getRepository('App:Place')
+            ->findAll()
+        ;
 
-        // We get the Linky Feed if it already exists.
-        /** @var \App\Entity\Feed $linky */
-        $meteoFrance = $this
-            ->getDoctrine()
-            ->getRepository('App:Feed')
-            ->findOneByFeedType('METEO_FRANCE');
+        if (count($places)) {
+            $place = $places[0];
+        }
+        else {
+            $place = null;
+        }
 
-        /** @var \Symfony\Component\Form\FormBuilder $linkyForm */
+        /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $configForm = $this
             ->get('form.factory')
-            ->createNamedBuilder('form_config', EnedisFeedType::class, [$linky, $meteoFrance])
+            ->createNamedBuilder('form_config', PlaceType::class, $place, ['data_class' => null])
             ->getForm();
 
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-                EnedisFeedType::handleSubmit($this->getDoctrine()->getManager(), [$linky, $meteoFrance], $configForm->getData());
+                PlaceType::handleSubmit($this->getDoctrine()->getManager(), $configForm->getData());
                 $message = 'Votre configuration a bien été enregistrée !';
             }
         }
