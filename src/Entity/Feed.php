@@ -277,8 +277,8 @@ class Feed
         while($lastUpToDate <= $date) {
             if (!$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
                 $this->getFeedObject($entityManager)->fetchData($lastUpToDate);
-                $lastUpToDate->add(new \DateInterval('P1D'));
             }
+            $lastUpToDate->add(new \DateInterval('P1D'));
         }
     }
 
