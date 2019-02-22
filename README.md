@@ -61,6 +61,13 @@ First of all:
 * You'll need a Linky (obviously) and a [Enedis account](https://espace-client-connexion.enedis.fr/auth/UI/Login?realm=particuliers)
 * Logged in your Enedis account, you have to activate option *Courbe de charge* in order to get your hourly consumption
 
+### Easy way - Using YunoHost
+
+* Get a [YunoHost](https://yunohost.org/) instance
+* Install Pilea with its [package](https://github.com/SimonMellerin/pilea_ynh)
+
+[![Install pilea with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=pilea)
+
 ### Hard way - Doing it all by hand
 
 **Requirements:**
@@ -79,13 +86,6 @@ First of all:
 
 Be aware that there's no security provided with this app for now, no login, no users, nothing.
 So if you install it on a server, set it accessible only on your local network.
-
-### Easy way - Using YunoHost
-
-* Get a [YunoHost](https://yunohost.org/) instance
-* Install Pilea with its [package](https://github.com/SimonMellerin/pilea_ynh)
-
-[![Install pilea with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=pilea)
 
 ## Todo
 
