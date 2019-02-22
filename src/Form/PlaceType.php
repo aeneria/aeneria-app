@@ -8,7 +8,6 @@ use App\Form\MeteoFranceFeedType;
 use App\Validator\Constraints\LogsToEnedis;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,17 +16,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class PlaceType extends AbstractType
 {
-    private $entityManager;
-
-    public function __construct(ObjectManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', HiddenType::class)
             ->add('name', TextType::class, [
                 'label' => 'Nom du compteur',
             ])
@@ -45,7 +36,7 @@ class PlaceType extends AbstractType
             ])
             ->addModelTransformer(new CallbackTransformer(
                 function (Place $place) {
-                    $data['id'] = $place->getId();
+                    $data['place'] = $place;
                     $data['name'] = $place->getName();
 
                     foreach ($place->getFeeds() as $feed) {
@@ -55,7 +46,7 @@ class PlaceType extends AbstractType
                     return $data;
                 },
                 function (array $data) {
-                    $place = $data['id'] ? $this->entityManager->getRepository('App:Place')->find($data['id']) : null;
+                    $place = $data['place'];
 
                     if (!$place) {
                         $place = new Place();

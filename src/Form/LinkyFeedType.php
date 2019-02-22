@@ -3,51 +3,42 @@
 namespace App\Form;
 
 use App\Entity\Feed;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class LinkyFeedType extends AbstractType
 {
-    private $entityManager;
-
-    public function __construct(ObjectManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', HiddenType::class)
             ->add('login', EmailType::class, [
                 'label' => 'Adresse email',
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'always_empty' => FALSE,
+                'required' => FALSE
             ])
         ;
 
         $builder->addModelTransformer(new CallbackTransformer(
             function (Feed $linkyFeed) {
-                $data['id'] = $linkyFeed->getId();
+                $data['feed'] = $linkyFeed;
                 $param = $linkyFeed->getParam();
 
                 $data['name'] = $linkyFeed->getName();
-                foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $paramName => $label) {
-                    $data[strtolower($paramName)] = $param[$paramName];
+                foreach (\array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $paramName) {
+                    $data[\strtolower($paramName)] = $param[$paramName];
                 }
 
                 return $data;
             },
             function (array $data) {
-                $linkyFeed = $data['id'] ? $this->entityManager->getRepository('App:Feed')->find($data['id']) : null;
+                $linkyFeed = $data['feed'];
 
                 if (!$linkyFeed) {
                     $linkyFeed = new Feed();
@@ -60,8 +51,8 @@ class LinkyFeedType extends AbstractType
                 }
 
                 $param = [];
-                foreach (Feed::FEED_TYPES['LINKY']['PARAM'] as $name => $label) {
-                    $param[$name] = $data[strtolower($name)];
+                foreach (array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $name) {
+                    $param[$name] = $data[\strtolower($name)] ?? $linkyFeed->getParam()[$name];
                 }
                 $linkyFeed->setParam($param);
 

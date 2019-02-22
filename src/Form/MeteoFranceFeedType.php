@@ -4,25 +4,14 @@ namespace App\Form;
 
 use App\Entity\Feed;
 use App\FeedObject\MeteoFrance;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Callback;
 
 class MeteoFranceFeedType extends AbstractType
 {
-    private $entityManager;
-
-    public function __construct(ObjectManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // Set MeteoStation parameter.
@@ -33,12 +22,11 @@ class MeteoFranceFeedType extends AbstractType
                 'label' => 'Station d\'observation',
                 'required' => TRUE,
             ])
-            ->add('id', HiddenType::class)
         ;
 
         $builder->addModelTransformer(new CallbackTransformer(
             function (Feed $meteoFranceFeed) {
-                $data['id'] = $meteoFranceFeed->getId();
+                $data['feed'] = $meteoFranceFeed;
 
                 $param = $meteoFranceFeed->getParam();
                 $data['station'] = (int)$param['STATION_ID'];
@@ -46,7 +34,7 @@ class MeteoFranceFeedType extends AbstractType
                 return $data;
             },
             function (array $data) use ($stations) {
-                $meteoFranceFeed = $data['id'] ? $this->entityManager->getRepository('App:Feed')->find($data['id']) : null;
+                $meteoFranceFeed = $data['feed'];
 
                 if (!$meteoFranceFeed) {
                     $meteoFranceFeed = new Feed();

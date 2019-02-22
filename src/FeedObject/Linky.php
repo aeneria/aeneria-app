@@ -73,7 +73,7 @@ class Linky implements FeedObject
     /**
      * Constructor.
      */
-    public function __construct(Feed $feed, EntityManager $entityManager)
+    public function __construct(Feed $feed, EntityManager $entityManager = null)
     {
         $this->feed = $feed;
         $feedParam = $feed->getParam();
