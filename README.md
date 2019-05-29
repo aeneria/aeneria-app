@@ -76,7 +76,7 @@ First of all:
   (PostgreSQL & SQLite should work but you'll have to adapt `.env` & `config/packages/doctrine.yaml`)
 
 **Installation:**
-* Get the repo
+* Get [the repo](https://github.com/SimonMellerin/Pilea)
 * Set Database name, user and password in `.env` file
 * Install [Composer](https://getcomposer.org/) dependencies: `composer install`
 * Run install script: `bin/console pilea:install`
