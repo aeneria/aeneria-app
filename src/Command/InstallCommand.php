@@ -8,10 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityManager;
 
 /***
  * Inspired by Wallabag install command.
@@ -281,15 +279,9 @@ class InstallCommand extends Command
             throw $exception;
         }
 
-        // custom verification for sqlite, since `getListDatabasesSQL` doesn't work for sqlite
+        // custom code for sqlite, since `getListDatabasesSQL` doesn't work for sqlite
         if ('sqlite' === $schemaManager->getDatabasePlatform()->getName()) {
-            $params = $this->entityManager->get('doctrine.dbal.default_connection')->getParams();
-
-            if (isset($params['path']) && file_exists($params['path'])) {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         try {
