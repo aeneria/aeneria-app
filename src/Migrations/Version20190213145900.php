@@ -32,7 +32,7 @@ final class Version20190213145900 extends AbstractMigration implements Container
             $place = new Place();
             $place->setName($address);
             $place->setPublic(true);
-            $place->setCreator('admin');
+            $place->setCreator(1);
 
             $linkyFeed->setPlace($place);
 
