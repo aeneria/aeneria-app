@@ -505,13 +505,15 @@ class MeteoFrance implements FeedObject {
     {
         $tempAvg = ($tempMax + $tempMin)/2;
         if (self::BASE_DJU > $tempMax) {
-          return self::BASE_DJU - $tempAvg;
+            return self::BASE_DJU - $tempAvg;
         }
         elseif (self::BASE_DJU <= $tempMin) {
-          return 0;
+            return 0;
         }
         else {
-          return (self::BASE_DJU - $tempMin) * (0.08 + 0.42 * (self::BASE_DJU - $tempMin) / ($tempMax - $tempMin));
+            // If $tempMin == $tempMax then we have 0.42 * infinite ≈ 0
+            $extra = $tempMax !== $tempMin ? 0.42 * (self::BASE_DJU - $tempMin) / ($tempMax - $tempMin) : 0;
+            return (self::BASE_DJU - $tempMin) * (0.08 + $extra);
         }
     }
 }
