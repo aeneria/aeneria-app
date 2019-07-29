@@ -163,7 +163,7 @@ class Feed
      */
     public function getParam(): array
     {
-        return $this->param;
+        return $this->param ?? [];
     }
 
     public function setPublic(bool $public): Feed

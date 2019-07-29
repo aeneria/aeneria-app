@@ -35,18 +35,20 @@ class PlaceType extends AbstractType
                 'label' => 'Enregistrer',
             ])
             ->addModelTransformer(new CallbackTransformer(
-                function (Place $place) {
-                    $data['place'] = $place;
-                    $data['name'] = $place->getName();
+                function (?Place $place) {
+                    if ($place) {
+                        $data['place'] = $place;
+                        $data['name'] = $place->getName();
 
-                    foreach ($place->getFeeds() as $feed) {
-                        $data[\strtolower($feed->getFeedType())] = $feed;
+                        foreach ($place->getFeeds() as $feed) {
+                            $data[\strtolower($feed->getFeedType())] = $feed;
+                        }
+
+                        return $data;
                     }
-
-                    return $data;
                 },
                 function (array $data) {
-                    $place = $data['place'];
+                    $place = $data['place'] ?? null;
 
                     if (!$place) {
                         $place = new Place();

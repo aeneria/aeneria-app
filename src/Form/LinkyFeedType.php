@@ -26,19 +26,21 @@ class LinkyFeedType extends AbstractType
         ;
 
         $builder->addModelTransformer(new CallbackTransformer(
-            function (Feed $linkyFeed) {
-                $data['feed'] = $linkyFeed;
-                $param = $linkyFeed->getParam();
+            function (?Feed $linkyFeed) {
+                if($linkyFeed) {
+                    $data['feed'] = $linkyFeed;
+                    $param = $linkyFeed->getParam();
 
-                $data['name'] = $linkyFeed->getName();
-                foreach (\array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $paramName) {
-                    $data[\strtolower($paramName)] = $param[$paramName];
+                    $data['name'] = $linkyFeed->getName();
+                    foreach (\array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $paramName) {
+                        $data[\strtolower($paramName)] = $param[$paramName];
+                    }
+
+                    return $data;
                 }
-
-                return $data;
             },
             function (array $data) {
-                $linkyFeed = $data['feed'];
+                $linkyFeed = $data['feed'] ?? null;
 
                 if (!$linkyFeed) {
                     $linkyFeed = new Feed();
@@ -52,7 +54,7 @@ class LinkyFeedType extends AbstractType
 
                 $param = [];
                 foreach (array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $name) {
-                    $param[$name] = $data[\strtolower($name)] ?? $linkyFeed->getParam()[$name];
+                    $param[$name] = $data[\strtolower($name)] ?? $linkyFeed->getParam()[$name] ?? null;
                 }
                 $linkyFeed->setParam($param);
 

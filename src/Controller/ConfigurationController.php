@@ -31,10 +31,10 @@ class ConfigurationController extends AbstractController
         }
 
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
-        $configForm = $this
-            ->get('form.factory')
-            ->createNamedBuilder('form_config', PlaceType::class, $place, ['data_class' => null])
-            ->getForm();
+        $configForm = $this->createForm(PlaceType::class, $place, [
+                'data_class' => null
+            ])
+        ;
 
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
@@ -46,7 +46,7 @@ class ConfigurationController extends AbstractController
 
         return $this->render('pages/configuration.html.twig', [
             'form_config' => $configForm->createView(),
-            'message' => !empty($message) ? $message : NULL,
+            'message' => $message ?? NULL,
         ]);
     }
 }
