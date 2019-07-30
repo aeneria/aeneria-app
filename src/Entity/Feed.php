@@ -246,9 +246,14 @@ class Feed
         // Foreach feedData we get the last up to date value.
         /** @var \App\Entity\FeedData $feedData */
         foreach ($feedDataList as $feedData) {
-            // A feed is up to date only if all its feedData are up to date.
+            // A feed is up to date only if one feedData is up to date.
+            // Well it could be that we will never have some feedData for a Feed. (in particular nebulosity from meteofrance)
+            // In this case, if we choose that a feed is up to date only if all its feedData
+            // are up to date, we will try to get this missing data over and over and flood the api
+            // of the feed AND that's not cool :( and we try to be cool people :)
+
             $feedDataLastUpToDate = $feedData->getLastUpToDate($entityManager);
-            $lastUpToDate = min($lastUpToDate, $feedDataLastUpToDate);
+            $lastUpToDate = max($lastUpToDate, $feedDataLastUpToDate);
         }
 
         $lastUpToDate->add(new \DateInterval('P1D'));
