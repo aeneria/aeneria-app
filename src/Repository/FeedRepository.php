@@ -2,6 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Feed;
+use App\Entity\FeedData;
+
 /**
  * FeedRepository
  *
@@ -10,4 +13,28 @@ namespace App\Repository;
  */
 class FeedRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Create and persist Feed dependent FeedData according to it type.
+     */
+    public function createDependentFeedData(Feed $feed): void
+    {
+        $entityManager = $this->getEntityManager();
+        $feedDataRepository = $entityManager->getRepository('App:FeedData');
+
+        // We check, for this feed, if each dataFeeds are already created,
+        // and create it if not.
+        foreach (\array_keys(Feed::FEED_TYPES[$feed->getFeedType()]['DATA_TYPE']) as $label) {
+            $feedData = $feedDataRepository->findOneBy([
+                'feed' =>  $feed,
+                'dataType' => $label
+            ]);
+
+            if (!$feedData) {
+                $feedData = new FeedData();
+                $feedData->setDataType($label);
+                $feedData->setFeed($feed);
+                $entityManager->persist($feedData);
+            }
+        }
+    }
 }

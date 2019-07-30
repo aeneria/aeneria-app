@@ -37,7 +37,6 @@ class MeteoFranceFeedType extends AbstractType
             },
             function (array $data) use ($stations) {
                 $meteoFranceFeed = $data['feed'] ?? null;
-
                 if (!$meteoFranceFeed) {
                     $meteoFranceFeed = new Feed();
                     $meteoFranceFeed

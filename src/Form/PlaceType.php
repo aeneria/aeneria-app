@@ -6,13 +6,13 @@ use App\Entity\Place;
 use App\Form\LinkyFeedType;
 use App\Form\MeteoFranceFeedType;
 use App\Validator\Constraints\LogsToEnedis;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class PlaceType extends AbstractType
 {
@@ -57,7 +57,6 @@ class PlaceType extends AbstractType
                             ->setCreator(0)
                         ;
                     }
-                    // $place->removeAllFeeds();
 
                     $place
                         ->setName($data['name'])
@@ -80,8 +79,11 @@ class PlaceType extends AbstractType
     {
         $entityManager->persist($place);
 
+        $feedRepository = $entityManager->getRepository('App:Feed');
+
         foreach ($place->getFeeds() as $feed) {
             $entityManager->persist($feed);
+            $feedRepository->createDependentFeedData($feed);
         }
 
         $entityManager->flush();
