@@ -144,7 +144,7 @@ class MeteoFrance implements FeedObject {
             /** @var \App\Entity\FeedData $feedData */
             foreach ($feedDataList as $feedData) {
                 $dataType = $feedData->getDataType();
-                if (!empty($fastenData[$dataType])) {
+                if ($fastenData[$dataType] !== NULL) {
                     $feedData->updateOrCreateValue(
                         $date,
                         DataValue::FREQUENCY['DAY'],
