@@ -1,0 +1,50 @@
+Configuration: Configuracion
+'A propos': 'A prepaus'
+Accueil: Acuèlh
+'Indicateurs généraux sur la consommation d''électricité': 'Indicators generals sus la consomacion d''electricitat'
+'Consommation d''électricité VS Météo': 'Consomacion d''electricitat VS Météo'
+'Indicateurs généraux sur la météo': 'Indicators generals de la metèo'
+"<p>\n              Développé avec l'aide de :\n            </p>\n            <ul>\n                <li>Côté back : PHP, MySQL, Symfony et son outillage</li>\n                <li>Côté front : Bootstrap, jQuery, D3.js, Pooper.js</li>\n                <li>Icones de :\n                  <a href=\"https://thenounproject.com/iconisland/\">Icon Island</a>, <a href=\"https://thenounproject.com/coquet_adrien\">Adrien Coquet</a>, <a href=\"https://thenounproject.com/grega.cresnar\">Gregor Cresnar</a>, <a href=\"https://thenounproject.com/creativestall/\"> Creative Stall</a>\n                </li>\n            </ul>": "<p>\n              Desvolopat amb l''ajuda de :\n            </p>\n            <ul>\n                <li>Costat back : PHP, MySQL, Symfony e sas aisinas</li>\n                <li>Costat front : Bootstrap, jQuery, D3.js, Pooper.js</li>\n                <li>Icònas de :\n                  <a href=\"https://thenounproject.com/iconisland/\">Icon Island</a>, <a href=\"https://thenounproject.com/coquet_adrien\">Adrien Coquet</a>, <a href=\"https://thenounproject.com/grega.cresnar\">Gregor Cresnar</a>, <a href=\"https://thenounproject.com/creativestall/\"> Creative Stall</a>\n                </li>\n            </ul>"
+'Compteur Linky': 'Comptador Linky'
+'Meteo France': 'Meteo France'
+Janvier: Genièr
+Février: Febrièr
+Mars: Març
+Avril: Abrial
+Mai: Mai
+Juin: Junh
+Juillet: Julhet
+Aout: Agost
+Septembre: Setembre
+Octobre: Octòbre
+Novembre: Novembre
+Décembre: Decembre
+'Afficher le mois précédent': 'Far veire lo mes precedent'
+'Analyse générale': 'Analisi generala'
+Électricité: Electricitat
+kWh: kWh
+'consommés sur la période': 'consumits sul periòde'
+'En moyenne sur la semaine': 'En mejana de la setmana'
+'Répartition sur la semaine': 'Reparticion sus la setmana'
+'Evolution de la consommation': 'Evolucion de la consomacion'
+'Analyse de la température': 'Analisi de la temperatura'
+'DJU & Conso': 'DJU & Conso'
+kWh/DJU: kWh/DJU
+'Evolution de la consommation & DJU': 'Evolucion de la consomacion & DJU'
+'Consommation VS DJU': 'Consomacion VS DJU'
+'Analyse de la météo': 'Analisis de la metèo'
+Température: Temperatura
+DJU: DJU
+'(degrés jour unifié)': '(gras jorn unificat)'
+Nébulosité: Nebulositat
+jours: jorns
+'sans nuages': 'sens nívols'
+Précipitations: Precipitacions
+'sans pluie': 'sens pluèja'
+Humidité: Umiditat
+'à moins de 70%': 'almens de 70%'
+Année: Annada
+Mois: Mes
+Semaine: Setmana
+Jour: Jorn
+'Analyser votre consommation d''électricité': 'Analizar vòstra consomacion d''electricitat'

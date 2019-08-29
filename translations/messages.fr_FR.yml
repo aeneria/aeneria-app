@@ -1,5 +1,5 @@
 Configuration: Configuration
-'A propos': 'A propos'
+'A propos': 'À propos'
 Accueil: Accueil
 'Indicateurs généraux sur la consommation d''électricité': 'Indicateurs généraux sur la consommation d''électricité'
 'Consommation d''électricité VS Météo': 'Consommation d''électricité VS Météo'
@@ -26,11 +26,11 @@ kWh: kWh
 'consommés sur la période': 'consommés sur la période'
 'En moyenne sur la semaine': 'En moyenne sur la semaine'
 'Répartition sur la semaine': 'Répartition sur la semaine'
-'Evolution de la consommation': 'Evolution de la consommation'
+'Evolution de la consommation': 'Évolution de la consommation'
 'Analyse de la température': 'Analyse de la température'
 'DJU & Conso': 'DJU & Conso'
 kWh/DJU: kWh/DJU
-'Evolution de la consommation & DJU': 'Evolution de la consommation & DJU'
+'Evolution de la consommation & DJU': 'Évolution de la consommation & DJU'
 'Consommation VS DJU': 'Consommation VS DJU'
 'Analyse de la météo': 'Analyse de la météo'
 Température: Température
