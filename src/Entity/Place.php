@@ -100,21 +100,14 @@ class Place
     public function addFeed(Feed $feed)
     {
         // If the feed we try to add is already there, we delete it
-        foreach( $this->feeds as $currentFeed) {
+        foreach( $this->feeds as $key => $currentFeed) {
             if ($currentFeed->getId() === $feed->getId()) {
-                $this->removeFeed($currentFeed);
+                unset($this->feeds[$key]);
             }
         }
 
         $this->feeds[] = $feed;
         $feed->setPlace($this);
-
-        return $this;
-    }
-
-    public function removeFeed(Feed $feed)
-    {
-        $this->feeds->removeElement($feed);
 
         return $this;
     }
