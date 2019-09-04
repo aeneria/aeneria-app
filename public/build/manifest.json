@@ -1,7 +1,7 @@
 {
-  "build/app.css": "./app.78d87a25.css",
-  "build/app.js": "./app.fd0bdfe4.js",
-  "build/runtime.js": "./runtime.8c9e4858.js",
+  "build/app.css": "./app.css",
+  "build/app.js": "./app.js",
+  "build/runtime.js": "./runtime.js",
   "build/fonts/Arvo-Regular.ttf": "./fonts/Arvo-Regular.31c017da.ttf",
   "build/fonts/Kingsmen_D.otf": "./fonts/Kingsmen_D.5144c290.otf",
   "build/fonts/code-new-roman.otf": "./fonts/code-new-roman.8c7880d8.otf",

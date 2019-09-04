@@ -6,23 +6,23 @@
     {{ selection | raw }}
     <div class="ml-auto">
         <a class="navbar-item" title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" >
-                <img src="{{ asset('image/icon/config.png') }}" height=20 alt="*" >
+                <img src="{{ asset('image/icon/config.png') }}" height=20 alt="{{ 'Configuration' | trans }}" >
         </a>
     </div>
 </nav>
 <nav class="nav sidebar desktop">
     <div class="nav flex-column">
         <a href="{{ path('homepage') }}" title="{{ 'Accueil' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'homepage' %}active{% endif %}">
-            <img src="{{ asset('image/icon/home.png') }}" alt="*">
+            <img src="{{ asset('image/icon/home.png') }}" alt="{{ 'Accueil' | trans }}">
         </a>
         <a href="{{ path('general') }}" title="{{ 'Consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
-            <img src="{{ asset('image/icon/electricity.png') }}" alt="*" >
+            <img src="{{ asset('image/icon/electricity.png') }}" alt="{{ 'Consommation d\'électricité' | trans }}" >
         </a>
         <a href="{{ path('meteo') }}" title="{{ 'Analyse de la météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
-            <img src="{{ asset('image/icon/meteo.png') }}" alt="*" >
+            <img src="{{ asset('image/icon/meteo.png') }}" alt="{{ 'Analyse de la météo' | trans }}" >
         </a>
         <a href="{{ path('energy_x_meteo') }}" title="{{ 'Analyse croisée Energie/Météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{% if app.request.attributes.get('_route') == 'energy_x_meteo' %}active{% endif %}">
-            <img src="{{ asset('image/icon/analyse.png') }}" alt="*" >
+            <img src="{{ asset('image/icon/analyse.png') }}" alt="{{ 'Analyse croisée Energie/Météo' | trans }}" >
         </a>
     </div>
 </nav>
