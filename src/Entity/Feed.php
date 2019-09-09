@@ -253,12 +253,20 @@ class Feed
             // of the feed AND that's not cool :( and we try to be cool people :)
 
             $feedDataLastUpToDate = $feedData->getLastUpToDate($entityManager);
+
+            if (empty($lastUpToDate)) {
+                $lastUpToDate = $feedDataLastUpToDate;
+            }
+
             $lastUpToDate = max($lastUpToDate, $feedDataLastUpToDate);
         }
 
-        $lastUpToDate->add(new \DateInterval('P1D'));
+        // If we have no data, we start with yesterday
+        if (empty($lastUpToDate)) {
+            $lastUpToDate = new \DateTime("2 days ago");
+        }
 
-        return $lastUpToDate;
+        return $lastUpToDate->add(new \DateInterval('P1D'));
     }
 
     public function getFeedObject(EntityManager $entityManager): FeedObject
