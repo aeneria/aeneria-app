@@ -129,7 +129,7 @@ class Linky implements FeedObject
 
         // Persist hours data.
         foreach (\end($this->data['hours']) as $hour => $value) {
-            if ($value) {
+            if ($value && (int)$value !== -1) {
                 $feedData->updateOrCreateValue(
                     new \DateTime($date->format("Y-m-d") . $hour . ':00'),
                     DataValue::FREQUENCY['HOUR'],
@@ -140,31 +140,34 @@ class Linky implements FeedObject
         }
 
         // Persist day data.
-        if (\end($this->data['days'])) {
+        $value = \end($this->data['days']);
+        if ($value && (int)$value !== -1) {
             $feedData->updateOrCreateValue(
                 $date,
                 DataValue::FREQUENCY['DAY'],
-                \end($this->data['days']),
+                $value,
                 $this->entityManager
             );
         }
 
         // Persist month data.
-        if (\end($this->data['months'])) {
+        $value = \end($this->data['months']);
+        if ($value && (int)$value !== -1) {
             $feedData->updateOrCreateValue(
                 $date,
                 DataValue::FREQUENCY['MONTH'],
-                \end($this->data['months']),
+                $value,
                 $this->entityManager
             );
         }
 
         // Persist year data.
-        if (\end($this->data['years'])) {
+        $value = \end($this->data['years']);
+        if ($value && (int)$value !== -1) {
             $feedData->updateOrCreateValue(
                 $date,
                 DataValue::FREQUENCY['YEAR'],
-                \end($this->data['years']),
+                $value,
                 $this->entityManager
             );
         }
