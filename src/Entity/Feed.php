@@ -241,8 +241,6 @@ class Feed
         // Get all feedData.
         $feedDataList = $entityManager->getRepository('App:FeedData')->findByFeed($this);
 
-        $lastUpToDate = new \DateTime("2 days ago");
-
         // Foreach feedData we get the last up to date value.
         /** @var \App\Entity\FeedData $feedData */
         foreach ($feedDataList as $feedData) {
