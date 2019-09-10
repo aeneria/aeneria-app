@@ -24,10 +24,12 @@ final class Version20190909180600 extends AbstractMigration implements Container
     {
         // Cean -1 values from FeedData from Enedis.
         $this->addSql('
-            DELETE FROM data_value
-            JOIN feed_data ON feed_data.id = data_value.feed_data_id
+            DELETE data_value.*
+            FROM data_value
+            JOIN feed_data
+                ON feed_data.id = data_value.feed_data_id
+                AND feed_data.data_type = "CONSO_ELEC"
             WHERE data_value.value = "-1"
-            AND feed_data.data_type LIKE "CONSO_ELEC"
         ');
     }
 
