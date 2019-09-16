@@ -176,8 +176,10 @@ class FeedData
         // Try to get the corresponding DataValue.
         $result = $entityManager
             ->getRepository('App:DataValue')
-            ->getLastValue($this, DataValue::FREQUENCY['DAY']);
-        if (!empty($result)) {
+            ->getLastValue($this, DataValue::FREQUENCY['DAY'])
+        ;
+
+        if (!empty($result[0]['date'])) {
             return new \DateTime($result[0]['date']);
         }
 
