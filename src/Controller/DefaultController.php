@@ -5,7 +5,6 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\DataValue;
 
 class DefaultController extends AbstractController
 {
@@ -14,11 +13,7 @@ class DefaultController extends AbstractController
      */
     public function homepageAction(Request $request)
     {
-        $linky = $this
-            ->getDoctrine()
-            ->getRepository('App:Feed')
-            ->findOneByFeedType('LINKY');
-        if (!$linky) {
+        if (!$this->getUser()->getPlaces()) {
             return $this->render('pages/welcome.html.twig', [
                 'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             ]);
@@ -34,6 +29,12 @@ class DefaultController extends AbstractController
      */
     public function electricityAction(Request $request)
     {
+        if (!$this->getUser()->getPlaces()) {
+            return $this->render('pages/welcome.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            ]);
+        }
+
         return $this->render('dashboards/electricity.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
@@ -44,6 +45,12 @@ class DefaultController extends AbstractController
      */
     public function energymeteoAction(Request $request)
     {
+        if (!$this->getUser()->getPlaces()) {
+            return $this->render('pages/welcome.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            ]);
+        }
+
         return $this->render('dashboards/energy_x_meteo.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
@@ -54,6 +61,12 @@ class DefaultController extends AbstractController
      */
     public function meteoAction(Request $request)
     {
+        if (!$this->getUser()->getPlaces()) {
+            return $this->render('pages/welcome.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            ]);
+        }
+
         return $this->render('dashboards/meteo.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
@@ -61,6 +74,12 @@ class DefaultController extends AbstractController
 
     public function periodAction()
     {
+        if (!$this->getUser()->getPlaces()) {
+            return $this->render('pages/welcome.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            ]);
+        }
+
         $period = $this
             ->getDoctrine()
             ->getRepository('App:DataValue')

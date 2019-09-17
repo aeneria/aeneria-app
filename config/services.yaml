@@ -26,3 +26,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    yunohost.ldap:
+        class: Symfony\Component\Ldap\Ldap
+        arguments: ['@yunohost.ldap.adapter']
+
+    yunohost.ldap.adapter:
+        class: Symfony\Component\Ldap\Adapter\ExtLdap\Adapter
+        arguments:
+            - host: "localhost"

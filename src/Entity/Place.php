@@ -38,11 +38,12 @@ class Place
     private $public;
 
     /**
-     * @var int
+     * @var User
      *
-     * @ORM\Column(name="creator", type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="places")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $creator;
+    private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="place")
@@ -85,16 +86,16 @@ class Place
         return $this->public;
     }
 
-    public function setCreator(int $creator): Place
+    public function setUser(User $user): Place
     {
-        $this->creator = $creator;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getCreator(): ?int
+    public function getUser(): User
     {
-        return $this->creator;
+        return $this->user;
     }
 
     public function addFeed(Feed $feed)
