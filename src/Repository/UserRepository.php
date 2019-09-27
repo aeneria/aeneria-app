@@ -19,32 +19,22 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function isLastAdmin(string $username)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        $users =  $this->createQueryBuilder('u')
+            ->where('u.username <> :username')
+            ->setParameter('username', $username)
+            ->andWhere('u.active = true')
             ->getQuery()
             ->getResult()
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        foreach ($users as $user) {
+            if (\in_array(User::ROLE_ADMIN, $user->getRoles())) {
+                return false;
+            }
+        }
+
+        return true;
     }
-    */
 }

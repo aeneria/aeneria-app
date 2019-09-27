@@ -14,7 +14,6 @@ class ConfigurationController extends AbstractController
      */
     public function configAction(Request $request)
     {
-
         // We get a Place if it already exists.
         /** @var \App\Entity\Place $place */
         $places = $this
@@ -40,13 +39,12 @@ class ConfigurationController extends AbstractController
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
                 PlaceType::handleSubmit($this->getDoctrine()->getManager(), $configForm->getData());
-                $message = 'Votre configuration a bien été enregistrée !';
+                $this->addFlash('success', 'Votre configuration a bien été enregistrée !');
             }
         }
 
         return $this->render('pages/configuration.html.twig', [
-            'form_config' => $configForm->createView(),
-            'message' => $message ?? NULL,
+            'form_config' => $configForm->createView()
         ]);
     }
 }

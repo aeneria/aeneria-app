@@ -7,7 +7,7 @@
     {% block stylesheets %}
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('image/icon/favicon.png') }}" />
-    <link rel="stylesheet" href="build/app.css">
+    <link rel="stylesheet" href="{{path('homepage')}}build/app.css">
 </head>
 <body>
 
@@ -15,6 +15,22 @@
     {% include "misc/navigation-mobile.html.twig" %}
 
     <main class="container-fluid" id='body'>
+
+        {% block flash_messages %}
+        <div class="container-fluid row">
+            <div class="col-12">
+            {% for label, messages in app.flashes %}
+            {% if label == 'error' %}{% set label = 'danger' %}{% endif %}
+            <div class="alert alert-{{ label }}">
+                {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endblock %}
+
         {% block body %}
         {% endblock %}
     </main>
@@ -24,8 +40,8 @@
     {{ render(controller(
         'App\\Controller\\DefaultController::periodAction'
     )) }}
-    <script src="build/runtime.js"></script>
-    <script src="build/app.js"></script>
+    <script src="{{path('homepage')}}build/runtime.js"></script>
+    <script src="{{path('homepage')}}build/app.js"></script>
     {% block javascripts %}
     {% endblock %}
 </body>

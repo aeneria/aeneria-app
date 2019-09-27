@@ -1,0 +1,52 @@
+{% extends 'pages/administration.html.twig' %}
+
+{% block title %}{{ parent() }}{{ 'Gestion des utilisateurs' | trans }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+  <div class="container-fluid users">
+    <div class='card'>
+      <div class="card-body">
+        <h1>{{ 'Liste des utilisateurs' | trans }}</h1>
+        <a href="{{ path('config_user_add') }}" class="btn btn-sm btn-success add-user">
+          <i class="fas fa-user-plus"></i>{{ 'Ajouter un utilisateur' | trans }}
+        </a>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Username</th>
+              <th scope="col">Adresses</th>
+              <th scope="col">Administrateur</th>
+              <th scope="col">Actif</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr scope="row">
+              <td>{{ user.id}}</td>
+              <td>{{ user.username}}</td>
+              <td>{{ user.places|length }}</td>
+              <td><i class="fas fa-{{ 'ROLE_ADMIN' in user.roles ? 'check-circle text-success' : 'times-circle text-danger'}}"></i></td>
+              <td><i class="fas fa-{{ user.active ? 'check-circle text-success' : 'times-circle text-danger'}}"></i></td>
+              <td>
+                <a href="{{ path('config_user_update',{id: user.id}) }}" class="btn btn-sm btn-primary">
+                  <i class="fas fa-user-edit"></i><span class="sr-only">{{ 'Mettre à jour' | trans }}</span>
+                </a>
+                <a href="{{ path('config_user_delete',{id: user.id}) }}" class="btn btn-sm btn-danger">
+                  <i class="fas fa-user-times"></i><span class="sr-only">{{ 'Supprimer' | trans }}</span>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}

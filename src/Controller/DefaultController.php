@@ -14,9 +14,7 @@ class DefaultController extends AbstractController
     public function homepageAction(Request $request)
     {
         if (!$this->getUser()->getPlaces()) {
-            return $this->render('pages/welcome.html.twig', [
-                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            ]);
+            $this->redirectToRoute('welcome');
         }
 
         return $this->render('dashboards/homepage.html.twig', [
@@ -30,9 +28,7 @@ class DefaultController extends AbstractController
     public function electricityAction(Request $request)
     {
         if (!$this->getUser()->getPlaces()) {
-            return $this->render('pages/welcome.html.twig', [
-                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            ]);
+            $this->redirectToRoute('welcome');
         }
 
         return $this->render('dashboards/electricity.html.twig', [
@@ -46,9 +42,7 @@ class DefaultController extends AbstractController
     public function energymeteoAction(Request $request)
     {
         if (!$this->getUser()->getPlaces()) {
-            return $this->render('pages/welcome.html.twig', [
-                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            ]);
+            $this->redirectToRoute('welcome');
         }
 
         return $this->render('dashboards/energy_x_meteo.html.twig', [
@@ -62,9 +56,7 @@ class DefaultController extends AbstractController
     public function meteoAction(Request $request)
     {
         if (!$this->getUser()->getPlaces()) {
-            return $this->render('pages/welcome.html.twig', [
-                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            ]);
+            $this->redirectToRoute('welcome');
         }
 
         return $this->render('dashboards/meteo.html.twig', [
@@ -74,12 +66,6 @@ class DefaultController extends AbstractController
 
     public function periodAction()
     {
-        if (!$this->getUser()->getPlaces()) {
-            return $this->render('pages/welcome.html.twig', [
-                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            ]);
-        }
-
         $period = $this
             ->getDoctrine()
             ->getRepository('App:DataValue')
@@ -87,6 +73,16 @@ class DefaultController extends AbstractController
 
         return $this->render('misc/period.html.twig', [
             'period' => $period[0],
+        ]);
+    }
+
+    /**
+     * @Route("/welcome", name="welcome")
+     */
+    public function welcomeAction(Request $request)
+    {
+        return $this->render('pages/welcome.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
 }

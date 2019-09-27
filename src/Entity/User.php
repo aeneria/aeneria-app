@@ -10,12 +10,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : true})
+     */
+    private $active;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -43,9 +50,21 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function setUsername(): self
+    public function setActive(bool $isActive)
     {
-        $this->username = $this->username;
+        $this->active = $isActive;
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setUsername($username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
