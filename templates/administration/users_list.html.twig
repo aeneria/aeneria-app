@@ -1,6 +1,6 @@
-{% extends 'pages/administration.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }}{{ 'Gestion des utilisateurs' | trans }}{% endblock %}
+{% block title %}{{ 'Gestion des utilisateurs' | trans }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -9,7 +9,7 @@
     <div class='card'>
       <div class="card-body">
         <h1>{{ 'Liste des utilisateurs' | trans }}</h1>
-        <a href="{{ path('config_user_add') }}" class="btn btn-sm btn-success add-user">
+        <a href="{{ path('admin.user.add') }}" class="btn btn-sm btn-success add-user">
           <i class="fas fa-user-plus"></i>{{ 'Ajouter un utilisateur' | trans }}
         </a>
         <table class="table table-striped table-hover">
@@ -32,10 +32,10 @@
               <td><i class="fas fa-{{ 'ROLE_ADMIN' in user.roles ? 'check-circle text-success' : 'times-circle text-danger'}}"></i></td>
               <td><i class="fas fa-{{ user.active ? 'check-circle text-success' : 'times-circle text-danger'}}"></i></td>
               <td>
-                <a href="{{ path('config_user_update',{id: user.id}) }}" class="btn btn-sm btn-primary">
+                <a href="{{ path('admin.user.update',{id: user.id}) }}" class="btn btn-sm btn-primary">
                   <i class="fas fa-user-edit"></i><span class="sr-only">{{ 'Mettre à jour' | trans }}</span>
                 </a>
-                <a href="{{ path('config_user_delete',{id: user.id}) }}" class="btn btn-sm btn-danger">
+                <a href="{{ path('admin.user.delete',{id: user.id}) }}" class="btn btn-sm btn-danger">
                   <i class="fas fa-user-times"></i><span class="sr-only">{{ 'Supprimer' | trans }}</span>
                 </a>
               </td>

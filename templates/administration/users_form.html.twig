@@ -1,6 +1,6 @@
-{% extends 'pages/administration.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }}{{ title | trans }}{% endblock %}
+{% block title %}{{ title | trans }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -36,6 +36,14 @@
         </div>
 
         {{ form_row(user_form.is_admin) }}
+        {{ form_row(user_form.is_active) }}
+
+        <div class="form-group row">
+          <div class="col">
+              <a class="btn btn-danger" href="{{path('admin.user.list')}}">{{ 'Annuler' | trans }}</a>
+          </div>
+          {{ form_row(user_form.save) }}
+        </div>
 
         {{ form_end(user_form) }}
       </div>

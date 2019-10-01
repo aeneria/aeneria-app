@@ -1,6 +1,6 @@
-{% extends 'pages/administration.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }}{{ title | trans }}{% endblock %}
+{% block title %}{{ title | trans }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -11,6 +11,9 @@
         <h1>{{ title | trans }}</h1>
 
         {{ form(form) }}
+
+        <a class="btn btn-primary" href="{{path('admin.user.list')}}">{{ 'Retour' | trans }}</a>
+
       </div>
     </div>
   </div>

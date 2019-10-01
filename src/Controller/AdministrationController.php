@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AdministrationController extends AbstractController
 {
     /**
-     * @Route("/admin/users", name="config_user_list")
+     * @Route("/admin/users", name="admin.user.list")
      */
     public function userListAction(UserRepository $userRepository)
     {
@@ -31,7 +31,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/add", name="config_user_add")
+     * @Route("/admin/users/add", name="admin.user.add")
      */
     public function addUserAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -48,7 +48,7 @@ class AdministrationController extends AbstractController
             if ($userForm->isValid()) {
                 UserType::handleSubmit($entityManager, $userForm->getData());
                 $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
-                return $this->redirectToRoute('config_user_list');
+                return $this->redirectToRoute('admin.user.list');
             }
         }
 
@@ -59,7 +59,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/update", name="config_user_update")
+     * @Route("/admin/users/{id}/update", name="admin.user.update")
      */
     public function updateUserAction(Request $request, EntityManagerInterface $entityManager, $id)
     {
@@ -85,18 +85,18 @@ class AdministrationController extends AbstractController
             if ($userForm->isValid()) {
                 UserType::handleSubmit($entityManager, $userForm->getData());
                 $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
-                return $this->redirectToRoute('config_user_list');
+                return $this->redirectToRoute('admin.user.list');
             }
         }
 
         return $this->render('administration/users_form.html.twig', [
-            'title' => 'Ajouter un utilisateur',
+            'title' => 'Mettre à jour un utilisateur',
             'user_form' => $userForm->createView()
         ]);
     }
 
     /**
-     * @Route("/admin/users/{id}/delete", name="config_user_delete")
+     * @Route("/admin/users/{id}/delete", name="admin.user.delete")
      */
     public function removeUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
     {
@@ -137,7 +137,7 @@ class AdministrationController extends AbstractController
                 $user->setActive(false);
                 $entityManager->flush();
                 $this->addFlash('success', 'L\'utilisateur a bien été désactivé !');
-                return $this->redirectToRoute('config_user_list');
+                return $this->redirectToRoute('admin.user.list');
             }
         }
 

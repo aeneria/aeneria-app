@@ -81,7 +81,7 @@ class DefaultController extends AbstractController
      */
     public function welcomeAction(Request $request)
     {
-        return $this->render('pages/welcome.html.twig', [
+        return $this->render('welcome.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
