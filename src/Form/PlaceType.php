@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Place;
+use App\Entity\User;
 use App\Form\LinkyFeedType;
 use App\Form\MeteoFranceFeedType;
 use App\Validator\Constraints\LogsToEnedis;
@@ -54,7 +55,6 @@ class PlaceType extends AbstractType
                         $place = new Place();
                         $place
                             ->setPublic(true)
-                            ->setCreator(0)
                         ;
                     }
 
@@ -75,8 +75,10 @@ class PlaceType extends AbstractType
 
     }
 
-    public function handleSubmit(ObjectManager $entityManager, Place $place)
+    public function handleSubmit(ObjectManager $entityManager, Place $place, User $user)
     {
+        $place->setUser($user);
+
         $entityManager->persist($place);
 
         $feedRepository = $entityManager->getRepository('App:Feed');

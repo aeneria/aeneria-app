@@ -38,7 +38,7 @@ class ConfigurationController extends AbstractController
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-                PlaceType::handleSubmit($this->getDoctrine()->getManager(), $configForm->getData());
+                PlaceType::handleSubmit($this->getDoctrine()->getManager(), $configForm->getData(), $this->getUser());
                 $this->addFlash('success', 'Votre configuration a bien été enregistrée !');
             }
         }

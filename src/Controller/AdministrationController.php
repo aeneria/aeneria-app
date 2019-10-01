@@ -35,6 +35,8 @@ class AdministrationController extends AbstractController
      */
     public function addUserAction(Request $request, EntityManagerInterface $entityManager)
     {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $userForm = $this->createForm(UserType::class, null, [
                 'data_class' => null,
@@ -61,6 +63,8 @@ class AdministrationController extends AbstractController
      */
     public function updateUserAction(Request $request, EntityManagerInterface $entityManager, $id)
     {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
         $user = $this
             ->getDoctrine()
             ->getRepository('App:User')
@@ -96,6 +100,8 @@ class AdministrationController extends AbstractController
      */
     public function removeUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
     {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
         $user = $this
             ->getDoctrine()
             ->getRepository('App:User')
