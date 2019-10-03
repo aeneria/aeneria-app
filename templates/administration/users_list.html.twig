@@ -32,11 +32,14 @@
               <td><i class="fas fa-{{ 'ROLE_ADMIN' in user.roles ? 'check-circle text-success' : 'times-circle text-danger'}}"></i></td>
               <td><i class="fas fa-{{ user.active ? 'check-circle text-success' : 'times-circle text-danger'}}"></i></td>
               <td>
-                <a href="{{ path('admin.user.update',{id: user.id}) }}" class="btn btn-sm btn-primary">
-                  <i class="fas fa-user-edit"></i><span class="sr-only">{{ 'Mettre à jour' | trans }}</span>
+                <a href="{{ path('admin.user.update',{id: user.id}) }}" class="btn btn-sm btn-primary" title="{{ 'Mettre à jour' | trans }}">
+                  <i class="fas fa-user-edit"></i>
                 </a>
-                <a href="{{ path('admin.user.delete',{id: user.id}) }}" class="btn btn-sm btn-danger">
-                  <i class="fas fa-user-times"></i><span class="sr-only">{{ 'Supprimer' | trans }}</span>
+                <a href="{{ path('admin.user.disable',{id: user.id}) }}" class="btn btn-sm btn-warning" title="{{ 'Activer/Désactiver' | trans }}">
+                  <i class="fas fa-user-slash"></i>
+                </a>
+                <a href="{{ path('admin.user.delete',{id: user.id}) }}" class="btn btn-sm btn-danger" title="{{ 'Supprimer' | trans }}">
+                  <i class="fas fa-user-times"></i>
                 </a>
               </td>
             </tr>

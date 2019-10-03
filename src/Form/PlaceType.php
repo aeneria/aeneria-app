@@ -60,8 +60,8 @@ class PlaceType extends AbstractType
 
                     $place
                         ->setName($data['name'])
-                        ->addFeed($data['linky'])
                         ->addFeed($data['meteo_france'])
+                        ->addFeed($data['linky'])
                     ;
 
                     return $place;

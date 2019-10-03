@@ -37,4 +37,28 @@ class FeedRepository extends \Doctrine\ORM\EntityRepository
             }
         }
     }
+
+    /**
+     * Remove ALL data (feedData and dataValue) for a feed and then feed itself
+     */
+    public function purge(Feed $feed)
+    {
+        $feedDataRepository = $this
+            ->getEntityManager()
+            ->getRepository('App:FeedData')
+        ;
+
+        foreach ($feedDataRepository->findByFeed($feed) as $feedData) {
+            $feedDataRepository->purge($feedData);
+        }
+
+        $this
+            ->createQueryBuilder('f')
+            ->delete()
+            ->where('f.id = :id')
+            ->setParameter('id', $feed->getId())
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }

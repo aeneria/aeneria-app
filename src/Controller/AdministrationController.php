@@ -96,9 +96,9 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/delete", name="admin.user.delete")
+     * @Route("/admin/users/{id}/disable", name="admin.user.disable")
      */
-    public function removeUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
+    public function disableUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
@@ -142,8 +142,61 @@ class AdministrationController extends AbstractController
         }
 
         return $this->render('administration/confirmation_form.html.twig', [
-        'title' => 'Désactiver un utilisateur',
-        'form' => $form->createView()
+            'title' => 'Désactiver un utilisateur',
+            'form' => $form->createView(),
+            'cancel' => 'admin.user.list'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/users/{id}/delete", name="admin.user.delete")
+     */
+    public function removeUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
+    {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        $user = $this
+            ->getDoctrine()
+            ->getRepository('App:User')
+            ->find($id)
+        ;
+
+        if (!$user) {
+            throw new NotFoundHttpException('Utilisateur non trouvé');
+        }
+
+        $form = $this
+            ->createFormBuilder()
+            ->add('username', Form\HiddenType::class, [
+                'data' => $user->getUsername(),
+                'constraints' => [
+                    new AtLeastOneAdmin(),
+                ],
+            ])
+            ->add('are_you_sure', Form\CheckboxType::class, [
+                'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer cet utilisateur",
+                'required' => true,
+            ])
+            ->add('submit', Form\SubmitType::class, [
+                'attr' => ['class' => 'btn btn-danger'],
+                'label' => "Supprimer l'utilisateur",
+            ])
+            ->getForm()
+            ->handleRequest($request)
+        ;
+
+        if('POST' === $request->getMethod()) {
+            if ($form->isValid()) {
+                $entityManager->getRepository('App:User')->purge($user);
+                $this->addFlash('success', 'L\'utilisateur a bien été supprimé !');
+                return $this->redirectToRoute('admin.user.list');
+            }
+        }
+
+        return $this->render('misc/confirmation_form.html.twig', [
+            'title' => 'Supprimer un utilisateur',
+            'form' => $form->createView(),
+            'cancel' => 'admin.user.list'
         ]);
     }
 }

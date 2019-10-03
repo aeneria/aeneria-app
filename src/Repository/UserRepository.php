@@ -37,4 +37,29 @@ class UserRepository extends ServiceEntityRepository
 
         return true;
     }
+
+    /**
+     * Remove ALL data (place, feed, feedData and dataValue) for a user and then user himself
+     */
+    public function purge(User $user)
+    {
+        $placeRepository = $this
+            ->getEntityManager()
+            ->getRepository('App:Place')
+        ;
+
+        foreach ($placeRepository->findByUser($user) as $place) {
+            $placeRepository->purge($place);
+
+        }
+
+        $this
+            ->createQueryBuilder('u')
+            ->delete()
+            ->where('u.id = :id')
+            ->setParameter('id', $user->getId())
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }

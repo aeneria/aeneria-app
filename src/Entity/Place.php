@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 
 /**
  * Pace
@@ -26,7 +24,7 @@ class Place
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=150, unique=true)
+     * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
 
@@ -48,7 +46,7 @@ class Place
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="place")
      */
-    private $feeds;
+    private $feeds = [];
 
     public function getId(): ?int
     {
@@ -102,7 +100,7 @@ class Place
     {
         // If the feed we try to add is already there, we delete it
         foreach( $this->feeds as $key => $currentFeed) {
-            if ($currentFeed->getId() === $feed->getId()) {
+            if ($currentFeed->getId() && $currentFeed->getId() === $feed->getId()) {
                 unset($this->feeds[$key]);
             }
         }

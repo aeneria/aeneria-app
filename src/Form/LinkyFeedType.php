@@ -47,8 +47,6 @@ class LinkyFeedType extends AbstractType
                     $linkyFeed
                         ->setFeedType('LINKY')
                         ->setName('linky')
-                        ->setPublic(true)
-                        ->setCreator(0)
                     ;
                 }
 

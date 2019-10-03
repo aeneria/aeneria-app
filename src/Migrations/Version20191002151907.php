@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190927153009 extends AbstractMigration
+final class Version20191002151907 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,15 @@ final class Version20190927153009 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user ADD active TINYINT(1) DEFAULT \'1\' NOT NULL');
+        $this->addSql('ALTER TABLE user ADD IF NOT EXISTS active TINYINT(1) DEFAULT \'1\' NOT NULL');
+
+        $this->addSql('DROP INDEX UNIQ_741D53CD5E237E06 ON place');
+
+        $this->addSql('ALTER TABLE feed DROP public, DROP creator');
+        $this->addSql('DROP INDEX IF EXISTS UNIQ_234044ABC49BC7E ON feed');
+        $this->addSql('DROP INDEX IF EXISTS UNIQ_234044AB5E237E06 ON feed');
+
+        $this->addSql('DROP INDEX IF EXISTS UNIQ_2D64183437919CCB ON feed_data');
     }
 
     public function down(Schema $schema) : void
