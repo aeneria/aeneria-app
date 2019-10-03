@@ -28,14 +28,8 @@ if (document.getElementById('homepage')) {
 
     document.getElementById('title-' + targetMonth).innerHTML = MONTHS_NAME[start.getMonth()] + ' ' + start.getFullYear();
 
-
-    var start = start.toLocaleDateString();
-    var end = end.toLocaleDateString();
-
-    var startArray = start.split('/');
-    var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
-    var endArray = end.split('/');
-    var endDate = endArray[2] + '-' + endArray[1] + '-' + endArray[0];
+    var startDate = start.toISOString().substring(0, 10);
+    var endDate = end.toISOString().substring(0, 10);
 
     // Refresh global conso repartition.
     $.ajax({
