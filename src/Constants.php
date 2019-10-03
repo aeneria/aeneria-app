@@ -8,7 +8,7 @@ class Constants {
      * Current version
      * @var \String
      */
-    public const VERSION = '0.3.14';
+    public const VERSION = '0.3.16';
 
     /**
      * Github repo URL
