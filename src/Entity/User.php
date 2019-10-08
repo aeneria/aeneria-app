@@ -134,4 +134,21 @@ class User implements UserInterface
     {
         return $this->places;
     }
+
+    public function canSee(Place $askedPlace): bool
+    {
+        $askedPlaceId = $askedPlace->getId();
+
+        foreach ($this->getPlaces() as $place) {
+            if ($askedPlaceId === $place->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function canEdit(Place $askedPlace): bool
+    {
+        return $this->canSee($askedPlace);
+    }
 }

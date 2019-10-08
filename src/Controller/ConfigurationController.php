@@ -3,12 +3,20 @@
 namespace App\Controller;
 
 use App\Form\PlaceType;
+use App\Repository\PlaceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class ConfigurationController extends AbstractController
 {
+    private $placeRepository;
+
+    public function __construct( PlaceRepository $placeRepository)
+    {
+        $this->placeRepository = $placeRepository;
+    }
+
     /**
      * @Route("/configuration", name="config")
      */
@@ -58,14 +66,7 @@ class ConfigurationController extends AbstractController
      */
     public function placeUpdateAction(Request $request, string $id)
     {
-        /** @var \App\Entity\Place $place */
-        $place = $this
-            ->getDoctrine()
-            ->getRepository('App:Place')
-            ->find($id)
-        ;
-
-        // @todo sécurité ici !
+        $place = $this->checkPlace($id);
 
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $configForm = $this->createForm(PlaceType::class, $place, [
@@ -93,14 +94,7 @@ class ConfigurationController extends AbstractController
      */
     public function placeDeleteAction(Request $request, string $id)
     {
-        /** @var \App\Entity\Place $place */
-        $place = $this
-            ->getDoctrine()
-            ->getRepository('App:Place')
-            ->find($id)
-        ;
-
-        // @todo sécurité ici !
+        $place = $this->checkPlace($id);
 
         // ça va un peu vite nan ?
         $place = $this
@@ -110,5 +104,18 @@ class ConfigurationController extends AbstractController
         ;
 
         return $this->redirectToRoute('config');
+    }
+
+    private function checkPlace(string $placeId): Place
+    {
+        if (!$place = $this->placeRepository->find($placeId)) {
+            throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
+        }
+
+        if (!$this->getUser()->canEdit($place)) {
+            throw new AccessDeniedException("Vous n'êtes pas authorisé à voir les données de cette adresse.");
+        }
+
+        return $place;
     }
 }

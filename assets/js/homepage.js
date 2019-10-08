@@ -5,9 +5,12 @@
  */
 
 if (document.getElementById('homepage')) {
+
   // Refresh all graph on the page base on start and end dates.
   var refreshIndexGraph = function (target) {
     var targetMonth = parseInt(target.getAttribute('data-month'));
+
+    var place = pileaCurrent.getPlace();
 
     var start = '';
     var end = '';
@@ -33,7 +36,7 @@ if (document.getElementById('homepage')) {
 
     // Refresh global conso repartition.
     $.ajax({
-      url: appRoute + 'data/conso_elec/repartition/year_v/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
@@ -43,7 +46,7 @@ if (document.getElementById('homepage')) {
 
     // Refresh conso total.
     $.ajax({
-      url: appRoute + 'data/conso_elec/sum/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/sum/conso_elec/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         if (data.length > 0) {
@@ -57,7 +60,7 @@ if (document.getElementById('homepage')) {
 
     // Refresh global temp repartition.
     $.ajax({
-      url: appRoute + 'data/temperature/repartition/year_v/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/repartition/temperature/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
@@ -67,7 +70,7 @@ if (document.getElementById('homepage')) {
 
     // Refresh DJU total.
     $.ajax({
-      url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/sum/dju/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         if (data.length > 0) {
@@ -109,6 +112,14 @@ if (document.getElementById('homepage')) {
     for (var j = 0; j < monthSummaries.length; j++) {
       refreshIndexGraph(monthSummaries[j]);
     }
+
+    document.addEventListener('selection', function() {
+      var monthSummaries = document.getElementsByClassName('month-summary');
+
+      for (var j = 0; j < monthSummaries.length; j++) {
+        refreshIndexGraph(monthSummaries[j]);
+      }
+    });
   });
 }
 

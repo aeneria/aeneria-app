@@ -3,10 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\DataValue;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Place;
+use App\Repository\DataValueRepository;
+use App\Repository\FeedDataRepository;
+use App\Repository\FeedRepository;
+use App\Repository\PlaceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class DataController extends AbstractController
@@ -15,10 +22,24 @@ class DataController extends AbstractController
     const YEAR_HORIZONTAL_REPARTITION = 'YEAR_H';
     const YEAR_VERTICAL_REPARTITION = 'YEAR_V';
 
+    private $placeRepository;
+    private $feedRepository;
+    private $feedDataRepository;
+    private $dataValueRepository;
+
+    public function __construct(PlaceRepository $placeRepository, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
+    {
+
+        $this->placeRepository = $placeRepository;
+        $this->feedRepository = $feedRepository;
+        $this->feedDataRepository = $feedDataRepository;
+        $this->dataValueRepository = $dataValueRepository;
+    }
+
     /**
      * Get json to build an heatmap graph between two date.
      *
-     * @Route("/data/{dataType}/repartition/{repartitionType}/{start}/{end}", name="data-api-repartition")
+     * @Route("/data/{placeId}/repartition/{dataType}/{repartitionType}/{start}/{end}", name="data-api-repartition")
      *
      * @param Request $request
      * @param string $dataType
@@ -29,8 +50,10 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getRepartionAction(Request $request, $dataType, $repartitionType, $start = NULL, $end = NULL, TranslatorInterface $translator)
+    public function getRepartionAction(string $placeId, string $dataType, string $repartitionType, string $start = NULL, string $end = NULL, TranslatorInterface $translator)
     {
+        $place = $this->checkPlace($placeId);
+
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
@@ -40,7 +63,7 @@ class DataController extends AbstractController
         list($axe, $axeX, $axeY, $frequency) = $this->buildRepartitionAxes($repartitionType, $start, $end, $translator);
 
         // Get values from Database.
-        $values = $this->getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType);
+        $values = $this->getRepartitionData($place, $start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType);
 
         // Build data object.
         $data = $this->buildRepartitionDataObject($axe, $values, $repartitionType);
@@ -57,7 +80,7 @@ class DataController extends AbstractController
     /**
      * Get json to build an evolution graph between two date.
      *
-     * @Route("/data/{dataType}/evolution/{frequency}/{start}/{end}", name="data-api-evolution")
+     * @Route("/data/{placeId}/evolution/{dataType}/{frequency}/{start}/{end}", name="data-api-evolution")
      *
      * @param Request $request
      * @param string $dataType
@@ -68,24 +91,19 @@ class DataController extends AbstractController
      * @param string $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getEvolutionAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getEvolutionAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
-        // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $result = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+        $result = $this->dataValueRepository->getValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $axe = $this->buildEvolutionAxes($frequency, $start, $end);
         $data = $this->buildEvolutionDataObject($result, $frequency, $axe);
@@ -97,7 +115,7 @@ class DataController extends AbstractController
     /**
      * Get json to build an sum of value graph group by a dataValue column between two date.
      *
-     * @Route("/data/{dataType}/sum-group/{frequency}/{groupBy}/{start}/{end}", name="data-api-sum-group-by")
+     * @Route("/data/{placeId}/sum-group/{dataType}/{frequency}/{groupBy}/{start}/{end}", name="data-api-sum-group-by")
      *
      * @param Request $request
      * @param string $dataType
@@ -110,24 +128,21 @@ class DataController extends AbstractController
      * @param string $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getSumGroupByAction(Request $request, $dataType, $frequency, $groupBy, $start = NULL, $end = NULL, TranslatorInterface $translator)
+    public function getSumGroupByAction(string $placeId, $dataType, $frequency, $groupBy, $start = NULL, $end = NULL, TranslatorInterface $translator)
     {
+        $place = $this->checkPlace($placeId);
+
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
+
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $result = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getSumValueGroupBy($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $groupBy);
+        $result = $this->dataValueRepository->getSumValueGroupBy($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $groupBy);
 
         $axe = (object)[
             'x' => [
@@ -158,7 +173,7 @@ class DataController extends AbstractController
     /**
      * Get sum between two date.
      *
-     * @Route("/data/{dataType}/sum/{start}/{end}", name="data-api-sum")
+     * @Route("/data/{placeId}/sum/{dataType}/{start}/{end}", name="data-api-sum")
      *
      * @param Request $request
      * @param string $dataType
@@ -169,23 +184,19 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getSumAction(Request $request, $dataType, $start = NULL, $end = NULL)
+    public function getSumAction(string $placeId, $dataType, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $dataType = strtoupper($dataType);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getSumValue($start, $end, $feedData, DataValue::FREQUENCY['DAY']);
+        $data = $this->dataValueRepository->getSumValue($start, $end, $feedData, DataValue::FREQUENCY['DAY']);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -194,7 +205,7 @@ class DataController extends AbstractController
     /**
      * Get average by <frequency> between two date.
      *
-     * @Route("/data/{dataType}/avg/{frequency}/{start}/{end}", name="data-api-average")
+     * @Route("/data/{placeId}/avg/{dataType}/{frequency}/{start}/{end}", name="data-api-average")
      *
      * @param Request $request
      * @param string $dataType
@@ -205,24 +216,20 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getAverageAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getAverageAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getAverageValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+        $data = $this->dataValueRepository->getAverageValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -231,7 +238,7 @@ class DataController extends AbstractController
     /**
      * Get max by <frequency> between two date.
      *
-     * @Route("/data/{dataType}/max/{frequency}/{start}/{end}", name="data-api-max")
+     * @Route("/data/{placeId}/max/{dataType}/{frequency}/{start}/{end}", name="data-api-max")
      *
      * @param Request $request
      * @param string $dataType
@@ -242,24 +249,20 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getMaxAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getMaxAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getMaxValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+        $data = $this->dataValueRepository->getMaxValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -268,7 +271,7 @@ class DataController extends AbstractController
     /**
      * Get minimum by <frequency> between two date.
      *
-     * @Route("/data/{dataType}/min/{frequency}/{start}/{end}", name="data-api-min")
+     * @Route("/data/{placeId}/min/{dataType}/{frequency}/{start}/{end}", name="data-api-min")
      *
      * @param Request $request
      * @param string $dataType
@@ -279,24 +282,20 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getMinAction(Request $request, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getMinAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getMinValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+        $data = $this->dataValueRepository->getMinValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -305,7 +304,7 @@ class DataController extends AbstractController
     /**
      * Get number of value by <frequency> between two date.
      *
-     * @Route("/data/{dataType}/inf/{value}/{frequency}/{start}/{end}", name="data-api-number")
+     * @Route("/data/{placeId}/inf/{dataType}/{value}/{frequency}/{start}/{end}", name="data-api-number")
      *
      * @param Request $request
      * @param string $dataType
@@ -316,24 +315,20 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getNumberInfAction(Request $request, $dataType, $value, $frequency, $start = NULL, $end = NULL)
+    public function getNumberInfAction(string $placeId, $dataType, $value, $frequency, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
         $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getNumberInfValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $value);
+        $data = $this->dataValueRepository->getNumberInfValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $value);
 
         $jsonData = json_encode($data);
         return new JsonResponse($jsonData, 200);
@@ -342,7 +337,7 @@ class DataController extends AbstractController
     /**
      * Get XY by <frequency> between two date.
      *
-     * @Route("/data/xy/{dataTypeX}/{dataTypeY}/{frequency}/{start}/{end}", name="data-api-xy")
+     * @Route("/data/{placeId}/xy/{dataTypeX}/{dataTypeY}/{frequency}/{start}/{end}", name="data-api-xy")
      *
      * @param Request $request
      * @param string $dataTypeX
@@ -355,8 +350,10 @@ class DataController extends AbstractController
      * @param \Datetime $end
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getXY(Request $request, $dataTypeX, $dataTypeY, $frequency, $start = NULL, $end = NULL)
+    public function getXY(string $placeId, $dataTypeX, $dataTypeY, $frequency, $start = NULL, $end = NULL)
     {
+        $place = $this->checkPlace($placeId);
+
         $dataTypeX = strtoupper($dataTypeX);
         $dataTypeY = strtoupper($dataTypeY);
         $frequency = strtoupper($frequency);
@@ -364,21 +361,11 @@ class DataController extends AbstractController
         $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
 
         // Find feedData with the good dataType.
-        $feedDataX = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataTypeX);
-
-        $feedDataY = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataTypeY);
+        $feedDataX = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataTypeX);
+        $feedDataY = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataTypeY);
 
         // Get data between $start & $end for requested frequency.
-        $results = $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getXY($start, $end, $feedDataX, $feedDataY, DataValue::FREQUENCY[$frequency]);
+        $results = $this->dataValueRepository->getXY($start, $end, $feedDataX, $feedDataY, DataValue::FREQUENCY[$frequency]);
 
         $data = (object)[
             'axeX' => [],
@@ -522,19 +509,13 @@ class DataController extends AbstractController
      * @param string $frequency
      * @param string $repartitionType
      */
-    private function getRepartitionData($start, $end, $dataType, $axeX, $axeY, $frequency, $repartitionType)
+    private function getRepartitionData(Place $place, \DateTime $start, \DateTime $end, string $dataType, string $axeX, string $axeY, string $frequency, string $repartitionType): array
     {
         // Find feedData with the good dataType.
-        $feedData = $this
-            ->getDoctrine()
-            ->getRepository('App:FeedData')
-            ->findOneByDataType($dataType);
+        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        return $this
-            ->getDoctrine()
-            ->getRepository('App:DataValue')
-            ->getRepartitionValue($start, $end, $feedData, $axeX, $axeY, $frequency, $repartitionType);
+        return $this->dataValueRepository->getRepartitionValue($start, $end, $feedData, $axeX, $axeY, $frequency, $repartitionType);
     }
 
     private function buildRepartitionDataObject($axe, $values, $repartitionType)
@@ -734,5 +715,18 @@ class DataController extends AbstractController
         }
 
         return $axe;
+    }
+
+    private function checkPlace(string $placeId): Place
+    {
+        if (!$place = $this->placeRepository->find($placeId)) {
+            throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
+        }
+
+        if (!$this->getUser()->canSee($place)) {
+            throw new AccessDeniedException("Vous n'êtes pas authorisé à voir les données de cette adresse.");
+        }
+
+        return $place;
     }
 }

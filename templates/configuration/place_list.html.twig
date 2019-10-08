@@ -25,7 +25,7 @@
       </div>
       <hr>
       {% else %}
-        <a href="{{path('config.place.add')}}">{{ 'Il n\'y a pas encore d\'adresse, clique ici pour en ajouter une' | trans }}</a>
+        <p>{{ 'Il n\'y a pas encore d\'adresse' | trans }}</p>
         <hr>
       {% endfor %}
 

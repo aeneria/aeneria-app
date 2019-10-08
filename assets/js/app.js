@@ -15,7 +15,8 @@ global.d3 = d3;
 require('./variables.js');
 
 // Handle Date & Granularity selections
-require('./selection.js');
+const pileaCurrent = require('./selection.js');
+global.pileaCurrent = pileaCurrent;
 
 // Load Pilea chart library.
 const pilea = require('./pilea_chart.js');

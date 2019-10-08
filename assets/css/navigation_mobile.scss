@@ -15,86 +15,56 @@
         background-color: $selection-bg-color;
         position: fixed;
         z-index: $zindex-sticky;
-        padding-bottom: 10px;
+        padding: 10px;
         box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
         width: 100%;
         justify-content: center;
 
-        .selection-form {
-            margin: 0 10px;
+        .col {
+            padding: 5px;
+        }
+
+        .selection-date {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+        }
 
+        .col-period {
             .start-input {
-                margin-left: 0;
-                &.fa-calendar-alt { order: 1; }
-                &.fa-filter {
-                    order: 5;
-                    margin-left: 5px;
+                height: 64px;
+                vertical-align: middle;
+                &:before {
+                    position: relative;
+                    top: 13px;
                 }
             }
 
             .input-daterange {
-                display: inline-flex;
-                order: 2;
-                span {
-                    position: relative;
-                    top: 5px;
-                    width: 5px;
-                }
-                .pilea-start-date {
-                    width: 110px;
-                    padding: 5px 4px;
-                }
-                .pilea-end-date {
-                    border-radius: 0 20px 20px 0 !important;
-                    width: 110px;
-                    padding: 5px 4px;
-                }
+                width: 130px;
+                display: flex;
+                flex-wrap: wrap;
             }
+
+            .pilea-inter-date {
+                display: none;
+            }
+
+            .pilea-select-period button {
+                height: 64px;
+                vertical-align: middle;
+            }
+
             .pilea-refresh {
-                order: 3;
-                border-radius: 20px;
-                margin-left: 5px;
-                margin-right: 0px;
-            }
-
-            > div, > span, > button {
-                margin-top: 10px;
-            }
-
-            .pilea-select-period {
-                order: 4;
-                margin-left: 5px;
-                margin-right: 0px;
-                > button {
-                    border-radius: 20px;
-                    background-color: $button-color;
-                    color: white;
-                    height: 32px;
-                    width: 66px;
-                    padding: .39rem .9rem;
-                    :before {
-                        content: '\f271';
-                        font-size: 1.2em;
-                        font-family: 'Font Awesome 5 Free';
-                        font-weight: 900;
-                    }
-                    &.dropdown-toggle:after {
-                        display: inline-block !important;
-                    }
-                }
-            }
-
-            .pilea-select-frequency {
-                order: 6;
+                height: 64px;
+                vertical-align: middle;
             }
         }
+
+
     }
 }
 
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(lg) {
     .mobile {
         display: none;
     }
