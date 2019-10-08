@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
