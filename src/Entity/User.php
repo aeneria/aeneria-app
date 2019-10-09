@@ -15,7 +15,7 @@ class User implements UserInterface
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
@@ -45,6 +45,11 @@ class User implements UserInterface
      */
     private $places;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Place", mappedBy="allowedUsers")
+     */
+    private $sharedPlaces;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,7 +67,7 @@ class User implements UserInterface
         return $this->active;
     }
 
-    public function setUsername($username): self
+    public function setUsername($username): User
     {
         $this->username = $username;
 
@@ -91,7 +96,7 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): User
     {
         $this->roles = $roles;
 
@@ -106,7 +111,7 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): User
     {
         $this->password = $password;
 
@@ -135,7 +140,50 @@ class User implements UserInterface
         return $this->places;
     }
 
+    public function getSharedPlaces(): iterable
+    {
+        return $this->sharedPlaces;
+    }
+
+    public function addSharedPlace(Place $place): User
+    {
+        $this->sharedPlaces[] = $place;
+
+        return $this;
+    }
+
+    /**
+     * Check if user can see place's data
+     *
+     * A user can see place's data if :
+     *  - Place is public
+     *  - he owns the place
+     *  - someone shared the place with him
+     */
     public function canSee(Place $askedPlace): bool
+    {
+        if ($askedPlace->isPublic()) {
+            return true;
+        }
+
+        $askedPlaceId = $askedPlace->getId();
+
+        foreach ($this->getPlaces() as $place) {
+            if ($askedPlaceId === $place->getId()) {
+                return true;
+            }
+        }
+
+        foreach ($this->getSharedPlaces() as $place) {
+            if ($askedPlaceId === $place->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canEdit(Place $askedPlace): bool
     {
         $askedPlaceId = $askedPlace->getId();
 
@@ -144,11 +192,7 @@ class User implements UserInterface
                 return true;
             }
         }
-        return false;
-    }
 
-    public function canEdit(Place $askedPlace): bool
-    {
-        return $this->canSee($askedPlace);
+        return false;
     }
 }

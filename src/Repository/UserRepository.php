@@ -62,4 +62,22 @@ class UserRepository extends ServiceEntityRepository
             ->execute()
         ;
     }
+
+    public function getUsersList(User $user = null)
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('u')
+            ->select('u.id, u.username as username')
+            ->orderBy('u.username', 'ASC')
+        ;
+
+        if ($user) {
+            $queryBuilder
+                ->andWhere('u.id <> :id')
+                ->setParameter('id', $user->getId())
+            ;
+        }
+
+        return array_column($queryBuilder->getQuery()->getResult() ?? [], "id", 'username');
+    }
 }

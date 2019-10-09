@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Place;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -35,12 +36,29 @@ class PlaceRepository extends ServiceEntityRepository
         }
 
         $this
-            ->createQueryBuilder('f')
+            ->createQueryBuilder('p')
             ->delete()
-            ->where('f.id = :id')
+            ->where('p.id = :id')
             ->setParameter('id', $place->getId())
             ->getQuery()
             ->execute()
+        ;
+    }
+
+    public function getAllowedPlaces(User $user)
+    {
+
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        return $queryBuilder
+            ->select()
+            ->orWhere('p.user = :user')
+            ->orWhere(':user MEMBER OF p.allowedUsers')
+            ->orWhere('p.public = true')
+            ->setParameter('user', $user)
+            ->orderBy('p.name', 'asc')
+            ->getQuery()
+            ->getResult()
         ;
     }
 }

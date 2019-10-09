@@ -14,18 +14,25 @@
     .badge-danger {
         display: none;
     }
+    .dropdown-toggle {
+        margin-left: 15px;
+    }
 }
 
 /* ABOUT ////////////////////////////////////////////////////////////////////*/
 
 .about {
     margin-top: 25px;
+    h2 {
+        margin-bottom: 20px;
+    }
     .fa-heart {
         color: crimson;
     }
     .about-list {
         list-style: none;
     }
+
 }
 
 /* WELCOME ////////////////////////////////////////////////////////////////////*/

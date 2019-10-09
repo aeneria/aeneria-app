@@ -140,7 +140,7 @@ class AdministrationController extends AbstractController
             }
         }
 
-        return $this->render('administration/confirmation_form.html.twig', [
+        return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Désactiver un utilisateur',
             'form' => $form->createView(),
             'cancel' => 'admin.user.list'
@@ -174,11 +174,12 @@ class AdministrationController extends AbstractController
             ])
             ->add('are_you_sure', Form\CheckboxType::class, [
                 'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer cet utilisateur",
+                'help' => "Attention, cette action entrainera la suppression de TOUTES les données associées à cet utilisateurs.",
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
                 'attr' => ['class' => 'btn btn-danger'],
-                'label' => "Supprimer l'utilisateur",
+                'label' => "Supprimer l'utilisateur et TOUTES ses données",
             ])
             ->getForm()
             ->handleRequest($request)

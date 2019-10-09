@@ -36,12 +36,16 @@ class Place
     private $public;
 
     /**
-     * @var User
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="places")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"})
+     */
+    private $allowedUsers;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="place")
@@ -96,7 +100,7 @@ class Place
         return $this->user;
     }
 
-    public function addFeed(Feed $feed)
+    public function addFeed(Feed $feed): Place
     {
         // If the feed we try to add is already there, we delete it
         foreach( $this->feeds as $key => $currentFeed) {
@@ -114,5 +118,17 @@ class Place
     public function getFeeds(): iterable
     {
         return $this->feeds;
+    }
+
+    public function getAllowedUsers(): iterable
+    {
+        return $this->allowedUsers;
+    }
+
+    public function setAllowedUsers(array $allowedUsers): Place
+    {
+        $this->allowedUsers = $allowedUsers;
+
+        return $this;
     }
 }
