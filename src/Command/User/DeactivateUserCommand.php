@@ -5,8 +5,8 @@ namespace App\Command\User;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -41,7 +41,7 @@ class DeactivateUserCommand extends Command
         $this
             ->setName('pilea:user:deactivate')
             ->setDescription('Deactivate an user.')
-            ->addArgument('username', null, InputOption::VALUE_REQUIRED, 'Username')
+            ->addArgument('username', InputArgument::REQUIRED, 'Username')
         ;
     }
 

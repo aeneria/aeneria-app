@@ -5,8 +5,8 @@ namespace App\Command\User;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 /***
@@ -36,8 +36,8 @@ class GrantUserCommand extends Command
     {
         $this
             ->setName('pilea:user:grant')
-            ->setDescription('Grant user as admin.')
-            ->addArgument('username', null, InputOption::VALUE_REQUIRED, 'Username')
+            ->setDescription('Grant user admin role.')
+            ->addArgument('username', InputArgument::REQUIRED, 'Username')
         ;
     }
 
