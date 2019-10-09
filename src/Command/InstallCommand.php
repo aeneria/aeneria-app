@@ -42,7 +42,7 @@ class InstallCommand extends Command
         $this
             ->setName('pilea:install')
             ->setDescription('Pilea installer.')
-            ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'User who will run pilea cron')
+            ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'Linux user who will run pilea cron')
             ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database');
     }
 

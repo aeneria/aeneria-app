@@ -12,7 +12,7 @@ I'm not a big fan of Linky and you can understand why on [Reporterre.net [fr]](h
 
 But, now we have this little sneaky guy in our home, well, let's use it.
 
-And I can say that dispite what Enedis says: `Linky is great opportunoity for users to understand their consumption and reduce it blablabla..`
+And I can say that dispite what Enedis says: `Linky is great opportunity for users to understand their consumption and reduce it blablabla..`
 
 They do nothing to help individuals to use their data in their own (and not just visualize it on their website or on their partner's one).
 There's no API (or maybe there's one but any documentation can't be found) to programmaticly get our own data.
@@ -25,8 +25,8 @@ A dashboard with several tabs :
 
 * Current consumption state
 * Electricity consumption graphics
-* DJU vs Electricity consumption
 * Meteo (T°, Nebulosity, Rain, Humidity)
+* Meteo vs Electricity consumption
 
 ### Current consumption state
 
@@ -71,7 +71,7 @@ First of all:
 ### Hard way - Doing it all by hand
 
 **Requirements:**
-* PHP 7.2 or higher
+* PHP 7.3 or higher
 * MySQL 5.5 or higher
   (PostgreSQL & SQLite should work but you'll have to adapt `.env` & `config/packages/doctrine.yaml`)
 
@@ -80,18 +80,14 @@ First of all:
 * Set Database name, user and password in `.env` file
 * Install [Composer](https://getcomposer.org/) dependencies: `composer install`
 * Run install script: `bin/console pilea:install`
+* Add a first user: `bin/console pilea:user:add username password`
+* Grant him admin role: `bin/console pilea:user:grant username`
 * Set up cron: `echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
   (replace *[user]* and *[app_floder]* with your config)
 * Config [NGINX](https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx) or [Apache](https://symfony.com/doc/current/setup/web_server_configuration.html) as you would do for any Symfony 4 application
 
-Be aware that there's no security provided with this app for now, no login, no users, nothing.
-So if you install it on a server, set it accessible only on your local network.
-
 ## Todo
 
-- [ ] Add DJU trentenaire (average DJU on last 30 years) for comparision
 - [ ] Add a *compare period* tab
-- [ ] Handle users
-- [ ] Be more responsive
-- [ ] Handle multi linkys feeds support
+- [ ] Add possibility to re-fetch a day data
 - [ ] Handle other kind of feeds for other energies (Generic CSV ?)
