@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title | trans }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+  <div class="container-fluid row justify-content-center align-items-center users">
+    <div class='card col-lg-6 col-md-8'>
+      <div class="card-body">
+        <h1>{{ title | trans }}</h1>
+
+        {{ form(form) }}
+
+        <a class="btn btn-primary" href="{{path(cancel)}}">{{ 'Retour' | trans }}</a>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}

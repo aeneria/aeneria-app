@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %} | Pilea</title>
+    {% block stylesheets %}
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('image/icon/favicon.png') }}" />
+    <link rel="stylesheet" href="{{path('homepage')}}build/app.css">
+</head>
+<body>
+
+    {% include "misc/navigation-desktop.html.twig" with {selection: block('selection')} %}
+    {% include "misc/navigation-mobile.html.twig" with {selection: block('selection')} %}
+
+    <main class="container-fluid" id='body'>
+
+        {% block flash_messages %}
+        <div class="container-fluid row">
+            <div class="col-12">
+            {% for label, messages in app.flashes %}
+            {% if label == 'error' %}{% set label = 'danger' %}{% endif %}
+            <div class="alert alert-{{ label }}">
+                {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endblock %}
+
+        {% block body %}
+        {% endblock %}
+    </main>
+    <script>
+        var appRoute = "{{ path('homepage')|escape('js') }}";
+        {% if (places) %}
+            var places = {{ places|json_encode|raw }};
+        {% endif %}
+        {% if (app.user) %}
+            var user = {{ app.user.id }};
+        {% endif %}
+    </script>
+
+    <script src="{{path('homepage')}}build/runtime.js"></script>
+    <script src="{{path('homepage')}}build/app.js"></script>
+    {% block javascripts %}
+    {% endblock %}
+</body>
+</html>

@@ -8,15 +8,16 @@ if (document.getElementById('meteo_tab')) {
   // Refresh all graph on the page base on start and end dates.
   var refreshMeteoGraph = function () {
 
-    var startArray = localStorage.startDate.split('/');
+    var place = pileaCurrent.getPlace();
+    var startArray = pileaCurrent.getStartDate().split('/');
     var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
-    var endArray = localStorage.endDate.split('/');
+    var endArray = pileaCurrent.getEndDate().split('/');
     var endDate = endArray[2] + '-' + endArray[1] + '-' + endArray[0];
-    var frequency = localStorage.frequency;
+    var frequency = pileaCurrent.getFrequency();
 
     // Refresh temperature repartition.
     $.ajax({
-      url: appRoute + 'data/temperature/repartition/year_v/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/repartition/temperature/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'temp-repartition', TEMP_COLOR, '°C', 1, -5, 25);
@@ -26,7 +27,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh dju evolution.
     $.ajax({
-      url: appRoute + 'data/dju/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/evolution/dju/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'temperature-evolution', DJU_COLOR[6], 'DJU', 0, 200);
@@ -35,7 +36,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh DJU total.
     $.ajax({
-      url: appRoute + 'data/dju/sum/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/sum/dju/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         document.getElementById('dju').innerHTML = parseFloat(data[0].value).toFixed(0);
@@ -44,7 +45,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh nebulosity repartition.
     $.ajax({
-      url: appRoute + 'data/nebulosity/repartition/year_v/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/repartition/nebulosity/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'neb-repartition', NEBULOSITY_COLOR, '%', 1, 0, 100);
@@ -54,7 +55,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh nebulosity evolution.
     $.ajax({
-      url: appRoute + 'data/nebulosity/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/evolution/nebulosity/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'nebulosity-evolution', NEBULOSITY_COLOR[6], '%', 1, 200);
@@ -63,7 +64,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh day without cloud.
     $.ajax({
-      url: appRoute + 'data/nebulosity/inf/15/day/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/inf/nebulosity/15/day/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         document.getElementById('neb-day').innerHTML = parseFloat(data[0].value).toFixed(0);
@@ -72,7 +73,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh rain repartition.
     $.ajax({
-      url: appRoute + 'data/rain/repartition/year_v/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/repartition/rain/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'rain-repartition', RAIN_COLOR, 'mm', 1, 0);
@@ -82,7 +83,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh rain evolution.
     $.ajax({
-      url: appRoute + 'data/rain/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/evolution/rain/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'rain-evolution', RAIN_COLOR[6], 'mm', 1, 200);
@@ -91,7 +92,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh day without rain.
     $.ajax({
-      url: appRoute + 'data/rain/inf/0/day/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/inf/rain/0/day/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         document.getElementById('rain-day').innerHTML = parseFloat(data[0].value).toFixed(0);
@@ -100,7 +101,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh humidity repartition.
     $.ajax({
-      url: appRoute + 'data/humidity/repartition/year_v/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/repartition/humidity/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'humidity-repartition', HUMIDITY_COLOR, '%', 1, 0, 100);
@@ -110,7 +111,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh nebulosity evolution.
     $.ajax({
-      url: appRoute + 'data/humidity/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/evolution/humidity/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'humidity-evolution', HUMIDITY_COLOR[6], '%', 1, 200);
@@ -119,7 +120,7 @@ if (document.getElementById('meteo_tab')) {
 
     // Refresh day at less than 70% of humidity.
     $.ajax({
-      url: appRoute + 'data/humidity/inf/70/day/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/inf/humidity/70/day/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         document.getElementById('humidity-day').innerHTML = parseFloat(data[0].value).toFixed(0);

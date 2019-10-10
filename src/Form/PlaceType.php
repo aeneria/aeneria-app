@@ -3,12 +3,16 @@
 namespace App\Form;
 
 use App\Entity\Place;
+use App\Entity\User;
 use App\Form\LinkyFeedType;
 use App\Form\MeteoFranceFeedType;
+use App\Repository\UserRepository;
 use App\Validator\Constraints\LogsToEnedis;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,11 +20,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlaceType extends AbstractType
 {
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom du compteur',
+            ])
+            ->add('public', CheckboxType::class, [
+                'label' => 'Compteur public',
+                'help' => 'Un compteur public est visible par tous les utilisateurs de Pilea.',
+                'required' => false
+            ])
+            ->add('shared', ChoiceType::class, [
+                'multiple' => true,
+                'label' => 'Partager le compteur avec :',
+                'choices' => $this->userRepository->getUsersList($options['user']),
+                'attr' => ['class' => 'bootstrap-multiselect'],
+                'required' => false,
             ])
             ->add('linky', LinkyFeedType::class, [
                 'label' => false,
@@ -40,6 +63,13 @@ class PlaceType extends AbstractType
                         $data['place'] = $place;
                         $data['name'] = $place->getName();
 
+                        $data['public'] = $place->isPublic();
+
+                        $data['shared'] = [];
+                        foreach ($place->getAllowedUsers() as $user) {
+                            $data['shared'][] = $user->getId();
+                        }
+
                         foreach ($place->getFeeds() as $feed) {
                             $data[\strtolower($feed->getFeedType())] = $feed;
                         }
@@ -52,16 +82,13 @@ class PlaceType extends AbstractType
 
                     if (!$place) {
                         $place = new Place();
-                        $place
-                            ->setPublic(true)
-                            ->setCreator(0)
-                        ;
                     }
-
                     $place
                         ->setName($data['name'])
-                        ->addFeed($data['linky'])
+                        ->setPublic($data['public'])
+                        ->setAllowedUsers($this->userRepository->findById($data['shared']))
                         ->addFeed($data['meteo_france'])
+                        ->addFeed($data['linky'])
                     ;
 
                     return $place;
@@ -72,11 +99,15 @@ class PlaceType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
+        $resolver->setDefaults([
+            'user' => null,
+        ]);
     }
 
-    public function handleSubmit(ObjectManager $entityManager, Place $place)
+    public function handleSubmit(EntityManagerInterface $entityManager, Place $place, User $user)
     {
+        $place->setUser($user);
+
         $entityManager->persist($place);
 
         $feedRepository = $entityManager->getRepository('App:Feed');

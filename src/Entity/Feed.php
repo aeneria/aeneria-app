@@ -79,14 +79,14 @@ class Feed
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=150, unique=true)
+     * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="feed_type", type="string", length=150, unique=true)
+     * @ORM\Column(name="feed_type", type="string", length=150)
      */
     private $feedType;
 
@@ -96,20 +96,6 @@ class Feed
      * @ORM\Column(name="param", type="json_array")
      */
     private $param;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="public", type="boolean")
-     */
-    private $public;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="creator", type="integer")
-     */
-    private $creator;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Place", inversedBy="feeds")

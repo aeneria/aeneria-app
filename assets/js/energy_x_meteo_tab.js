@@ -9,17 +9,18 @@ if (document.getElementById('dju_x_conso_tab')) {
 
     var colors = d3.schemeGnBu[9];
 
-    var startArray = localStorage.startDate.split('/');
+    var place = pileaCurrent.getPlace();
+    var startArray = pileaCurrent.getStartDate().split('/');
     var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
-    var endArray = localStorage.endDate.split('/');
+    var endArray = pileaCurrent.getEndDate().split('/');
     var endDate = endArray[2] + '-' + endArray[1] + '-' + endArray[0];
-    var frequency = localStorage.frequency;
-    var meteo = localStorage.meteo;
+    var frequency = pileaCurrent.getFrequency();
+    var meteo = pileaCurrent.getMeteo();
     var meteoUnit = $('.pilea-select-meteo').find('[data="' + meteo + '"]')[0].getAttribute('unit');
 
     // Refresh conso x dju.
     $.ajax({
-      url: appRoute + 'data/xy/' + meteo + '/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/xy/' + meteo + '/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayXY(data, 'conso-x-dju', '#6b4450', meteoUnit, 'kWh', 0, 1);
@@ -28,10 +29,10 @@ if (document.getElementById('dju_x_conso_tab')) {
 
     // Refresh conso vs dju.
     $.ajax({
-      url: appRoute + 'data/conso_elec/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+      url: appRoute + 'data/' + place + '/evolution/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function(result1) {
         $.ajax({
-          url: appRoute + 'data/' + meteo + '/evolution/' + frequency + '/' + startDate + '/' + endDate + '',
+          url: appRoute + 'data/' + place + '/evolution/' + meteo + '/' + frequency + '/' + startDate + '/' + endDate + '',
           success: function(result2) {
             var data1 = JSON.parse(result1);
             var data2 = JSON.parse(result2);

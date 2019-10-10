@@ -1,10 +1,22 @@
-{% extends "bases/base.html.twig" %}
+{% extends "base.html.twig" %}
 
 {% block title %}{% endblock %}
 
 {% block selection %}
   <div class="mx-auto">
-    {% include "misc/selection.html.twig" %}
+    <form class="form-inline selection-form">
+      <div class="row align-items-center justify-content-around">
+        <div class="col col-place">
+          {% include "selection/place.html.twig" %}
+        </div>
+        <div class="col col-period">
+          {% include "selection/period.html.twig" %}
+        </div>
+        <div class="col col-frequency">
+          {% include "selection/frequency.html.twig" %}
+        </div>
+      </div>
+    </form>
   </div>
 {% endblock %}
 

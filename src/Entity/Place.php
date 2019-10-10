@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 
 /**
  * Pace
@@ -26,7 +24,7 @@ class Place
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=150, unique=true)
+     * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
 
@@ -38,16 +36,21 @@ class Place
     private $public;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="creator", type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="places")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $creator;
+    private $user;
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"})
+     */
+    private $allowedUsers;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="place")
      */
-    private $feeds;
+    private $feeds = [];
 
     public function getId(): ?int
     {
@@ -85,23 +88,23 @@ class Place
         return $this->public;
     }
 
-    public function setCreator(int $creator): Place
+    public function setUser(User $user): Place
     {
-        $this->creator = $creator;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getCreator(): ?int
+    public function getUser(): User
     {
-        return $this->creator;
+        return $this->user;
     }
 
-    public function addFeed(Feed $feed)
+    public function addFeed(Feed $feed): Place
     {
         // If the feed we try to add is already there, we delete it
         foreach( $this->feeds as $key => $currentFeed) {
-            if ($currentFeed->getId() === $feed->getId()) {
+            if ($currentFeed->getId() && $currentFeed->getId() === $feed->getId()) {
                 unset($this->feeds[$key]);
             }
         }
@@ -115,5 +118,17 @@ class Place
     public function getFeeds(): iterable
     {
         return $this->feeds;
+    }
+
+    public function getAllowedUsers(): iterable
+    {
+        return $this->allowedUsers;
+    }
+
+    public function setAllowedUsers(array $allowedUsers): Place
+    {
+        $this->allowedUsers = $allowedUsers;
+
+        return $this;
     }
 }

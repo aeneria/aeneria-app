@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title | trans }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+  <div class="container-fluid row justify-content-center align-items-center users">
+    <div class='card col-lg-6 col-md-8'>
+      <div class="card-body">
+        <h1>{{ title | trans }}</h1>
+
+        {{ form_start(user_form) }}
+        {{ form_errors(user_form) }}
+
+        <div class="form-group row">
+          <div class="col-sm-5 col-form-label">
+            {{ form_label(user_form.username) }}
+          </div>
+          <div class="col-sm-7">
+            {{ form_widget(user_form.username) }}
+            {{ form_errors(user_form.username) }}
+            {{ form_help(user_form.username) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-5 col-form-label">
+            {{ form_label(user_form.password) }}
+          </div>
+          <div class="col-sm-7">
+            {{ form_widget(user_form.password) }}
+            {{ form_errors(user_form.password) }}
+            {{ form_help(user_form.password) }}
+          </div>
+        </div>
+
+        {{ form_row(user_form.is_admin) }}
+        {{ form_row(user_form.is_active) }}
+
+        <div class="form-group row">
+          <div class="col">
+              <a class="btn btn-danger" href="{{path('admin.user.list')}}">{{ 'Annuler' | trans }}</a>
+          </div>
+          {{ form_row(user_form.save) }}
+        </div>
+
+        {{ form_end(user_form) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}

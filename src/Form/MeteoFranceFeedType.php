@@ -42,8 +42,6 @@ class MeteoFranceFeedType extends AbstractType
                     $meteoFranceFeed
                         ->setFeedType('METEO_FRANCE')
                         ->setName('meteo')
-                        ->setPublic(true)
-                        ->setCreator(0)
                     ;
                 }
 

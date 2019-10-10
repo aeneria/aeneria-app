@@ -11,7 +11,7 @@
     </div>
 
     <div class="ml-auto">
-        <a data-toggle="collapse" data-target="#selection" type="button" aria-expanded="false" aria-controls="sideBar">
+        <a data-toggle="collapse" data-target="#mobile-selection" type="button" aria-expanded="false" aria-controls="sideBar">
             <i class="fas fa-filter nav-icon"></i>
         </a>
     </div>
@@ -38,6 +38,8 @@
     </nav>
 </div>
 
-<div class="collapse mobile selection" id="selection">
-    {% include "misc/selection.html.twig" %}
+<div class="collapse mobile selection" id="mobile-selection">
+    <div class="mx-auto">
+        {{ selection | raw }}
+    </div>
 </div>

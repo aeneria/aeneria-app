@@ -1,11 +1,20 @@
-{% extends "pages/dashboard.html.twig" %}
+{% extends "dashboards/dashboard.html.twig" %}
 
 {% block title %}{{ 'Accueil' | trans }}{% endblock %}
 
-{% block selection %}{% endblock %}
+{% block selection %}
+<div class="mx-auto">
+  <form class="form-inline selection-form">
+      <div class="row align-items-center justify-content-around">
+        <div class="col col-place">
+          {% include "selection/place.html.twig" %}
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
 
 {% block body %}
-
   {% import "dashboards/month_summary.html.twig" as month %}
 
   <div id="homepage" class="container-fluid">

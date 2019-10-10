@@ -1,0 +1,198 @@
+<?php
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ */
+class User implements UserInterface
+{
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(name="id", type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : true})
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Place", mappedBy="user")
+     */
+    private $places;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Place", mappedBy="allowedUsers")
+     */
+    private $sharedPlaces;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setActive(bool $isActive)
+    {
+        $this->active = $isActive;
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setUsername($username): User
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): User
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): User
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getPlaces(): iterable
+    {
+        return $this->places;
+    }
+
+    public function getSharedPlaces(): iterable
+    {
+        return $this->sharedPlaces;
+    }
+
+    public function addSharedPlace(Place $place): User
+    {
+        $this->sharedPlaces[] = $place;
+
+        return $this;
+    }
+
+    /**
+     * Check if user can see place's data
+     *
+     * A user can see place's data if :
+     *  - Place is public
+     *  - he owns the place
+     *  - someone shared the place with him
+     */
+    public function canSee(Place $askedPlace): bool
+    {
+        if ($askedPlace->isPublic()) {
+            return true;
+        }
+
+        $askedPlaceId = $askedPlace->getId();
+
+        foreach ($this->getPlaces() as $place) {
+            if ($askedPlaceId === $place->getId()) {
+                return true;
+            }
+        }
+
+        foreach ($this->getSharedPlaces() as $place) {
+            if ($askedPlaceId === $place->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canEdit(Place $askedPlace): bool
+    {
+        $askedPlaceId = $askedPlace->getId();
+
+        foreach ($this->getPlaces() as $place) {
+            if ($askedPlaceId === $place->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

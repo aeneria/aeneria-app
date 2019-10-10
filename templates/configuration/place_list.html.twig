@@ -1,0 +1,47 @@
+<div class='card about'>
+  <div class="card-body">
+    <h1 class="card-title">{{ 'Adresses' | trans }}</h1>
+    <div class="content">
+      {% for place in places %}
+      <h2>{{place.name}}</h2>
+      <ul class="about-list">
+        {% for feed in place.feeds %}
+        <li>
+          {% if feed.feedType == "LINKY" %}
+          <i class="fas fa-tachometer-alt"></i> {{ 'Compte Enedis' | trans }} : {{feed.param['LOGIN']}}</h>
+          {% elseif feed.feedType == "METEO_FRANCE" %}
+          <i class="fas fa-cloud-sun"></i> {{ 'Météo' | trans}} : {{feed.param['CITY']}}
+          {% endif %}
+        </li>
+        {% endfor %}
+        <li>
+          <i class="fas fa-unlock-alt"></i> {{ place.public ? 'L\'adresse est publique' | trans : 'L\'adresse est privée' | trans}}
+        </li>
+        <li>
+          {% set allowed = '' %}
+          {% for allowedUser in place.allowedUsers %}
+            {% set allowed = allowed ~ allowedUser.username ~ (loop.last ? '' : ', ')%}
+          {% endfor %}
+          <i class="fas fa-user-friends"></i> Partagée avec {{ allowed?: 'personne' | trans }}
+        </li>
+      </ul>
+      <div class="container-fluid">
+        <a class="btn btn-sm btn-primary" href="{{path('config.place.update', {id: place.id})}}" title="{{ 'Modifier' | trans }}">
+          <i class="fas fa-pen"></i>
+        </a>
+        <a class="btn btn-sm btn-danger" href="{{path('config.place.delete', {id: place.id})}}" title="{{ 'Supprimer' | trans }}">
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+      <hr>
+      {% else %}
+        <p>{{ 'Il n\'y a pas encore d\'adresse' | trans }}</p>
+        <hr>
+      {% endfor %}
+
+      <a class="btn btn-success" href="{{path('config.place.add')}}">
+        <i class="fas fa-plus-square"></i> {{ 'Ajouter une adresse' | trans }}
+      </a>
+    </div>
+  </div>
+</div>

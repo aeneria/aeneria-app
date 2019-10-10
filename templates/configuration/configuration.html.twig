@@ -1,4 +1,4 @@
-{% extends 'bases/base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ 'Configuration' | trans }}{% endblock %}
 
@@ -7,7 +7,10 @@
 {% block body %}
   <div class="container-fluid row">
     <div class="col-md-6">
-        {% include "configuration/configuration_form.html.twig" with {form_config: form_config, message: message} %}
+        {% include "configuration/place_list.html.twig" with places%}
+        {% if is_granted('ROLE_ADMIN') %}
+          {% include "configuration/administration.html.twig" with places%}
+        {% endif %}
     </div>
     <div class="col-md-6">
         {% include "configuration/about.html.twig" %}
