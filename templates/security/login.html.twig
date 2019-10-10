@@ -22,8 +22,8 @@
                     {% endif %}
 
                     <div class="form-group row">
-                        <label for="inputEmail" >{{ 'Email' | trans }}</label>
-                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+                        <label for="inputUsername" >{{ 'Identifiant' | trans }}</label>
+                        <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'Identifiant' | trans }}" required autofocus>
                     </div>
                     <div class="form-group row">
                         <label for="inputPassword" >{{ 'Mot de passe' | trans }}</label>
@@ -34,17 +34,11 @@
                         value="{{ csrf_token('authenticate') }}"
                     >
 
-                    {#
-                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html
-                    #}
-
                     <div class="checkbox mb-3">
                         <label>
                             <input type="checkbox" name="_remember_me"> Rester connecté
                         </label>
                     </div>
-
 
                     <button class="btn btn-lg btn-primary" type="submit">
                         Connexion

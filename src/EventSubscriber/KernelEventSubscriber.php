@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Entity\User;
 use App\Repository\DataValueRepository;
 use App\Repository\PlaceRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -49,8 +50,8 @@ final class KernelEventSubscriber implements EventSubscriberInterface
     public function onController(FilterControllerEvent $event)
     {
         if ($token = $this->tokenStorage->getToken()) {
-            if ($user = $token->getUser()) {
-                $places = [];
+            $places = [];
+            if (($user = $token->getUser()) instanceof User) {
                 if ($allowedPlaces = $this->placeRepository->getAllowedPlaces($user)) {
                     foreach ($allowedPlaces as $place) {
                         $period = $this->dataValueRepository->getPeriodDataAmplitude($place);
@@ -61,8 +62,8 @@ final class KernelEventSubscriber implements EventSubscriberInterface
                         ];
                     }
                 }
-                $this->twig->addGlobal('places', $places);
             }
+            $this->twig->addGlobal('places', $places);
         }
     }
 }
