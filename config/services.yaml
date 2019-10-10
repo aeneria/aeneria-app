@@ -19,12 +19,3 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
-    yunohost.ldap:
-        class: Symfony\Component\Ldap\Ldap
-        arguments: ['@yunohost.ldap.adapter']
-
-    yunohost.ldap.adapter:
-        class: Symfony\Component\Ldap\Adapter\ExtLdap\Adapter
-        arguments:
-            - host: "localhost"

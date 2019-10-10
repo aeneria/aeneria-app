@@ -20,10 +20,6 @@ security:
                 provider: app_user_provider
                 authenticators:
                     - App\Security\LoginFormAuthenticator
-            http_basic_ldap:
-                provider: app_user_provider
-                service: yunohost.ldap
-                dn_string: "uid={username},ou=users,dc=yunohost,dc=org"
             logout:
                 path: app_logout
                 target: app_login
