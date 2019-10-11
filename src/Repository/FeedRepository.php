@@ -76,7 +76,7 @@ class FeedRepository extends ServiceEntityRepository
             ->select()
             ->innerJoin('f.place', 'p')
             ->innerJoin('p.user', 'u')
-            ->where('u.active')
+            ->where('u.active = 1')
             ->getQuery()
             ->getResult()
         ;
