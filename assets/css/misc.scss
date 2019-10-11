@@ -17,6 +17,25 @@
     .dropdown-toggle {
         margin-left: 15px;
     }
+    .bootstrap-multiselect-fa + div {
+        font-family: "Font Awesome 5 Free";
+        label, span {
+            font-weight: 900;
+            font-size: 1.60rem;
+            color: #000000;
+        }
+        ul.show {
+            display: flex;
+            flex-wrap: wrap;
+            width: 400px;
+            input {
+                -webkit-appearance: none;
+            }
+            label {
+                padding: 3px 20px 3px 20px;
+            }
+        }
+    }
 }
 
 /* ABOUT ////////////////////////////////////////////////////////////////////*/

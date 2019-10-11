@@ -29,6 +29,13 @@ class Place
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="icon", type="string", length=10)
+     */
+    private $icon;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="public", type="boolean")
@@ -74,6 +81,18 @@ class Place
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setIcon(string $icon): Place
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon;
     }
 
     public function setPublic(bool $public): Place

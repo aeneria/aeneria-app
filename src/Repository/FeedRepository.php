@@ -68,4 +68,17 @@ class FeedRepository extends ServiceEntityRepository
             ->execute()
         ;
     }
+
+    public function findAllActive()
+    {
+        return $this
+            ->createQueryBuilder('f')
+            ->select()
+            ->innerJoin('f.place', 'p')
+            ->innerJoin('p.user', 'u')
+            ->where('u.active')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

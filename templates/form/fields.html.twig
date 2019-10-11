@@ -1,0 +1,26 @@
+ {%- block choice_widget_options -%}
+ {% for group_label, choice in options %}
+     {%- if choice is iterable -%}
+         <optgroup label="{{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}">
+             {% set options = choice %}
+             {{- block('choice_widget_options') -}}
+         </optgroup>
+     {%- else -%}
+
+         {# this line has been overwritten, see {{- block('choice_option_label') -}} to end #}
+         <option value="{{ choice.value }}"{% if choice.attr %} {% set attr = choice.attr %}{{ block('attributes') }}{% endif %}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{- block('choice_option_label') -}}</option>
+
+     {%- endif -%}
+ {% endfor %}
+{%- endblock choice_widget_options -%}
+
+{%- block choice_option_label -%}
+ {# this block has been called from choice_widget_options block #}
+
+ {%- if raw_label|default(false) -%}
+     {# the label is rendered as raw when IconChoiceType is used #}
+     {{ choice_translation_domain is same as(false) ? choice.label|raw : choice.label|trans({}, choice_translation_domain)|raw }}
+ {%- else -%}
+     {{ choice_translation_domain is same as(false) ? choice.label : choice.label|trans({}, choice_translation_domain) }}
+ {%- endif -%}
+{%- endblock -%}

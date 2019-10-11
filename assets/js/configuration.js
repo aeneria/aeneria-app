@@ -21,4 +21,5 @@ $(document).ready(function() {
       }
     }
   });
+  $('.bootstrap-multiselect-fa').multiselect({  });
 });

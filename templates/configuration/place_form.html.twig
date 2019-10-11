@@ -16,6 +16,9 @@
       {{ form_errors(form_config) }}
 
       <h2><i class="fas fa-clipboard-check"></i> {{ 'Informations générales' | trans }}</h2>
+
+      {{ form_row(form_config.icon) }}
+
       <div class="form-group row">
         <div class="col-sm-5 col-form-label">
           {{ form_label(form_config.name) }}

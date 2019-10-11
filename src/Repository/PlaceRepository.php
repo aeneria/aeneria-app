@@ -47,10 +47,8 @@ class PlaceRepository extends ServiceEntityRepository
 
     public function getAllowedPlaces(User $user)
     {
-
-        $queryBuilder = $this->createQueryBuilder('p');
-
-        return $queryBuilder
+        return $this
+            ->createQueryBuilder('p')
             ->select()
             ->orWhere('p.user = :user')
             ->orWhere(':user MEMBER OF p.allowedUsers')

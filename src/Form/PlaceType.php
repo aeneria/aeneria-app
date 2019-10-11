@@ -33,6 +33,9 @@ class PlaceType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom du compteur',
             ])
+            ->add('icon', IconChoiceType::class, [
+                'label' => 'Icone'
+            ])
             ->add('public', CheckboxType::class, [
                 'label' => 'Compteur public',
                 'help' => 'Un compteur public est visible par tous les utilisateurs de Pilea.',
@@ -62,6 +65,7 @@ class PlaceType extends AbstractType
                     if ($place) {
                         $data['place'] = $place;
                         $data['name'] = $place->getName();
+                        $data['icon'] = $place->getIcon();
 
                         $data['public'] = $place->isPublic();
 
@@ -85,6 +89,7 @@ class PlaceType extends AbstractType
                     }
                     $place
                         ->setName($data['name'])
+                        ->setIcon($data['icon'])
                         ->setPublic($data['public'])
                         ->setAllowedUsers($this->userRepository->findById($data['shared']))
                         ->addFeed($data['meteo_france'])

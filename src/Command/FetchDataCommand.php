@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Object\Linky;
 use App\Entity\DataValue;
 use App\Object\MeteoFrance;
+use App\Repository\FeedRepository;
 
 /**
  * Defined command to refresh all feeds
@@ -20,10 +21,12 @@ use App\Object\MeteoFrance;
 class FetchDataCommand extends Command
 {
     private $entityManager;
+    private $feedRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, FeedRepository $feedRepository)
     {
         $this->entityManager = $entityManager;
+        $this->feedRepository = $feedRepository;
         parent::__construct();
     }
 
@@ -54,7 +57,7 @@ class FetchDataCommand extends Command
         $force = filter_var($input->getArgument('force'), FILTER_VALIDATE_BOOLEAN);
 
         // We fetch all Feeds data.
-        $feeds = $this->entityManager->getRepository('App:Feed')->findAll();
+        $feeds = $this->feedRepository->findAllActive();
 
         // If a date is given, we update only for this date.
         if($date=$input->getArgument('date')) {

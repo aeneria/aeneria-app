@@ -22,6 +22,11 @@
         var button = $(element).children('button');
         var placeLabel = places[place].name;
         button[0].innerHTML = placeLabel;
+
+        var span = $(element).prev();
+        var placeClass = 'fas fa-' + places[place].icon + ' start-input';
+        span[0].classList = placeClass;
+
       });
 
       initPeriod(place);

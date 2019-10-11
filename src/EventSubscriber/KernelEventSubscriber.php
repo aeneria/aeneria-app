@@ -57,6 +57,7 @@ final class KernelEventSubscriber implements EventSubscriberInterface
                         $period = $this->dataValueRepository->getPeriodDataAmplitude($place);
                         $places[$place->getId()] = [
                             'name' => $place->getName(),
+                            'icon' => $place->getIcon(),
                             'start' => $period[1],
                             'end' => $period[2],
                         ];
