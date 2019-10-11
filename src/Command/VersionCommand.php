@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\Constants;
 
 /***
- * Inspired by Wallabag install command.
+ * Get current version of pilea.
  */
 class VersionCommand extends Command
 {
