@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Derniers logs' | trans }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+  <div class="container-fluid users">
+    <div class='card'>
+      <div class="card-body">
+        <h1>{{ 'Derniers logs' | trans }}</h1>
+        <figure class="highlight">
+          <pre>
+            <code>
+              {{log}}
+            </code>
+          </pre>
+        </figure>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}

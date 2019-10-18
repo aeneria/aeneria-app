@@ -9,6 +9,7 @@ use App\Validator\Constraints\AtLeastOneAdmin;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -196,6 +197,34 @@ class AdministrationController extends AbstractController
         return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Supprimer un utilisateur',
             'form' => $form->createView(),
+            'cancel' => 'admin.user.list'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/log", name="admin.log")
+     */
+    public function displayLog(ContainerInterface $container)
+    {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        $logDir = $container->get('kernel')->getLogDir();
+
+        $latestCTime = 0;
+        $latestLogfile = '';
+        if ($dirHandle = \dir($logDir )) {
+            while (($entry = $dirHandle->read()) !== false) {
+                $filepath = "{$logDir}/{$entry}";
+                if (is_file($filepath) && filectime($filepath) > $latestCTime) {
+                    $latestCTime = filectime($filepath);
+                    $latestLogfile = $entry;
+                }
+            }
+        }
+
+        return $this->render('administration/log.html.twig', [
+            'title' => 'Supprimer un utilisateur',
+            'log' => \file_get_contents("{$logDir}/{$latestLogfile}") ?? false,
             'cancel' => 'admin.user.list'
         ]);
     }
