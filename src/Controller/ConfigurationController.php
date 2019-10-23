@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Feed;
 use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type as Form;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class ConfigurationController extends AbstractController
@@ -113,9 +116,9 @@ class ConfigurationController extends AbstractController
 
         if('POST' === $request->getMethod()) {
             if ($form->isValid()) {
-                // ça va un peu vite nan ?
                 $place = $this->placeRepository->purge($place);
                 $this->addFlash('success', 'L\'adresse a bien été supprimée !');
+
                 return $this->redirectToRoute('config');
             }
         }
@@ -123,6 +126,63 @@ class ConfigurationController extends AbstractController
         return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Supprimer une adresse',
             'form' => $form->createView(),
+            'cancel' => 'config'
+        ]);
+    }
+
+    /**
+     * @Route("/configuration/place/{id}/fetch", name="config.place.fetch")
+     */
+    public function placeFetchAction(Request $request, EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, string $id)
+    {
+        $place = $this->checkPlace($id);
+
+        $forms = [];
+        $feeds = [];
+
+        foreach ($place->getFeeds() as $feed) {
+            $feeds[$feed->getId()] = $feed;
+            $forms[$feed->getId()] = $formFactory
+                ->createNamedBuilder($feed->getId())
+                ->add('wanted_date', Form\TextType::class, [
+                    'label' => "Date",
+                    'help' => $feed->getFeedType() === 'METEO_FRANCE' ? "Attention, les données météorologiques ne sont plus accessibles après 2 semaines." : '',
+                    'attr' => ['class' => 'simple-datepicker'],
+                    'required' => true,
+                ])
+                ->add('submit', Form\SubmitType::class, [
+                    'attr' => [
+                        'class' => 'btn btn-warning',
+                    ],
+                    'label' => 'Recharger',
+                ])
+                ->getForm()
+                ->handleRequest($request)
+            ;
+        }
+
+        if('POST' === $request->getMethod()) {
+            foreach ($forms as $feedId => $form) {
+                if ($request->request->has($feedId) && $form->isSubmitted() && $form->isValid()) {
+                    $data = $form->getData();
+                    $date = \DateTime::createFromFormat('d/m/Y', $data['wanted_date']);
+
+                    $feeds[$feedId]->fetchDataFor($entityManager, $date, true);
+
+                    $this->addFlash('success', 'Les données ' . \ucfirst($feeds[$feedId]->getName()) . ' ont correctement été rechargées pour le ' . $data['wanted_date'] . ' .');
+                }
+            }
+        }
+
+        $views = [];
+        foreach ($forms as $key => $form) {
+            $views[$key] = $form->createView();
+        }
+
+        return $this->render('configuration/place_fetch.html.twig', [
+            'title' => "Recharger les données de l'adresse",
+            'feeds' => $feeds,
+            'forms' => $views,
             'cancel' => 'config'
         ]);
     }

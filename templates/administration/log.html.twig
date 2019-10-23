@@ -12,13 +12,17 @@
         <table class="table table-striped table-hover">
           <tbody>
             {% for log in logs|reverse %}
-            {% set class = "" %}
-            {% if ".CRITICAL" in log or ".ERROR" in log %}
-            {% set class = "danger" %}
-            {% endif %}
-            <tr scope="row">
-              <td class="{{ class ? "table-" ~ class : ""}}">{{ log }}</td>
-            </tr>
+              {% set class = "" %}
+              {% if ".CRITICAL" in log %}
+                {% set class = "danger" %}
+              {% elseif ".ERROR" in log %}
+                {% set class = "warning" %}
+              {% elseif ".INFO" in log %}
+                {% set class = "info" %}
+              {% endif %}
+              <tr scope="row">
+                <td class="{{ class ? "table-" ~ class : ""}}">{{ log }}</td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid row justify-content-center align-items-center users">
+  <div class='card config-form col-lg-6 col-md-8'>
+    <div class="card-body">
+      <h1> {{ title }} </h1>
+
+      {% for key, form in forms %}
+
+        <h2>{{ feeds[key].name|capitalize }}</h2>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div class="row">
+
+          <div class="col-auto">
+            {{ form_label(form.wanted_date) }}
+          </div>
+          <div class="col">
+            {{ form_widget(form.wanted_date) }}
+            {{ form_errors(form.wanted_date) }}
+            {{ form_help(form.wanted_date) }}
+          </div>
+          <div class="col-auto">
+            {{ form_row(form.submit) }}
+          </div>
+        </div>
+        {{ form_end(form) }}
+
+        {% if not loop.last %}
+        <hr>
+        {% endif %}
+
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

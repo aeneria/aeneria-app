@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, Serializable
 {
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
@@ -194,5 +195,39 @@ class User implements UserInterface
         }
 
         return false;
+    }
+
+    /**
+     * Serializes the content of the current User object
+     * @return string
+     */
+    public function serialize()
+    {
+        return \json_encode([
+            $this->id,
+            $this->active,
+            $this->username,
+            $this->password,
+            $this->places,
+            $this->roles,
+            $this->sharedPlaces
+        ]);
+    }
+
+    /**
+     * Unserializes the given string in the current User object
+     * @param serialized
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->active,
+            $this->username,
+            $this->password,
+            $this->places,
+            $this->roles,
+            $this->sharedPlaces
+        ) = \json_decode($serialized);
     }
 }

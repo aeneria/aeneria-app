@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+  // Multiselect
   $('.bootstrap-multiselect').multiselect({
     buttonText: function(options, select) {
       if (options.length === 0) {
@@ -21,5 +23,14 @@ $(document).ready(function() {
       }
     }
   });
-  $('.bootstrap-multiselect-fa').multiselect({  });
+
+  $('.bootstrap-multiselect-fa').multiselect();
+
+  // Date
+  $('.simple-datepicker').datepicker({
+    format: 'dd/mm/yyyy',
+    endDate: '-1d',
+    language: 'fr',
+    orientation: 'bottom'
+  });
 });
