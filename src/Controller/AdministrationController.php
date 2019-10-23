@@ -224,7 +224,7 @@ class AdministrationController extends AbstractController
 
         return $this->render('administration/log.html.twig', [
             'title' => 'Supprimer un utilisateur',
-            'log' => \file_get_contents("{$logDir}/{$latestLogfile}") ?? false,
+            'logs' => \file("{$logDir}/{$latestLogfile}", FILE_IGNORE_NEW_LINES),//\file_get_contents("{$logDir}/{$latestLogfile}") ?? false,
             'cancel' => 'admin.user.list'
         ]);
     }
