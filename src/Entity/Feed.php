@@ -279,13 +279,26 @@ class Feed
     }
 
     /**
-     * Fetch data from last data for $date,
+     * Fetch data for $date,
      * if $force is set to true, update data even if there are already ones.
      */
     public function fetchDataFor(EntityManager $entityManager, \DateTime $date, $force): void
     {
         if ($force || !$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
             $this->getFeedObject($entityManager)->fetchData($date);
+        }
+    }
+
+    /**
+     * Fetch data from startDate to $endDate,
+     * if $force is set to true, update data even if there are already ones.
+     */
+    public function fetchDataBetween(EntityManager $entityManager, \DateTime $startDate, \DateTime $endDate, $force): void
+    {
+        $date = $startDate;
+        while ($date <= $endDate) {
+            $this->fetchDataFor($entityManager, $date, $force);
+            $date->add(new \DateInterval('P1D'));
         }
     }
 }

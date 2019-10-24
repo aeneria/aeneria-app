@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Recharger les données de {{ place.name }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -8,28 +8,35 @@
 <div class="container-fluid row justify-content-center align-items-center users">
   <div class='card config-form col-lg-6 col-md-8'>
     <div class="card-body">
-      <h1> {{ title }} </h1>
+      <h1> Recharger les données de <i>{{ place.name }}</i> </h1>
 
       {% for key, form in forms %}
+        <div class="place-fetch-form">
+          <h2>{{ feeds[key].name|capitalize }}</h2>
+          {{ form_start(form) }}
+          {{ form_errors(form) }}
+          <div class="form-group row">
+            <div class="col-auto input-daterange">
+              <span class="input-group-addon">{{ 'Recharger du'|trans }}</span>
+              {{- form_widget(form['start_date_' ~ key]) -}}
+              <span class="input-group-addon">{{ 'au'|trans }}</span>
+              {{- form_widget(form['end_date_' ~ key]) -}}
+            </div>
+            <div class="col-auto">
+              {{ form_row(form['force_' ~ key], {label_attr: {class: 'checkbox-custom'} })}}
+            </div>
+            <div class="col-auto">
+              {{ form_row(form['submit_' ~ key]) }}
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col">
+              {{ form_help(form['start_date_' ~ key]) }}
+            </div>
+          </div>
 
-        <h2>{{ feeds[key].name|capitalize }}</h2>
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        <div class="row">
-
-          <div class="col-auto">
-            {{ form_label(form.wanted_date) }}
-          </div>
-          <div class="col">
-            {{ form_widget(form.wanted_date) }}
-            {{ form_errors(form.wanted_date) }}
-            {{ form_help(form.wanted_date) }}
-          </div>
-          <div class="col-auto">
-            {{ form_row(form.submit) }}
-          </div>
+          {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
 
         {% if not loop.last %}
         <hr>

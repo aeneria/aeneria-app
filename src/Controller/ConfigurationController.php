@@ -141,20 +141,31 @@ class ConfigurationController extends AbstractController
         $feeds = [];
 
         foreach ($place->getFeeds() as $feed) {
-            $feeds[$feed->getId()] = $feed;
-            $forms[$feed->getId()] = $formFactory
-                ->createNamedBuilder($feed->getId())
-                ->add('wanted_date', Form\TextType::class, [
-                    'label' => "Date",
+            $feedId = $feed->getId();
+
+            $feeds[$feedId] = $feed;
+            $forms[$feedId] = $formFactory
+                ->createNamedBuilder($feedId)
+                ->add('start_date_' . $feedId, Form\TextType::class, [
+                    'label' => false,
                     'help' => $feed->getFeedType() === 'METEO_FRANCE' ? "Attention, les données météorologiques ne sont plus accessibles après 2 semaines." : '',
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
                 ])
-                ->add('submit', Form\SubmitType::class, [
+                ->add('end_date_' . $feedId, Form\TextType::class, [
+                    'label' => false,
+                    'attr' => ['class' => 'simple-datepicker'],
+                    'required' => true,
+                ])
+                ->add('force_' . $feedId, Form\CheckboxType::class, [
+                    'label' => 'Forcer',
+                ])
+                ->add('submit_' . $feedId, Form\SubmitType::class, [
                     'attr' => [
                         'class' => 'btn btn-warning',
+                        'title' => 'Recharger',
                     ],
-                    'label' => 'Recharger',
+                    'label' => '',
                 ])
                 ->getForm()
                 ->handleRequest($request)
@@ -165,11 +176,20 @@ class ConfigurationController extends AbstractController
             foreach ($forms as $feedId => $form) {
                 if ($request->request->has($feedId) && $form->isSubmitted() && $form->isValid()) {
                     $data = $form->getData();
-                    $date = \DateTime::createFromFormat('d/m/Y', $data['wanted_date']);
 
-                    $feeds[$feedId]->fetchDataFor($entityManager, $date, true);
+                    $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
+                    $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId]);
 
-                    $this->addFlash('success', 'Les données ' . \ucfirst($feeds[$feedId]->getName()) . ' ont correctement été rechargées pour le ' . $data['wanted_date'] . ' .');
+                    $feeds[$feedId]->fetchDataBetween($entityManager, $startDate, $endDate, $data['force_' . $feedId]);
+
+                    $message = \sprintf(
+                        'Les données %s ont été correctement rechargées entre le %s et le %s .',
+                        \ucfirst($feeds[$feedId]->getName()),
+                        $data['start_date_' . $feedId],
+                        $data['end_date_' . $feedId]
+                    );
+
+                    $this->addFlash('success', $message);
                 }
             }
         }
@@ -180,7 +200,7 @@ class ConfigurationController extends AbstractController
         }
 
         return $this->render('configuration/place_fetch.html.twig', [
-            'title' => "Recharger les données de l'adresse",
+            'place' => $place,
             'feeds' => $feeds,
             'forms' => $views,
             'cancel' => 'config'

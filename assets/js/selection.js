@@ -84,7 +84,8 @@
       // Initiate datepicker.
       $('.pilea-start-date').val(startString);
       $('.pilea-end-date').val(endString);
-      $('.input-daterange').datepicker({
+
+      $('.selection-form .input-daterange').datepicker({
         format: 'dd/mm/yyyy',
         endDate: maxDate,
         startDate: minDate,

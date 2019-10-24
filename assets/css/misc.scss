@@ -1,4 +1,4 @@
-/* SETTINGS /////////////////////////////////////////////////////////////////*/
+/* CONFIGURATION /////////////////////////////////////////////////////////////////*/
 
 .config-form {
     margin-top: 25px;
@@ -130,5 +130,29 @@
         i {
             margin-right: 10px;
         }
+    }
+}
+
+/* FETCH DATA ///////////////////////////////////////////////////////////////*/
+
+.place-fetch-form {
+    .input-daterange{
+        display: flex;
+
+        input {
+            width: 130px;
+            height: 32px;
+        }
+
+        span, input {
+            margin-right: 10px;
+        }
+
+    }
+    .btn {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 1rem;
+        color: #000000;
     }
 }

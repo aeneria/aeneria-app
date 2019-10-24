@@ -26,11 +26,10 @@ $(document).ready(function() {
 
   $('.bootstrap-multiselect-fa').multiselect();
 
-  // Date
-  $('.simple-datepicker').datepicker({
-    format: 'dd/mm/yyyy',
-    endDate: '-1d',
-    language: 'fr',
-    orientation: 'bottom'
+  $('.place-fetch-form .input-daterange').datepicker({
+      format: 'dd/mm/yyyy',
+      endDate: '-1d',
+      language: 'fr',
+      orientation: 'bottom'
   });
 });
