@@ -37,13 +37,13 @@ class PlaceType extends AbstractType
                 'label' => 'Icone'
             ])
             ->add('public', CheckboxType::class, [
-                'label' => 'Compteur public',
+                'label' => 'Public',
                 'help' => 'Un compteur public est visible par tous les utilisateurs de Pilea.',
                 'required' => false
             ])
             ->add('shared', ChoiceType::class, [
                 'multiple' => true,
-                'label' => 'Partager le compteur avec :',
+                'label' => 'Partager avec :',
                 'choices' => $this->userRepository->getUsersList($options['user']),
                 'attr' => ['class' => 'bootstrap-multiselect'],
                 'required' => false,

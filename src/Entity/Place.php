@@ -31,7 +31,7 @@ class Place
     /**
      * @var string
      *
-     * @ORM\Column(name="icon", type="string", length=10)
+     * @ORM\Column(name="icon", type="string", length=50)
      */
     private $icon;
 

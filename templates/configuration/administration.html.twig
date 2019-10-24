@@ -2,7 +2,7 @@
   <div class="card-body">
     <h1 class="card-title">{{ 'Administration' | trans }}</h1>
     <div class="content">
-      <a class="btn btn-primary" href="{{path('admin.user.list')}}">
+      <a class="btn btn-primary" href="{{ path('admin.user.list') }}">
         <i class="fas fa-users"></i> {{ 'Gérer les utilisateurs' | trans }}
       </a>
       <a class="btn btn-primary" href="{{path('admin.log')}}">
