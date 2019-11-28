@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 /**
  * Meteo France API to get SYNOP Observations.
  */
-class MeteoFrance implements FeedObject {
+class MeteoFrance extends FeedObject {
 
     /**
      * Different usefull URIs.

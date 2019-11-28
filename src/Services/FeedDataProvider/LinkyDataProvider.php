@@ -1,6 +1,6 @@
 <?php
 
-namespace App\FeedObject;
+namespace App\FeedDataProvider;
 
 
 use App\Entity\DataValue;
@@ -9,13 +9,13 @@ use App\Entity\FeedData;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Linky API
+ * Linky Data Provider
  *
  * @see https://github.com/KiboOst/php-LinkyAPI
  * @todo simply curl request by guzzle ones
  * @todo week data
  */
-class Linky implements FeedObject
+class LinkyDataProvider extends AbstractDataProvider
 {
     /**
      * Differents usefull URIs.
@@ -40,27 +40,10 @@ class Linky implements FeedObject
     private $feed;
 
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * Error.
      * @var mixed
      */
     private $error = null;
-
-    /**
-     * Authentifications variables.
-     * @var string
-     */
-    private $login, $password;
-
-    /**
-     * Is connected
-     * @var boolean
-     */
-    private $isAuth = false;
 
     /**
      * Authentification cookie.
@@ -73,15 +56,9 @@ class Linky implements FeedObject
     /**
      * Constructor.
      */
-    public function __construct(Feed $feed, EntityManager $entityManager = null)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->feed = $feed;
-        $feedParam = $feed->getParam();
-        $this->login = $feedParam['LOGIN'];
-        $this->password = $feedParam['PASSWORD'];
-
-        $this->entityManager = $entityManager;
-        $this->auth();
+        parent::__construct($entityManager);
     }
 
     /**
@@ -94,21 +71,19 @@ class Linky implements FeedObject
     }
 
     /**
-     * Is the connexion with Enedis ok.
-     */
-    public function isAuth(): bool
-    {
-        return $this->isAuth;
-    }
-
-    /**
      * Fetch ENEDIS data for $date and persist its in database.
      *
      * @param \DateTime $date
      */
-    public function fetchData(\DateTime $date)
+    public function fetchData(Feed $feed, \DateTime $date)
     {
-        if ($this->isAuth()) {
+        $feedParam = $feed->getParam();
+        $this->login = $feedParam['LOGIN'];
+        $this->password = $feedParam['PASSWORD'];
+
+        $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD']);
+
+        if ( $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD'])) {
             $this->getAll($date);
             $this->persistData($date);
         }
@@ -469,12 +444,12 @@ class Linky implements FeedObject
         return \json_decode($response, true);
     }
 
-    public function auth(): bool
+    public function auth(string $login, string $password): bool
     {
         $postdata = \http_build_query(
             [
-                'IDToken1' => $this->login,
-                'IDToken2' => $this->password,
+                'IDToken1' => $login,
+                'IDToken2' => $password,
                 'SunQueryParamsString' => base64_encode('realm=particuliers'),
                 'encoded' => 'true',
                 'gx_charset' => 'UTF-8'
@@ -496,10 +471,9 @@ class Linky implements FeedObject
             return false;
         }
 
-        $url = 'https://espace-client-particuliers.enedis.fr/group/espace-particuliers/accueil';
+        $url = self::API_BASE_URL . '/accueil';
         $response = $this->request('GET', $url);
 
-        $this->isAuth = true;
-        return $this->isAuth;
+        return true;
     }
 }
