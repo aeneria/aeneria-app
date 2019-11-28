@@ -36,7 +36,11 @@
       $('.pilea-select-place a').click(function(e) {
         place = e.target.getAttribute('data');
         setCurrentPlace(e.target.getAttribute('data'));
-        $('.pilea-select-place button')[0].innerHTML =  e.target.innerHTML;
+        $('.pilea-select-place button')[0].innerHTML = places[place].name;
+
+        var span = $('.pilea-select-place').prev()[0];
+        var placeClass = 'fas fa-' + places[place].icon + ' start-input';
+        span.classList = placeClass;
 
         initPeriod(place);
         initFrequency(place);
@@ -52,12 +56,16 @@
 
     function initPeriod(place) {
       // Get min and max dates.
-      var minDate = places[place].start.substring(0,10).split('-') ;
-      minDate = minDate[2] + '/' + minDate[1] + '/' + minDate[0];
-      var periodStart = new Date(places[place].start);
-      var maxDate = places[place].end.substring(0,10).split('-') ;
-      maxDate = maxDate[2] + '/' + maxDate[1] + '/' + maxDate[0];
-      var periodEnd = new Date(places[place].end);
+      if (places[place].start) {
+        var minDate = places[place].start.substring(0,10).split('-') ;
+        minDate = minDate[2] + '/' + minDate[1] + '/' + minDate[0];
+        var periodStart = new Date(places[place].start);
+      }
+      if (places[place].end) {
+        var maxDate = places[place].end.substring(0,10).split('-') ;
+        maxDate = maxDate[2] + '/' + maxDate[1] + '/' + maxDate[0];
+        var periodEnd = new Date(places[place].end);
+      }
 
       // If we can't retrieve start or end date from localStorage, we create them.
       var startString = getCurrentStartDate();
