@@ -19,5 +19,5 @@ There's no API (or maybe there's one but any documentation can't be found) to pr
 
 I want to thanks [KibOost](https://github.com/KiboOst/) for [the retroengineering he has done](https://github.com/KiboOst/php-LinkyAPI).
 
-**For more informations, see `Pilea's documentation on Read the Docs<https://pilea.readthedocs.io/fr/latest/>`_**
+**For more informations, see [Pilea's documentation on Read the Docs](https://pilea.readthedocs.io/fr/latest/)**
 (sorry it's in french cause this project is based on Linky and Enedis, main users will be french)
