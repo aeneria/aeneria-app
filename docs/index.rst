@@ -8,6 +8,7 @@ Pilea
 consommation d'électricité à partir des données d'un Linky.
 
 L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
+
 * Mieux comprendre sa consommation d'énergie
 * Analyser sa consommation en fonction de données météorologiques
 

@@ -14,16 +14,16 @@ Installation via YunoHost
 Son but est de faciliter l'administration d'un serveur : `en savoir plus <https://yunohost.org/#/whatsyunohost_fr>`_
 
 .. image:: https://yunohost.org/images/ynh_logo_black_300dpi.png
-   :align: center
-   :height: 200px
-   :width: 200px
+    :align: center
+    :height: 200px
+    :width: 200px
 
 `Des nombreuses applications sont déjà packagées <https://yunohost.org/#/apps>`_ pour être utilisées
 avec et c'est le cas de Pilea.
 
 .. image:: https://install-app.yunohost.org/install-with-yunohost.png
-   :target: https://install-app.yunohost.org/?app=pilea
-   :align: center
+    :target: https://install-app.yunohost.org/?app=pilea
+    :align: center
 
 
 Installation à la main
@@ -39,21 +39,48 @@ d'un PHP récent et d'un serveur de base de données MySQL.
 
 .. note::
 
-  PostgreSQL & SQLite devrait fonctionner mais vous aurez à adapter les fichiers `.env` & `config/packages/doctrine.yaml`
+    PostgreSQL & SQLite devrait fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
 
-  Il n'est pas prévu que Pilea les supporte *officiellement*, si vous souhaitez vous y coller allez-y mais
-  n'ouvrez pas d'issue à ce propos :)
+    Il n'est pas prévu que Pilea les supporte *officiellement*, si vous souhaitez vous y coller allez-y mais
+    n'ouvrez pas d'issue à ce propos :)
 
 
 **Installation :**
 
-* Télécharger `le dépot <https://github.com/SimonMellerin/Pilea>`_
-* Créer un base de donnés puis renseigner son nom, l'utilisateur et le mot de passe dans le ficheir `.env`
-* Installer les dépendance `Composer <https://getcomposer.org/>` : `composer install`
-* Lancer le script d'installation : `bin/console pilea:install`
-* Ajouter une premier utilisateur : `bin/console pilea:user:add username password`
-* Lui donner les droits administrateur: `bin/console pilea:user:grant username`
-* Mettre en place le cron : `echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
-  (remplacer *[user]* et *[app_floder]* en fonction de votre configuration)
-* Configurer `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
+Télécharger `le dépot <https://github.com/SimonMellerin/Pilea>`_ :
+
+.. code-block:: sh
+
+    git clone https://github.com/SimonMellerin/Pilea.git [app_folder]
+
+Créer un base de donnés puis renseigner son nom, l'utilisateur et le mot de passe dans le ficheir ``.env``
+
+Installer les dépendance `Composer <https://getcomposer.org/>`_ : `composer install`
+
+.. code-block:: sh
+
+    cd [app_folder]
+    composer install
+
+Lancer le script d'installation :
+
+.. code-block:: sh
+
+    bin/console pilea:install
+
+Ajouter une premier utilisateur et lui donner les droits administrateur :
+
+.. code-block:: sh
+
+    bin/console pilea:user:add [username] [password]
+    bin/console pilea:user:grant [username]
+
+Mettre en place le cron :
+
+.. code-block:: sh
+
+    echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea
+    # où [user] est l'utilisateur linux qui lancera le cron
+
+Enfin, configurer `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
   `Apache <https://symfony.com/doc/current/setup/web_server_configuration.html>`_ comme pour une application Symfony 4 classique
