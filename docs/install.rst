@@ -15,6 +15,8 @@ Son but est de faciliter l'administration d'un serveur : `en savoir plus <https:
 
 .. image:: https://yunohost.org/images/ynh_logo_black_300dpi.png
    :align: center
+   :height: 200px
+   :width: 200px
 
 `Des nombreuses applications sont déjà packagées <https://yunohost.org/#/apps>`_ pour être utilisées
 avec et c'est le cas de Pilea.
