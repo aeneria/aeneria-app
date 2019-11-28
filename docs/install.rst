@@ -55,7 +55,7 @@ Télécharger `le dépot <https://github.com/SimonMellerin/Pilea>`_ :
 
 Créer un base de donnés puis renseigner son nom, l'utilisateur et le mot de passe dans le ficheir ``.env``
 
-Installer les dépendance `Composer <https://getcomposer.org/>`_ : `composer install`
+Installer les dépendance `Composer <https://getcomposer.org/>`_ :
 
 .. code-block:: sh
 
@@ -82,5 +82,6 @@ Mettre en place le cron :
     echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea
     # où [user] est l'utilisateur linux qui lancera le cron
 
+
 Enfin, configurer `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
-  `Apache <https://symfony.com/doc/current/setup/web_server_configuration.html>`_ comme pour une application Symfony 4 classique
+`Apache <https://symfony.com/doc/current/setup/web_server_configuration.html>`_ comme pour une application Symfony 4 classique
