@@ -7,7 +7,7 @@ Tout d'abord pour utiliser Pilea,
 * Vous devez avoir accès à un Linky et à un `compte Enedis <https://espace-client-connexion.enedis.fr/auth/UI/Login?realm=particuliers>`_
 * Via ce compte, vous devez activer l'option *Courbe de charge* pour pouvoir avoir accès à votre consommation horaire
 
-De manière facile - via YunoHost
+Installation via YunoHost
 =================================
 
 `YunoHost <https://yunohost.org/>`_ est un projet ayant pour but de promouvoir l'autohébergement.
@@ -26,8 +26,8 @@ avec et c'est le cas de Pilea.
    :align: center
 
 
-De manière un peu moins facile - installation à la main
-=========================================================
+Installation à la main
+========================
 
 Pilea est une application basée sur le framework Symfony. Elle s'installe sur un serveur web disposant
 d'un PHP récent et d'un serveur de base de données MySQL.
