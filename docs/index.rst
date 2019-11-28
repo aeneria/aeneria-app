@@ -12,6 +12,8 @@ L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers 
 * Analyser sa consommation en fonction de données météorologiques
 
 .. image:: img/index_pilea.png
+   :height: 200px
+   :width: 200px
    :align: center
 
 .. note::
