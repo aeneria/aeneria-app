@@ -10,8 +10,8 @@ Tout d'abord pour utiliser Pilea,
 La manière facile - via YunoHost
 =================================
 
-* Obtenir une instance `YunoHost<https://yunohost.org/>`_
-* Installer Pilea via son `paquet<https://github.com/SimonMellerin/pilea_ynh>`_
+* Obtenir une instance `YunoHost <https://yunohost.org/>`_
+* Installer Pilea via son `paquet <https://github.com/SimonMellerin/pilea_ynh>`_
 
 .. image:: https://install-app.yunohost.org/install-with-yunohost.png
    :target: https://install-app.yunohost.org/?app=pilea
@@ -21,6 +21,7 @@ La manière un peu moins facile - installation à la main
 =======================================================
 
 **Prérequis:**
+
 * PHP 7.3 ou plus
 * MySQL 5.5 ou plus
   (PostgreSQL & SQLite should work but you'll have to adapt `.env` & `config/packages/doctrine.yaml`)
@@ -34,5 +35,5 @@ La manière un peu moins facile - installation à la main
 * Lui donner les droits administrateur: `bin/console pilea:user:grant username`
 * Mettre en place le cron : `echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea`
   (remplacer *[user]* et *[app_floder]* en fonction de votre configuration)
-* Configurer `NGINX<https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
-`Apache <https://symfony.com/doc/current/setup/web_server_configuration.html>`_ comme pour une application Symfony 4 classique
+* Configurer `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
+  `Apache <https://symfony.com/doc/current/setup/web_server_configuration.html>`_ comme pour une application Symfony 4 classique

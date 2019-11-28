@@ -1,24 +1,22 @@
 Pilea
 ########
 
-
-Introduction
-============
 `Pilea <https://github.com/SimonMellerin/Pilea/>`_ est un petit tableau de bord permettant d'analyser sa
 consommation d'électricité à partir des données d'un Linky.
 
 L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
-
 * Mieux comprendre sa consommation d'énergie
 * Analyser sa consommation en fonction de données météorologiques
 
+.. image:: img/index_pilea.png
+
 .. note::
 
-   **Cette application n'est pas une tentative pour prouver que les compteurs Linky sont cool.**
+   **Cette application n'est pas une tentative pour prouver que les compteurs Linky sont cools.**
    Je ne suis pas fan des compteurs Linky et vous pourrez comprendre pourquoi en lisant `ce dossier
    du site Reporterre <https://reporterre.net/Linky-n-est-pas-un-ami-la-grande-enquete-de-Reporterre>`_.
 
-   Maintenant, Linky est présent chez nous alors, autant l'utiliser.
+   Maintenant, Linky est présent chez nous alors autant l'utiliser !
 
    Et malgré ce qu'essaye de nous vendre Enedis:
 
@@ -41,7 +39,8 @@ L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers 
 
 Todo List
 =========
- * Ajouter un onglet pour comparer des périodeset des compteurs
+
+ * Ajouter un onglet pour comparer des périodes et des compteurs
  * Prendre en compte d'autres sources de données (comme un fichier CSV)
 
 Support
