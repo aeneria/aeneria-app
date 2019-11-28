@@ -11,13 +11,17 @@ De manière facile - via YunoHost
 =================================
 
 `YunoHost <https://yunohost.org/>`_ est un projet ayant pour but de promouvoir l'autohébergement.
-Son but est de faciliter l'administration d'un serveur.
+Son but est de faciliter l'administration d'un serveur : `en savoir plus <https://yunohost.org/#/whatsyunohost_fr>`_
 
-`Des nombreuses applications sont déjà packagées <https://yunohost.org/#/apps>` pour être utilisées
+.. image:: https://yunohost.org/images/ynh_logo_black_300dpi.png
+   :align: center
+
+`Des nombreuses applications sont déjà packagées <https://yunohost.org/#/apps>`_ pour être utilisées
 avec et c'est le cas de Pilea.
 
 .. image:: https://install-app.yunohost.org/install-with-yunohost.png
    :target: https://install-app.yunohost.org/?app=pilea
+   :align: center
 
 
 De manière un peu moins facile - installation à la main
@@ -26,13 +30,20 @@ De manière un peu moins facile - installation à la main
 Pilea est une application basée sur le framework Symfony. Elle s'installe sur un serveur web disposant
 d'un PHP récent et d'un serveur de base de données MySQL.
 
-**Prérequis:**
+**Prérequis :**
 
 * PHP 7.3 ou plus
 * MySQL 5.5 ou plus
-  (PostgreSQL & SQLite should work but you'll have to adapt `.env` & `config/packages/doctrine.yaml`)
 
-**Installation:**
+.. note::
+
+  PostgreSQL & SQLite devrait fonctionner mais vous aurez à adapter les fichiers `.env` & `config/packages/doctrine.yaml`
+
+  Il n'est pas prévu que Pilea les supporte *officiellement*, si vous souhaitez vous y coller allez-y mais
+  n'ouvrez pas d'issue à ce propos :)
+
+
+**Installation :**
 
 * Télécharger `le dépot <https://github.com/SimonMellerin/Pilea>`_
 * Créer un base de donnés puis renseigner son nom, l'utilisateur et le mot de passe dans le ficheir `.env`

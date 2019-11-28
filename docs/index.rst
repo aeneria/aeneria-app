@@ -1,6 +1,9 @@
 Pilea
 ########
 
+.. image:: img/favicon.png
+   :align: center
+
 `Pilea <https://github.com/SimonMellerin/Pilea/>`_ est un petit tableau de bord permettant d'analyser sa
 consommation d'électricité à partir des données d'un Linky.
 
@@ -9,6 +12,7 @@ L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers 
 * Analyser sa consommation en fonction de données météorologiques
 
 .. image:: img/index_pilea.png
+   :align: center
 
 .. note::
 
@@ -30,7 +34,7 @@ L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contenu :
 
    install
    utilisateur
@@ -45,4 +49,5 @@ Todo List
 
 Support
 =======
-Please ask questions on the `Github issues page <https://github.com/SimonMellerin/Pilea/issues/>`_.
+
+Posez vos questions sur `Github <https://github.com/SimonMellerin/Pilea/issues/>`_.
