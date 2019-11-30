@@ -1,4 +1,8 @@
 Documentation administrateur
 ##############################
 
-A venir
+Geestion des utilisateurs
+=============================
+
+Logs
+======
