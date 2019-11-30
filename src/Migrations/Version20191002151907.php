@@ -24,7 +24,7 @@ final class Version20191002151907 extends AbstractMigration
 
         $this->addSql('ALTER TABLE user ADD IF NOT EXISTS active TINYINT(1) DEFAULT \'1\' NOT NULL');
 
-        $this->addSql('DROP INDEX UNIQ_741D53CD5E237E06 ON place');
+        $this->addSql('DROP INDEX IF EXISTS UNIQ_E16F61D45E237E06 ON place');
 
         $this->addSql('ALTER TABLE feed DROP public, DROP creator');
         $this->addSql('DROP INDEX IF EXISTS UNIQ_234044ABC49BC7E ON feed');
