@@ -48,3 +48,17 @@ text {
 .global-repartition {
     margin-left: 30px;
 }
+
+.help {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: black;
+    opacity: .3;
+    font-size: 1.4em;
+    &:hover {
+        color: black;
+        opacity: 0.6;
+        text-decoration: none;
+    }
+}

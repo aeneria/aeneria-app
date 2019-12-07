@@ -15,4 +15,10 @@ class Constants {
      * @var \String
      */
     public const GITHUB = 'https://github.com/SimonMellerin/Pilea';
+
+    /**
+     * Documentation URL
+     * @var \String
+     */
+    public const DOCUMENTATION = 'https://pilea.readthedocs.io/fr/';
 }

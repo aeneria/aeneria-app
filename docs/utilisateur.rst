@@ -5,6 +5,7 @@ Documentation utilisateur
    :maxdepth: 2
    :caption: Contenu :
 
-   utilisateur/address
    utilisateur/dashboard
    utilisateur/graph
+   utilisateur/glossaire
+   utilisateur/address
