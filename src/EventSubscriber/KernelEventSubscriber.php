@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\DataValueRepository;
 use App\Repository\PlaceRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -47,7 +48,7 @@ final class KernelEventSubscriber implements EventSubscriberInterface
     /**
      * Set twig global variables
      */
-    public function onController(FilterControllerEvent $event)
+    public function onController(ControllerEvent $event)
     {
         if ($token = $this->tokenStorage->getToken()) {
             $places = [];
