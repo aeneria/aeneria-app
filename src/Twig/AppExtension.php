@@ -29,7 +29,7 @@ final class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('pilea_version', [$this, 'getVersion']),
-            new TwigFunction('pilea_github', [$this, 'getGithubRepo']),
+            new TwigFunction('pilea_repo_git', [$this, 'getGitRepo']),
             new TwigFunction('pilea_documentation', [$this, 'getDocumentation']),
             new TwigFunction('pilea_help_graph', [$this, 'getGraphHelp']),
         ];
@@ -40,9 +40,9 @@ final class AppExtension extends AbstractExtension
         return Constants::VERSION;
     }
 
-    public function getGithubRepo(): string
+    public function getGitRepo(): string
     {
-        return Constants::GITHUB;
+        return Constants::REPO_GIT;
     }
 
     public function getDocumentation(?string $path = ''): string

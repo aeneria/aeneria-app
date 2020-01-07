@@ -11,10 +11,10 @@ class Constants {
     public const VERSION = '0.4.4';
 
     /**
-     * Github repo URL
+     * Gitlab repo URL
      * @var \String
      */
-    public const GITHUB = 'https://github.com/SimonMellerin/Pilea';
+    public const REPO_GIT = 'https://gitlab.com/pilea/Pilea';
 
     /**
      * Documentation URL
