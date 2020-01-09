@@ -224,6 +224,12 @@
             "ref": "82e2278ff2a74a97837e84c2493c30e7a85ad299"
         }
     },
+    "symfony/http-client": {
+        "version": "v5.0.2"
+    },
+    "symfony/http-client-contracts": {
+        "version": "v2.0.1"
+    },
     "symfony/http-foundation": {
         "version": "v4.2.1"
     },

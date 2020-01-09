@@ -1,21 +1,20 @@
 <?php
 
-namespace App\FeedDataProvider;
+namespace App\Services\FeedDataProvider;
 
 
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Linky Data Provider
  *
  * @see https://github.com/KiboOst/php-LinkyAPI
- * @todo simply curl request by guzzle ones
- * @todo week data
+ * @todo simplify curl requests
+ *
  */
-class LinkyDataProvider extends AbstractDataProvider
+class LinkyDataProvider extends AbstractFeedDataProvider
 {
     /**
      * Differents usefull URIs.
@@ -33,33 +32,8 @@ class LinkyDataProvider extends AbstractDataProvider
      */
     const FREQUENCY = DataValue::FREQUENCY;
 
-    /**
-     * Feed corresponding to the Linky Object.
-     * @var Feed
-     */
-    private $feed;
-
-    /**
-     * Error.
-     * @var mixed
-     */
-    private $error = null;
-
-    /**
-     * Authentification cookie.
-     * @var string
-     */
     private $cookFile = '';
-
     private $curlHdl = null;
-
-    /**
-     * Constructor.
-     */
-    public function __construct(EntityManager $entityManager)
-    {
-        parent::__construct($entityManager);
-    }
 
     /**
      * {@inheritDoc}
@@ -75,17 +49,22 @@ class LinkyDataProvider extends AbstractDataProvider
      *
      * @param \DateTime $date
      */
-    public function fetchData(Feed $feed, \DateTime $date)
+    public function fetchData(\DateTime $date, array $feeds, bool $force = false)
     {
-        $feedParam = $feed->getParam();
-        $this->login = $feedParam['LOGIN'];
-        $this->password = $feedParam['PASSWORD'];
+        foreach ($feeds as $feed) {
+            if ( (!$feed instanceof Feed) || $feed->getFeedType() !== 'LINKY') {
+                throw new \InvalidArgumentException("Should be an array of Linky Feeds overhere !");
+            }
 
-        $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD']);
+            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $this->getFrequencies())) {
+                $feedParam = $feed->getParam();
 
-        if ( $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD'])) {
-            $this->getAll($date);
-            $this->persistData($date);
+                if ( $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD'])) {
+
+                    $data = $this->getAll($date);
+                    $this->persistData($date, $feed, $data);
+                }
+            }
         }
     }
 
@@ -94,56 +73,55 @@ class LinkyDataProvider extends AbstractDataProvider
      *
      * @param \DateTime $date
      */
-    private function persistData(\DateTime $date)
+    private function persistData(\DateTime $date, Feed $feed, array $data)
     {
         $date = new \DateTime($date->format("Y-m-d 00:00:00"));
 
         // Get feedData.
-        /** @var \App\Entity\FeedData $feedData */
-        $feedData = $this->entityManager->getRepository('App:FeedData')->findOneByFeed($this->feed);
+        $feedData = $this->feedDataRepository->findOneByFeed($feed);
 
         // Persist hours data.
-        foreach (\end($this->data['hours']) as $hour => $value) {
+        foreach ($data['hours'] as $hour => $value) {
             if ($value && (int)$value !== -1) {
-                $feedData->updateOrCreateValue(
+                $this->feedDataRepository->updateOrCreateValue(
+                    $feedData,
                     new \DateTime($date->format("Y-m-d") . $hour . ':00'),
                     DataValue::FREQUENCY['HOUR'],
-                    $value,
-                    $this->entityManager
+                    $value
                 );
             }
         }
 
         // Persist day data.
-        $value = \end($this->data['days']);
+        $value = \end($data['days']);
         if ($value && (int)$value !== -1) {
-            $feedData->updateOrCreateValue(
+            $this->feedDataRepository->updateOrCreateValue(
+                $feedData,
                 $date,
                 DataValue::FREQUENCY['DAY'],
-                $value,
-                $this->entityManager
+                $value
             );
         }
 
         // Persist month data.
-        $value = \end($this->data['months']);
+        $value = \end($data['months']);
         if ($value && (int)$value !== -1) {
-            $feedData->updateOrCreateValue(
+            $this->feedDataRepository->updateOrCreateValue(
+                $feedData,
                 $date,
                 DataValue::FREQUENCY['MONTH'],
-                $value,
-                $this->entityManager
+                $value
             );
         }
 
         // Persist year data.
-        $value = \end($this->data['years']);
+        $value = \end($data['years']);
         if ($value && (int)$value !== -1) {
-            $feedData->updateOrCreateValue(
+            $this->feedDataRepository->updateOrCreateValue(
+                $feedData,
                 $date,
                 DataValue::FREQUENCY['YEAR'],
-                $value,
-                $this->entityManager
+                $value
             );
         }
 
@@ -172,8 +150,7 @@ class LinkyDataProvider extends AbstractDataProvider
         $lastDayOfWeek->add(new \DateInterval('P6D'));
 
         $agregateData = $this
-            ->entityManager
-            ->getRepository('App:DataValue')
+            ->dataValueRepository
             ->getSumValue(
                 $firstDayOfWeek,
                 $lastDayOfWeek,
@@ -182,11 +159,11 @@ class LinkyDataProvider extends AbstractDataProvider
             );
 
         if (isset($agregateData[0]['value'])) {
-            $feedData->updateOrCreateValue(
+            $this->feedDataRepository->updateOrCreateValue(
+                $feedData,
                 $firstDayOfWeek,
                 DataValue::FREQUENCY['WEEK'],
-                \round($agregateData[0]['value'], 1),
-                $this->entityManager
+                \round($agregateData[0]['value'], 1)
             );
         }
     }
@@ -205,8 +182,7 @@ class LinkyDataProvider extends AbstractDataProvider
         $lastDayOfYear->add(new \DateInterval('P1Y'));
 
         $agregateData = $this
-            ->entityManager
-            ->getRepository('App:DataValue')
+            ->dataValueRepository
             ->getSumValue(
                 $firstDayOfYear,
                 $lastDayOfYear,
@@ -215,11 +191,11 @@ class LinkyDataProvider extends AbstractDataProvider
             );
 
         if (isset($agregateData[0]['value'])) {
-            $feedData->updateOrCreateValue(
+            $this->feedDataRepository->updateOrCreateValue(
+                $feedData,
                 $firstDayOfYear,
                 DataValue::FREQUENCY['YEAR'],
-                \round($agregateData[0]['value'], 1),
-                $this->entityManager
+                \round($agregateData[0]['value'], 1)
             );
         }
     }
@@ -257,8 +233,7 @@ class LinkyDataProvider extends AbstractDataProvider
             }
         }
 
-        $returnData = \array_reverse($returnData);
-        return $this->data['hours'][$date->format('d/m/Y')] = $returnData;
+        return \array_reverse($returnData);
     }
 
     private function getDataPerDay(\DateTime $startDate, \DateTime $endDate)
@@ -285,7 +260,7 @@ class LinkyDataProvider extends AbstractDataProvider
             }
         }
 
-        return $this->data['days'] = $returnData;
+        return $returnData;
     }
 
     private function getDataPerMonth(\DateTime $startDate, \DateTime $endDate)
@@ -307,7 +282,7 @@ class LinkyDataProvider extends AbstractDataProvider
             }
         }
 
-        return $this->data['months'] = $returnData;
+        return $returnData;
     }
 
     private function getDataPerYear()
@@ -331,7 +306,7 @@ class LinkyDataProvider extends AbstractDataProvider
             }
         }
 
-        return $this->data['years'] = $returnData;
+        return $returnData;
     }
 
     /**
@@ -340,26 +315,26 @@ class LinkyDataProvider extends AbstractDataProvider
      * @param \DateTime $date
      * @return array of data.
      */
-    public function getAll(\DateTime $date) : array
+    private function getAll(\DateTime $date) : array
     {
+        $data = [];
         // Get per hour for date:
-        $formattedDate = $date->format('d/m/Y');
-        $this->getDataPerHour($date);
+        $data['hours'] = $this->getDataPerHour($date);
 
         // Get per day:
         $var = clone $date;
         $fromMonth = $var->sub(new \DateInterval('P30D'));
-        $this->getDataPerDay($fromMonth, $date);
+        $data['days'] = $this->getDataPerDay($fromMonth, $date);
 
         // Get per month:
         $var = clone $date;
         $fromYear = $var->sub(new \DateInterval('P1Y'));
-        $this->getDataPerMonth($fromYear, $date);
+        $data['months'] = $this->getDataPerMonth($fromYear, $date);
 
         // Get per year:
-        $this->getDataPerYear();
+        $data['years'] = $this->getDataPerYear();
 
-        return $this->data;
+        return $data;
     }
 
     /**
@@ -369,7 +344,7 @@ class LinkyDataProvider extends AbstractDataProvider
      * @param array $postdata
      * @return string
      */
-    private function request($method, $url, $postdata = null)
+    private function request($method, $url, $postdata = null, $withHeader = false)
     {
         if (!isset($this->curlHdl)) {
             $this->curlHdl = \curl_init();
@@ -408,7 +383,7 @@ class LinkyDataProvider extends AbstractDataProvider
             $this->error = \curl_error($this->curlHdl);
         }
 
-        if ($this->isAuth) {
+        if (!$withHeader) {
             $header_size = \curl_getinfo($this->curlHdl, CURLINFO_HEADER_SIZE);
             $response = \substr($response, $header_size);
         }
@@ -446,6 +421,10 @@ class LinkyDataProvider extends AbstractDataProvider
 
     public function auth(string $login, string $password): bool
     {
+        // Reset older connexion
+        $this->cookFile = '';
+        $this->curlHdl = null;
+
         $postdata = \http_build_query(
             [
                 'IDToken1' => $login,
@@ -457,7 +436,7 @@ class LinkyDataProvider extends AbstractDataProvider
         );
 
         $url = self::LOGIN_BASE_URL . self::API_LOGIN_URL;
-        $response = $this->request('POST', $url, $postdata);
+        $response = $this->request('POST', $url, $postdata, true);
 
         // Connected ?
         \preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $response, $matches);

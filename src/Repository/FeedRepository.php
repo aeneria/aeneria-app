@@ -69,16 +69,84 @@ class FeedRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllActive()
+    public function findAllActive($feedType = null)
     {
-        return $this
+        $queryBuilder = $this
             ->createQueryBuilder('f')
             ->select()
             ->innerJoin('f.place', 'p')
             ->innerJoin('p.user', 'u')
             ->where('u.active = 1')
+        ;
+
+        if ($feedType) {
+            $queryBuilder
+                ->where('f.feedType = :type')
+                ->setParameter('type', $feedType)
+            ;
+        }
+
+        return $queryBuilder
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    /**
+     * Get Date of last up to date data.
+     */
+    public function getLastUpToDate(array $feeds): ?\DateTime
+    {
+        $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
+
+        // Get all feedData.
+        $feedDataList = $feedDataRepository->findByFeed($feeds);
+
+        // Foreach feedData we get the last up to date value.
+        /** @var \App\Entity\FeedData $feedData */
+        foreach ($feedDataList as $feedData) {
+            // A feed is up to date only if one feedData is up to date.
+            // Well it could be that we will never have some feedData for a Feed. (in particular nebulosity from meteofrance)
+            // In this case, if we choose that a feed is up to date only if all its feedData
+            // are up to date, we will try to get this missing data over and over and flood the api
+            // of the feed AND that's not cool :( and we try to be cool people :)
+
+            $feedDataLastUpToDate = $feedDataRepository->getLastUpToDate($feedData);
+
+            if (empty($lastUpToDate)) {
+                $lastUpToDate = $feedDataLastUpToDate;
+            }
+
+            $lastUpToDate = max($lastUpToDate, $feedDataLastUpToDate);
+        }
+
+        // If we have no data, we start with yesterday
+        if (empty($lastUpToDate)) {
+            $lastUpToDate = new \DateTime("2 days ago");
+        }
+
+        return $lastUpToDate->add(new \DateInterval('P1D'));
+    }
+
+    /**
+     * Check if there's data in DB for $date for all $feed's feedData and for all $frequencies.
+     */
+    public function isUpToDate(Feed $feed, \DateTime $date, array $frequencies): bool
+    {
+        $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
+
+        // Get all feedData.
+        $feedDataList = $feedDataRepository->findByFeed($feed);
+
+        $isUpToDate = true;
+
+        // Foreach feedData we check if we have a value for yesterday.
+        /** @var \App\Entity\FeedData $feedData */
+        foreach ($feedDataList as $feedData) {
+            // A feed is up to date only if all its feedData are up to date.
+            $isUpToDate = $isUpToDate && $feedDataRepository->isUpToDate($feedData, $date, $frequencies);
+        }
+
+        return $isUpToDate;
     }
 }

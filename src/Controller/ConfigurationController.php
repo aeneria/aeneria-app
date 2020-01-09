@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Feed;
 use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -133,7 +132,7 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/configuration/place/{id}/fetch", name="config.place.fetch")
      */
-    public function placeFetchAction(Request $request, EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, string $id)
+    public function placeFetchAction(Request $request, GenericFeedDataProvider $feedDataProvider, FormFactoryInterface $formFactory, string $id)
     {
         $place = $this->checkPlace($id);
 
@@ -159,6 +158,7 @@ class ConfigurationController extends AbstractController
                 ])
                 ->add('force_' . $feedId, Form\CheckboxType::class, [
                     'label' => 'Forcer',
+                    'required' => false,
                 ])
                 ->add('submit_' . $feedId, Form\SubmitType::class, [
                     'attr' => [
@@ -180,10 +180,10 @@ class ConfigurationController extends AbstractController
                     $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
                     $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId]);
 
-                    $feeds[$feedId]->fetchDataBetween($entityManager, $startDate, $endDate, $data['force_' . $feedId]);
+                    $feedDataProvider->fetchDataBetween($startDate, $endDate, [$feeds[$feedId]], $data['force_' . $feedId]);
 
                     $message = \sprintf(
-                        'Les données %s ont été correctement rechargées entre le %s et le %s .',
+                        'Les données %s ont été correctement rechargées entre le %s et le %s.',
                         \ucfirst($feeds[$feedId]->getName()),
                         $data['start_date_' . $feedId],
                         $data['end_date_' . $feedId]

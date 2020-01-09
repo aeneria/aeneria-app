@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\FeedObject\FeedObject;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -103,13 +101,6 @@ class Feed
      */
     private $place;
 
-
-    /**
-     * Feed Object
-     * @var FeedObject
-     */
-    private $catchedFeedObject = NULL;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -197,108 +188,5 @@ class Feed
     public function getPlace(): Place
     {
         return $this->place;
-    }
-
-    /**
-     * Check if there's data in DB for $date for all $feed's feedData and for all $frequencies.
-     */
-    public function isUpToDate(EntityManager $entityManager, \DateTime $date, array $frequencies): bool
-    {
-        // Get all feedData.
-        $feedDataList = $entityManager->getRepository('App:FeedData')->findByFeed($this);
-
-        $isUpToDate = TRUE;
-
-        // Foreach feedData we check if we have a value for yesterday.
-        /** @var \App\Entity\FeedData $feedData */
-        foreach ($feedDataList as $feedData) {
-            // A feed is up to date only if all its feedData are up to date.
-            $isUpToDate = $isUpToDate && $feedData->isUpToDate($entityManager, $date, $frequencies);
-        }
-
-        return $isUpToDate;
-    }
-
-    /**
-     * Get Date of last up to date data.
-     */
-    public function getLastUpToDate(EntityManager $entityManager): ?\DateTime
-    {
-        // Get all feedData.
-        $feedDataList = $entityManager->getRepository('App:FeedData')->findByFeed($this);
-
-        // Foreach feedData we get the last up to date value.
-        /** @var \App\Entity\FeedData $feedData */
-        foreach ($feedDataList as $feedData) {
-            // A feed is up to date only if one feedData is up to date.
-            // Well it could be that we will never have some feedData for a Feed. (in particular nebulosity from meteofrance)
-            // In this case, if we choose that a feed is up to date only if all its feedData
-            // are up to date, we will try to get this missing data over and over and flood the api
-            // of the feed AND that's not cool :( and we try to be cool people :)
-
-            $feedDataLastUpToDate = $feedData->getLastUpToDate($entityManager);
-
-            if (empty($lastUpToDate)) {
-                $lastUpToDate = $feedDataLastUpToDate;
-            }
-
-            $lastUpToDate = max($lastUpToDate, $feedDataLastUpToDate);
-        }
-
-        // If we have no data, we start with yesterday
-        if (empty($lastUpToDate)) {
-            $lastUpToDate = new \DateTime("2 days ago");
-        }
-
-        return $lastUpToDate->add(new \DateInterval('P1D'));
-    }
-
-    public function getFeedObject(EntityManager $entityManager): FeedObject
-    {
-        if (empty($this->catchedFeedObject)) {
-            $feedClass = Feed::FEED_TYPES[$this->feedType]['CLASS'];
-            $this->catchedFeedObject = new $feedClass($this, $entityManager);
-        }
-        return $this->catchedFeedObject;
-    }
-
-    /**
-     * Fetch data from last data to $date.
-     */
-    public function fetchDataUntilLastUpdateTo(EntityManager $entityManager, \DateTime $date): void
-    {
-        $lastUpToDate = $this->getLastUpToDate($entityManager);
-        $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
-
-        while($lastUpToDate <= $date) {
-            if (!$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
-                $this->getFeedObject($entityManager)->fetchData($lastUpToDate);
-            }
-            $lastUpToDate->add(new \DateInterval('P1D'));
-        }
-    }
-
-    /**
-     * Fetch data for $date,
-     * if $force is set to true, update data even if there are already ones.
-     */
-    public function fetchDataFor(EntityManager $entityManager, \DateTime $date, $force): void
-    {
-        if ($force || !$this->isUpToDate($entityManager, $date, $this->getFeedObject($entityManager)::FREQUENCY)) {
-            $this->getFeedObject($entityManager)->fetchData($date);
-        }
-    }
-
-    /**
-     * Fetch data from startDate to $endDate,
-     * if $force is set to true, update data even if there are already ones.
-     */
-    public function fetchDataBetween(EntityManager $entityManager, \DateTime $startDate, \DateTime $endDate, $force): void
-    {
-        $date = $startDate;
-        while ($date <= $endDate) {
-            $this->fetchDataFor($entityManager, $date, $force);
-            $date->add(new \DateInterval('P1D'));
-        }
     }
 }

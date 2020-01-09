@@ -26,5 +26,7 @@ class VersionCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->write(Constants::VERSION);
+
+        return 0;
     }
 }
