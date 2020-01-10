@@ -12,6 +12,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FeedData
 {
+    const FEED_DATA_CONSO_ELEC = 'CONSO_ELEC';
+    const FEED_DATA_TEMPERATURE = 'TEMPERATURE';
+    const FEED_DATA_TEMPERATURE_MIN = 'TEMPERATURE_MIN';
+    const FEED_DATA_TEMPERATURE_MAX = 'TEMPERATURE_MAX';
+    const FEED_DATA_DJU = 'DJU';
+    const FEED_DATA_PRESSURE = 'PRESSURE';
+    const FEED_DATA_HUMIDITY = 'HUMIDITY';
+    const FEED_DATA_NEBULOSITY = 'NEBULOSITY';
+    const FEED_DATA_RAIN = 'RAIN';
+
     /**
      * @var int
      *
@@ -34,6 +44,31 @@ class FeedData
      */
     private $dataType;
 
+    /**
+     * Get unit for a type of data.
+     */
+    public static function getUnitFor(string $feedDataType): string
+    {
+        switch ($feedDataType) {
+            case self::FEED_DATA_CONSO_ELEC:
+                return 'KWh';
+            case self::FEED_DATA_TEMPERATURE:
+            case self::FEED_DATA_TEMPERATURE_MIN:
+            case self::FEED_DATA_TEMPERATURE_MAX:
+                return '°C';
+            case self::FEED_DATA_DJU:
+                return 'DJU';
+            case self::FEED_DATA_PRESSURE:
+                return 'hPa';
+            case self::FEED_DATA_HUMIDITY:
+            case self::FEED_DATA_NEBULOSITY:
+                return '%';
+            case self::FEED_DATA_RAIN:
+                return 'mm';
+            default:
+                return '';
+        }
+    }
 
     /**
      * Get id

@@ -64,6 +64,17 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function getParametersName(Feed $feed): array
+    {
+        return [
+            'STATION_ID' => 'Id de la station',
+            'CITY_NAME' => 'Ville',
+         ];
+    }
+
+    /**
      * Get all available station on MeteoFrance for SYNOP observation.
      */
     public static function getAvailableStations(): array

@@ -61,7 +61,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/users/{id}/update", name="admin.user.update")
      */
-    public function updateUserAction(Request $request, EntityManagerInterface $entityManager, $id)
+    public function updateUserAction(Request $request, $id, EntityManagerInterface $entityManager)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 

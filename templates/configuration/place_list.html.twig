@@ -7,9 +7,9 @@
       <ul class="about-list">
         {% for feed in place.feeds %}
         <li>
-          {% if feed.feedType == "LINKY" %}
+          {% if feed.feedType == "ELECTRICITY" %}
           <i class="fas fa-tachometer-alt"></i> {{ 'Compte Enedis' | trans }} : {{ feed.param['LOGIN'] }}</h>
-          {% elseif feed.feedType == "METEO_FRANCE" %}
+          {% elseif feed.feedType == "METEO" %}
           <i class="fas fa-cloud-sun"></i> {{ 'Météo' | trans}} : {{ feed.param['CITY'] }}
           {% endif %}
         </li>

@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\FeedDataProvider;
 
+use App\Entity\Feed;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
@@ -42,6 +43,21 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider {
                 break;
             default:
                 throw new \InvalidArgumentException("There's no data provider for type of feed : " . $feedType);
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getParametersName(Feed $feed): array
+    {
+        switch ($feed->getFeedType()) {
+            case 'LINKY' :
+                return LinkyDataProvider::getParametersName($feed);
+            case 'METEO_FRANCE':
+                return MeteoFranceDataProvider::getParametersName($feed);
+            default:
+                throw new \InvalidArgumentException("There's no data provider for type of feed : " . $feed->getFeedType());
         }
     }
 }

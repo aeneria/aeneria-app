@@ -12,58 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feed
 {
-    const FEED_TYPES = [
-        'LINKY' => [
-            'ID' => 1,
-            'NAME' => 'Linky',
-            'PARAM' => [
-                'ADDRESS' => 'Adresse du compteur',
-                'LOGIN' => 'Adresse email du compte Enedis',
-                'PASSWORD' => 'Mot de passe',
-            ],
-            'DATA_TYPE' => [
-                'CONSO_ELEC' => [
-                    'UNIT' => 'KWh',
-                ]
-            ],
-            'CLASS' => 'App\FeedObject\Linky',
-        ],
-        'METEO_FRANCE' => [
-            'ID' => 2,
-            'NAME' => 'Meteo France',
-            'PARAM' => [
-                'STATION_ID' => 'Id de la station',
-                'CITY_NAME' => 'Ville',
-            ],
-            'DATA_TYPE' => [
-                'TEMPERATURE' => [
-                    'UNIT' => '°C',
-                ],
-                'TEMPERATURE_MIN' => [
-                    'UNIT' => '°C',
-                ],
-                'TEMPERATURE_MAX' => [
-                    'UNIT' => '°C',
-                ],
-                'DJU' => [
-                    'UNIT' => 'DJU',
-                ],
-                'PRESSURE' => [
-                    'UNIT' => 'hPa',
-                ],
-                'HUMIDITY' => [
-                    'UNIT' => '%',
-                ],
-                'NEBULOSITY' => [
-                    'UNIT' => '%',
-                ],
-                'RAIN' => [
-                    'UNIT' => 'mm',
-                ],
-            ],
-            'CLASS' => 'App\FeedObject\MeteoFrance',
-        ],
-    ];
+    const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
+    const FEED_TYPE_METEO = 'METEO';
+
+    const FEED_DATA_PROVIDER_LINKY = 'LINKY';
+    const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
 
     /**
      * @var int
@@ -89,6 +42,13 @@ class Feed
     private $feedType;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="feed_data_provider_type", type="string", length=150)
+     */
+    private $feedDataProviderType;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="param", type="json_array")
@@ -100,6 +60,52 @@ class Feed
      * @ORM\JoinColumn(nullable=false)
      */
     private $place;
+
+    public static function getAllFeedTypes(): array
+    {
+        return [
+            self::FEED_TYPE_ELECTRICITY => [
+                'NAME' => 'Electricity',
+                'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
+                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_LINKY],
+            ],
+            self::FEED_TYPE_METEO => [
+                'NAME' => 'Meteo',
+                'DATA_TYPE' => [
+                    FeedData::FEED_DATA_TEMPERATURE,
+                    FeedData::FEED_DATA_TEMPERATURE_MIN,
+                    FeedData::FEED_DATA_TEMPERATURE_MAX,
+                    FeedData::FEED_DATA_DJU,
+                    FeedData::FEED_DATA_PRESSURE,
+                    FeedData::FEED_DATA_HUMIDITY,
+                    FeedData::FEED_DATA_NEBULOSITY,
+                    FeedData::FEED_DATA_RAIN,
+                ],
+                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_METEO_FRANCE],
+            ],
+        ];
+    }
+
+    public static function getAllowedDataProvidersFor(string $feedType): array
+    {
+        if (\key_exists($feedType, self::getAllFeedTypes())) {
+            return self::getAllFeedTypes()[$feedType]['DATA_PROVIDER_TYPE'];
+        }
+    }
+
+    public static function getNameFor(string $feedType): array
+    {
+        if (\key_exists($feedType, self::getAllFeedTypes())) {
+            return self::getAllFeedTypes()[$feedType]['NAME'];
+        }
+    }
+
+    public static function getDataTypeFor(string $feedType): array
+    {
+        if (\key_exists($feedType, self::getAllFeedTypes())) {
+            return self::getAllFeedTypes()[$feedType]['DATA_TYPE'];
+        }
+    }
 
     public function getId(): ?int
     {
@@ -176,6 +182,18 @@ class Feed
     public function getFeedType(): string
     {
         return $this->feedType;
+    }
+
+    public function setFeedDataProviderType(string $feedDataProviderType): Feed
+    {
+        $this->feedDataProviderType = $feedDataProviderType;
+
+        return $this;
+    }
+
+    public function getFeedDataProviderType(): string
+    {
+        return $this->feedDataProviderType;
     }
 
     public function setPlace(Place $place): Feed

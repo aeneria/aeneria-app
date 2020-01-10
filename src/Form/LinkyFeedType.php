@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Feed;
+use App\Services\FeedDataProvider\LinkyDataProvider;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -32,7 +33,7 @@ class LinkyFeedType extends AbstractType
                     $param = $linkyFeed->getParam();
 
                     $data['name'] = $linkyFeed->getName();
-                    foreach (\array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $paramName) {
+                    foreach (\array_keys(LinkyDataProvider::getParametersName($linkyFeed)) as $paramName) {
                         $data[\strtolower($paramName)] = $param[$paramName];
                     }
 
@@ -45,13 +46,14 @@ class LinkyFeedType extends AbstractType
                 if (!$linkyFeed) {
                     $linkyFeed = new Feed();
                     $linkyFeed
-                        ->setFeedType('LINKY')
+                        ->setFeedType(Feed::FEED_TYPE_ELECTRICITY)
+                        ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_LINKY)
                         ->setName('linky')
                     ;
                 }
 
                 $param = [];
-                foreach (array_keys(Feed::FEED_TYPES['LINKY']['PARAM']) as $name) {
+                foreach (array_keys(LinkyDataProvider::getParametersName($linkyFeed)) as $name) {
                     $param[$name] = $data[\strtolower($name)] ?? $linkyFeed->getParam()[$name] ?? null;
                 }
                 $linkyFeed->setParam($param);

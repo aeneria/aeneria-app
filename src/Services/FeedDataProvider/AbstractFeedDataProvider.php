@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\FeedDataProvider;
 
+use App\Entity\Feed;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
@@ -44,6 +45,15 @@ abstract class AbstractFeedDataProvider {
     public static function getFrequencies()
     {
         throw new \Exception("Your custom feedDataProvider should implement this method !");
+    }
+
+    /**
+     * Get array parameters that a feed which uses this provider should have.
+     */
+    public static function getParametersName(Feed $feed): array
+    {
+        throw new \Exception("Your custom feedDataProvider should implement this method !");
+        return [];
     }
 
     /**

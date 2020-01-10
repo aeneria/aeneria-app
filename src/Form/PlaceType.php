@@ -6,6 +6,7 @@ use App\Entity\Place;
 use App\Entity\User;
 use App\Form\LinkyFeedType;
 use App\Form\MeteoFranceFeedType;
+use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
 use App\Validator\Constraints\LogsToEnedis;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,13 +49,13 @@ class PlaceType extends AbstractType
                 'attr' => ['class' => 'bootstrap-multiselect'],
                 'required' => false,
             ])
-            ->add('linky', LinkyFeedType::class, [
+            ->add('electricity', LinkyFeedType::class, [
                 'label' => false,
                 'constraints' => [
                     new LogsToEnedis(),
                 ],
             ])
-            ->add('meteo_france', MeteoFranceFeedType::class, [
+            ->add('meteo', MeteoFranceFeedType::class, [
                 'label' => false,
             ])
             ->add('save', SubmitType::class, [
@@ -92,8 +93,8 @@ class PlaceType extends AbstractType
                         ->setIcon($data['icon'])
                         ->setPublic($data['public'])
                         ->setAllowedUsers($this->userRepository->findById($data['shared']))
-                        ->addFeed($data['meteo_france'])
-                        ->addFeed($data['linky'])
+                        ->addFeed($data['meteo'])
+                        ->addFeed($data['electricity'])
                     ;
 
                     return $place;
@@ -109,12 +110,11 @@ class PlaceType extends AbstractType
         ]);
     }
 
-    public function handleSubmit(EntityManagerInterface $entityManager, Place $place, User $user)
+    public static function handleSubmit(EntityManagerInterface $entityManager, Place $place, User $user)
     {
         $place->setUser($user);
 
         $entityManager->persist($place);
-
         $feedRepository = $entityManager->getRepository('App:Feed');
 
         foreach ($place->getFeeds() as $feed) {

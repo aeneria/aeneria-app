@@ -41,7 +41,8 @@ class MeteoFranceFeedType extends AbstractType
                 if (!$meteoFranceFeed) {
                     $meteoFranceFeed = new Feed();
                     $meteoFranceFeed
-                        ->setFeedType('METEO_FRANCE')
+                        ->setFeedType(Feed::FEED_TYPE_METEO)
+                        ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_METEO_FRANCE)
                         ->setName('meteo')
                     ;
                 }

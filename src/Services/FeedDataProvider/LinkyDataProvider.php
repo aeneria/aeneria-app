@@ -45,6 +45,17 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function getParametersName(Feed $feed): array
+    {
+        return [
+            'LOGIN' => 'Adresse email du compte Enedis',
+            'PASSWORD' => 'Mot de passe',
+        ];
+    }
+
+    /**
      * Fetch ENEDIS data for $date and persist its in database.
      *
      * @param \DateTime $date

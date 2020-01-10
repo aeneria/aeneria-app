@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -89,7 +90,7 @@ class UserType extends AbstractType
 
     }
 
-    public function handleSubmit(ObjectManager $entityManager, User $user)
+    public static function handleSubmit(EntityManagerInterface $entityManager, User $user)
     {
         $entityManager->persist($user);
         $entityManager->flush();

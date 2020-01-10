@@ -30,7 +30,7 @@ class FeedRepository extends ServiceEntityRepository
 
         // We check, for this feed, if each dataFeeds are already created,
         // and create it if not.
-        foreach (\array_keys(Feed::FEED_TYPES[$feed->getFeedType()]['DATA_TYPE']) as $label) {
+        foreach (Feed::getDataTypeFor($feed->getFeedType()) as $label) {
             $feedData = $feedDataRepository->findOneBy([
                 'feed' =>  $feed,
                 'dataType' => $label

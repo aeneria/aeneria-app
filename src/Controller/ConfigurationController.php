@@ -6,6 +6,7 @@ use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -37,7 +38,7 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/configuration/place/add", name="config.place.add")
      */
-    public function placeAddAction(Request $request)
+    public function placeAddAction(Request $request, EntityManagerInterface $entityManager)
     {
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $configForm = $this->createForm(PlaceType::class, null, [
@@ -48,7 +49,7 @@ class ConfigurationController extends AbstractController
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-                PlaceType::handleSubmit($this->getDoctrine()->getManager(), $configForm->getData(), $this->getUser());
+                PlaceType::handleSubmit($entityManager, $configForm->getData(), $this->getUser());
                 $this->addFlash('success', 'La nouvelle adresse a bien été enregistrée !');
 
                 return $this->redirectToRoute('config');
@@ -64,7 +65,7 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/configuration/place/{id}/update", name="config.place.update")
      */
-    public function placeUpdateAction(Request $request, string $id)
+    public function placeUpdateAction(Request $request, string $id, EntityManagerInterface $entityManager)
     {
         $place = $this->checkPlace($id);
 
@@ -78,7 +79,7 @@ class ConfigurationController extends AbstractController
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-                PlaceType::handleSubmit($this->getDoctrine()->getManager(), $configForm->getData(), $this->getUser());
+                PlaceType::handleSubmit($entityManager, $configForm->getData(), $this->getUser());
                 $this->addFlash('success', 'Votre configuration a bien été enregistrée !');
 
                 return $this->redirectToRoute('config');
@@ -147,7 +148,7 @@ class ConfigurationController extends AbstractController
                 ->createNamedBuilder($feedId)
                 ->add('start_date_' . $feedId, Form\TextType::class, [
                     'label' => false,
-                    'help' => $feed->getFeedType() === 'METEO_FRANCE' ? "Attention, les données météorologiques ne sont plus accessibles après 2 semaines." : '',
+                    'help' => $feed->getFeedType() === 'METEO' ? "Attention, les données météorologiques ne sont plus accessibles après 2 semaines." : '',
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
                 ])
