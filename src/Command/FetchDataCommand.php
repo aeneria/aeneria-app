@@ -38,7 +38,7 @@ class FetchDataCommand extends Command
             ->setDescription('Get newly data from all feeds')
             ->setHelp('This command allows you to fetch newly data for all active feeds')
             ->addOption('date', 'd', InputOption::VALUE_OPTIONAL, 'A date (Y-m-d), if you want to refresh data for a specific date.')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Use this option if you want to refresh data even if it already exists')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, "Use this option if you want to refresh data even if it already exists (that's relevant only if you precise a date with the --date option)")
             ->addOption('placeid', 'pid', InputOption::VALUE_OPTIONAL, 'A Place ID, if you want to refresh data for a specific place.')
             ->addOption('feedid', 'fid', InputOption::VALUE_OPTIONAL, 'A Feed ID, if you want to refresh data for a specific feed.')
         ;
@@ -47,7 +47,7 @@ class FetchDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('placeid') && $input->getOption('feedid')) {
-            throw new \Exception("You can't specefied a Place id AND a Feed id, you have to choose !");
+            throw new \Exception("You can't specify a Place id AND a Feed id, you have to choose !");
         }
 
         if ($placeId = $input->getOption('placeid')) {

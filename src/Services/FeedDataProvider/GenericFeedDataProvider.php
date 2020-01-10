@@ -29,7 +29,7 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider {
             if (!$feedType) {
                 $feedType = $feed->getFeedType();
             } else if ($feed->getFeedType() !== $feedType) {
-                throw new \InvalidArgumentException("Should be an array of of Feeds with the same type here !");
+                throw new \InvalidArgumentException("Should be an array of Feeds with the same type here !");
             }
         }
 
