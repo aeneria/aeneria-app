@@ -1,17 +1,15 @@
 <?php
 
-namespace App\FeedObject;
+namespace App\Services\FeedDataProvider;
 
 
 use App\Entity\Feed;
 use App\Entity\DataValue;
-use Doctrine\ORM\EntityManager;
-use GuzzleHttp\Client;
 
 /**
  * Meteo France API to get SYNOP Observations.
  */
-class MeteoFrance implements FeedObject {
+class MeteoFranceDataProvider extends AbstractFeedDataProvider {
 
     /**
      * Different usefull URIs.
@@ -46,7 +44,6 @@ class MeteoFrance implements FeedObject {
     /**
      * Frequencies for MeteoFrance FeedData.
      * @deprecated use getFrequencies() instead.
-     * @var array
      */
     const FREQUENCY = [
         DataValue::FREQUENCY['DAY'],
@@ -55,31 +52,7 @@ class MeteoFrance implements FeedObject {
     ];
 
     /**
-     * Feed correspondingto the MeteoFrance Object
-     * @var Feed
-     */
-    private $feed;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Constructor.
-     *
-     * @param Feed $feed
-     * @param EntityManager $entityManager
-     */
-    public function __construct(Feed $feed, EntityManager $entityManager)
-    {
-        $this->feed = $feed;
-        $this->entityManager = $entityManager;
-    }
-
-    /**
      * {@inheritDoc}
-     * @see \App\FeedObject\FeedObject::getFrequencies()
      */
     public static function getFrequencies()
     {
@@ -92,12 +65,11 @@ class MeteoFrance implements FeedObject {
 
     /**
      * Get all available station on MeteoFrance for SYNOP observation.
-     * @return array
      */
-    public static function getAvailableStations()
+    public static function getAvailableStations(): array
     {
         $stations = [];
-        $header = NULL;
+        $header = [];
 
         // Reads csv files containing stations info.
         $stationsData = \file(\getcwd() . self::SYNOP_POSTES);
@@ -105,10 +77,9 @@ class MeteoFrance implements FeedObject {
         foreach($stationsData as $row) {
             $row = \str_getcsv ($row, ';');
 
-            if(!$header) {
+            if(\count($header) == 0) {
                 $header = $row;
-            }
-            else {
+            } else {
                 $row = \array_combine($header, $row);
 
                 // We only keep ID and name for each station.
@@ -123,33 +94,88 @@ class MeteoFrance implements FeedObject {
     }
 
     /**
-     * Fetch SYNOP data for $date and persist its in database.
-     *
-     * @param \DateTime $date
+     * @inheritdoc
      */
-    public function fetchData(\DateTime $date)
+    public function fetchData(\DateTime $date, array $feeds, bool $force = false)
     {
-        // Get all 3-hours interval data from yesterday.
-        $rawData = $this->getRawData($date);
+        $synopData = $this->fetchSynopData($date);
+
+        foreach ($feeds as $feed) {
+            if ( (!$feed instanceof Feed) || $feed->getFeedType() !== 'METEO_FRANCE') {
+                throw new \InvalidArgumentException("Should be an array of MeteoFrance Feeds overhere !");
+            }
+
+            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $this->getFrequencies())) {
+                $this->refreshFeedData($date, $feed, $synopData);
+            }
+        }
+    }
+
+    private function fetchSynopData(\Datetime $date): array
+    {
+        $synopData = [];
+
+        $clientOption = [
+            'verify_host' => false,
+            'buffer' => true,
+        ];
+
+        $dateFormated = $date->format('Ymd');
+
+        // We get data foreach 3 hours intervall from 00 to 21h.
+        for ($hour = 0; $hour < 24; $hour += 3) {
+            // We build the path to the date's file (ex: synop.2018040800.csv).
+            $uri = \sprintf("%s%s%s%02d%s", self::SYNOP_BASE_PATH, self::SYNOP_DATA, $dateFormated, $hour, '.csv');
+
+            // We get the raw CSV.
+            $response = $this->httpClient->request('GET', $uri, $clientOption);
+            if ($response->getStatusCode() == 200) {
+                $partialSynopData = $response->getContent();
+
+                // We parse it.
+                $rows = \array_filter(\preg_split('/\R/', $partialSynopData));
+                $header = [];
+
+                foreach($rows as $row) {
+                    $row = \str_getcsv ($row, ';');
+                    if(\count($header) == 0) {
+                        // If the first line doesn't start with the right data, then we have an error in the response
+                        if ($row[0] !== self::SYNOP_DATA_NAME['STATION_ID']) {
+                            break;
+                        }
+                        $header = $row;
+                    } else {
+                        $row = \array_combine($header, $row);
+                        $synopData[\intval($row[self::SYNOP_DATA_NAME['STATION_ID']])][$hour] = $row;
+                    }
+                }
+            }
+        }
+
+        return $synopData;
+    }
+
+    private function refreshFeedData(\DateTime $date, Feed $feed, array $synopData)
+    {
+        $stationId = $feed->getParam()['STATION_ID'];
 
         // If we have data.
-        if (!empty($rawData)) {
+        if (\key_exists($stationId, $synopData) && $rawData = $synopData[$stationId]) {
             // Get 1 value for yesterday for each type of data.
             $fastenData = $this->fastenRawData($rawData);
 
             // Get all feedData.
-            $feedDataList = $this->entityManager->getRepository('App:FeedData')->findByFeed($this->feed);
+            $feedDataList = $this->feedDataRepository->findByFeed($feed);
 
             // Foreach feedData store the value for yesterday.
-            /** @var \App\Entity\FeedData $feedData */
             foreach ($feedDataList as $feedData) {
                 $dataType = $feedData->getDataType();
                 if ($fastenData[$dataType] !== NULL) {
-                    $feedData->updateOrCreateValue(
+                    $this->feedDataRepository->updateOrCreateValue(
+                        $feedData,
                         $date,
                         DataValue::FREQUENCY['DAY'],
-                        $fastenData[$dataType],
-                        $this->entityManager
+                        $fastenData[$dataType]
                     );
                 }
             }
@@ -158,7 +184,7 @@ class MeteoFrance implements FeedObject {
             $this->entityManager->flush();
 
             // Refresh week and month aggregate data.
-            $this->refreshAgregateValue($date);
+            $this->refreshAgregateValue($date, $feed);
         }
     }
 
@@ -168,55 +194,16 @@ class MeteoFrance implements FeedObject {
      *
      * @param \DateTime $date
      */
-    public function refreshAgregateValue(\DateTime $date)
+    private function refreshAgregateValue(\DateTime $date, Feed $feed)
     {
         // Refreshing agregate value for current week.
-        $this->refreshWeekValue($date);
+        $this->refreshWeekValue($date, $feed);
 
         // Refreshing agregate value for current month.
-        $this->refreshMonthValue($date);
+        $this->refreshMonthValue($date, $feed);
 
         // Flush all persisted DataValue.
         $this->entityManager->flush();
-    }
-
-    /**
-     * Get each 3-hours raw SYNOP data for the date from Meteo France.
-     *
-     * @param \DateTime $date
-     * @return array[]
-     */
-    private function getRawData(\DateTime $date)
-    {
-        $rawData = [];
-
-        // Declare the http client.
-        $client = new Client(['base_uri' => self::SYNOP_BASE_PATH]);
-        $clientOption = [
-            'verify' => false,
-            'stream' => true,
-        ];
-
-        $dateFormated = $date->format('Ymd');
-
-        // We get data foreach 3 hours intervall from 00 to 21h.
-        for ($hour = 0; $hour < 24; $hour += 3) {
-            // We build the path to the date's file (ex: synop.2018040800.csv).
-            $uri= self::SYNOP_DATA . $dateFormated . \sprintf("%02d", $hour) . '.csv';
-
-            // We get the raw CSV.
-            $response = $client->get($uri, $clientOption);
-            if ($response->getStatusCode() == 200) {
-                $synopData = $response->getBody()->getContents();
-                // We parse it to only get what we need.
-                $data = $this->getStationRawData($synopData);
-                if ($data) {
-                    $rawData[] = $data;
-                }
-            }
-        }
-
-        return $rawData;
     }
 
     /**
@@ -324,7 +311,7 @@ class MeteoFrance implements FeedObject {
      *
      * @param \DateTime $date
      */
-    private function refreshWeekValue(\DateTime $date)
+    private function refreshWeekValue(\DateTime $date, Feed $feed)
     {
         $firstDayOfWeek = clone $date;
         $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
@@ -333,7 +320,7 @@ class MeteoFrance implements FeedObject {
         $lastDayOfWeek = clone $firstDayOfWeek;
         $lastDayOfWeek->add(new \DateInterval('P6D'));
 
-        $this->performAgregateValue($firstDayOfWeek, $lastDayOfWeek, DataValue::FREQUENCY['WEEK']);
+        $this->performAgregateValue($firstDayOfWeek, $lastDayOfWeek, $feed, DataValue::FREQUENCY['WEEK']);
     }
 
     /**
@@ -342,7 +329,7 @@ class MeteoFrance implements FeedObject {
      *
      * @param \DateTime $date
      */
-    private function refreshMonthValue(\DateTime $date)
+    private function refreshMonthValue(\DateTime $date, Feed $feed)
     {
         $firstDayOfMonth = clone $date;
         $firstDayOfMonth->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
@@ -350,7 +337,7 @@ class MeteoFrance implements FeedObject {
         $lastDayOfMonth = clone $firstDayOfMonth;
         $lastDayOfMonth->add(new \DateInterval('P' . ($date->format('t')) . 'D'));
 
-        $this->performAgregateValue($firstDayOfMonth, $lastDayOfMonth, DataValue::FREQUENCY['MONTH']);
+        $this->performAgregateValue($firstDayOfMonth, $lastDayOfMonth, $feed, DataValue::FREQUENCY['MONTH']);
     }
 
     /**
@@ -360,10 +347,10 @@ class MeteoFrance implements FeedObject {
      * @param \DateTime $endDate
      * @param int $frequency
      */
-    private function performAgregateValue(\DateTime $startDate, \DateTime $endDate, $frequency)
+    private function performAgregateValue(\DateTime $startDate, \DateTime $endDate, Feed $feed, string $frequency)
     {
         // Get all feedData.
-        $feedDataList = $this->entityManager->getRepository('App:FeedData')->findByFeed($this->feed);
+        $feedDataList = $this->feedDataRepository->findByFeed($feed);
 
         /** @var \App\Entity\FeedData $feedData */
         foreach ($feedDataList as $feedData) {
@@ -371,8 +358,7 @@ class MeteoFrance implements FeedObject {
                 case 'DJU':
                 case 'RAIN':
                     $agregateData = $this
-                        ->entityManager
-                        ->getRepository('App:DataValue')
+                        ->dataValueRepository
                         ->getSumValue(
                             $startDate,
                             $endDate,
@@ -383,8 +369,7 @@ class MeteoFrance implements FeedObject {
                     break;
                 case 'TEMPERATURE_MAX':
                     $agregateData = $this
-                        ->entityManager
-                        ->getRepository('App:DataValue')
+                        ->dataValueRepository
                         ->getMaxValue(
                             $startDate,
                             $endDate,
@@ -395,8 +380,7 @@ class MeteoFrance implements FeedObject {
                     break;
                 case 'TEMPERATURE_MIN':
                     $agregateData = $this
-                        ->entityManager
-                        ->getRepository('App:DataValue')
+                        ->dataValueRepository
                         ->getMinValue(
                             $startDate,
                             $endDate,
@@ -407,8 +391,7 @@ class MeteoFrance implements FeedObject {
                     break;
                 default:
                     $agregateData = $this
-                        ->entityManager
-                        ->getRepository('App:DataValue')
+                        ->dataValueRepository
                         ->getAverageValue(
                             $startDate,
                             $endDate,
@@ -420,75 +403,13 @@ class MeteoFrance implements FeedObject {
             }
 
             if (isset($agregateData[0]['value'])) {
-                $feedData->updateOrCreateValue(
+                $this->feedDataRepository->updateOrCreateValue(
+                    $feedData,
                     $startDate,
                     $frequency,
-                    \round($agregateData[0]['value'], 1),
-                    $this->entityManager
+                    \round($agregateData[0]['value'], 1)
                 );
             }
-        }
-    }
-
-    /**
-     * Extract SYNOP data for the feed's station from Meteo France CSV.
-     *
-     * @param string $synopData
-     * @return array
-     */
-    private function getStationRawData($synopData)
-    {
-        $stationId = $this->feed->getParam()['STATION_ID'];
-        $rows = \array_filter(\preg_split('/\R/', $synopData));
-        $header = NULL;
-        $data = [];
-
-        foreach($rows as $row) {
-            $row = \str_getcsv ($row, ';');
-
-            if(!$header) {
-                $header = $row;
-                if ($header[0] != self::SYNOP_DATA_NAME['STATION_ID']) {
-                  return FALSE;
-                }
-            }
-            else {
-                $row = \array_combine($header, $row);
-                if ($row[self::SYNOP_DATA_NAME['STATION_ID']] == $stationId) {
-                    $data = $row;
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Update min & max value.
-     *
-     * @param float $curMin
-     * @param float $curMax
-     * @param float $newValue
-     */
-    private function updateExtrema(&$curMin, &$curMax, $newValue)
-    {
-        if (!isset($curMin)) {
-            $curMin = $newValue;
-        }
-        else {
-            $curMin = \min([
-                $curMin,
-                $newValue,
-            ]);
-        }
-        if (!isset($curMax)) {
-            $curMax = $newValue;
-        }
-        else {
-            $curMax = \max([
-                $curMax,
-                $newValue,
-            ]);
         }
     }
 
@@ -501,7 +422,7 @@ class MeteoFrance implements FeedObject {
      * @param float $tempMax
      * @return float DJU
      */
-    private function calculateDju($tempMin, $tempMax)
+    public static function calculateDju($tempMin, $tempMax)
     {
         $tempAvg = ($tempMax + $tempMin)/2;
         if (self::BASE_DJU > $tempMax) {

@@ -61,6 +61,8 @@ class InstallCommand extends Command
             ->clearCache();
 
         $this->io->success('Pilea has been successfully installed.');
+
+        return 0;
     }
 
     protected function checkRequirements()
