@@ -5,9 +5,6 @@ monolog:
             action_level: error
             handler: nested
             max_files: 10
-            excluded_404s:
-                # regex: exclude all 404 errors from the logs
-                - ^/
         nested:
             type: rotating_file
             path: "%kernel.logs_dir%/%kernel.environment%.log"
