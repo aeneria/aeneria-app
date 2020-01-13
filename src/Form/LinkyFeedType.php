@@ -34,7 +34,7 @@ class LinkyFeedType extends AbstractType
 
                     $data['name'] = $linkyFeed->getName();
                     foreach (\array_keys(LinkyDataProvider::getParametersName($linkyFeed)) as $paramName) {
-                        $data[\strtolower($paramName)] = $param[$paramName];
+                        $data[\strtolower($paramName)] = $param[$paramName] ?? null;
                     }
 
                     return $data;
@@ -45,12 +45,12 @@ class LinkyFeedType extends AbstractType
 
                 if (!$linkyFeed) {
                     $linkyFeed = new Feed();
-                    $linkyFeed
-                        ->setFeedType(Feed::FEED_TYPE_ELECTRICITY)
-                        ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_LINKY)
-                        ->setName('linky')
-                    ;
                 }
+                $linkyFeed
+                    ->setFeedType(Feed::FEED_TYPE_ELECTRICITY)
+                    ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_LINKY)
+                    ->setName('linky')
+                ;
 
                 $param = [];
                 foreach (array_keys(LinkyDataProvider::getParametersName($linkyFeed)) as $name) {

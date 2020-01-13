@@ -66,8 +66,8 @@ class GenerateFakeDataCommand extends Command
         $username = $input->getOption('user-name') ?? 'user-test';
         $password = $input->getOption('user-password') ?? 'password';
         $placeName = $input->getOption('place-name') ?? 'place-test';
-        $from = $input->getOption('from') ?? new \DateTime('3 months ago');
-        $to = $input->getOption('to') ?? new \DateTime('yesterday');
+        $from = $input->getOption('from') ? new \DateTime($input->getOption('from')) : new \DateTime('3 months ago');
+        $to = $input->getOption('to') ? new \DateTime($input->getOption('to')) : new \DateTime('yesterday');
 
         $user = $this->createOrUpdateUser($username , $password);
         $place = $this->createOrGetPlace($user, $placeName);
