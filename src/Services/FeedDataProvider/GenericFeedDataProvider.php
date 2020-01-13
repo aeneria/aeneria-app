@@ -11,38 +11,43 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider {
 
     private $linkyDataProvider;
     private $meteoFranceDataProvider;
+    private $fakeDataProvider;
 
     public function __construct(EntityManagerInterface $entityManager, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository,
-        DataValueRepository $dataValueRepository, LinkyDataProvider $linkyDataProvider, MeteoFranceDataProvider $meteoFranceDataProvider)
-    {
+        DataValueRepository $dataValueRepository,
+        LinkyDataProvider $linkyDataProvider, MeteoFranceDataProvider $meteoFranceDataProvider, FakeDataProvider $fakeDataProvider
+    ) {
         $this->linkyDataProvider = $linkyDataProvider;
         $this->meteoFranceDataProvider = $meteoFranceDataProvider;
+        $this->fakeDataProvider = $fakeDataProvider;
 
         parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository);
     }
 
     public function fetchData(\Datetime $date, array $feeds, bool $force = false)
     {
-        $feedType = '';
+        $feedDataProviderId = '';
 
         // Determine Feeds type
         foreach ($feeds as $feed) {
-            if (!$feedType) {
-                $feedType = $feed->getFeedType();
-            } else if ($feed->getFeedType() !== $feedType) {
-                throw new \InvalidArgumentException("Should be an array of Feeds with the same type here !");
+            if (!$feedDataProviderId) {
+                $feedDataProviderId = $feed->getFeedDataProviderType();
+            } else if ($feed->getFeedDataProviderType() !== $feedDataProviderId) {
+                throw new \InvalidArgumentException("Should be an array of Feeds with the same data provider type here !");
             }
         }
 
-        switch ($feedType) {
-            case 'LINKY' :
+        switch ($feedDataProviderId) {
+            case Feed::FEED_DATA_PROVIDER_LINKY :
                 $this->linkyDataProvider->fetchData($date, $feeds, $force);
                 break;
-            case 'METEO_FRANCE':
+            case Feed::FEED_DATA_PROVIDER_METEO_FRANCE:
                 $this->meteoFranceDataProvider->fetchData($date, $feeds, $force);
                 break;
+            case Feed::FEED_DATA_PROVIDER_FAKE:
+                $this->fakeDataProvider->fetchData($date, $feeds, $force);
             default:
-                throw new \InvalidArgumentException("There's no data provider for type of feed : " . $feedType);
+                throw new \InvalidArgumentException("There's no data provider of type : " . $feedDataProviderId);
         }
     }
 
@@ -51,11 +56,13 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider {
      */
     public static function getParametersName(Feed $feed): array
     {
-        switch ($feed->getFeedType()) {
-            case 'LINKY' :
+        switch ($feed->getFeedDataProviderType()) {
+            case Feed::FEED_DATA_PROVIDER_LINKY :
                 return LinkyDataProvider::getParametersName($feed);
-            case 'METEO_FRANCE':
+            case Feed::FEED_DATA_PROVIDER_METEO_FRANCE:
                 return MeteoFranceDataProvider::getParametersName($feed);
+            case Feed::FEED_DATA_PROVIDER_FAKE:
+                return [];
             default:
                 throw new \InvalidArgumentException("There's no data provider for type of feed : " . $feed->getFeedType());
         }

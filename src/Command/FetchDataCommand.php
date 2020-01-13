@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
@@ -12,9 +11,7 @@ use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Defined command to refresh all feeds
- * @todo Simplify, no need for callbacks, just make Linky and MeteoFrance implements a same interface
- *
+ * Get newly data from all feeds
  */
 class FetchDataCommand extends Command
 {
@@ -64,11 +61,14 @@ class FetchDataCommand extends Command
             }
             $this->fetchFor($input, [$feed]);
         } else {
-            $feedTypes = ['LINKY', 'METEO_FRANCE'];
+            $feedDataProviderTypes = ['LINKY', 'METEO_FRANCE'];
 
-            foreach ($feedTypes as $feedType) {
+            foreach ($feedDataProviderTypes as $feedDataProviderType) {
                 // We fetch all Feeds data.
-                $this->fetchFor($input, $this->feedRepository->findAllActive($feedType));
+                if ($feeds = $this->feedRepository->findAllActive($feedDataProviderType))
+                {
+                    $this->fetchFor($input, $feeds);
+                }
             }
         }
 

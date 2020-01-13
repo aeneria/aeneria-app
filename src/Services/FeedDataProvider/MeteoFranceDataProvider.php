@@ -112,7 +112,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         $synopData = $this->fetchSynopData($date);
 
         foreach ($feeds as $feed) {
-            if ( (!$feed instanceof Feed) || $feed->getFeedType() !== 'METEO_FRANCE') {
+            if ( (!$feed instanceof Feed) || $feed->getFeedDataProviderType() !== 'METEO_FRANCE') {
                 throw new \InvalidArgumentException("Should be an array of MeteoFrance Feeds overhere !");
             }
 

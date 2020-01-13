@@ -17,6 +17,7 @@ class Feed
 
     const FEED_DATA_PROVIDER_LINKY = 'LINKY';
     const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
+    const FEED_DATA_PROVIDER_FAKE = 'FAKE';
 
     /**
      * @var int

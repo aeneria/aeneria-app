@@ -69,7 +69,7 @@ class FeedRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllActive($feedType = null)
+    public function findAllActive($feedDataProviderType = null)
     {
         $queryBuilder = $this
             ->createQueryBuilder('f')
@@ -79,10 +79,10 @@ class FeedRepository extends ServiceEntityRepository
             ->where('u.active = 1')
         ;
 
-        if ($feedType) {
+        if ($feedDataProviderType) {
             $queryBuilder
-                ->where('f.feedType = :type')
-                ->setParameter('type', $feedType)
+                ->where('f.feedDataProviderType = :type')
+                ->setParameter('type', $feedDataProviderType)
             ;
         }
 

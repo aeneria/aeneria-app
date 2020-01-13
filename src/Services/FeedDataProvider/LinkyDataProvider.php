@@ -63,7 +63,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     public function fetchData(\DateTime $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
-            if ( (!$feed instanceof Feed) || $feed->getFeedType() !== 'LINKY') {
+            if ( (!$feed instanceof Feed) || $feed->getFeedDataProviderType() !== 'LINKY') {
                 throw new \InvalidArgumentException("Should be an array of Linky Feeds overhere !");
             }
 

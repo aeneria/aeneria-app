@@ -33,7 +33,7 @@ class Place
      *
      * @ORM\Column(name="icon", type="string", length=50)
      */
-    private $icon;
+    private $icon = 'home';
 
     /**
      * @var bool
