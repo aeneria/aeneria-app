@@ -93,22 +93,16 @@ class DataValue
 
     /**
      * Get id
-     *
-     * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * Set value
-     *
-     * @param float $value
-     *
-     * @return DataValue
      */
-    public function setValue($value)
+    public function setValue(float $value): self
     {
         $this->value = $value;
 
@@ -117,22 +111,16 @@ class DataValue
 
     /**
      * Get value
-     *
-     * @return float
      */
-    public function getValue()
+    public function getValue(): float
     {
         return $this->value;
     }
 
     /**
      * Set date
-     *
-     * @param \DateTime $date
-     *
-     * @return DataValue
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date): self
     {
         $this->date = $date;
 
@@ -141,22 +129,16 @@ class DataValue
 
     /**
      * Get date
-     *
-     * @return \DateTime
      */
-    public function getDate()
+    public function getDate(): \DateTime
     {
         return $this->date;
     }
 
     /**
      * Set hour
-     *
-     * @param integer $hour
-     *
-     * @return DataValue
      */
-    public function setHour($hour)
+    public function setHour(int $hour): self
     {
         $this->hour = $hour;
 
@@ -165,22 +147,16 @@ class DataValue
 
     /**
      * Get hour
-     *
-     * @return integer
      */
-    public function getHour()
+    public function getHour(): int
     {
         return $this->hour;
     }
 
     /**
      * Set weekDay
-     *
-     * @param integer $weekDay
-     *
-     * @return DataValue
      */
-    public function setWeekDay($weekDay)
+    public function setWeekDay(int $weekDay): self
     {
         $this->weekDay = $weekDay;
 
@@ -189,10 +165,8 @@ class DataValue
 
     /**
      * Get weekDay
-     *
-     * @return integer
      */
-    public function getWeekDay()
+    public function getWeekDay(): int
     {
         return $this->weekDay;
     }
@@ -201,10 +175,8 @@ class DataValue
      * Set week
      *
      * @param integer $week
-     *
-     * @return DataValue
      */
-    public function setWeek($week)
+    public function setWeek(int $week): self
     {
         $this->week = $week;
 
@@ -213,10 +185,8 @@ class DataValue
 
     /**
      * Get week
-     *
-     * @return integer
      */
-    public function getWeek()
+    public function getWeek(): int
     {
         return $this->week;
     }
@@ -225,10 +195,8 @@ class DataValue
      * Set month
      *
      * @param integer $month
-     *
-     * @return DataValue
      */
-    public function setMonth($month)
+    public function setMonth(int $month): self
     {
         $this->month = $month;
 
@@ -237,22 +205,16 @@ class DataValue
 
     /**
      * Get month
-     *
-     * @return integer
      */
-    public function getMonth()
+    public function getMonth(): int
     {
         return $this->month;
     }
 
     /**
      * Set year
-     *
-     * @param integer $year
-     *
-     * @return DataValue
      */
-    public function setYear($year)
+    public function setYear(int $year): self
     {
         $this->year = $year;
 
@@ -261,22 +223,16 @@ class DataValue
 
     /**
      * Get year
-     *
-     * @return integer
      */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->year;
     }
 
     /**
      * Set frequency
-     *
-     * @param integer $frequency
-     *
-     * @return DataValue
      */
-    public function setFrequency($frequency)
+    public function setFrequency(int $frequency): self
     {
         $this->frequency = $frequency;
 
@@ -285,22 +241,16 @@ class DataValue
 
     /**
      * Get frequency
-     *
-     * @return integer
      */
-    public function getFrequency()
+    public function getFrequency(): int
     {
         return $this->frequency;
     }
 
     /**
      * Set feedData
-     *
-     * @param \App\Entity\FeedData $feedData
-     *
-     * @return DataValue
      */
-    public function setFeedData(\App\Entity\FeedData $feedData)
+    public function setFeedData(\App\Entity\FeedData $feedData): self
     {
         $this->feedData = $feedData;
 
@@ -309,37 +259,114 @@ class DataValue
 
     /**
      * Get feedData
-     *
-     * @return \App\Entity\FeedData
      */
-    public function getFeedData()
+    public function getFeedData(): FeedData
     {
         return $this->feedData;
     }
 
-    public static function adaptToFrequency(\DateTime &$date, $frequency)
+    /**
+     * Return the a date which is adapt to be the first day of a period
+     *
+     * If frequency is :
+     *  * WEEK, return monday of the date's week
+     *  * Month, return the first day of date's month
+     *  * ...
+     */
+    public static function adaptToFrequency(\DateTime $date, int $frequency): \DateTime
     {
+        $ret = clone $date;
         // Update date according to frequency.
         switch ($frequency) {
             case DataValue::FREQUENCY['HOUR'] :
-                $date = new \DateTime($date->format("Y-m-d H:00:00"));
+                $ret = new \DateTime($ret->format("Y-m-d H:00:00"));
                 break;
             case DataValue::FREQUENCY['DAY'] :
-                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+                $ret = new \DateTime($ret->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['WEEK'] :
-                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-                $date->sub(new \DateInterval('P' . $w . 'D'));
-                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+                $w = $ret->format('w') == 0 ? 6 : $ret->format('w') - 1;
+                $ret->sub(new \DateInterval('P' . $w . 'D'));
+                $ret = new \DateTime($ret->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['MONTH'] :
-                $date = new \DateTime($date->format("Y-m-01 00:00:00"));
+                $ret = new \DateTime($ret->format("Y-m-01 00:00:00"));
                 break;
             case DataValue::FREQUENCY['YEAR'] :
-                $date = new \DateTime($date->format("Y-01-01 00:00:00"));
+                $ret = new \DateTime($ret->format("Y-01-01 00:00:00"));
                 break;
         }
 
-        return $date;
+        return $ret;
+    }
+
+    /**
+     * Return first and last day of a pediod defined by a date and a frequency.
+     *
+     * return [
+     *      'from' => period first day,
+     *      'to' => period last day,
+     *      'previousFrequency' => the frequence nelow the given frequency,
+     * ]
+     *
+     *  * If frequence is MONTH and date is DD/MM/YYYY,
+     *    [
+     *      'from' => 01/MM/YYYY,
+     *      'to' => 30/MM/YYYY or 31/MM/YYYY,
+     *      'previousFrequency' => DAY,
+     *    ]
+     *  * If frequence is WEEK and date is DD/MM/YYYY,
+     *    [
+     *      'from' => first monday before DD/MM/YYYY,
+     *      'to' => first sunday after DD/MM/YYYY,
+     *      'previousFrequency' => DAY,
+     *    ]
+     *  * ...
+     */
+    public static function getAdaptedBoundariesForFrequency(\DateTime $date, int $frequency): array
+    {
+        switch ($frequency) {
+            case DataValue::FREQUENCY['DAY']:
+                $firstDay = clone $date;
+                $lastDay = clone $date;
+
+                $lastDay->add(new \DateInterval('P1D'));
+
+                $previousFrequency = DataValue::FREQUENCY['HOUR'];
+                break;
+            case DataValue::FREQUENCY['WEEK']:
+                $firstDay = clone $date;
+                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+                $firstDay->sub(new \DateInterval('P' . $w . 'D'));
+
+                $lastDay = clone $firstDay;
+                $lastDay->add(new \DateInterval('P6D'));
+
+                $previousFrequency = DataValue::FREQUENCY['DAY'];
+                break;
+            case DataValue::FREQUENCY['MONTH']:
+                $firstDay = clone $date;
+                $firstDay->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
+
+                $lastDay = clone $firstDay;
+                $lastDay->add(new \DateInterval('P' . ($date->format('t')) . 'D'));
+
+                $previousFrequency = DataValue::FREQUENCY['DAY'];
+                break;
+            case DataValue::FREQUENCY['YEAR']:
+                $firstDay = new \DateTime($date->format("Y-1-1 00:00:00"));;
+
+                $lastDay = clone $firstDay;
+                $lastDay->add(new \DateInterval('P1Y'));
+
+                $previousFrequency = DataValue::FREQUENCY['MONTH'];
+                break;
+        }
+
+        return [
+            'from' => $firstDay,
+            'to' => $lastDay,
+            'previousFrequency' => $previousFrequency,
+        ];
     }
 }

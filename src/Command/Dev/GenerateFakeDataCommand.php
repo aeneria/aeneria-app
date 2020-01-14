@@ -53,26 +53,33 @@ class GenerateFakeDataCommand extends Command
             ->setName('pilea:dev:generate-fake-data')
             ->setDescription('Generate fake data for development')
             ->setHelp('Create a User and a Place and generate fake data for it.')
-            ->addOption('user-name', 'un', InputOption::VALUE_OPTIONAL, "A name for the user (default 'user-test').")
-            ->addOption('user-password', 'up', InputOption::VALUE_OPTIONAL, "A name for the user (default 'password').")
-            ->addOption('place-name', 'pn', InputOption::VALUE_OPTIONAL, "A name for the place (default 'place-test').")
-            ->addOption('from', 'f', InputOption::VALUE_OPTIONAL, "Data will be created from this date (default '3 months ago').")
-            ->addOption('to', 't', InputOption::VALUE_OPTIONAL, "Data will be created to this date (default 'yesterday').")
+            ->addOption('user-name', null, InputOption::VALUE_OPTIONAL, "A name for the user (default 'user-test').")
+            ->addOption('user-password', null, InputOption::VALUE_OPTIONAL, "A name for the user (default 'password').")
+            ->addOption('place-name', null, InputOption::VALUE_OPTIONAL, "A name for the place (default 'place-test').")
+            ->addOption('from', null, InputOption::VALUE_OPTIONAL, "Data will be created from this date (default '3 months ago').")
+            ->addOption('to', null, InputOption::VALUE_OPTIONAL, "Data will be created to this date (default 'today').")
+            ->addOption('force', null, InputOption::VALUE_NONE, "Erase and rewrite data if there're already ones.")
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ( ! \in_array($input->getOption('env'),['dev', 'test']) ) {
+            $output->writeln("<error>Cette commande ne doit être lancée qu'en environnement de développement !</error>");
+            return;
+        }
+
         $username = $input->getOption('user-name') ?? 'user-test';
         $password = $input->getOption('user-password') ?? 'password';
         $placeName = $input->getOption('place-name') ?? 'place-test';
         $from = $input->getOption('from') ? new \DateTime($input->getOption('from')) : new \DateTime('3 months ago');
-        $to = $input->getOption('to') ? new \DateTime($input->getOption('to')) : new \DateTime('yesterday');
+        $to = $input->getOption('to') ? new \DateTime($input->getOption('to')) : new \DateTime('today');
+        $force = $input->getOption('force');
 
         $user = $this->createOrUpdateUser($username , $password);
         $place = $this->createOrGetPlace($user, $placeName);
 
-        $this->fakeDataProvider->fetchDataBetween($from, $to, \iterator_to_array($place->getFeeds()), false);
+        $this->fakeDataProvider->fetchDataBetween($from, $to, \iterator_to_array($place->getFeeds()), $force);
 
         return 0;
     }

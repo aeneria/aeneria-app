@@ -85,7 +85,7 @@ class FeedDataRepository extends ServiceEntityRepository
         ;
 
         // Update date according to frequnecy
-        DataValue::adaptToFrequency($date, $frequency);
+        $date = DataValue::adaptToFrequency($date, $frequency);
 
         $criteria = [
             'feedData' => $feedData,

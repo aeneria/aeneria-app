@@ -38,16 +38,6 @@ abstract class AbstractFeedDataProvider {
     }
 
     /**
-     * Get frequencies for this type of feed.
-     *
-     * @return array
-     */
-    public static function getFrequencies()
-    {
-        throw new \Exception("Your custom feedDataProvider should implement this method !");
-    }
-
-    /**
      * Get array parameters that a feed which uses this provider should have.
      */
     public static function getParametersName(Feed $feed): array

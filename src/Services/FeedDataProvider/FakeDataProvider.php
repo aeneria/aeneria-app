@@ -16,17 +16,22 @@ class FakeDataProvider extends AbstractFeedDataProvider {
     public function fetchData(\Datetime $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
-            switch ($feed->getFeedType()) {
-                case Feed::FEED_TYPE_METEO :
-                    $this->generateMeteoData($date, $feed);
-                    break;
-                case Feed::FEED_TYPE_ELECTRICITY:
-                    $this->generateElectricityData($date, $feed);
-                    break;
+            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
+                switch ($feed->getFeedType()) {
+                    case Feed::FEED_TYPE_METEO :
+                        $this->generateMeteoData($date, $feed);
+                        break;
+                    case Feed::FEED_TYPE_ELECTRICITY:
+                        $this->generateElectricityData($date, $feed);
+                        break;
+                }
             }
         }
     }
 
+    /**
+     * Generate Fake data for a meteo typed feed for date for all frenquencies.
+     */
     private function generateMeteoData(\DateTime $date, Feed $feed)
     {
         $DataTypes = [
@@ -93,6 +98,9 @@ class FakeDataProvider extends AbstractFeedDataProvider {
         }
     }
 
+    /**
+     * Generate Fake data for a electricty typed feed for date for all frenquencies.
+     */
     private function generateElectricityData(\DateTime $date, Feed $feed)
     {
         // Get feedData.
@@ -120,47 +128,7 @@ class FakeDataProvider extends AbstractFeedDataProvider {
 
     private function generateAgregatedData(\DateTime $date, FeedData $feedData, int $frequency, string $operator = 'SUM')
     {
-        $firstDay = new \DateTime();
-        $lastDay = new \DateTime();
-        $previousFrequency = '';
-
-        switch ($frequency) {
-            case DataValue::FREQUENCY['DAY']:
-                $firstDay = clone $date;
-                $lastDay = clone $date;
-
-                $lastDay->add(new \DateInterval('P1D'));
-
-                $previousFrequency = DataValue::FREQUENCY['HOUR'];
-                break;
-            case DataValue::FREQUENCY['WEEK']:
-                $firstDay = clone $date;
-                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-                $firstDay->sub(new \DateInterval('P' . $w . 'D'));
-
-                $lastDay = clone $firstDay;
-                $lastDay->add(new \DateInterval('P6D'));
-
-                $previousFrequency = DataValue::FREQUENCY['DAY'];
-                break;
-            case DataValue::FREQUENCY['MONTH']:
-                $firstDay = clone $date;
-                $firstDay->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
-
-                $lastDay = clone $firstDay;
-                $lastDay->add(new \DateInterval('P' . ($date->format('t')) . 'D'));
-
-                $previousFrequency = DataValue::FREQUENCY['DAY'];
-                break;
-            case DataValue::FREQUENCY['YEAR']:
-                $firstDay = new \DateTime($date->format("Y-1-1 00:00:00"));;
-
-                $lastDay = clone $firstDay;
-                $lastDay->add(new \DateInterval('P1Y'));
-
-                $previousFrequency = DataValue::FREQUENCY['MONTH'];
-                break;
-        }
+        list('from' => $firstDay, 'to' =>  $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
 
         switch ($operator) {
             case 'SUM':

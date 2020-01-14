@@ -69,6 +69,7 @@ class Feed
                 'NAME' => 'Electricity',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_LINKY],
+                'FREQUENCIES' => DataValue::FREQUENCY,
             ],
             self::FEED_TYPE_METEO => [
                 'NAME' => 'Meteo',
@@ -83,6 +84,11 @@ class Feed
                     FeedData::FEED_DATA_RAIN,
                 ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_METEO_FRANCE],
+                'FREQUENCIES' => [
+                    DataValue::FREQUENCY['DAY'],
+                    DataValue::FREQUENCY['WEEK'],
+                    DataValue::FREQUENCY['MONTH'],
+                ],
             ],
         ];
     }
@@ -91,6 +97,8 @@ class Feed
     {
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['DATA_PROVIDER_TYPE'];
+        } else {
+            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
         }
     }
 
@@ -98,6 +106,17 @@ class Feed
     {
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['NAME'];
+        } else {
+            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
+        }
+    }
+
+    public static function getFrequenciesFor(string $feedType): array
+    {
+        if (\key_exists($feedType, self::getAllFeedTypes())) {
+            return self::getAllFeedTypes()[$feedType]['FREQUENCIES'];
+        } else {
+            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
         }
     }
 
@@ -105,6 +124,8 @@ class Feed
     {
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['DATA_TYPE'];
+        } else {
+            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
         }
     }
 
@@ -207,5 +228,10 @@ class Feed
     public function getPlace(): Place
     {
         return $this->place;
+    }
+
+    public function getFrequencies(): array
+    {
+        return self::getFrequenciesFor($this->getFeedType());
     }
 }

@@ -25,24 +25,8 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     const API_HOME_URL = '/home';
     const API_DATA_URL = '/suivi-de-consommation';
 
-    /**
-     * Frequencies for Linky FeedData.
-     * @deprecated use getFrequencies() instead.
-     * @var array
-     */
-    const FREQUENCY = DataValue::FREQUENCY;
-
     private $cookFile = '';
     private $curlHdl = null;
-
-    /**
-     * {@inheritDoc}
-     * @see \App\FeedObject\FeedObject::getFrequencies()
-     */
-    public static function getFrequencies()
-    {
-        return DataValue::FREQUENCY;
-    }
 
     /**
      * @inheritdoc
@@ -67,7 +51,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
                 throw new \InvalidArgumentException("Should be an array of Linky Feeds overhere !");
             }
 
-            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $this->getFrequencies())) {
+            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
                 $feedParam = $feed->getParam();
 
                 if ( $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD'])) {

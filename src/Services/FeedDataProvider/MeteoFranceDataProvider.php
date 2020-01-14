@@ -42,28 +42,6 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     ];
 
     /**
-     * Frequencies for MeteoFrance FeedData.
-     * @deprecated use getFrequencies() instead.
-     */
-    const FREQUENCY = [
-        DataValue::FREQUENCY['DAY'],
-        DataValue::FREQUENCY['WEEK'],
-        DataValue::FREQUENCY['MONTH'],
-    ];
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function getFrequencies()
-    {
-        return [
-            DataValue::FREQUENCY['DAY'],
-            DataValue::FREQUENCY['WEEK'],
-            DataValue::FREQUENCY['MONTH'],
-        ];
-    }
-
-    /**
      * @inheritdoc
      */
     public static function getParametersName(Feed $feed): array
@@ -116,7 +94,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
                 throw new \InvalidArgumentException("Should be an array of MeteoFrance Feeds overhere !");
             }
 
-            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $this->getFrequencies())) {
+            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
                 $this->refreshFeedData($date, $feed, $synopData);
             }
         }
@@ -208,10 +186,12 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     private function refreshAgregateValue(\DateTime $date, Feed $feed)
     {
         // Refreshing agregate value for current week.
-        $this->refreshWeekValue($date, $feed);
+        list('from' => $firstDay, 'to' =>  $lastDay) = DataValue::getAdaptedBoundariesForFrequency($date, DataValue::FREQUENCY['WEEK']);
+        $this->performAgregateValue($firstDay, $lastDay, $feed, DataValue::FREQUENCY['WEEK']);
 
         // Refreshing agregate value for current month.
-        $this->refreshMonthValue($date, $feed);
+        list('from' => $firstDay, 'to' =>  $lastDay) = DataValue::getAdaptedBoundariesForFrequency($date, DataValue::FREQUENCY['MONTH']);
+        $this->performAgregateValue($firstDay, $lastDay, $feed, DataValue::FREQUENCY['MONTH']);
 
         // Flush all persisted DataValue.
         $this->entityManager->flush();
@@ -313,42 +293,6 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         }
 
         return $fastenData;
-    }
-
-
-    /**
-     * Create or refresh week agregate data for the date.
-     * Persist it in EntityManager
-     *
-     * @param \DateTime $date
-     */
-    private function refreshWeekValue(\DateTime $date, Feed $feed)
-    {
-        $firstDayOfWeek = clone $date;
-        $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-        $firstDayOfWeek->sub(new \DateInterval('P' . $w . 'D'));
-
-        $lastDayOfWeek = clone $firstDayOfWeek;
-        $lastDayOfWeek->add(new \DateInterval('P6D'));
-
-        $this->performAgregateValue($firstDayOfWeek, $lastDayOfWeek, $feed, DataValue::FREQUENCY['WEEK']);
-    }
-
-    /**
-     * Create or refresh month agregate data for the date.
-     * Persist it in EntityManager
-     *
-     * @param \DateTime $date
-     */
-    private function refreshMonthValue(\DateTime $date, Feed $feed)
-    {
-        $firstDayOfMonth = clone $date;
-        $firstDayOfMonth->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
-
-        $lastDayOfMonth = clone $firstDayOfMonth;
-        $lastDayOfMonth->add(new \DateInterval('P' . ($date->format('t')) . 'D'));
-
-        $this->performAgregateValue($firstDayOfMonth, $lastDayOfMonth, $feed, DataValue::FREQUENCY['MONTH']);
     }
 
     /**

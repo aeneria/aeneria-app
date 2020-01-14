@@ -280,7 +280,7 @@ class DataValueRepository extends ServiceEntityRepository
     */
     public function betweenDateWithFeedDataAndFrequency(\DateTime $startDate, \DateTime $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
     {
-        DataValue::adaptToFrequency($startDate, $frequency);
+        $startDate = DataValue::adaptToFrequency($startDate, $frequency);
 
         $queryBuilder
             ->andWhere('d.date BETWEEN :start AND :end')
