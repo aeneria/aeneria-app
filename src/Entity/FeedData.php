@@ -72,22 +72,16 @@ class FeedData
 
     /**
      * Get id
-     *
-     * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * Set dataType
-     *
-     * @param integer $dataType
-     *
-     * @return FeedData
      */
-    public function setDataType($dataType)
+    public function setDataType(string $dataType): self
     {
         $this->dataType = $dataType;
 
@@ -96,22 +90,16 @@ class FeedData
 
     /**
      * Get dataType
-     *
-     * @return integer
      */
-    public function getDataType()
+    public function getDataType(): string
     {
         return $this->dataType;
     }
 
     /**
      * Set feed
-     *
-     * @param \App\Entity\Feed $feed
-     *
-     * @return FeedData
      */
-    public function setFeed(\App\Entity\Feed $feed)
+    public function setFeed(Feed $feed): self
     {
         $this->feed = $feed;
 
@@ -120,10 +108,8 @@ class FeedData
 
     /**
      * Get feed
-     *
-     * @return \App\Entity\Feed
      */
-    public function getFeed()
+    public function getFeed(): Feed
     {
         return $this->feed;
     }

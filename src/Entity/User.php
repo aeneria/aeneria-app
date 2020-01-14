@@ -68,7 +68,7 @@ class User implements UserInterface, Serializable
         return $this->active;
     }
 
-    public function setUsername($username): User
+    public function setUsername(string $username): User
     {
         $this->username = $username;
 
