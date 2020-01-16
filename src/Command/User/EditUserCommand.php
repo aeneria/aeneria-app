@@ -77,5 +77,7 @@ class EditUserCommand extends Command
         $this->entityManager->flush();
 
         $this->io->success('User has been correctly updated.');
+
+        return 0;
     }
 }

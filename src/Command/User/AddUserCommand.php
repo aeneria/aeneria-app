@@ -61,5 +61,7 @@ class AddUserCommand extends Command
         $this->entityManager->flush();
 
         $this->io->success('User has been correctly created.');
+
+        return 0;
     }
 }

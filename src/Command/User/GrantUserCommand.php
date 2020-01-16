@@ -54,5 +54,7 @@ class GrantUserCommand extends Command
         $this->entityManager->flush();
 
         $this->io->success('User has been correctly granted as admin.');
+
+        return 0;
     }
 }

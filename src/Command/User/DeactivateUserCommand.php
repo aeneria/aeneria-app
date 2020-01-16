@@ -61,5 +61,7 @@ class DeactivateUserCommand extends Command
         $this->entityManager->flush();
 
         $this->io->success('User has been correctly desactivated.');
+
+        return 0;
     }
 }

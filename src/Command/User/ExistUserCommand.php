@@ -49,5 +49,7 @@ class ExistUserCommand extends Command
         $output->write(
             $this->userRepository->findOneByUsername($input->getArgument('username')) ? 1 : 0
         );
+
+        return 0;
     }
 }

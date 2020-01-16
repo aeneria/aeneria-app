@@ -66,7 +66,7 @@ class GenerateFakeDataCommand extends Command
     {
         if ( ! \in_array($input->getOption('env'),['dev', 'test']) ) {
             $output->writeln("<error>Cette commande ne doit être lancée qu'en environnement de développement !</error>");
-            return;
+            return 1;
         }
 
         $username = $input->getOption('user-name') ?? 'user-test';
