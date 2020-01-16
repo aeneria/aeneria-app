@@ -31,8 +31,17 @@ if (document.getElementById('homepage')) {
 
     document.getElementById('title-' + targetMonth).innerHTML = MONTHS_NAME[start.getMonth()] + ' ' + start.getFullYear();
 
-    var startDate = start.toISOString().substring(0, 10);
-    var endDate = end.toISOString().substring(0, 10);
+    var startDate = start.getFullYear();
+    startDate += '-';
+    startDate += start.getMonth() < 9 ? '0' + (start.getMonth() + 1) : (start.getMonth() + 1);
+    startDate += '-';
+    startDate += start.getDate() < 10 ? '0' + start.getDate() : start.getDate();
+
+    var endDate = end.getFullYear();
+    endDate += '-';
+    endDate += end.getMonth() < 9 ? '0' + (end.getMonth() + 1) : (end.getMonth() + 1);
+    endDate += '-';
+    endDate += end.getDate() < 10 ? '0' + end.getDate() : end.getDate();
 
     // Refresh global conso repartition.
     $.ajax({

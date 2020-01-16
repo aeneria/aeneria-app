@@ -270,8 +270,10 @@
       });
     }
 
-    initPlace();
-    initMeteo();
+    if (typeof user !== 'undefined') {
+      initPlace();
+      initMeteo();
+    }
 
   })
 
