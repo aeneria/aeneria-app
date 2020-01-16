@@ -1,0 +1,13 @@
+<nav class="navbar navbar-expand-lg sticky-top navbar-expand" >
+    <div class="mr-auto"></div>
+    <div class="navbar-brand" title="Pilea :{{ ' Analyser votre consommation d\'électricité' | trans }}">
+        <img src="{{ asset('image/icon/pilea.svg') }}" alt='logo' class="logo">
+        <span>Pilea</span>
+    </div>
+
+    <div class="ml-auto">
+        <a class="navbar-item" title="{{ 'Aide' | trans }}" target="_blank" href="{{ pilea_documentation() }}">
+                <img src="{{ asset('image/icon/about.png') }}" height=20 alt="{{ 'Aide' | trans }}" >
+        </a>
+    </div>
+</nav>

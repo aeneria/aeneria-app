@@ -11,8 +11,13 @@
 </head>
 <body>
 
-    {% include "misc/navigation-desktop.html.twig" with {selection: block('selection')} %}
-    {% include "misc/navigation-mobile.html.twig" with {selection: block('selection')} %}
+
+    {% if (app.user) %}
+        {% include "misc/navigation-desktop.html.twig" with {selection: block('selection')} %}
+        {% include "misc/navigation-mobile.html.twig" with {selection: block('selection')} %}
+    {% else %}
+        {% include "misc/navigation-light.html.twig" %}
+    {% endif %}
 
     <main class="container-fluid" id='body'>
 
