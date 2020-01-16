@@ -47,11 +47,11 @@ d'un PHP récent et d'un serveur de base de données MySQL.
 
 **Installation :**
 
-Télécharger `le dépot <https://github.com/SimonMellerin/Pilea>`_ :
+Télécharger `le dépot <https://gitlab.com/pilea/Pilea>`_ :
 
 .. code-block:: sh
 
-    git clone https://github.com/SimonMellerin/Pilea.git [app_folder]
+    git clone https://gitlab.com/pilea/Pilea.git [app_folder]
 
 Créer un base de donnés puis renseigner son nom, l'utilisateur et le mot de passe dans le fichier ``.env``
 
