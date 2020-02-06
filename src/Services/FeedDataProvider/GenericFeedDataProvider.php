@@ -46,6 +46,7 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider {
                 break;
             case Feed::FEED_DATA_PROVIDER_FAKE:
                 $this->fakeDataProvider->fetchData($date, $feeds, $force);
+                break;
             default:
                 throw new \InvalidArgumentException("There's no data provider of type : " . $feedDataProviderId);
         }

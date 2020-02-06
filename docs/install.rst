@@ -34,16 +34,20 @@ d'un PHP récent et d'un serveur de base de données MySQL.
 
 **Prérequis :**
 
-* PHP 7.3 ou plus
-* MySQL 5.5 ou plus
+* PHP 7.3 et supérieur
+* MySQL (5.5 et supérieur) / PostreSQL (9.6 et supérieur)
 
 .. note::
 
-    PostgreSQL & SQLite devrait fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
+    SQLite devrait fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
 
-    Il n'est pas prévu que Pilea les supporte *officiellement*, si vous souhaitez vous y coller allez-y mais
-    n'ouvrez pas d'issue à ce propos : )
+    Il n'est pas prévu que Pilea le supporte *officiellement*, si vous souhaitez vous y coller allez-y, faites une merge request et
+    je regarderai :)
 
+.. warning::
+
+    Les migrations de Pilea sont uniquement générées pour MySQL, si vous utilisez un autre type de serveur, gardez à l'esprit qu'il
+    faudra vérifier chaque migration avant de la lancer !
 
 **Installation :**
 
@@ -53,7 +57,7 @@ Télécharger `le dépot <https://gitlab.com/pilea/Pilea>`_ :
 
     git clone https://gitlab.com/pilea/Pilea.git [app_folder]
 
-Créer un base de donnés puis renseigner son nom, l'utilisateur et le mot de passe dans le fichier ``.env``
+Créer un base de donnés puis adapter les fichiers ``.env`` et ``config/packages/doctrine.yaml``
 
 Installer les dépendance `Composer <https://getcomposer.org/>`_ :
 

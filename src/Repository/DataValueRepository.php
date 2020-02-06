@@ -39,7 +39,7 @@ class DataValueRepository extends ServiceEntityRepository
 
         $queryBuilder->select('AVG(d.value) AS value');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->addGroupBy('d.feedData');
         return $queryBuilder
             ->getQuery()
             ->getScalarResult();
@@ -60,7 +60,7 @@ class DataValueRepository extends ServiceEntityRepository
 
         $queryBuilder->select('MIN(d.value) AS value, d.date');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->addGroupBy('d.feedData');
         return $queryBuilder
             ->getQuery()
             ->getScalarResult();
@@ -81,7 +81,7 @@ class DataValueRepository extends ServiceEntityRepository
 
         $queryBuilder->select('MAX(d.value) AS value, d.date');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->addGroupBy('d.feedData');
         return $queryBuilder
             ->getQuery()
             ->getScalarResult();
@@ -103,7 +103,7 @@ class DataValueRepository extends ServiceEntityRepository
 
         $queryBuilder->select('SUM(d.value) AS value');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->addGroupBy('d.feedData');
 
         return $queryBuilder
             ->getQuery()
@@ -142,6 +142,9 @@ class DataValueRepository extends ServiceEntityRepository
             ->andWhere('dx.frequency = :frequency')
             ->andWhere('dy.frequency = :frequency')
             ->setParameter('frequency', $frequency)
+            ->addGroupBy('dx.value')
+            ->addGroupBy('dy.value')
+            ->addGroupBy('dx.date')
             ->orderBy('dx.date', 'asc');
 
         return $queryBuilder
@@ -165,7 +168,7 @@ class DataValueRepository extends ServiceEntityRepository
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
         $queryBuilder->andWhere('d.value <= :value');
         $queryBuilder->setParameter('value', $value);
-        $queryBuilder->groupBy('d.feedData');
+        $queryBuilder->addGroupBy('d.feedData');
 
         return $queryBuilder
             ->getQuery()
@@ -211,6 +214,7 @@ class DataValueRepository extends ServiceEntityRepository
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
 
         return $queryBuilder
+            ->addGroupBy('d.id')
             ->getQuery()
             ->getResult();
     }
@@ -230,7 +234,7 @@ class DataValueRepository extends ServiceEntityRepository
 
         $queryBuilder->select('AVG(d.value) AS value, d.' . $axeX . ' AS axeX, d.' . $axeY . ' AS axeY');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder->groupBy('d.' . $axeX);
+        $queryBuilder->addGroupBy('d.' . $axeX);
         $queryBuilder->addGroupBy('d.' . $axeY);
 
         // If this is a year repartition, we also group by year.
@@ -260,7 +264,7 @@ class DataValueRepository extends ServiceEntityRepository
 
         $queryBuilder->select('SUM(d.value) AS value, d.' . $groupBy . ' AS groupBy');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder->groupBy('d.' . $groupBy);
+        $queryBuilder->addGroupBy('d.' . $groupBy);
 
         return $queryBuilder
             ->getQuery()
@@ -292,6 +296,7 @@ class DataValueRepository extends ServiceEntityRepository
             // Add condition on frequency
             ->andWhere('d.frequency = :frequency')
             ->setParameter('frequency', $frequency)
+            ->addGroupBy('d.date')
             ->orderBy('d.date', 'asc');
     }
 
