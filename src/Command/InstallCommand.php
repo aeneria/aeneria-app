@@ -119,7 +119,7 @@ class InstallCommand extends Command
 
             preg_match('/PostgreSQL ([0-9\.]+)/i', $version, $matches);
 
-            if (isset($matches[1]) & version_compare($matches[1], '9.2.0', '<')) {
+            if (isset($matches[1]) & version_compare($matches[1], '9.6.0', '<')) {
                 $fulfilled = false;
                 $status = '<error>ERROR!</error>';
                 $help = 'PostgreSQL should be greater than 9.1 (actual version: ' . $matches[1] . ')';

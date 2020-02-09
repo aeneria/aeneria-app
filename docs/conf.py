@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Pilea'
-copyright = '2019, Simon Mellerin'
+copyright = '2020, Simon Mellerin'
 author = 'Simon Mellerin'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -108,7 +108,6 @@ html_sidebars = {
         'navigation.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
-        'donate.html',
     ]
 }
 

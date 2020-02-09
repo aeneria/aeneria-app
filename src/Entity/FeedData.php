@@ -71,6 +71,35 @@ class FeedData
     }
 
     /**
+     * Get unit for a type of data.
+     */
+    public static function getLabelFor(string $feedDataType): string
+    {
+        switch ($feedDataType) {
+            case self::FEED_DATA_CONSO_ELEC:
+                return "Consommation d'électricité";
+            case self::FEED_DATA_TEMPERATURE:
+                return "Température";
+            case self::FEED_DATA_TEMPERATURE_MIN:
+                return "Température minimale";
+            case self::FEED_DATA_TEMPERATURE_MAX:
+                return "Température maximale";
+            case self::FEED_DATA_DJU:
+                return 'Degrés Jour Unifié';
+            case self::FEED_DATA_PRESSURE:
+                return 'Pression';
+            case self::FEED_DATA_HUMIDITY:
+                return 'Humidité';
+            case self::FEED_DATA_NEBULOSITY:
+                return 'Nébulosité';
+            case self::FEED_DATA_RAIN:
+                return 'Précipiations';
+            default:
+                return '';
+        }
+    }
+
+    /**
      * Get id
      */
     public function getId(): int
@@ -94,6 +123,14 @@ class FeedData
     public function getDataType(): string
     {
         return $this->dataType;
+    }
+
+    /**
+     * Get dataType human readable
+     */
+    public function getDisplayDataType(): string
+    {
+        return self::getLabelFor($this->dataType);
     }
 
     /**

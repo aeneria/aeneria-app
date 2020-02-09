@@ -1,4 +1,7 @@
 {
+    "box/spout": {
+        "version": "v3.1.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -93,7 +96,7 @@
         "version": "2.1.1"
     },
     "php": {
-        "version": "7.2"
+        "version": "7.3"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"

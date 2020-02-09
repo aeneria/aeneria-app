@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exporter les données de {{ place.name }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid row justify-content-center align-items-center users">
+  <div class='card config-form col-lg-6 col-md-8'>
+    <div class="card-body">
+      <h1> Exporter les données de <i>{{ place.name }}</i> </h1>
+
+      <div class="place-fetch-form">
+      {{ form_start(form) }}
+      {{ form_errors(form) }}
+      <div class="form-group row">
+        <div class="col-auto input-daterange">
+          <span class="input-group-addon">{{ 'Exporter du'|trans }}</span>
+          {{- form_widget(form['start_date']) -}}
+          <span class="input-group-addon">{{ 'au'|trans }}</span>
+          {{- form_widget(form['end_date']) -}}
+        </div>
+        <div class="col-auto">
+          {{ form_row(form['submit']) }}
+        </div>
+      </div>
+    </div>
+
+      {{ form_end(form) }}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

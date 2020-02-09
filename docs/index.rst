@@ -4,7 +4,7 @@ Pilea
 .. image:: img/favicon.png
    :align: center
 
-`Pilea <https://github.com/SimonMellerin/Pilea/>`_ est un petit tableau de bord permettant d'analyser sa
+`Pilea <https://gitlab.com/pilea/Pilea/>`_ est un petit tableau de bord permettant d'analyser sa
 consommation d'électricité à partir des données d'un Linky.
 
 L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
@@ -50,4 +50,4 @@ Todo List
 Support
 =======
 
-Posez vos questions sur `Github <https://github.com/SimonMellerin/Pilea/issues/>`_.
+Posez vos questions sur `Github <https://gitlab.com/pilea/Pilea/issues/>`_.

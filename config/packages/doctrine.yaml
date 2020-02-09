@@ -7,13 +7,24 @@ parameters:
 
 doctrine:
     dbal:
-        # configure these for your database server
+        # Configure these for your database server
+
+        # Mysql
         driver: 'pdo_mysql'
         server_version: '5.2'
         charset: utf8mb4
         default_table_options:
             charset: utf8mb4
             collate: utf8mb4_unicode_ci
+
+        # PostgreSQL
+        # driver: 'pdo_pgsql'
+        # server_version: '9.6'
+        # charset: utf8
+
+        #SQLLite
+        # driver:   pdo_sqlite
+        # charset: utf8
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
