@@ -34,6 +34,9 @@
         <a class="btn btn-sm btn-warning" href="{{ path('config.place.fetch', {id: place.id}) }}" title="{{ 'Recharger des dates' | trans }}">
           <i class="fas fa-download"></i>
         </a>
+        <a class="btn btn-sm btn-warning" href="{{ path('config.place.export', {id: place.id}) }}" title="{{ 'Exporter des données' | trans }}">
+          <i class="fas fa-upload"></i>
+        </a>
         <a class="btn btn-sm btn-danger" href="{{ path('config.place.delete', {id: place.id}) }}" title="{{ 'Supprimer' | trans }}">
           <i class="fas fa-trash"></i>
         </a>

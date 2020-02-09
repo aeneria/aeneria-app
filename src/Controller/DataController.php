@@ -8,30 +8,25 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DataController extends AbstractController
+class DataController extends AbstractAppController
 {
     const WEEK_REPARTITION = 'WEEK';
     const YEAR_HORIZONTAL_REPARTITION = 'YEAR_H';
     const YEAR_VERTICAL_REPARTITION = 'YEAR_V';
 
-    private $placeRepository;
-    private $feedRepository;
     private $feedDataRepository;
     private $dataValueRepository;
 
-    public function __construct(PlaceRepository $placeRepository, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
+    public function __construct(PlaceRepository $placeRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
     {
 
-        $this->placeRepository = $placeRepository;
-        $this->feedRepository = $feedRepository;
+        parent::__construct($placeRepository);
+
         $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;
     }
@@ -715,18 +710,5 @@ class DataController extends AbstractController
         }
 
         return $axe;
-    }
-
-    private function checkPlace(string $placeId): Place
-    {
-        if (!$place = $this->placeRepository->find($placeId)) {
-            throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
-        }
-
-        if (!$this->getUser()->canSee($place)) {
-            throw new AccessDeniedException("Vous n'êtes pas authorisé à voir les données de cette adresse.");
-        }
-
-        return $place;
     }
 }

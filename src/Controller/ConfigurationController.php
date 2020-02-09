@@ -2,26 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Place;
 use App\Form\PlaceType;
-use App\Repository\PlaceRepository;
+use App\Services\DataExporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ConfigurationController extends AbstractController
+class ConfigurationController extends AbstractAppController
 {
-    private $placeRepository;
-
-    public function __construct(PlaceRepository $placeRepository)
-    {
-        $this->placeRepository = $placeRepository;
-    }
-
     /**
      * @Route("/configuration", name="config")
      */
@@ -208,16 +203,56 @@ class ConfigurationController extends AbstractController
         ]);
     }
 
-    private function checkPlace(string $placeId): Place
+    /**
+     * @Route("/configuration/place/{id}/export", name="config.place.export")
+     */
+    public function placeExportAction(Request $request, DataExporter $dataExporter, string $id)
     {
-        if (!$place = $this->placeRepository->find($placeId)) {
-            throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
+        $place = $this->checkPlace($id);
+
+        $form = $this
+            ->createFormBuilder()
+            ->add('start_date', Form\TextType::class, [
+                'label' => false,
+                'attr' => ['class' => 'simple-datepicker'],
+                'required' => true,
+            ])
+            ->add('end_date', Form\TextType::class, [
+                'label' => false,
+                'attr' => ['class' => 'simple-datepicker'],
+                'required' => true,
+            ])
+            ->add('submit', Form\SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-warning',
+                    'title' => 'Recharger',
+                ],
+                'label' => '',
+            ])
+            ->getForm()
+            ->handleRequest($request)
+        ;
+
+        if('POST' === $request->getMethod()) {
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date']);
+                $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date']);
+                $filename = $dataExporter->exportPlace($place, $startDate, $endDate);
+                $file =new File($filename);
+
+                $response = new BinaryFileResponse($file);
+                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getFilename());
+
+                return $response;
+            }
         }
 
-        if (!$this->getUser()->canEdit($place)) {
-            throw new AccessDeniedException("Vous n'êtes pas authorisé à voir les données de cette adresse.");
-        }
-
-        return $place;
+        return $this->render('configuration/place_export.html.twig', [
+            'place' => $place,
+            'form' => $form->createView(),
+            'cancel' => 'config'
+        ]);
     }
 }
