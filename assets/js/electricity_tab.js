@@ -16,6 +16,7 @@ if (document.getElementById('electricity_tab')) {
     var frequency = pileaCurrent.getFrequency();
 
     // Refresh conso total.
+    document.getElementById('conso-total').innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/sum/conso_elec/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -25,6 +26,7 @@ if (document.getElementById('electricity_tab')) {
     });
 
     // Refresh week repartition.
+    pilea.loadingAnimation('conso-week-repartition');
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/conso_elec/week/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -38,6 +40,8 @@ if (document.getElementById('electricity_tab')) {
     });
 
     // Refresh global repartition.
+    pilea.loadingAnimation('conso-global-repartition');
+    pilea.loadingAnimation('conso-global-repartition-legend');
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -48,6 +52,7 @@ if (document.getElementById('electricity_tab')) {
     });
 
     // Refresh global evolution.
+    pilea.loadingAnimation('conso-global-evolution');
     $.ajax({
       url: appRoute + 'data/' + place + '/evolution/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
@@ -57,6 +62,7 @@ if (document.getElementById('electricity_tab')) {
     });
 
     // Refresh global week frequency.
+    pilea.loadingAnimation('conso-week-frequency');
     $.ajax({
       url: appRoute + 'data/' + place + '/sum-group/conso_elec/day/weekDay/' + startDate + '/' + endDate + '',
       success: function( result ) {

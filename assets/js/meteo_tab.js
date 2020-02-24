@@ -16,6 +16,8 @@ if (document.getElementById('meteo_tab')) {
     var frequency = pileaCurrent.getFrequency();
 
     // Refresh temperature repartition.
+    pilea.loadingAnimation('temp-repartition');
+    pilea.loadingAnimation('temp-repartition-legend');
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/temperature/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -26,6 +28,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh dju evolution.
+    pilea.loadingAnimation('temperature-evolution');
     $.ajax({
       url: appRoute + 'data/' + place + '/evolution/dju/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
@@ -35,6 +38,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh DJU total.
+    document.getElementById('dju').innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/sum/dju/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -44,6 +48,8 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh nebulosity repartition.
+    pilea.loadingAnimation('neb-repartition');
+    pilea.loadingAnimation('neb-repartition-legend');
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/nebulosity/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -54,6 +60,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh nebulosity evolution.
+    pilea.loadingAnimation('nebulosity-evolution');
     $.ajax({
       url: appRoute + 'data/' + place + '/evolution/nebulosity/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
@@ -63,6 +70,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh day without cloud.
+    document.getElementById('neb-day').innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/inf/nebulosity/15/day/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -72,6 +80,8 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh rain repartition.
+    pilea.loadingAnimation('rain-repartition');
+    pilea.loadingAnimation('rain-repartition-legend');
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/rain/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -82,6 +92,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh rain evolution.
+    pilea.loadingAnimation('rain-evolution');
     $.ajax({
       url: appRoute + 'data/' + place + '/evolution/rain/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
@@ -91,6 +102,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh day without rain.
+    document.getElementById('rain-day').innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/inf/rain/0/day/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -100,6 +112,8 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh humidity repartition.
+    pilea.loadingAnimation('humidity-repartition');
+    pilea.loadingAnimation('humidity-repartition-legend');
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/humidity/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -109,7 +123,8 @@ if (document.getElementById('meteo_tab')) {
       }
     });
 
-    // Refresh nebulosity evolution.
+    // Refresh humidity evolution.
+    pilea.loadingAnimation('humidity-evolution');
     $.ajax({
       url: appRoute + 'data/' + place + '/evolution/humidity/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
@@ -119,6 +134,7 @@ if (document.getElementById('meteo_tab')) {
     });
 
     // Refresh day at less than 70% of humidity.
+    document.getElementById('humidity-day').innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/inf/humidity/70/day/' + startDate + '/' + endDate + '',
       success: function(result) {

@@ -19,6 +19,7 @@ if (document.getElementById('dju_x_conso_tab')) {
     var meteoUnit = $('.pilea-select-meteo').find('[data="' + meteo + '"]')[0].getAttribute('unit');
 
     // Refresh conso x dju.
+    pilea.loadingAnimation('conso-x-dju');
     $.ajax({
       url: appRoute + 'data/' + place + '/xy/' + meteo + '/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -28,6 +29,7 @@ if (document.getElementById('dju_x_conso_tab')) {
     });
 
     // Refresh conso vs dju.
+    pilea.loadingAnimation('conso-vs-dju');
     $.ajax({
       url: appRoute + 'data/' + place + '/evolution/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function(result1) {

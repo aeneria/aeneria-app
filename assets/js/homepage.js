@@ -44,6 +44,8 @@ if (document.getElementById('homepage')) {
     endDate += end.getDate() < 10 ? '0' + end.getDate() : end.getDate();
 
     // Refresh global conso repartition.
+    pilea.loadingAnimation('conso-repartition-' + targetMonth);
+    pilea.loadingAnimation('conso-repartition-legend-' + targetMonth);
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -54,6 +56,7 @@ if (document.getElementById('homepage')) {
     });
 
     // Refresh conso total.
+    document.getElementById('conso-total-' + targetMonth).innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/sum/conso_elec/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -68,6 +71,8 @@ if (document.getElementById('homepage')) {
     });
 
     // Refresh global temp repartition.
+    pilea.loadingAnimation('temp-repartition-' + targetMonth);
+    pilea.loadingAnimation('temp-repartition-legend-' + targetMonth);
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/temperature/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
@@ -78,6 +83,7 @@ if (document.getElementById('homepage')) {
     });
 
     // Refresh DJU total.
+    document.getElementById('dju-total-' + targetMonth).innerHTML = "--";
     $.ajax({
       url: appRoute + 'data/' + place + '/sum/dju/' + startDate + '/' + endDate + '',
       success: function(result) {
