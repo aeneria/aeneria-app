@@ -42,18 +42,18 @@ final class AppExtension extends AbstractExtension
 
     public function getVersion(): string
     {
-        return $this->parameters->get('pilea.version');
+        return $this->parameters->get('aeneria.version');
     }
 
     public function getGitRepo(): string
     {
-        return $this->parameters->get('pilea.repo_git');
+        return $this->parameters->get('aeneria.repo_git');
     }
 
     public function getDocumentation(?string $path = ''): string
     {
-        $documentationBaseUri = $this->parameters->get('pilea.documentation');
-        $version = $this->parameters->get('pilea.version');
+        $documentationBaseUri = $this->parameters->get('aeneria.documentation');
+        $version = $this->parameters->get('aeneria.version');
         return \sprintf("%s%s/%s", $documentationBaseUri, $version, $path);
     }
 
@@ -76,29 +76,29 @@ final class AppExtension extends AbstractExtension
 
     public function getUserMaxPlaces(): ?int
     {
-        $userMaxPlaces = (int)$this->parameters->get('pilea.user.max_places');
+        $userMaxPlaces = (int)$this->parameters->get('aeneria.user.max_places');
 
         return $userMaxPlaces === -1 ? null : $userMaxPlaces;
     }
 
     public function canUserSharePlace(): bool
     {
-        return (bool)$this->parameters->get('pilea.user.can_share_place');
+        return (bool)$this->parameters->get('aeneria.user.can_share_place');
     }
 
     public function canUserFetchData(): bool
     {
-        return (bool)$this->parameters->get('pilea.user.can_fetch');
+        return (bool)$this->parameters->get('aeneria.user.can_fetch');
     }
 
     public function canUserExportData(): bool
     {
-        return (bool)$this->parameters->get('pilea.user.can_export');
+        return (bool)$this->parameters->get('aeneria.user.can_export');
     }
 
     public function canPlaceBePublic(): bool
     {
-        return (bool)$this->parameters->get('pilea.place_can_be_public');
+        return (bool)$this->parameters->get('aeneria.place_can_be_public');
     }
 
     public function canUserAddPlace(User $user): bool

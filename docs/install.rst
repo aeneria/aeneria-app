@@ -79,6 +79,7 @@ Ajouter une premier utilisateur et lui donner les droits administrateur :
     php7.3 bin/console aeneria:user:add [username] [password]
     php7.3 bin/console aeneria:user:grant [username]
 
+
 Mettre en place le cron :
 
 .. code-block:: sh

@@ -33,7 +33,7 @@ class VersionCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->write($this->parameters->get('pilea.version'));
+        $output->write($this->parameters->get('aeneria.version'));
 
         return 0;
     }
