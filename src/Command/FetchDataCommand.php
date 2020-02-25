@@ -31,7 +31,7 @@ class FetchDataCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:fetch-data')
+            ->setName('aeneria:fetch-data')
             ->setDescription('Get newly data from all feeds')
             ->setHelp('This command allows you to fetch newly data for all active feeds')
             ->addOption('date', 'd', InputOption::VALUE_OPTIONAL, 'A date (Y-m-d), if you want to refresh data for a specific date.')

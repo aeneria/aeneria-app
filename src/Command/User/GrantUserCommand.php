@@ -38,7 +38,7 @@ class GrantUserCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:user:grant')
+            ->setName('aeneria:user:grant')
             ->setDescription('Grant user admin role.')
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
         ;

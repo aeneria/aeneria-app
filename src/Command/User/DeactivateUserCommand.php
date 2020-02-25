@@ -38,7 +38,7 @@ class DeactivateUserCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:user:deactivate')
+            ->setName('aeneria:user:deactivate')
             ->setDescription('Deactivate an user.')
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
         ;

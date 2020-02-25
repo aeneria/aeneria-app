@@ -1,6 +1,6 @@
-# Pilea - A little dashboard to analyse your electricity consumption data from Linky
+# æneria - A little dashboard to analyse your electricity consumption data from Linky
 
-The idea of Pilea is to display electricity consumption and weather data on a little dashboard that allow the user to:
+The idea of æneria is to display electricity consumption and weather data on a little dashboard that allow the user to:
 
 * Better understand his electricity consumption,
 * Analyse his electricity consumption throw weather data (in a first time, essentialy temperature).
@@ -19,5 +19,5 @@ There's no API (or maybe there's one but any documentation can't be found) to pr
 
 I want to thanks [KibOost](https://github.com/KiboOst/) for [the retroengineering he has done](https://github.com/KiboOst/php-LinkyAPI).
 
-**For more informations, see [Pilea's documentation on Read the Docs](https://pilea.readthedocs.io/fr/latest/)**
+**For more informations, see [æneria's documentation on Read the Docs](https://pilea.readthedocs.io/fr/latest/)**
 (sorry it's in french cause this project is based on Linky and Enedis, main users will be french)

@@ -51,6 +51,11 @@
     .about-list {
         list-style: none;
     }
+    a.btn-primary,
+    a.btn-primary:focus,
+    a.btn-primary:hover {
+        color: $white;
+    }
 
 }
 

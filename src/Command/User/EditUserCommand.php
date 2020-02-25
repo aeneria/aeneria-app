@@ -42,7 +42,7 @@ class EditUserCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:user:edit')
+            ->setName('aeneria:user:edit')
             ->setDescription('Edit an user.')
             ->addArgument('username', InputArgument::REQUIRED, 'Old username')
             ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'New username')

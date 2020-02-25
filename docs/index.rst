@@ -1,13 +1,13 @@
-Pilea
+æneria
 ########
 
 .. image:: img/favicon.png
    :align: center
 
-`Pilea <https://gitlab.com/pilea/Pilea/>`_ est un petit tableau de bord permettant d'analyser sa
+`æneria <https://gitlab.com/aeneria/aeneria/>`_ est un petit tableau de bord permettant d'analyser sa
 consommation d'électricité à partir des données d'un Linky.
 
-L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
+L'idée derrière æneria est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
 
 * Mieux comprendre sa consommation d'énergie
 * Analyser sa consommation en fonction de données météorologiques
@@ -50,4 +50,4 @@ Todo List
 Support
 =======
 
-Posez vos questions sur `Gitlab <https://gitlab.com/pilea/Pilea/issues/>`_.
+Posez vos questions sur `Gitlab <https://gitlab.com/aeneria/aeneria-app/issues/>`_.

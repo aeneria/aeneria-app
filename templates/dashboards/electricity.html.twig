@@ -11,7 +11,7 @@
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">{{ 'Électricité' | trans }}</h2>
-            {{ pilea_help_graph('carte-de-chaleur-jours-semaines')|raw }}
+            {{ aeneria_help_graph('carte-de-chaleur-jours-semaines')|raw }}
             <div class="content">
               <div class="row index-top">
                 <div class="col-4 col-sm-4">
@@ -45,7 +45,7 @@
             <div class="card week-repartition">
               <div class="card-body">
                 <h2 class="card-title">{{ "En moyenne sur la semaine" | trans }}</h2>
-                {{ pilea_help_graph('carte-de-chaleur-jours-heures')|raw }}
+                {{ aeneria_help_graph('carte-de-chaleur-jours-heures')|raw }}
                 <div id="conso-week-repartition"></div>
               </div>
             </div>
@@ -54,7 +54,7 @@
             <div class="card">
               <div class="card-body">
                 <h2 class="card-title">{{ "Répartition sur la semaine" | trans }}</h2>
-                {{ pilea_help_graph('graphique-de-repartition')|raw }}
+                {{ aeneria_help_graph('graphique-de-repartition')|raw }}
                 <div id="conso-week-frequency"></div>
               </div>
             </div>
@@ -64,7 +64,7 @@
         <div class="card gen-second-line">
           <div class="card-body">
             <h2 class="card-title">{{ "Evolution de la consommation" | trans }}</h2>
-            {{ pilea_help_graph('graphique-d-evolution-temporelle')|raw }}
+            {{ aeneria_help_graph('graphique-d-evolution-temporelle')|raw }}
             <div id="conso-global-evolution"></div>
           </div>
         </div>

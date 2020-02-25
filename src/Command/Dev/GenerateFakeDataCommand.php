@@ -50,7 +50,7 @@ class GenerateFakeDataCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:dev:generate-fake-data')
+            ->setName('aeneria:dev:generate-fake-data')
             ->setDescription('Generate fake data for development')
             ->setHelp('Create a User and a Place and generate fake data for it.')
             ->addOption('user-name', null, InputOption::VALUE_OPTIONAL, "A name for the user (default 'user-test').")

@@ -26,17 +26,17 @@ final class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('pilea_version', [$this, 'getVersion']),
-            new TwigFunction('pilea_repo_git', [$this, 'getGitRepo']),
-            new TwigFunction('pilea_documentation', [$this, 'getDocumentation']),
-            new TwigFunction('pilea_help_icon_link', [$this, 'getHelpIconLink']),
-            new TwigFunction('pilea_help_graph', [$this, 'getGraphHelp']),
-            new TwigFunction('pilea_user_max_places', [$this, 'getUserMaxPlaces']),
-            new TwigFunction('pilea_user_can_share_place', [$this, 'canUserSharePlace']),
-            new TwigFunction('pilea_user_can_fetch', [$this, 'canUserFetchData']),
-            new TwigFunction('pilea_user_can_export', [$this, 'canUserExportData']),
-            new TwigFunction('pilea_place_can_be_public', [$this, 'canPlaceBePublic']),
-            new TwigFunction('pilea_user_can_add_place', [$this, 'canUserAddPlace']),
+            new TwigFunction('aeneria_version', [$this, 'getVersion']),
+            new TwigFunction('aeneria_repo_git', [$this, 'getGitRepo']),
+            new TwigFunction('aeneria_documentation', [$this, 'getDocumentation']),
+            new TwigFunction('aeneria_help_icon_link', [$this, 'getHelpIconLink']),
+            new TwigFunction('aeneria_help_graph', [$this, 'getGraphHelp']),
+            new TwigFunction('aeneria_user_max_places', [$this, 'getUserMaxPlaces']),
+            new TwigFunction('aeneria_user_can_share_place', [$this, 'canUserSharePlace']),
+            new TwigFunction('aeneria_user_can_fetch', [$this, 'canUserFetchData']),
+            new TwigFunction('aeneria_user_can_export', [$this, 'canUserExportData']),
+            new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
+            new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
         ];
     }
 

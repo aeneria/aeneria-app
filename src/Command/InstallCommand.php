@@ -40,9 +40,9 @@ class InstallCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:install')
-            ->setDescription('Pilea installer.')
-            ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'Linux user who will run pilea cron')
+            ->setName('aeneria:install')
+            ->setDescription('aeneria installer.')
+            ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'Linux user who will run aeneria cron')
             ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database');
     }
 
@@ -52,7 +52,7 @@ class InstallCommand extends Command
 
         $this->io = new SymfonyStyle($input, $output);
 
-        $this->io->title('Pilea installer');
+        $this->io->title('aeneria installer');
 
         $this
             ->checkRequirements()
@@ -60,7 +60,7 @@ class InstallCommand extends Command
             ->setupMigration()
             ->clearCache();
 
-        $this->io->success('Pilea has been successfully installed.');
+        $this->io->success('aeneria has been successfully installed.');
 
         return 0;
     }
@@ -134,7 +134,7 @@ class InstallCommand extends Command
             throw new \RuntimeException('Some system requirements are not fulfilled. Please check output messages and fix them.');
         }
 
-        $this->io->text('<info>Success! Seems that your system can run pilea properly.</info>');
+        $this->io->text('<info>Success! Seems that your system can run aeneria properly.</info>');
 
         return $this;
     }

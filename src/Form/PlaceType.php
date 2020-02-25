@@ -42,7 +42,7 @@ class PlaceType extends AbstractType
         if ($options['place_can_be_public']) {
             $builder->add('public', CheckboxType::class, [
                 'label' => 'Public',
-                'help' => 'Un compteur public est visible par tous les utilisateurs de Pilea.',
+                'help' => 'Un compteur public est visible par tous les utilisateurs de æneria.',
                 'required' => false
             ]);
         }

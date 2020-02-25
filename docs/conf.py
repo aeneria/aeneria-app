@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Pilea documentation build configuration file, created by
+# æneria documentation build configuration file, created by
 # sphinx-quickstart on Wed Aug  2 13:28:48 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Pilea'
+project = 'æneria'
 copyright = '2020, Simon Mellerin'
 author = 'Simon Mellerin'
 
@@ -115,7 +115,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pilea'
+htmlhelp_basename = 'aeneria'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -142,7 +142,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pilea.tex', 'Pilea Documentation',
+    (master_doc, 'aeneria.tex', 'æneria Documentation',
      author, 'manual'),
 ]
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'Pilea', 'Pilea Documentation',
+    (master_doc, 'æneria', 'æneria Documentation',
      [author], 1)
 ]
 
@@ -163,8 +163,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Pilea', 'Pilea Documentation',
-     author, 'Pilea', 'A little dashboard to analyse your electricity consumption data from Linky.',
+    (master_doc, 'æneria', 'æneria Documentation',
+     author, 'æneria', 'A little dashboard to analyse your electricity consumption data from Linky.',
      'Miscellaneous'),
 ]
 

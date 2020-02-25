@@ -42,7 +42,7 @@ class AddUserCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('pilea:user:add')
+            ->setName('aeneria:user:add')
             ->setDescription('Add an user.')
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
             ->addArgument('password', InputArgument::REQUIRED, 'Password')

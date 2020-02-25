@@ -3,22 +3,42 @@
     <h1 class="card-title">{{ 'À propos' | trans }}</h1>
     <div class="content">
 
-      <p><b>Pilea</b> - {{ 'Un petit tableau de bord pour analyser sa consommation d\'énergie&nbsp;:' | trans | raw }}</p>
+      <p><b>æneria</b> - {{ 'Un petit tableau de bord pour analyser sa consommation d\'énergie&nbsp;:' | trans | raw }}</p>
       <ul class="about-list">
         <li><i class="fas fa-book"></i> Documentation :
-          <a target="_blank" href="{{ pilea_documentation('utilisateur.html') }}">Utilisateur</a>
+          <a target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}">Utilisateur</a>
           /
-          <a target="_blank" href="{{ pilea_documentation('administrateur.html') }}">Administrateur</a>
+          <a target="_blank" href="{{ aeneria_documentation('administrateur.html') }}">Administrateur</a>
           /
-          <a target="_blank" href="{{ pilea_documentation('developpeur.html') }}">Développeur</a>
+          <a target="_blank" href="{{ aeneria_documentation('developpeur.html') }}">Développeur</a>
         </li>
-        <li><i class="fas fa-code-branch"></i> Version : <a target="_blank" href="{{ pilea_repo_git() }}/-/tags/{{ pilea_version() }}">{{ pilea_version() }}</a>
+        <li><i class="fas fa-code-branch"></i> Version : <a target="_blank" href="{{ aeneria_repo_git() }}/-/tags/{{ aeneria_version() }}">{{ aeneria_version() }}</a>
         </li>
         <li><i class="fas fa-clipboard"></i> License : <a target="_blank" href="https://en.wikipedia.org/wiki/MIT_License">MIT</a></li>
       </ul>
       <hr>
+      <h2><i class="fas fa-bullhorn"></i> {{ 'Envie d\'aider æneria ?' | trans }}</h2>
+      <div class="row justify-content-center">
+        <div class="col-7">
+          <p>Combien de personnes utilisent æneria ?</p>
+          <a href="https://aeneria.com/coucou" class="btn btn-primary" name="coucou"/>
+            <i class="fas fa-paper-plane"></i> Faire coucou
+          </a>
+        </div>
+        <div class="col-5">
+          <p>Payez-moi une petite bière</p>
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+            <input type="hidden" name="cmd" value="_s-xclick" />
+            <input type="hidden" name="hosted_button_id" value="EXHAXM6FUG8C6" />
+            <button class="btn btn-primary" name="submit" title="Via le site de PayPal" />
+              <i class="fab fa-paypal"></i> Faire un don
+            </button>
+          </form>
+        </div>
+      </div>
+      <hr>
       <h2><i class="fas fa-bug"></i> {{ 'Un bug ou une proposition d\'amélioration ?' | trans }}</h2>
-      <p>{{ 'Faites-le savoir un ouvrant une issue sur' | trans }} <a target="_blank" href="{{ pilea_repo_git() }}/issues">{{ 'le dépôt <i class="fab fa-gitlab" style="font-size: xx-large;"></i> de Pilea ' | trans | raw }}</a>!</p>
+      <p>{{ 'Faites-le savoir un ouvrant une issue sur' | trans }} <a target="_blank" href="{{ aeneria_repo_git() }}/issues">{{ 'le dépôt <i class="fab fa-gitlab" style="font-size: xx-large;"></i> d\'æneria ' | trans | raw }}</a>!</p>
       <hr>
       <p>{{ 'Développé avec <i class="fas fa-heart"></i> par Simon Mellerin, avec l\'aide de&nbsp;:' | trans | raw }}</p>
       <ul class="about-list">
