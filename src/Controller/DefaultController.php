@@ -28,9 +28,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('welcome');
         }
 
-        return $this->render('dashboards/homepage.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('dashboards/homepage.html.twig');
     }
 
     /**
@@ -42,9 +40,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('welcome');
         }
 
-        return $this->render('dashboards/electricity.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('dashboards/electricity.html.twig');
     }
 
     /**
@@ -56,9 +52,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('welcome');
         }
 
-        return $this->render('dashboards/energy_x_meteo.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('dashboards/energy_x_meteo.html.twig');
     }
 
     /**
@@ -70,9 +64,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('welcome');
         }
 
-        return $this->render('dashboards/meteo.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('dashboards/meteo.html.twig');
     }
 
     /**
@@ -80,8 +72,6 @@ class DefaultController extends AbstractController
      */
     public function welcomeAction(Request $request)
     {
-        return $this->render('welcome.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('welcome.html.twig');
     }
 }

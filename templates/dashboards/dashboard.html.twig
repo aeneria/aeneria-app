@@ -5,10 +5,12 @@
 {% block selection %}
   <div class="mx-auto">
     <form class="form-inline selection-form">
-      <div class="row align-items-center justify-content-around">
+      <div class="row align-items-center justify-content-space-around">
+        {% if places|length > 1 %}
         <div class="col col-place">
           {% include "selection/place.html.twig" %}
         </div>
+        {% endif %}
         <div class="col col-period">
           {% include "selection/period.html.twig" %}
         </div>
