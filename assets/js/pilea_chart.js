@@ -77,7 +77,7 @@
       .style('text-anchor', 'left')
       .style('fill', AXE_COLOR)
       .attr('transform', function (d, i) {
-          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 4) + ')'
+          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 2) + ')'
       })
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
@@ -573,7 +573,7 @@
   var displayLegend = function (result, target, colors, unit, precision, min, max) {
     var total_height = colors.length * DAY_SIZE + 20;
     var total_width = 100;
-    var margin_left = 25;
+    var margin_left = 33;
 
     var element = d3
     .select('#' + target);

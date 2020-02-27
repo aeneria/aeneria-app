@@ -1,7 +1,7 @@
 /* GENERAL //////////////////////////////////////////////////////////////////*/
 
 body {
-  font-family: CodeNew;
+  font-family: $font-text;
   background: $body-bg-color;
 }
 
@@ -14,11 +14,11 @@ body {
 }
 
 h1 {
-  font-family: 'Arvo';
+  font-family: $font-title;
 }
 
 h2 {
-  font-family: 'Arvo';
+  font-family: $font-title;
   font-size: 1.50rem;
 }
 

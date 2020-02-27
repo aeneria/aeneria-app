@@ -1,18 +1,27 @@
+@font-face {
+    font-family: Kingsmen;
+    src: url('../font/Kingsmen_D.otf');
+}
+$font-logo: Kingsmen;
 
 @font-face {
     font-family: 'Arvo';
     src: url('../font/Arvo-Regular.ttf');
 }
+$font-title: Arvo;
 
 @font-face {
     font-family: CodeNew;
     src: url('../font/code-new-roman.otf');
 }
+$font-monospace: CodeNew;
 
 @font-face {
-    font-family: Kingsmen;
-    src: url('../font/Kingsmen_D.otf');
+    font-family: RobotoSlab;
+    src: url('../font/RobotoSlab-Regular.ttf');
 }
+$font-text: RobotoSlab;
+
 
 $primary-color: #4f323b;
 $white: #ffffff;
