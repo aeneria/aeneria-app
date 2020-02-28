@@ -23,7 +23,7 @@ class AtLeastOneAdminValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof AtLeastOneAdmin) {
-            throw new UnexpectedTypeException($constraint, LogsToEnedis::class);
+            throw new UnexpectedTypeException($constraint, AtLeastOneAdmin::class);
         }
 
         if ($this->userRepository->isLastAdmin($value)) {
