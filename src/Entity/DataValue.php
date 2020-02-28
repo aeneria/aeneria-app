@@ -275,29 +275,28 @@ class DataValue
      */
     public static function adaptToFrequency(\DateTime $date, int $frequency): \DateTime
     {
-        $ret = clone $date;
         // Update date according to frequency.
         switch ($frequency) {
             case DataValue::FREQUENCY['HOUR'] :
-                $ret = new \DateTime($ret->format("Y-m-d H:00:00"));
+                $date = new \DateTime($date->format("Y-m-d H:00:00"));
                 break;
             case DataValue::FREQUENCY['DAY'] :
-                $ret = new \DateTime($ret->format("Y-m-d 00:00:00"));
+                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['WEEK'] :
-                $w = $ret->format('w') == 0 ? 6 : $ret->format('w') - 1;
-                $ret->sub(new \DateInterval('P' . $w . 'D'));
-                $ret = new \DateTime($ret->format("Y-m-d 00:00:00"));
+                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+                $date->sub(new \DateInterval('P' . $w . 'D'));
+                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['MONTH'] :
-                $ret = new \DateTime($ret->format("Y-m-01 00:00:00"));
+                $date = new \DateTime($date->format("Y-m-01 00:00:00"));
                 break;
             case DataValue::FREQUENCY['YEAR'] :
-                $ret = new \DateTime($ret->format("Y-01-01 00:00:00"));
+                $date = new \DateTime($date->format("Y-01-01 00:00:00"));
                 break;
         }
 
-        return $ret;
+        return $date;
     }
 
     /**

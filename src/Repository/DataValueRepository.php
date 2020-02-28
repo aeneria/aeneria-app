@@ -296,8 +296,7 @@ class DataValueRepository extends ServiceEntityRepository
             // Add condition on frequency
             ->andWhere('d.frequency = :frequency')
             ->setParameter('frequency', $frequency)
-            ->addGroupBy('d.date')
-            ->orderBy('d.date', 'asc');
+        ;
     }
 
 
