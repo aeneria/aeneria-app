@@ -47,7 +47,7 @@ final class AppExtension extends AbstractExtension
 
     public function getDocumentation(?string $path = ''): string
     {
-        return \sprintf("%s%s%s", Constants::DOCUMENTATION, Constants::VERSION, $path);
+        return \sprintf("%s%s/%s", Constants::DOCUMENTATION, Constants::VERSION, $path);
     }
 
     public function getGraphHelp(?string $graph): string
