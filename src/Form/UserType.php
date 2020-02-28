@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use App\Validator\Constraints\AtLeastOneAdmin;
+use App\Validator\Constraints\UniqueUsername;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -33,6 +34,7 @@ class UserType extends AbstractType
                 'label' => 'Nom de l\'utilisateur',
                 'constraints' => [
                     new AtLeastOneAdmin(),
+                    new UniqueUsername(),
                 ],
             ])
             ->add('password', PasswordType::class, [
