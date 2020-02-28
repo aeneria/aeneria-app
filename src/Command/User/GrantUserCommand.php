@@ -47,7 +47,11 @@ class GrantUserCommand extends Command
 
         $this->io = new SymfonyStyle($input, $output);
 
-        $user = $this->entityManager->getRepository(User::class)->findOneByUsername($input->getArgument('username'));
+        if ( !$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
+            $this->io->error("User can't be found.");
+            return 1;
+        }
+
         $user->setRoles([User::ROLE_ADMIN]);
 
         $this->entityManager->persist($user);

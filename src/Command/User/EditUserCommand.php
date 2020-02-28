@@ -60,7 +60,7 @@ class EditUserCommand extends Command
 
         if ( !$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
             $this->io->error("User can't be found.");
-            return;
+            return 1;
         }
 
         if ($username = $input->getOption('username')) {
