@@ -31,7 +31,7 @@ class AddUserCommand extends Command
     private $passwordEncoder;
     private $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, UserRepository $user)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, UserRepository $userRepository)
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
