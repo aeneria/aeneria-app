@@ -3,6 +3,7 @@
 namespace App\Command\User;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,11 +29,13 @@ class AddUserCommand extends Command
 
     private $entityManager;
     private $passwordEncoder;
+    private $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, UserRepository $user)
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
         parent::__construct();
     }
 

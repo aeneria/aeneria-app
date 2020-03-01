@@ -2,14 +2,13 @@
 
 namespace App\Command\User;
 
-use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /***
  * Remove user command
@@ -27,19 +26,19 @@ class ActivateUserCommand extends Command
     protected $io;
 
     private $entityManager;
-    private $passwordEncoder;
+    private $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
         $this->entityManager = $entityManager;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
         parent::__construct();
     }
 
     protected function configure()
     {
         $this
-            ->setName('pilea:user:deactivate')
+            ->setName('pilea:user:activate')
             ->setDescription('Activate an user.')
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
         ;
