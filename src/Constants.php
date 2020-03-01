@@ -8,7 +8,7 @@ class Constants {
      * Current version
      * @var \String
      */
-    public const VERSION = '0.5.0';
+    public const VERSION = '0.5.1';
 
     /**
      * Gitlab repo URL
