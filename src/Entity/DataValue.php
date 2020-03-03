@@ -37,7 +37,7 @@ class DataValue
     private $value;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      *
      * @ORM\Column(name="date", type="datetime")
      */
@@ -120,7 +120,7 @@ class DataValue
     /**
      * Set date
      */
-    public function setDate(\DateTime $date): self
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
@@ -130,7 +130,7 @@ class DataValue
     /**
      * Get date
      */
-    public function getDate(): \DateTime
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
@@ -273,26 +273,28 @@ class DataValue
      *  * Month, return the first day of date's month
      *  * ...
      */
-    public static function adaptToFrequency(\DateTime $date, int $frequency): \DateTime
+    public static function adaptToFrequency(\DateTimeImmutable $dateToAdapt, int $frequency): \DateTimeImmutable
     {
+        $date = \DateTime::createFromImmutable($dateToAdapt);
+
         // Update date according to frequency.
         switch ($frequency) {
             case DataValue::FREQUENCY['HOUR'] :
-                $date = new \DateTime($date->format("Y-m-d H:00:00"));
+                $date = new \DateTimeImmutable($date->format("Y-m-d H:00:00"));
                 break;
             case DataValue::FREQUENCY['DAY'] :
-                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+                $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['WEEK'] :
                 $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
                 $date->sub(new \DateInterval('P' . $w . 'D'));
-                $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+                $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
                 break;
             case DataValue::FREQUENCY['MONTH'] :
-                $date = new \DateTime($date->format("Y-m-01 00:00:00"));
+                $date = new \DateTimeImmutable($date->format("Y-m-01 00:00:00"));
                 break;
             case DataValue::FREQUENCY['YEAR'] :
-                $date = new \DateTime($date->format("Y-01-01 00:00:00"));
+                $date = new \DateTimeImmutable($date->format("Y-01-01 00:00:00"));
                 break;
         }
 
@@ -322,19 +324,21 @@ class DataValue
      *    ]
      *  * ...
      */
-    public static function getAdaptedBoundariesForFrequency(\DateTime $date, int $frequency): array
+    public static function getAdaptedBoundariesForFrequency(\DateTimeImmutable $dateToAdapt, int $frequency): array
     {
+        $date = \DateTime::createFromImmutable($dateToAdapt);
+
         switch ($frequency) {
             case DataValue::FREQUENCY['DAY']:
-                $firstDay = clone $date;
-                $lastDay = clone $date;
+                $firstDay = \DateTime::createFromImmutable($dateToAdapt);
+                $lastDay = \DateTime::createFromImmutable($dateToAdapt);
 
                 $lastDay->add(new \DateInterval('P1D'));
 
                 $previousFrequency = DataValue::FREQUENCY['HOUR'];
                 break;
             case DataValue::FREQUENCY['WEEK']:
-                $firstDay = clone $date;
+                $firstDay = \DateTime::createFromImmutable($dateToAdapt);
                 $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
                 $firstDay->sub(new \DateInterval('P' . $w . 'D'));
 
@@ -344,7 +348,7 @@ class DataValue
                 $previousFrequency = DataValue::FREQUENCY['DAY'];
                 break;
             case DataValue::FREQUENCY['MONTH']:
-                $firstDay = clone $date;
+                $firstDay = \DateTime::createFromImmutable($dateToAdapt);
                 $firstDay->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
 
                 $lastDay = clone $firstDay;
@@ -363,8 +367,8 @@ class DataValue
         }
 
         return [
-            'from' => $firstDay,
-            'to' => $lastDay,
+            'from' => \DateTimeImmutable::createFromMutable($firstDay),
+            'to' => \DateTimeImmutable::createFromMutable($lastDay),
             'previousFrequency' => $previousFrequency,
         ];
     }

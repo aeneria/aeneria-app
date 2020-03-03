@@ -27,6 +27,7 @@ class FeedRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $feedDataRepository = $entityManager->getRepository('App:FeedData');
+        \assert($feedDataRepository instanceof FeedDataRepository);
 
         // We check, for this feed, if each dataFeeds are already created,
         // and create it if not.
@@ -50,10 +51,8 @@ class FeedRepository extends ServiceEntityRepository
      */
     public function purge(Feed $feed)
     {
-        $feedDataRepository = $this
-            ->getEntityManager()
-            ->getRepository('App:FeedData')
-        ;
+        $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
+        \assert($feedDataRepository instanceof FeedDataRepository);
 
         foreach ($feedDataRepository->findByFeed($feed) as $feedData) {
             $feedDataRepository->purge($feedData);
@@ -98,6 +97,7 @@ class FeedRepository extends ServiceEntityRepository
     public function getLastUpToDate(array $feeds): ?\DateTime
     {
         $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
+        \assert($feedDataRepository instanceof FeedDataRepository);
 
         // Get all feedData.
         $feedDataList = $feedDataRepository->findByFeed($feeds);
@@ -131,9 +131,10 @@ class FeedRepository extends ServiceEntityRepository
     /**
      * Check if there's data in DB for $date for all $feed's feedData and for all $frequencies.
      */
-    public function isUpToDate(Feed $feed, \DateTime $date, array $frequencies): bool
+    public function isUpToDate(Feed $feed, \DateTimeImmutable $date, array $frequencies): bool
     {
         $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
+        \assert($feedDataRepository instanceof FeedDataRepository);
 
         // Get all feedData.
         $feedDataList = $feedDataRepository->findByFeed($feed);

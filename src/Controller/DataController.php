@@ -6,10 +6,8 @@ use App\Entity\DataValue;
 use App\Entity\Place;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
-use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -36,23 +34,19 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/repartition/{dataType}/{repartitionType}/{start}/{end}", name="data-api-repartition")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $repartitionType
      *     Type of repartition we want (week, year_h, year_v)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getRepartionAction(string $placeId, string $dataType, string $repartitionType, string $start = NULL, string $end = NULL, TranslatorInterface $translator)
+    public function getRepartionAction(string $placeId, string $dataType, string $repartitionType, string $start, string $end, TranslatorInterface $translator): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = new \DateTimeImmutable($start);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Set and build axes's type & frequency according to repartitionType.
         list($axe, $axeX, $axeY, $frequency) = $this->buildRepartitionAxes($repartitionType, $start, $end, $translator);
@@ -77,23 +71,21 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/evolution/{dataType}/{frequency}/{start}/{end}", name="data-api-evolution")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
+     *     Frequency we want (day, week, month)
      * @param string $start
      * @param string $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getEvolutionAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getEvolutionAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
 
@@ -112,25 +104,21 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/sum-group/{dataType}/{frequency}/{groupBy}/{start}/{end}", name="data-api-sum-group-by")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
+     *     Frequency we want (day, week, month)
      * @param string $groupBy
      *     The column we want to group by (from dataValue table)
-     * @param string $start
-     * @param string $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getSumGroupByAction(string $placeId, $dataType, $frequency, $groupBy, $start = NULL, $end = NULL, TranslatorInterface $translator)
+    public function getSumGroupByAction(string $placeId, string $dataType, string $frequency, string $groupBy, string $start, string $end, TranslatorInterface $translator): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
 
         // Find feedData with the good dataType.
@@ -170,22 +158,18 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/sum/{dataType}/{start}/{end}", name="data-api-sum")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *     Frequency we want (day, week, month)
      */
-    public function getSumAction(string $placeId, $dataType, $start = NULL, $end = NULL)
+    public function getSumAction(string $placeId, string $dataType, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $dataType = strtoupper($dataType);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = new \DateTimeImmutable($start);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -202,23 +186,19 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/avg/{dataType}/{frequency}/{start}/{end}", name="data-api-average")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *     Frequency we want (day, week, month)
      */
-    public function getAverageAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getAverageAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -235,23 +215,19 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/max/{dataType}/{frequency}/{start}/{end}", name="data-api-max")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *     Frequency we want (day, week, month)
      */
-    public function getMaxAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getMaxAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -268,23 +244,19 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/min/{dataType}/{frequency}/{start}/{end}", name="data-api-min")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *     Frequency we want (day, week, month)
      */
-    public function getMinAction(string $placeId, $dataType, $frequency, $start = NULL, $end = NULL)
+    public function getMinAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -297,27 +269,23 @@ class DataController extends AbstractAppController
     }
 
     /**
-     * Get number of value by <frequency> between two date.
+     * Get number of value inferior of <value> by <frequency> between two date.
      *
      * @Route("/data/{placeId}/inf/{dataType}/{value}/{frequency}/{start}/{end}", name="data-api-number")
      *
-     * @param Request $request
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
-     *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *     Frequency we want (day, week, month)
      */
-    public function getNumberInfAction(string $placeId, $dataType, $value, $frequency, $start = NULL, $end = NULL)
+    public function getNumberInfAction(string $placeId, string $dataType, string $value, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -334,26 +302,22 @@ class DataController extends AbstractAppController
      *
      * @Route("/data/{placeId}/xy/{dataTypeX}/{dataTypeY}/{frequency}/{start}/{end}", name="data-api-xy")
      *
-     * @param Request $request
      * @param string $dataTypeX
      *     Type of data we want on x axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $dataTypeY
      *     Type of data we want on y axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
      *     Frequency we want for the evolution (day, week, month)
-     * @param \DateTime $start
-     * @param \Datetime $end
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getXY(string $placeId, $dataTypeX, $dataTypeY, $frequency, $start = NULL, $end = NULL)
+    public function getXY(string $placeId, string $dataTypeX, string $dataTypeY, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->checkPlace($placeId);
 
         $dataTypeX = strtoupper($dataTypeX);
         $dataTypeY = strtoupper($dataTypeY);
         $frequency = strtoupper($frequency);
-        $start = $start ? new \DateTime($start) : new \DateTime('2018-01-01');
-        $end = $end ? new \DateTime($end . ' 23:59:59') : new \DateTime();
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
         $feedDataX = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataTypeX);
@@ -397,11 +361,9 @@ class DataController extends AbstractAppController
      * Build axes for a repartition graph
      *
      * @param string $repartitionType
-     * @param \DateTime $start
-     * @param \DateTime $end
      * @return array of values [$axe, $axeX, $axeY, $frequency]
      */
-    private function buildRepartitionAxes($repartitionType, $start, $end, TranslatorInterface $translator)
+    private function buildRepartitionAxes(string $repartitionType, \DateTimeInterface $start, \DateTimeInterface $end, TranslatorInterface $translator): array
     {
         $axe = (object)[
             'x' => [],
@@ -449,8 +411,8 @@ class DataController extends AbstractAppController
                     $translator->trans('Dim.'),
                 ];
 
-                $currentDate = clone $start;
-                $endWeek = clone $end;
+                $currentDate = \DateTime::createFromImmutable($start);
+                $endWeek = \DateTime::createFromImmutable($end);
                 $endWeek->add(new \DateInterval('P'.(7-$end->format('w')).'D'));
                 while($currentDate <= $endWeek) {
                     $axe->x[] = (int)$currentDate->format('W');
@@ -477,8 +439,8 @@ class DataController extends AbstractAppController
                     $translator->trans('Dim.'),
                 ];
 
-                $currentDate = clone $start;
-                $endWeek = clone $end;
+                $currentDate = \DateTime::createFromImmutable($start);
+                $endWeek = \DateTime::createFromImmutable($end);
                 $endWeek->add(new \DateInterval('P'.(7-$end->format('w')).'D'));
                 while($currentDate <= $endWeek) {
                     $axe->y[] = (int)$currentDate->format('W');
@@ -496,15 +458,8 @@ class DataController extends AbstractAppController
 
     /**
      * Get data for a repartition graph from database
-     * @param \Datetime $start
-     * @param \Datetime $end
-     * @param string $dataType
-     * @param string $axeX
-     * @param string $axeY
-     * @param string $frequency
-     * @param string $repartitionType
      */
-    private function getRepartitionData(Place $place, \DateTime $start, \DateTime $end, string $dataType, string $axeX, string $axeY, string $frequency, string $repartitionType): array
+    private function getRepartitionData(Place $place, \DateTimeImmutable $start, \DateTimeImmutable $end, string $dataType, string $axeX, string $axeY, string $frequency, string $repartitionType): array
     {
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -666,7 +621,7 @@ class DataController extends AbstractAppController
         return $data;
     }
 
-    private function buildEvolutionAxes($frequency, $start, $end)
+    private function buildEvolutionAxes(string $frequency, \DateTimeImmutable $start, \DateTimeImmutable $end)
     {
         $axe = (object)[
             'x' => [],
@@ -702,7 +657,7 @@ class DataController extends AbstractAppController
                 $step = 'P1Y';
         }
 
-        $currentDate = clone $start;
+        $currentDate = \DateTime::createFromImmutable($start);
         while($currentDate <= $end) {
             $axe->x[] = $currentDate->format($axeFormat);
             $axe->label[] = $currentDate->format($labelFormat);

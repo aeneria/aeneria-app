@@ -80,14 +80,14 @@ class FetchDataCommand extends Command
         if($date = $input->getOption('date')) {
             // If a date is given, we update only for this date.
 
-            $date = new \DateTime($date);
+            $date = new \DateTimeImmutable($date);
             $this->feedDataProvider->fetchDataFor($date, $feeds, $input->getOption('force'));
         } else {
             // Else we update from last data to yesterday.
             // Get yesterday datetime.
             $date = new \DateTime();
             $date->sub(new \DateInterval('P1D'));
-            $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+            $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
             $this->feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
         }
     }

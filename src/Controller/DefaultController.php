@@ -10,12 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends AbstractController
 {
-    private $dataValueRepository;
     private $placeRepository;
 
-    public function __construct(PlaceRepository $placeRepository, DataValueRepository $dataValueRepository)
+    public function __construct(PlaceRepository $placeRepository)
     {
-        $this->dataValueRepository = $dataValueRepository;
         $this->placeRepository = $placeRepository;
     }
 
@@ -24,8 +22,8 @@ class DefaultController extends AbstractController
      */
     public function homepageAction(Request $request)
     {
-        if (\count($this->getUser()->getPlaces()) == 0) {
-            return $this->redirectToRoute('welcome');
+        if (!$this->canUserSeeAtLeastOnPlace()) {
+            return $this->render('welcome.html.twig');
         }
 
         return $this->render('dashboards/homepage.html.twig');
@@ -36,8 +34,8 @@ class DefaultController extends AbstractController
      */
     public function electricityAction(Request $request)
     {
-        if (\count($this->getUser()->getPlaces()) == 0) {
-            return $this->redirectToRoute('welcome');
+        if (!$this->canUserSeeAtLeastOnPlace()) {
+            return $this->render('welcome.html.twig');
         }
 
         return $this->render('dashboards/electricity.html.twig');
@@ -48,8 +46,8 @@ class DefaultController extends AbstractController
      */
     public function energymeteoAction(Request $request)
     {
-        if (\count($this->getUser()->getPlaces()) == 0) {
-            return $this->redirectToRoute('welcome');
+        if (!$this->canUserSeeAtLeastOnPlace()) {
+            return $this->render('welcome.html.twig');
         }
 
         return $this->render('dashboards/energy_x_meteo.html.twig');
@@ -60,18 +58,15 @@ class DefaultController extends AbstractController
      */
     public function meteoAction(Request $request)
     {
-        if (\count($this->getUser()->getPlaces()) == 0) {
-            return $this->redirectToRoute('welcome');
+        if (!$this->canUserSeeAtLeastOnPlace()) {
+            return $this->render('welcome.html.twig');
         }
 
         return $this->render('dashboards/meteo.html.twig');
     }
 
-    /**
-     * @Route("/welcome", name="welcome")
-     */
-    public function welcomeAction(Request $request)
+    private function canUserSeeAtLeastOnPlace(): bool
     {
-        return $this->render('welcome.html.twig');
+        return \count($this->placeRepository->getAllowedPlaces($this->getUser())) > 0;
     }
 }

@@ -6,7 +6,7 @@ use App\Entity\DataValue;
 use App\Entity\FeedData;
 use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * FeedDataRepository
@@ -26,10 +26,8 @@ class FeedDataRepository extends ServiceEntityRepository
      */
     public function purge(FeedData $feedData)
     {
-        $dataValueRepository = $this
-            ->getEntityManager()
-            ->getRepository('App:DataValue')
-        ;
+        $dataValueRepository = $this->getEntityManager()->getRepository('App:DataValue');
+        \assert($dataValueRepository instanceof DataValueRepository);
 
         $dataValueRepository
             ->createQueryBuilder('v')
@@ -77,12 +75,10 @@ class FeedDataRepository extends ServiceEntityRepository
      * @param string $value
      * @param EntityManager $entityManager
      */
-    public function updateOrCreateValue(FeedData $feedData, \DateTime $date, $frequency, $value)
+    public function updateOrCreateValue(FeedData $feedData, \DateTimeImmutable $date, $frequency, $value)
     {
-        $dataValueRepository = $this
-            ->getEntityManager()
-            ->getRepository('App:DataValue')
-        ;
+        $dataValueRepository = $this->getEntityManager()->getRepository('App:DataValue');
+        \assert($dataValueRepository instanceof DataValueRepository);
 
         // Update date according to frequnecy
         $date = DataValue::adaptToFrequency($date, $frequency);
@@ -126,11 +122,12 @@ class FeedDataRepository extends ServiceEntityRepository
      */
     public function getLastUpToDate(FeedData $feedData)
     {
+        $dataValueRepository = $this->getEntityManager()->getRepository('App:DataValue');
+        \assert($dataValueRepository instanceof DataValueRepository);
+
         // Try to get the corresponding DataValue.
-        $result = $this->getEntityManager()
-            ->getRepository('App:DataValue')
-            ->getLastValue($feedData, DataValue::FREQUENCY['DAY'])
-        ;
+
+        $result = $dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY['DAY']);
 
         if (!empty($result[0]['date'])) {
             return new \DateTime($result[0]['date']);
@@ -145,7 +142,7 @@ class FeedDataRepository extends ServiceEntityRepository
      * @param \DateTime $date
      * @param $frequencies array of int from DataValue frequencies
      */
-    public function isUpToDate(FeedData $feedData, \DateTime $date, array $frequencies)
+    public function isUpToDate(FeedData $feedData, \DateTimeImmutable $date, array $frequencies)
     {
         $isUpToDate = true;
 
