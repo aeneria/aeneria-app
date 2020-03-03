@@ -13,7 +13,7 @@ use App\Entity\FeedData;
  */
 class FakeDataProvider extends AbstractFeedDataProvider {
 
-    public function fetchData(\Datetime $date, array $feeds, bool $force = false)
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
@@ -32,48 +32,40 @@ class FakeDataProvider extends AbstractFeedDataProvider {
     /**
      * Generate Fake data for a meteo typed feed for date for all frenquencies.
      */
-    private function generateMeteoData(\DateTime $date, Feed $feed)
+    private function generateMeteoData(\DateTimeImmutable $date, Feed $feed)
     {
         $DataTypes = [
             FeedData::FEED_DATA_TEMPERATURE => [
                 'min' => -10,
                 'max' => 40,
-                'operator' => 'AVG',
             ],
             FeedData::FEED_DATA_TEMPERATURE_MIN => [
                 'min' => -10,
                 'max' => 40,
-                'operator' => 'AVG',
             ],
             FeedData::FEED_DATA_TEMPERATURE_MAX => [
                 'min' => -10,
                 'max' => 40,
-                'operator' => 'AVG',
             ],
             FeedData::FEED_DATA_DJU => [
                 'min' => 0,
                 'max' => 4,
-                'operator' => 'SUM',
             ],
             FeedData::FEED_DATA_HUMIDITY => [
                 'min' => 0,
                 'max' => 100,
-                'operator' => 'AVG',
             ],
             FeedData::FEED_DATA_NEBULOSITY => [
                 'min' => 0,
                 'max' => 100,
-                'operator' => 'AVG',
             ],
             FeedData::FEED_DATA_RAIN => [
                 'min' => 0,
                 'max' => 20,
-                'operator' => 'AVG',
             ],
             FeedData::FEED_DATA_PRESSURE => [
                 'min' => 103668,
                 'max' => 98167,
-                'operator' => 'SUM',
             ],
         ];
 
@@ -82,7 +74,6 @@ class FakeDataProvider extends AbstractFeedDataProvider {
 
             $min = $DataTypes[$type]['min'];
             $max = $DataTypes[$type]['max'];
-            $operator = $DataTypes[$type]['operator'];
 
             $this->feedDataRepository->updateOrCreateValue(
                 $feedData,
@@ -92,16 +83,17 @@ class FakeDataProvider extends AbstractFeedDataProvider {
             );
             $this->entityManager->flush();
 
-            $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['WEEK'], $operator);
-            $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['MONTH'], $operator);
-            $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['YEAR'], $operator);
         }
+
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
     }
 
     /**
      * Generate Fake data for a electricty typed feed for date for all frenquencies.
      */
-    private function generateElectricityData(\DateTime $date, Feed $feed)
+    private function generateElectricityData(\DateTimeImmutable $date, Feed $feed)
     {
         // Get feedData.
         $feedData = $this->feedDataRepository->findOneByFeed($feed);
@@ -111,57 +103,16 @@ class FakeDataProvider extends AbstractFeedDataProvider {
 
             $this->feedDataRepository->updateOrCreateValue(
                 $feedData,
-                new \DateTime($date->format("Y-m-d") . $hour . ':00'),
+                new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
                 DataValue::FREQUENCY['HOUR'],
                 \rand(0, 50)/10
             );
         }
         $this->entityManager->flush();
 
-        $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['DAY']);
-        $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['WEEK']);
-        $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['MONTH']);
-        $this->generateAgregatedData($date, $feedData, DataValue::FREQUENCY['YEAR']);
-
-        $this->entityManager->flush();
-    }
-
-    private function generateAgregatedData(\DateTime $date, FeedData $feedData, int $frequency, string $operator = 'SUM')
-    {
-        list('from' => $firstDay, 'to' =>  $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
-
-        switch ($operator) {
-            case 'SUM':
-                $agregateData = $this
-                    ->dataValueRepository
-                    ->getSumValue(
-                        $firstDay,
-                        $lastDay,
-                        $feedData,
-                        $previousFrequency
-                    )
-                ;
-            case 'AVG':
-                $agregateData = $this
-                    ->dataValueRepository
-                    ->getAverageValue(
-                        $firstDay,
-                        $lastDay,
-                        $feedData,
-                        $previousFrequency
-                    )
-                ;
-        }
-
-        if (isset($agregateData[0]['value'])) {
-            $this->feedDataRepository->updateOrCreateValue(
-                $feedData,
-                $firstDay,
-                $frequency,
-                \round($agregateData[0]['value'], 1)
-            );
-        }
-
-        $this->entityManager->flush();
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['DAY']);
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
     }
 }

@@ -85,7 +85,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     /**
      * @inheritdoc
      */
-    public function fetchData(\DateTime $date, array $feeds, bool $force = false)
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         $synopData = $this->fetchSynopData($date);
 
@@ -100,7 +100,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         }
     }
 
-    private function fetchSynopData(\Datetime $date): array
+    private function fetchSynopData(\DateTimeImmutable $date): array
     {
         $synopData = [];
 
@@ -144,7 +144,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         return $synopData;
     }
 
-    private function refreshFeedData(\DateTime $date, Feed $feed, array $synopData)
+    private function refreshFeedData(\DateTimeImmutable $date, Feed $feed, array $synopData)
     {
         $stationId = $feed->getParam()['STATION_ID'];
 
@@ -172,29 +172,10 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
             // Flush all persisted DataValue.
             $this->entityManager->flush();
 
-            // Refresh week and month aggregate data.
-            $this->refreshAgregateValue($date, $feed);
+            $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+            $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+            $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
         }
-    }
-
-    /**
-     * Create or refresh month and week agregate data for the date.
-     * Persist it in EntityManager.
-     *
-     * @param \DateTime $date
-     */
-    private function refreshAgregateValue(\DateTime $date, Feed $feed)
-    {
-        // Refreshing agregate value for current week.
-        list('from' => $firstDay, 'to' =>  $lastDay) = DataValue::getAdaptedBoundariesForFrequency($date, DataValue::FREQUENCY['WEEK']);
-        $this->performAgregateValue($firstDay, $lastDay, $feed, DataValue::FREQUENCY['WEEK']);
-
-        // Refreshing agregate value for current month.
-        list('from' => $firstDay, 'to' =>  $lastDay) = DataValue::getAdaptedBoundariesForFrequency($date, DataValue::FREQUENCY['MONTH']);
-        $this->performAgregateValue($firstDay, $lastDay, $feed, DataValue::FREQUENCY['MONTH']);
-
-        // Flush all persisted DataValue.
-        $this->entityManager->flush();
     }
 
     /**
@@ -293,79 +274,6 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         }
 
         return $fastenData;
-    }
-
-    /**
-     * Agregate Values between 2 date and push it to EntityManager.
-     *
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
-     * @param int $frequency
-     */
-    private function performAgregateValue(\DateTime $startDate, \DateTime $endDate, Feed $feed, string $frequency)
-    {
-        // Get all feedData.
-        $feedDataList = $this->feedDataRepository->findByFeed($feed);
-
-        /** @var \App\Entity\FeedData $feedData */
-        foreach ($feedDataList as $feedData) {
-            switch ($feedData->getDataType()) {
-                case 'DJU':
-                case 'RAIN':
-                    $agregateData = $this
-                        ->dataValueRepository
-                        ->getSumValue(
-                            $startDate,
-                            $endDate,
-                            $feedData,
-                            DataValue::FREQUENCY['DAY']
-                        )
-                    ;
-                    break;
-                case 'TEMPERATURE_MAX':
-                    $agregateData = $this
-                        ->dataValueRepository
-                        ->getMaxValue(
-                            $startDate,
-                            $endDate,
-                            $feedData,
-                            DataValue::FREQUENCY['DAY']
-                        )
-                    ;
-                    break;
-                case 'TEMPERATURE_MIN':
-                    $agregateData = $this
-                        ->dataValueRepository
-                        ->getMinValue(
-                            $startDate,
-                            $endDate,
-                            $feedData,
-                            DataValue::FREQUENCY['DAY']
-                        )
-                    ;
-                    break;
-                default:
-                    $agregateData = $this
-                        ->dataValueRepository
-                        ->getAverageValue(
-                            $startDate,
-                            $endDate,
-                            $feedData,
-                            DataValue::FREQUENCY['DAY']
-                        )
-                    ;
-                    break;
-            }
-
-            if (isset($agregateData[0]['value'])) {
-                $this->feedDataRepository->updateOrCreateValue(
-                    $feedData,
-                    $startDate,
-                    $frequency,
-                    \round($agregateData[0]['value'], 1)
-                );
-            }
-        }
     }
 
     /**

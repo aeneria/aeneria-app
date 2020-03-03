@@ -5,7 +5,6 @@ namespace App\Services\FeedDataProvider;
 
 use App\Entity\DataValue;
 use App\Entity\Feed;
-use App\Entity\FeedData;
 
 /**
  * Linky Data Provider
@@ -44,7 +43,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
      *
      * @param \DateTime $date
      */
-    public function fetchData(\DateTime $date, array $feeds, bool $force = false)
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
             if ( (!$feed instanceof Feed) || $feed->getFeedDataProviderType() !== 'LINKY') {
@@ -68,9 +67,9 @@ class LinkyDataProvider extends AbstractFeedDataProvider
      *
      * @param \DateTime $date
      */
-    private function persistData(\DateTime $date, Feed $feed, array $data)
+    private function persistData(\DateTimeImmutable $date, Feed $feed, array $data)
     {
-        $date = new \DateTime($date->format("Y-m-d 00:00:00"));
+        $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
 
         // Get feedData.
         $feedData = $this->feedDataRepository->findOneByFeed($feed);
@@ -80,7 +79,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
             if ($value && (int)$value !== -1) {
                 $this->feedDataRepository->updateOrCreateValue(
                     $feedData,
-                    new \DateTime($date->format("Y-m-d") . $hour . ':00'),
+                    new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
                     DataValue::FREQUENCY['HOUR'],
                     $value
                 );
@@ -98,110 +97,27 @@ class LinkyDataProvider extends AbstractFeedDataProvider
             );
         }
 
-        // Persist month data.
-        $value = \end($data['months']);
-        if ($value && (int)$value !== -1) {
-            $this->feedDataRepository->updateOrCreateValue(
-                $feedData,
-                $date,
-                DataValue::FREQUENCY['MONTH'],
-                $value
-            );
-        }
-
-        // Persist year data.
-        $value = \end($data['years']);
-        if ($value && (int)$value !== -1) {
-            $this->feedDataRepository->updateOrCreateValue(
-                $feedData,
-                $date,
-                DataValue::FREQUENCY['YEAR'],
-                $value
-            );
-        }
-
         // Flush all persisted DataValue.
         $this->entityManager->flush();
 
         // Persist week data.
-        $this->persistWeekValue($date, $feedData);
-        $this->persistYearValue($date, $feedData);
-        $this->entityManager->flush();
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+
+        // Before, we used to get month value from enedis directly. But, this have two inconveniants :
+        //  * First, data can be insconsistent : sum of days value for a month could be different than month value
+        //  * When you get data for a date, it gives you the consumption as it was this particular day, so when you
+        //    try to refetch data for a date, you have to refetch it also for the last date of the date's month.
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
     }
 
-    /**
-     * Create or refresh week agregate data for the date.
-     * Persist it in EntityManager
-     *
-     * @param \DateTime $date
-     */
-    private function persistWeekValue(\DateTime $date, FeedData $feedData)
-    {
-        $firstDayOfWeek = clone $date;
-        $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-        $firstDayOfWeek->sub(new \DateInterval('P' . $w . 'D'));
-
-        $lastDayOfWeek = clone $firstDayOfWeek;
-        $lastDayOfWeek->add(new \DateInterval('P6D'));
-
-        $agregateData = $this
-            ->dataValueRepository
-            ->getSumValue(
-                $firstDayOfWeek,
-                $lastDayOfWeek,
-                $feedData,
-                DataValue::FREQUENCY['DAY']
-            );
-
-        if (isset($agregateData[0]['value'])) {
-            $this->feedDataRepository->updateOrCreateValue(
-                $feedData,
-                $firstDayOfWeek,
-                DataValue::FREQUENCY['WEEK'],
-                \round($agregateData[0]['value'], 1)
-            );
-        }
-    }
-
-    /**
-     * Create or refresh year agregate data for the date.
-     * Persist it in EntityManager
-     *
-     * @param \DateTime $date
-     */
-    private function persistYearValue(\DateTime $date, FeedData $feedData)
-    {
-        $firstDayOfYear = new \DateTime($date->format("Y-1-1 00:00:00"));;
-
-        $lastDayOfYear = clone $firstDayOfYear;
-        $lastDayOfYear->add(new \DateInterval('P1Y'));
-
-        $agregateData = $this
-            ->dataValueRepository
-            ->getSumValue(
-                $firstDayOfYear,
-                $lastDayOfYear,
-                $feedData,
-                DataValue::FREQUENCY['MONTH']
-            );
-
-        if (isset($agregateData[0]['value'])) {
-            $this->feedDataRepository->updateOrCreateValue(
-                $feedData,
-                $firstDayOfYear,
-                DataValue::FREQUENCY['YEAR'],
-                \round($agregateData[0]['value'], 1)
-            );
-        }
-    }
-
-    private function getDataPerHour(\Datetime $date)
+    private function getDataPerHour(\DateTimeImmutable $date)
     {
         // Start from date - 2days to date + 1 day...
-        $endDate = clone $date;
+        $endDate = \DateTime::createFromImmutable($date);
         $endDate->add(new \DateInterval('P1D'));
         $endDate = $endDate->format('d/m/Y');
-        $startDate = clone $date;
+        $startDate = \DateTime::createFromImmutable($date);
         $startDate->sub(new \DateInterval('P2D'));
         $startDate = $startDate->format('d/m/Y');
 
@@ -231,7 +147,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         return \array_reverse($returnData);
     }
 
-    private function getDataPerDay(\DateTime $startDate, \DateTime $endDate)
+    private function getDataPerDay(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate)
     {
         // Max 31 days:
         if (($startDate->getTimestamp() - $startDate->getTimestamp()) / 86400 > 31) {
@@ -258,7 +174,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         return $returnData;
     }
 
-    private function getDataPerMonth(\DateTime $startDate, \DateTime $endDate)
+    private function getDataPerMonth(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate)
     {
         $resource_id = 'urlCdcMois';
         $result = $this->getData($resource_id, $startDate->format("d/m/Y"), $endDate->format("d/m/Y"));
@@ -306,25 +222,22 @@ class LinkyDataProvider extends AbstractFeedDataProvider
 
     /**
      * Get data for all frequencies for $date.
-     *
-     * @param \DateTime $date
-     * @return array of data.
      */
-    private function getAll(\DateTime $date) : array
+    private function getAll(\DateTimeImmutable $date) : array
     {
         $data = [];
         // Get per hour for date:
         $data['hours'] = $this->getDataPerHour($date);
 
         // Get per day:
-        $var = clone $date;
+        $var = \DateTime::createFromImmutable($date);
         $fromMonth = $var->sub(new \DateInterval('P30D'));
-        $data['days'] = $this->getDataPerDay($fromMonth, $date);
+        $data['days'] = $this->getDataPerDay(\DateTimeImmutable::createFromMutable($fromMonth), $date);
 
         // Get per month:
-        $var = clone $date;
+        $var = \DateTime::createFromImmutable($date);
         $fromYear = $var->sub(new \DateInterval('P1Y'));
-        $data['months'] = $this->getDataPerMonth($fromYear, $date);
+        $data['months'] = $this->getDataPerMonth(\DateTimeImmutable::createFromMutable($fromYear), $date);
 
         // Get per year:
         $data['years'] = $this->getDataPerYear();
@@ -386,7 +299,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         return $response;
     }
 
-    private function getData($resource_id, $startDate, $endDate)
+    private function getData(string $resource_id, ?string $startDate, ?string $endDate)
     {
         $p_p_id = 'lincspartdisplaycdc_WAR_lincspartcdcportlet';
 

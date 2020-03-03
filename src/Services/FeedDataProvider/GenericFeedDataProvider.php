@@ -24,7 +24,7 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider {
         parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository);
     }
 
-    public function fetchData(\Datetime $date, array $feeds, bool $force = false)
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         $feedDataProviderId = '';
 
