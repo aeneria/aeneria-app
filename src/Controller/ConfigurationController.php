@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ConfigurationController extends AbstractAppController
 {
@@ -143,7 +145,10 @@ class ConfigurationController extends AbstractAppController
                 ->createNamedBuilder($feedId)
                 ->add('start_date_' . $feedId, Form\TextType::class, [
                     'label' => false,
-                    'help' => $feed->getFeedType() === 'METEO' ? "Attention, les données météorologiques ne sont plus accessibles après 2 semaines." : '',
+                    'help' => $feed->getFeedType() === 'METEO' ?
+                        "Attention, les données météorologiques ne sont plus accessibles après 2 semaines."
+                        :
+                        "Le processus de rechargement des données pouvant être long, il n'est possible de recharger que par lot de 2 semaines",
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
                 ])
@@ -151,6 +156,19 @@ class ConfigurationController extends AbstractAppController
                     'label' => false,
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
+                    'constraints' => [new Callback([
+                        'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
+                            $data = $context->getRoot()->getData();
+                            $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
+                            $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId])->sub(new \DateInterval('P14D'));
+                            if ($startDate < $endDate) {
+                                $context
+                                    ->buildViolation("Vous devez sélectionner une période de moins de 2 semaines.")
+                                    ->addViolation()
+                                ;
+                            }
+                        }
+                    ])]
                 ])
                 ->add('force_' . $feedId, Form\CheckboxType::class, [
                     'label' => 'Forcer',
