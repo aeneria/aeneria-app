@@ -1,7 +1,7 @@
 Documentation administrateur
 ##############################
 
-Geestion des utilisateurs
+Gestion des utilisateurs
 =============================
 
 Logs
