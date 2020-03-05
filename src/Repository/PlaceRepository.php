@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Place;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Place Repository
@@ -15,8 +15,17 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class PlaceRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /** @var bool */
+    private $userCanSharePlace;
+
+    /** @var bool */
+    private $placeCanBePublic;
+
+    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, ManagerRegistry $registry)
     {
+        $this->userCanSharePlace = $userCanSharePlace;
+        $this->placeCanBePublic = $placeCanBePublic;
+
         parent::__construct($registry, Place::class);
     }
 
@@ -25,10 +34,8 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function purge(Place $place)
     {
-        $feedRepository = $this
-            ->getEntityManager()
-            ->getRepository('App:Feed')
-        ;
+        $feedRepository = $this->getEntityManager()->getRepository('App:Feed');
+        \assert($feedRepository instanceof FeedRepository);
 
         foreach ($feedRepository->findByPlace($place) as $feed) {
             $feedRepository->purge($feed);
@@ -47,12 +54,21 @@ class PlaceRepository extends ServiceEntityRepository
 
     public function getAllowedPlaces(User $user)
     {
-        return $this
+        $queryBuilder = $this
             ->createQueryBuilder('p')
             ->select()
             ->orWhere('p.user = :user')
-            ->orWhere(':user MEMBER OF p.allowedUsers')
-            ->orWhere('p.public = true')
+        ;
+
+        if($this->userCanSharePlace) {
+            $queryBuilder->orWhere(':user MEMBER OF p.allowedUsers');
+        }
+
+        if ($this->placeCanBePublic) {
+            $queryBuilder->orWhere('p.public = true');
+        }
+
+        return $queryBuilder
             ->setParameter('user', $user)
             ->orderBy('p.name', 'asc')
             ->getQuery()

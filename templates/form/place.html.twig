@@ -18,20 +18,25 @@
   </div>
 
   <div class="form-group row">
+    {% if placeType.shared is defined %}
     <div class="col-9">
       {{ form_row(placeType.shared) }}
     </div>
+    {% endif %}
+    {% if placeType.public is defined %}
     <div class="col-3">
       {{ form_widget(placeType.public, {label_attr: {class: 'checkbox-custom'} }) }}
       {{ form_errors(placeType.public) }}
     </div>
+    {% endif %}
   </div>
+  {% if placeType.public is defined %}
   <div class="row">
     <div class="col">
       {{ form_help(placeType.public, {label_attr: {class: 'checkbox-custom'} }) }}
     </div>
   </div>
-
+  {% endif %}
 
   <hr>
 

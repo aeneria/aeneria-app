@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\DataValueRepository;
 use App\Repository\PlaceRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

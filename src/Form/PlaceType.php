@@ -6,7 +6,7 @@ use App\Entity\Place;
 use App\Entity\User;
 use App\Form\LinkyFeedType;
 use App\Form\MeteoFranceFeedType;
-use App\Repository\PlaceRepository;
+use App\Repository\FeedRepository;
 use App\Repository\UserRepository;
 use App\Validator\Constraints\LogsToEnedis;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,18 +37,27 @@ class PlaceType extends AbstractType
             ->add('icon', IconChoiceType::class, [
                 'label' => 'Icone'
             ])
-            ->add('public', CheckboxType::class, [
+        ;
+
+        if ($options['place_can_be_public']) {
+            $builder->add('public', CheckboxType::class, [
                 'label' => 'Public',
                 'help' => 'Un compteur public est visible par tous les utilisateurs de Pilea.',
                 'required' => false
-            ])
-            ->add('shared', ChoiceType::class, [
+            ]);
+        }
+
+        if ($options['user_can_share_place']) {
+            $builder->add('shared', ChoiceType::class, [
                 'multiple' => true,
                 'label' => 'Partager avec :',
                 'choices' => $this->userRepository->getUsersList($options['user']),
                 'attr' => ['class' => 'bootstrap-multiselect'],
                 'required' => false,
-            ])
+            ]);
+        }
+
+        $builder
             ->add('electricity', LinkyFeedType::class, [
                 'label' => false,
                 'constraints' => [
@@ -91,8 +100,8 @@ class PlaceType extends AbstractType
                     $place
                         ->setName($data['name'])
                         ->setIcon($data['icon'])
-                        ->setPublic($data['public'])
-                        ->setAllowedUsers($this->userRepository->findById($data['shared']))
+                        ->setPublic($data['public'] ?? false)
+                        ->setAllowedUsers($this->userRepository->findById($data['shared'] ?? []))
                         ->addFeed($data['meteo'])
                         ->addFeed($data['electricity'])
                     ;
@@ -107,6 +116,8 @@ class PlaceType extends AbstractType
     {
         $resolver->setDefaults([
             'user' => null,
+            'user_can_share_place' => null,
+            'place_can_be_public' => null,
         ]);
     }
 
@@ -116,6 +127,7 @@ class PlaceType extends AbstractType
 
         $entityManager->persist($place);
         $feedRepository = $entityManager->getRepository('App:Feed');
+        \assert($feedRepository instanceof FeedRepository);
 
         foreach ($place->getFeeds() as $feed) {
             $entityManager->persist($feed);

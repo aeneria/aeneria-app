@@ -162,9 +162,9 @@ class User implements UserInterface, Serializable
      *  - he owns the place
      *  - someone shared the place with him
      */
-    public function canSee(Place $askedPlace): bool
+    public function canSee(Place $askedPlace, bool $userCanSharePlace = true, bool $placeCanBePublic = true): bool
     {
-        if ($askedPlace->isPublic()) {
+        if ($placeCanBePublic && $askedPlace->isPublic()) {
             return true;
         }
 
@@ -176,9 +176,11 @@ class User implements UserInterface, Serializable
             }
         }
 
-        foreach ($this->getSharedPlaces() as $place) {
-            if ($askedPlaceId === $place->getId()) {
-                return true;
+        if ($userCanSharePlace) {
+            foreach ($this->getSharedPlaces() as $place) {
+                if ($askedPlaceId === $place->getId()) {
+                    return true;
+                }
             }
         }
 

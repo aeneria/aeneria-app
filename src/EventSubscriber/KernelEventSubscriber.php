@@ -63,6 +63,8 @@ final class KernelEventSubscriber implements EventSubscriberInterface
                         ];
                     }
                 }
+
+                $this->twig->addGlobal('user', $user);
             }
             $this->twig->addGlobal('places', $places);
         }

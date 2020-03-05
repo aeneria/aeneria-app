@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\PlaceType;
 use App\Services\DataExporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
@@ -13,7 +14,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -35,12 +37,24 @@ class ConfigurationController extends AbstractAppController
     /**
      * @Route("/configuration/place/add", name="config.place.add")
      */
-    public function placeAddAction(Request $request, EntityManagerInterface $entityManager)
+    public function placeAddAction(int $userMaxPlaces, bool $userCanSharePlace, bool $placeCanBePublic, Request $request, EntityManagerInterface $entityManager)
     {
-        /** @var \Symfony\Component\Form\FormBuilder $configForm */
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        if($userMaxPlaces != -1 && \count($user->getPlaces()) >= $userMaxPlaces) {
+            throw new AccessDeniedHttpException(\sprintf(
+                "Vous ne pouvez créer que %s adresse%s.",
+                $userMaxPlaces,
+                $userMaxPlaces>1 ? 's' : ''
+            ));
+        }
+
         $configForm = $this->createForm(PlaceType::class, null, [
             'data_class' => null,
             'user' => $this->getUser(),
+            'user_can_share_place' => $userCanSharePlace,
+            'place_can_be_public' => $placeCanBePublic,
         ]);
 
         if('POST' === $request->getMethod()) {
@@ -62,14 +76,15 @@ class ConfigurationController extends AbstractAppController
     /**
      * @Route("/configuration/place/{id}/update", name="config.place.update")
      */
-    public function placeUpdateAction(Request $request, string $id, EntityManagerInterface $entityManager)
+    public function placeUpdateAction(bool $userCanSharePlace, bool $placeCanBePublic, Request $request, string $id, EntityManagerInterface $entityManager)
     {
         $place = $this->checkPlace($id);
 
-        /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $configForm = $this->createForm(PlaceType::class, $place, [
                 'data_class' => null,
                 'user' => $this->getUser(),
+                'user_can_share_place' => $userCanSharePlace,
+                'place_can_be_public' => $placeCanBePublic,
             ])
         ;
 
@@ -130,8 +145,12 @@ class ConfigurationController extends AbstractAppController
     /**
      * @Route("/configuration/place/{id}/fetch", name="config.place.fetch")
      */
-    public function placeFetchAction(Request $request, GenericFeedDataProvider $feedDataProvider, FormFactoryInterface $formFactory, string $id)
+    public function placeFetchAction(bool $userCanFetch, Request $request, GenericFeedDataProvider $feedDataProvider, FormFactoryInterface $formFactory, string $id)
     {
+        if (!$userCanFetch) {
+            throw new NotFoundHttpException();
+        }
+
         $place = $this->checkPlace($id);
 
         $forms = [];
@@ -224,8 +243,12 @@ class ConfigurationController extends AbstractAppController
     /**
      * @Route("/configuration/place/{id}/export", name="config.place.export")
      */
-    public function placeExportAction(Request $request, DataExporter $dataExporter, string $id)
+    public function placeExportAction(bool $userCanExport, Request $request, DataExporter $dataExporter, string $id)
     {
+        if (!$userCanExport) {
+            throw new NotFoundHttpException();
+        }
+
         $place = $this->checkPlace($id);
 
         $form = $this

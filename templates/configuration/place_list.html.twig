@@ -16,9 +16,12 @@
           {% endif %}
         </li>
         {% endfor %}
+        {% if pilea_place_can_be_public() %}
         <li>
           <i class="fas fa-unlock-alt"></i> {{ place.public ? 'L\'adresse est publique' | trans : 'L\'adresse est privée' | trans }}
         </li>
+        {% endif %}
+        {% if pilea_user_can_share_place() %}
         <li>
           {% set allowed = '' %}
           {% for allowedUser in place.allowedUsers %}
@@ -26,17 +29,23 @@
           {% endfor %}
           <i class="fas fa-user-friends"></i> Partagée avec {{ allowed?: 'personne' | trans }}
         </li>
+        {% endif %}
       </ul>
       <div class="container-fluid">
         <a class="btn btn-sm btn-primary" href="{{ path('config.place.update', {id: place.id}) }}" title="{{ 'Modifier' | trans }}">
           <i class="fas fa-pen"></i>
         </a>
+        {% if pilea_user_can_fetch() %}
         <a class="btn btn-sm btn-warning" href="{{ path('config.place.fetch', {id: place.id}) }}" title="{{ 'Recharger des dates' | trans }}">
           <i class="fas fa-download"></i>
         </a>
+        {% endif %}
+        {% if pilea_user_can_export() %}
         <a class="btn btn-sm btn-warning" href="{{ path('config.place.export', {id: place.id}) }}" title="{{ 'Exporter des données' | trans }}">
           <i class="fas fa-upload"></i>
         </a>
+        {% endif %}
+
         <a class="btn btn-sm btn-danger" href="{{ path('config.place.delete', {id: place.id}) }}" title="{{ 'Supprimer' | trans }}">
           <i class="fas fa-trash"></i>
         </a>
@@ -47,9 +56,12 @@
         <hr>
       {% endfor %}
 
+      {% if pilea_user_can_add_place(user) %}
       <a class="btn btn-primary" href="{{ path('config.place.add') }}">
         <i class="fas fa-plus-square"></i> {{ 'Ajouter une adresse' | trans }}
       </a>
+      {% endif %}
+
     </div>
   </div>
 </div>

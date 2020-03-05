@@ -4,13 +4,27 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'en'
+    locale: 'fr'
+    pilea.version: '0.5.2'
+    pilea.repo_git: 'https://gitlab.com/pilea/Pilea'
+    pilea.documentation: 'https://pilea.readthedocs.io/fr/'
+    pilea.user.max_places: "%env(PILEA_USER_MAX_PLACES)%"
+    pilea.user.can_share_place: "%env(PILEA_USER_CAN_SHARE_PLACE)%"
+    pilea.user.can_fetch: "%env(PILEA_USER_CAN_FETCH)%"
+    pilea.user.can_export: "%env(PILEA_USER_CAN_EXPORT)%"
+    pilea.place_can_be_public: "%env(PILEA_PLACE_CAN_BE_PUBLIC)%"
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $userMaxPlaces: "%pilea.user.max_places%"
+            $userCanSharePlace: "%pilea.user.can_share_place%"
+            $userCanFetch: "%pilea.user.can_fetch%"
+            $userCanExport: "%pilea.user.can_export%"
+            $placeCanBePublic: "%pilea.place_can_be_public%"
 
     App\:
         resource: '../src/*'

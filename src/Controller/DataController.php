@@ -17,13 +17,16 @@ class DataController extends AbstractAppController
     const YEAR_HORIZONTAL_REPARTITION = 'YEAR_H';
     const YEAR_VERTICAL_REPARTITION = 'YEAR_V';
 
+    /** @var FeedDataRepository */
     private $feedDataRepository;
+
+    /** @var DataValueRepository */
     private $dataValueRepository;
 
-    public function __construct(PlaceRepository $placeRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
+    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, PlaceRepository $placeRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
     {
 
-        parent::__construct($placeRepository);
+        // parent::__construct($userCanSharePlace, $placeCanBePublic, $placeRepository);
 
         $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;
@@ -41,7 +44,7 @@ class DataController extends AbstractAppController
      */
     public function getRepartionAction(string $placeId, string $dataType, string $repartitionType, string $start, string $end, TranslatorInterface $translator): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $repartitionType = strtoupper($repartitionType);
         $dataType = strtoupper($dataType);
@@ -80,7 +83,7 @@ class DataController extends AbstractAppController
      */
     public function getEvolutionAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
@@ -113,7 +116,7 @@ class DataController extends AbstractAppController
      */
     public function getSumGroupByAction(string $placeId, string $dataType, string $frequency, string $groupBy, string $start, string $end, TranslatorInterface $translator): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $frequency = strtoupper($frequency);
         $dataType = strtoupper($dataType);
@@ -165,7 +168,7 @@ class DataController extends AbstractAppController
      */
     public function getSumAction(string $placeId, string $dataType, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $dataType = strtoupper($dataType);
         $start = new \DateTimeImmutable($start);
@@ -193,7 +196,7 @@ class DataController extends AbstractAppController
      */
     public function getAverageAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
@@ -222,7 +225,7 @@ class DataController extends AbstractAppController
      */
     public function getMaxAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
@@ -251,7 +254,7 @@ class DataController extends AbstractAppController
      */
     public function getMinAction(string $placeId, string $dataType, string $frequency, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
@@ -280,7 +283,7 @@ class DataController extends AbstractAppController
      */
     public function getNumberInfAction(string $placeId, string $dataType, string $value, string $frequency, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $dataType = strtoupper($dataType);
         $frequency = strtoupper($frequency);
@@ -311,7 +314,7 @@ class DataController extends AbstractAppController
      */
     public function getXY(string $placeId, string $dataTypeX, string $dataTypeY, string $frequency, string $start, string $end): JsonResponse
     {
-        $place = $this->checkPlace($placeId);
+        $place = $this->canSeePlace($placeId);
 
         $dataTypeX = strtoupper($dataTypeX);
         $dataTypeY = strtoupper($dataTypeY);

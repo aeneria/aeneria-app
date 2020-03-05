@@ -2,24 +2,22 @@
 
 namespace App\Twig;
 
-use App\Constants;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use App\Entity\User;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Twig\TwigFunction;
 use Twig\Extension\AbstractExtension;
 
 final class AppExtension extends AbstractExtension
 {
-    private $requestStack;
-    private $urlGenerator;
+    /** @var ContainerBagInterface */
+    private $parameters;
 
     /**
      * Default constructor
      */
-    public function __construct(RequestStack $requestStack, UrlGeneratorInterface $urlGenerator)
+    public function __construct(ContainerBagInterface $parameters)
     {
-        $this->requestStack = $requestStack;
-        $this->urlGenerator = $urlGenerator;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -32,27 +30,71 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('pilea_repo_git', [$this, 'getGitRepo']),
             new TwigFunction('pilea_documentation', [$this, 'getDocumentation']),
             new TwigFunction('pilea_help_graph', [$this, 'getGraphHelp']),
+            new TwigFunction('pilea_user_max_places', [$this, 'getUserMaxPlaces']),
+            new TwigFunction('pilea_user_can_share_place', [$this, 'canUserSharePlace']),
+            new TwigFunction('pilea_user_can_fetch', [$this, 'canUserFetchData']),
+            new TwigFunction('pilea_user_can_export', [$this, 'canUserExportData']),
+            new TwigFunction('pilea_place_can_be_public', [$this, 'canPlaceBePublic']),
+            new TwigFunction('pilea_user_can_add_place', [$this, 'canUserAddPlace']),
         ];
     }
 
     public function getVersion(): string
     {
-        return Constants::VERSION;
+        return $this->parameters->get('pilea.version');
     }
 
     public function getGitRepo(): string
     {
-        return Constants::REPO_GIT;
+        return $this->parameters->get('pilea.repo_git');
     }
 
     public function getDocumentation(?string $path = ''): string
     {
-        return \sprintf("%s%s/%s", Constants::DOCUMENTATION, Constants::VERSION, $path);
+        $documentationBaseUri = $this->parameters->get('pilea.documentation');
+        $version = $this->parameters->get('pilea.version');
+        return \sprintf("%s%s/%s", $documentationBaseUri, $version, $path);
     }
 
     public function getGraphHelp(?string $graph): string
     {
-        $link =  self::getDocumentation(\sprintf("/utilisateur/graph.html#%s", $graph));
+        $link = self::getDocumentation(\sprintf("/utilisateur/graph.html#%s", $graph));
         return \sprintf('<a href="%s" target="_blank" class="help" title="Comment lire ce graphique ?"><i class="fas fa-question-circle"></i></a>', $link);
+    }
+
+    public function getUserMaxPlaces(): ?int
+    {
+        $userMaxPlaces = (int)$this->parameters->get('pilea.user.max_places');
+
+        return $userMaxPlaces === -1 ? null : $userMaxPlaces;
+    }
+
+    public function canUserSharePlace(): bool
+    {
+        return (bool)$this->parameters->get('pilea.user.can_share_place');
+    }
+
+    public function canUserFetchData(): bool
+    {
+        return (bool)$this->parameters->get('pilea.user.can_fetch');
+    }
+
+    public function canUserExportData(): bool
+    {
+        return (bool)$this->parameters->get('pilea.user.can_export');
+    }
+
+    public function canPlaceBePublic(): bool
+    {
+        return (bool)$this->parameters->get('pilea.place_can_be_public');
+    }
+
+    public function canUserAddPlace(User $user): bool
+    {
+        if ($userMaxPlaces = self::getUserMaxPlaces()) {
+            return \count($user->getPlaces()) < $userMaxPlaces;
+        }
+
+        return true;
     }
 }
