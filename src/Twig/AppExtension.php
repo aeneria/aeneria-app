@@ -57,21 +57,10 @@ final class AppExtension extends AbstractExtension
         return \sprintf("%s%s/%s", $documentationBaseUri, $version, $path);
     }
 
-    public function getHelpIconLink(?string $path, ?string $title = null, ?string $class = null): string
-    {
-        $link = self::getDocumentation(\sprintf("%s", $path));
-        return \sprintf(
-            '<a href="%s" target="_blank" class="%s" title="%s"><i class="fas fa-question-circle"></i></a>',
-            $link,
-            $class,
-            $title
-        );
-    }
-
     public function getGraphHelp(?string $graph): string
     {
-        $path = \sprintf("utilisateur/graph.html#%s", $graph);
-        return self::getHelpIconLink($path, "Comment lire ce graphique ?", "help");
+        $link = self::getDocumentation(\sprintf("/utilisateur/graph.html#%s", $graph));
+        return \sprintf('<a href="%s" target="_blank" class="help" title="Comment lire ce graphique ?"><i class="fas fa-question-circle"></i></a>', $link);
     }
 
     public function getUserMaxPlaces(): ?int
