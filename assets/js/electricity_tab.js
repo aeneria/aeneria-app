@@ -36,6 +36,9 @@ if (document.getElementById('electricity_tab')) {
         document.querySelectorAll('.tooltip').forEach(function (tooltip) {
           tooltip.hidden = true;
         });
+      },
+      error: function(result) {
+        pilea.displayError('conso-week-repartition');
       }
     });
 
@@ -48,6 +51,10 @@ if (document.getElementById('electricity_tab')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'conso-global-repartition', ELEC_COLOR, 'kWh', 1, 0);
         pilea.displayLegend(data, 'conso-global-repartition-legend', ELEC_COLOR, 'kWh', 1);
+      },
+      error: function(result) {
+        pilea.displayError('conso-global-repartition');
+        pilea.displayError('conso-global-repartition-legend');
       }
     });
 
@@ -58,6 +65,9 @@ if (document.getElementById('electricity_tab')) {
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'conso-global-evolution', ELEC_COLOR[6], 'kWh', 1);
+      },
+      error: function(result) {
+        pilea.displayError('conso-global-evolution');
       }
     });
 
@@ -68,6 +78,9 @@ if (document.getElementById('electricity_tab')) {
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'conso-week-frequency', ELEC_COLOR[6], 'kWh', 1, 95, 180, 50);
+      },
+      error: function(result) {
+        pilea.displayError('conso-week-frequency');
       }
     });
   }

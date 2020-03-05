@@ -25,6 +25,9 @@ if (document.getElementById('dju_x_conso_tab')) {
       success: function(result) {
         var data = JSON.parse(result);
         pilea.displayXY(data, 'conso-x-dju', '#6b4450', meteoUnit, 'kWh', 0, 1);
+      },
+      error: function(result) {
+        pilea.displayError('conso-x-dju');
       }
     });
 
@@ -41,6 +44,9 @@ if (document.getElementById('dju_x_conso_tab')) {
             pilea.displayDoubleEvolution(data1, data2, 'conso-vs-dju', ELEC_COLOR[6], DJU_COLOR[1], 'kWh', meteoUnit, 1, 0.1);
           }
         });
+      },
+      error: function(result) {
+        pilea.displayError('conso-vs-dju');
       }
     });
   }

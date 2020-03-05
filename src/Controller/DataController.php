@@ -26,7 +26,7 @@ class DataController extends AbstractAppController
     public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, PlaceRepository $placeRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
     {
 
-        // parent::__construct($userCanSharePlace, $placeCanBePublic, $placeRepository);
+        parent::__construct($userCanSharePlace, $placeCanBePublic, $placeRepository);
 
         $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;

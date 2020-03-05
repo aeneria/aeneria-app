@@ -24,6 +24,10 @@ if (document.getElementById('meteo_tab')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'temp-repartition', TEMP_COLOR, '°C', 1, -5, 25);
         pilea.displayLegend(data, 'temp-repartition-legend', TEMP_COLOR, '°C', 1, -5, 25);
+      },
+      error: function(result) {
+        pilea.displayError('temp-repartition');
+        pilea.displayError('temp-repartition-legend');
       }
     });
 
@@ -34,6 +38,9 @@ if (document.getElementById('meteo_tab')) {
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'temperature-evolution', DJU_COLOR[6], 'DJU', 0, 200);
+      },
+      error: function(result) {
+        pilea.displayError('temperature-evolution');
       }
     });
 
@@ -56,6 +63,10 @@ if (document.getElementById('meteo_tab')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'neb-repartition', NEBULOSITY_COLOR, '%', 1, 0, 100);
         pilea.displayLegend(data, 'neb-repartition-legend', NEBULOSITY_COLOR, '%', 1, 0, 100);
+      },
+      error: function(result) {
+        pilea.displayError('neb-repartition');
+        pilea.displayError('neb-repartition-legend');
       }
     });
 
@@ -66,6 +77,9 @@ if (document.getElementById('meteo_tab')) {
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'nebulosity-evolution', NEBULOSITY_COLOR[6], '%', 1, 200);
+      },
+      error: function(result) {
+        pilea.displayError('nebulosity-evolution');
       }
     });
 
@@ -88,6 +102,10 @@ if (document.getElementById('meteo_tab')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'rain-repartition', RAIN_COLOR, 'mm', 1, 0);
         pilea.displayLegend(data, 'rain-repartition-legend', RAIN_COLOR, 'mm', 1, 0);
+      },
+      error: function(result) {
+        pilea.displayError('rain-repartition');
+        pilea.displayError('rain-repartition-legend');
       }
     });
 
@@ -98,6 +116,9 @@ if (document.getElementById('meteo_tab')) {
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'rain-evolution', RAIN_COLOR[6], 'mm', 1, 200);
+      },
+      error: function(result) {
+        pilea.displayError('rain-evolution');
       }
     });
 
@@ -120,6 +141,10 @@ if (document.getElementById('meteo_tab')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'humidity-repartition', HUMIDITY_COLOR, '%', 1, 0, 100);
         pilea.displayLegend(data, 'humidity-repartition-legend', HUMIDITY_COLOR, '%', 1, 0, 100);
+      },
+      error: function(result) {
+        pilea.displayError('humidity-repartition');
+        pilea.displayError('humidity-repartition-legend');
       }
     });
 
@@ -130,6 +155,9 @@ if (document.getElementById('meteo_tab')) {
       success: function( result ) {
         var data = JSON.parse(result);
         pilea.displayGlobalEvolution(data, 'humidity-evolution', HUMIDITY_COLOR[6], '%', 1, 200);
+      },
+      error: function(result) {
+        pilea.displayError('humidity-evolution');
       }
     });
 

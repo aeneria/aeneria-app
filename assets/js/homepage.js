@@ -52,6 +52,10 @@ if (document.getElementById('homepage')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
         pilea.displayLegend(data, 'conso-repartition-legend-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
+      },
+      error: function(result) {
+        pilea.displayError('conso-repartition-' + targetMonth);
+        pilea.displayError('conso-repartition-legend-' + targetMonth);
       }
     });
 
@@ -79,6 +83,10 @@ if (document.getElementById('homepage')) {
         var data = JSON.parse(result);
         pilea.displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
         pilea.displayLegend(data, 'temp-repartition-legend-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
+      },
+      error: function(result) {
+        pilea.displayError('temp-repartition-' + targetMonth);
+        pilea.displayError('temp-repartition-legend-' + targetMonth);
       }
     });
 
