@@ -29,6 +29,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('pilea_version', [$this, 'getVersion']),
             new TwigFunction('pilea_repo_git', [$this, 'getGitRepo']),
             new TwigFunction('pilea_documentation', [$this, 'getDocumentation']),
+            new TwigFunction('pilea_help_icon_link', [$this, 'getHelpIconLink']),
             new TwigFunction('pilea_help_graph', [$this, 'getGraphHelp']),
             new TwigFunction('pilea_user_max_places', [$this, 'getUserMaxPlaces']),
             new TwigFunction('pilea_user_can_share_place', [$this, 'canUserSharePlace']),
@@ -56,10 +57,21 @@ final class AppExtension extends AbstractExtension
         return \sprintf("%s%s/%s", $documentationBaseUri, $version, $path);
     }
 
+    public function getHelpIconLink(?string $path, ?string $title = null, ?string $class = null): string
+    {
+        $link = self::getDocumentation(\sprintf("%s", $path));
+        return \sprintf(
+            '<a href="%s" target="_blank" class="%s" title="%s"><i class="fas fa-question-circle"></i></a>',
+            $link,
+            $class,
+            $title
+        );
+    }
+
     public function getGraphHelp(?string $graph): string
     {
-        $link = self::getDocumentation(\sprintf("/utilisateur/graph.html#%s", $graph));
-        return \sprintf('<a href="%s" target="_blank" class="help" title="Comment lire ce graphique ?"><i class="fas fa-question-circle"></i></a>', $link);
+        $path = \sprintf("utilisateur/graph.html#%s", $graph);
+        return self::getHelpIconLink($path, "Comment lire ce graphique ?", "help");
     }
 
     public function getUserMaxPlaces(): ?int
