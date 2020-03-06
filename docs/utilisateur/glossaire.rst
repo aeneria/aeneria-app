@@ -44,5 +44,3 @@ Glossaire
 
         .. seealso::
             `Les précipitations sur Wikipédia <https://fr.wikipedia.org/wiki/Pr%C3%A9cipitations#Pluviom%C3%A9trie>`_
-
-

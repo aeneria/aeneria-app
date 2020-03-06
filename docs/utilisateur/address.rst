@@ -8,7 +8,7 @@ on configure un compteur Linky et une station d'observation météo.
 Une *adresse* peut ensuite être rendue publique pour quelle soit visible par tous les
 utilisateurs de Pilea, ou bien, elle peut être partagée à une liste d'utilisateur.
 
-Pour gérer vos adresses, aller sur la page de configuration sur le bouton |icon_configuration|
+Pour gérer vos adresses, aller sur la page de configuration en cliquant sur le bouton |icon_configuration|
 dans la barre du haut.
 
 .. |icon_configuration| image:: ../img/config.png

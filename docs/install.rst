@@ -64,26 +64,26 @@ Installer les dépendance `Composer <https://getcomposer.org/>`_ :
 .. code-block:: sh
 
     cd [app_folder]
-    composer install
+    php7.3 composer.phar install --no-dev
 
 Lancer le script d'installation :
 
 .. code-block:: sh
 
-    bin/console pilea:install
+    php7.3 bin/console pilea:install
 
 Ajouter une premier utilisateur et lui donner les droits administrateur :
 
 .. code-block:: sh
 
-    bin/console pilea:user:add [username] [password]
-    bin/console pilea:user:grant [username]
+    php7.3 bin/console pilea:user:add [username] [password]
+    php7.3 bin/console pilea:user:grant [username]
 
 Mettre en place le cron :
 
 .. code-block:: sh
 
-    echo "*/10  *  *  *  * [user] /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea
+    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console pilea:fetch-data false" > /etc/cron.d/pilea
     # où [user] est l'utilisateur linux qui lancera le cron
 
 

@@ -36,7 +36,7 @@ class ExistUserCommand extends Command
     {
         $this
             ->setName('pilea:user:exist')
-            ->setDescription('Edit an user.')
+            ->setDescription('Does an user exist ?')
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
         ;
     }

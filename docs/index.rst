@@ -44,10 +44,10 @@ L'idée derrière Pilea est de permettre à l'utilsateur de pouvoir, au travers 
 Todo List
 =========
 
- * Ajouter un onglet pour comparer des périodes et des compteurs
- * Prendre en compte d'autres sources de données (comme un fichier CSV)
+ * Ajouter un onglet pour comparer des périodes et/ou des adresses
+ * Pouvoir importer des données
 
 Support
 =======
 
-Posez vos questions sur `Github <https://gitlab.com/pilea/Pilea/issues/>`_.
+Posez vos questions sur `Gitlab <https://gitlab.com/pilea/Pilea/issues/>`_.
