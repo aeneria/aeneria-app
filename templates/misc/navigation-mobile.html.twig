@@ -34,6 +34,9 @@
             <a href="{{ path('config') }}" class="{% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
                 <img src="{{ asset('image/icon/config.png') }}" alt="*" > {{ 'Configuration' | trans }}
             </a>
+            <a href="{{ path('app_logout') }}">
+                <img src="{{ asset('image/icon/shutdown.png') }}" alt="*" > {{ 'Déconnexion' | trans }}
+            </a>
         </div>
     </nav>
 </div>

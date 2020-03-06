@@ -6,10 +6,13 @@
     {{ selection | raw }}
     <div class="ml-auto">
         <a class="navbar-item" title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" >
-                <img src="{{ asset('image/icon/config.png') }}" height=20 alt="{{ 'Configuration' | trans }}" >
+                <img src="{{ asset('image/icon/config.png') }}" height=25 alt="{{ 'Configuration' | trans }}" >
         </a>
         <a class="navbar-item" title="{{ 'Aide' | trans }}" target="_blank" href="{{ pilea_documentation() }}">
-                <img src="{{ asset('image/icon/about.png') }}" height=20 alt="{{ 'Aide' | trans }}" >
+                <img src="{{ asset('image/icon/about.png') }}" height=25 alt="{{ 'Aide' | trans }}" >
+        </a>
+        <a class="navbar-item" title="{{ 'Déconnexion' | trans }}" target="_blank" href="{{ path('app_logout') }}">
+                <img src="{{ asset('image/icon/shutdown.png') }}" height=25 alt="{{ 'Déconnexion' | trans }}" >
         </a>
     </div>
 </nav>
