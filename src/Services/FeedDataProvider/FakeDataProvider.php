@@ -100,12 +100,33 @@ class FakeDataProvider extends AbstractFeedDataProvider {
 
         // 0 -> 5 kWh
         for ($hour = 0; $hour < 24; $hour++) {
+            $value = \rand(0, 50)/10;
+
+            // Try to generate nice value for 24*7 graph
+            switch((int)$date->format('N')) {
+                case 6:
+                case 7:
+                    // Saturday and sunday
+                    if (\in_array($hour, [9, 10 ,11 ,12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])) {
+                        $value = \rand(0, 50)/10;
+                    } else {
+                        $value = \rand(0, 50)/100;
+                    }
+                break;
+                default:
+                    // weekday
+                    if (\in_array($hour, [7, 8, 9, 17, 18, 19, 20, 21, 22, 23])) {
+                        $value = \rand(0, 50)/10;
+                    } else {
+                        $value = \rand(0, 50)/100;
+                    }
+            }
 
             $this->feedDataRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
                 DataValue::FREQUENCY['HOUR'],
-                \rand(0, 50)/10
+                $value
             );
         }
         $this->entityManager->flush();
