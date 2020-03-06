@@ -87,9 +87,9 @@ abstract class AbstractFeedDataProvider {
     /**
      * Agregate Values for a and a frequency date and push it to EntityManager.
      */
-    protected function performAgregateValue(\DateTimeImmutable $date, Feed $feed, string $frequency)
+    protected function performAgregateValue(\DateTimeImmutable $date, Feed $feed, int $frequency)
     {
-        list('from' => $firstDay, 'to' => $lastDay) = DataValue::getAdaptedBoundariesForFrequency($date, DataValue::FREQUENCY['WEEK']);
+        list('from' => $firstDay, 'to' => $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
 
         // Get all feedData.
         $feedDataList = $this->feedDataRepository->findByFeed($feed);
@@ -106,7 +106,7 @@ abstract class AbstractFeedDataProvider {
                             $firstDay,
                             $lastDay,
                             $feedData,
-                            DataValue::FREQUENCY['DAY']
+                            $previousFrequency
                         )
                     ;
                     break;
@@ -117,7 +117,7 @@ abstract class AbstractFeedDataProvider {
                             $firstDay,
                             $lastDay,
                             $feedData,
-                            DataValue::FREQUENCY['DAY']
+                            $previousFrequency
                         )
                     ;
                     break;
@@ -128,7 +128,7 @@ abstract class AbstractFeedDataProvider {
                             $firstDay,
                             $lastDay,
                             $feedData,
-                            DataValue::FREQUENCY['DAY']
+                            $previousFrequency
                         )
                     ;
                     break;
@@ -139,7 +139,7 @@ abstract class AbstractFeedDataProvider {
                             $firstDay,
                             $lastDay,
                             $feedData,
-                            DataValue::FREQUENCY['DAY']
+                            $previousFrequency
                         )
                     ;
                     break;
