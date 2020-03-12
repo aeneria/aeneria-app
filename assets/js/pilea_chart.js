@@ -1,7 +1,7 @@
 (function() {
 
   /**
-   * Display a hour/weekDay heatmap repartition graphic.
+   * Display a hour/weekDay heatmap repartition graphic horizontally.
    *
    *   result: an object containing :
    *     - axe.x: axeX labels
@@ -15,7 +15,7 @@
    *   min: min value for scale
    *   max: max value for scale
    */
-  var displayWeekRepartition = function (result, target, colors, unit, precision, min, max) {
+  var displayWeekRepartitionH = function (result, target, colors, unit, precision, min, max) {
     var rows = 7; // Number of hours in a day
     var cols = 24; // Number of days in a week
     var margin_top = 50;
@@ -122,7 +122,7 @@
         return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
       });
 
-      chart
+    chart
       .selectAll('rect')
       .transition()
       .duration(300)
@@ -133,6 +133,146 @@
       })
       .attr('y', function (d, i) {
         return Math.floor(i / cols) * DAY_SIZE + margin_top;
+      })
+      .attr('width', DAY_SIZE)
+      .attr('height', DAY_SIZE);
+
+    $('[data-toggle=\'tooltip\']').tooltip();
+  }
+
+  /**
+   * Display a hour/weekDay heatmap repartition graphic vertically.
+   *
+   *   result: an object containing :
+   *     - axe.x: axeX labels
+   *     - axe.y: axeY labels
+   *     - data.values: values to display
+   *     - data.dates: corresponding dates
+   *   target: id of the targetted DIV element
+   *   colors: a tab with 2 elements for the color scale
+   *   unit: a string, the unit of the displayed data
+   *   precision: float precision for value
+   *   min: min value for scale
+   *   max: max value for scale
+   */
+  var displayWeekRepartitionV = function (result, target, colors, unit, precision, min, max) {
+    var rows = 24; // Number of days in a week
+    var cols = 7; // Number of hours in a day
+    var margin_top = 50;
+    var margin_left = 30;
+    var margin_right = 30;
+    var margin_bottom = 10;
+    var total_height = margin_top + rows * DAY_SIZE + margin_bottom;
+    var total_width = margin_left + cols * DAY_SIZE + margin_right;
+
+    var element = d3
+      .select('#' + target);
+
+    element
+    .selectAll('svg')
+    .remove();
+
+    element
+    .selectAll('div')
+    .remove();
+
+    var svg = element
+      .append('svg')
+      .attr('class', 'chart')
+      .attr('width', total_width)
+      .attr('height', total_height);
+
+    var chart = svg
+      .append('g')
+      .attr('class', 'chart')
+      .attr('width', total_width)
+      .attr('height', total_height);
+
+    var color = d3
+      .scaleQuantile()
+      .domain([
+          (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
+          (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
+        ])
+      .range(colors);
+
+    // Define the div for the tooltip
+    var div = element
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
+    chart
+      .selectAll('.dayLabel')
+      .data(result.axe.x)
+      .enter()
+      .append('text')
+      .text(function (d) {return d;})
+      .style('text-anchor', 'left')
+      .style('fill', AXE_COLOR)
+      .attr('transform', function (d, i) {
+          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 14) + ')'
+      })
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', 10);
+
+    chart
+      .selectAll('.timeLabel')
+      .data(result.axe.y)
+      .enter()
+      .append('text')
+      .text(function (d, i) {
+        if (i % 3 == 0) {
+          return d;
+        } else {
+          return '';
+        }
+      })
+      .style('text-anchor', 'left')
+      .style('fill', AXE_COLOR)
+      .attr('transform', function (d, i) {
+        return 'translate(0,' + (i * DAY_SIZE + margin_top + 5) + ')'
+      })
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', 10);
+
+    chart
+      .selectAll('rect')
+      .data(result.data.values)
+      .enter()
+      .append('rect')
+      .attr('x', function (d, i) {
+        return Math.floor(i / rows) * DAY_SIZE + margin_left + DAY_SIZE/2;
+      })
+      .attr('y', function (d, i) {
+        return i % rows * DAY_SIZE + margin_top + DAY_SIZE/2;
+      })
+      .attr('width', 0)
+      .attr('height', 0)
+      .attr('display', function (d, i) {
+        if (d === "") {
+          return 'none';
+        }
+      })
+      .attr('fill', color)
+      .attr('data-toggle', 'tooltip')
+      .attr('data-placement', 'left')
+      .attr('data-html', 'true')
+      .attr('title', function (d, i) {
+        return result.data.dates[i] + '</br> ' + parseFloat(d).toFixed(precision) + ' ' + unit;
+      });
+
+    chart
+      .selectAll('rect')
+      .transition()
+      .duration(300)
+      .delay(function (d, i) { return i/24 * 15 + i%24 * 15; })
+      .ease(d3.easeCubic)
+      .attr('x', function (d, i) {
+        return Math.floor(i / rows) * DAY_SIZE + margin_left;
+      })
+      .attr('y', function (d, i) {
+        return i % rows * DAY_SIZE + margin_top;
       })
       .attr('width', DAY_SIZE)
       .attr('height', DAY_SIZE);
@@ -1170,7 +1310,8 @@
   exports.displayGlobalRepartitionH = displayGlobalRepartitionH;
   exports.displayGlobalRepartitionV = displayGlobalRepartitionV;
   exports.displayLegend = displayLegend;
-  exports.displayWeekRepartition = displayWeekRepartition;
+  exports.displayWeekRepartitionH = displayWeekRepartitionH;
+  exports.displayWeekRepartitionV = displayWeekRepartitionV;
   exports.displayXY = displayXY;
   exports.loadingAnimation = loadingAnimation;
   exports.displayError = displayError;

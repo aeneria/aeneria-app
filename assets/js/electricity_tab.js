@@ -27,11 +27,16 @@ if (document.getElementById('electricity_tab')) {
 
     // Refresh week repartition.
     pilea.loadingAnimation('conso-week-repartition');
+
     $.ajax({
       url: appRoute + 'data/' + place + '/repartition/conso_elec/week/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayWeekRepartition(data, 'conso-week-repartition', ELEC_COLOR, 'kWh', 1, 0);
+        if ($(window).width() > 480 ) {
+          pilea.displayWeekRepartitionH(data, 'conso-week-repartition', ELEC_COLOR, 'kWh', 1, 0);
+        } else {
+          pilea.displayWeekRepartitionV(data, 'conso-week-repartition', ELEC_COLOR, 'kWh', 1, 0);
+        }
         // Hidding existing tooltips.
         document.querySelectorAll('.tooltip').forEach(function (tooltip) {
           tooltip.hidden = true;
