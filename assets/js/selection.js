@@ -36,11 +36,15 @@
       $('.pilea-select-place a').click(function(e) {
         place = e.target.getAttribute('data');
         setCurrentPlace(e.target.getAttribute('data'));
-        $('.pilea-select-place button')[0].innerHTML = places[place].name;
 
-        var span = $('.pilea-select-place').prev()[0];
-        var placeClass = 'fas fa-' + places[place].icon + ' start-input';
-        span.classList = placeClass;
+        $('.pilea-select-place button').each((i, element) => {
+          element.innerHTML = places[place].name;
+        });
+
+        $('.pilea-select-place').prev().each((i, element) => {
+          let placeClass = 'fas fa-' + places[place].icon + ' start-input';
+          element.classList = placeClass;
+        });
 
         initPeriod(place);
         initFrequency(place);
