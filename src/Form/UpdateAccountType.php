@@ -6,7 +6,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,7 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserType extends AbstractType
+class UpdateAccountType extends AbstractType
 {
     private $passwordEncoder;
 
@@ -31,18 +30,17 @@ class UserType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => 'Nom de l\'utilisateur',
             ])
-            ->add('password', PasswordType::class, [
-                'label' => 'Mot de passe',
+            ->add('old_password', PasswordType::class, [
+                'label' => 'Mot de passe actuel',
                 'always_empty' => FALSE,
                 'required' => !$data ?? FALSE
             ])
-            ->add('is_admin', CheckboxType::class, [
-                'label' => 'L\'utilisateur est Administrateur',
-                'help' => 'S\'il est administrateur, il pourra ajouter/modifier/supprimer les autres utilisateurs',
+            ->add('new_password', PasswordType::class, [
+                'label' => 'Nouveau mot de passe',
                 'required' => FALSE
             ])
-            ->add('is_active', CheckboxType::class, [
-                'label' => 'L\'utilisateur est actif',
+            ->add('new_password2', PasswordType::class, [
+                'label' => 'Confirmez votre nouveau mot de passe',
                 'required' => FALSE,
             ])
             ->add('save', SubmitType::class, [
@@ -53,29 +51,12 @@ class UserType extends AbstractType
                     if ($user) {
                         $data['user'] = $user;
                         $data['username'] = $user->getUsername();
-                        $data['is_admin'] = \in_array(User::ROLE_ADMIN, $user->getRoles());
-                        $data['is_active'] = $user->isActive();
 
                         return $data;
                     }
                 },
                 function (array $data) {
-                    $user = $data['user'] ?? null;
-
-                    if (!$user) {
-                        $user = new User();
-                    }
-
-                    $user->setUsername($data['username']);
-                    $user->setActive($data['is_active']);
-
-                    if (\key_exists('password', $data) && $data['password']) {
-                        $user->setPassword($this->passwordEncoder->encodePassword($user, $data['password']));
-                    }
-
-                    $user->setRoles($data['is_admin'] ? ['ROLE_ADMIN'] : []);
-
-                    return $user;
+                    return $data;
                 }
             ))
         ;
@@ -83,11 +64,20 @@ class UserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
+        $resolver->setDefaults([]);
     }
 
-    public static function handleSubmit(EntityManagerInterface $entityManager, User $user)
+    public static function handleSubmit(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Array $data)
     {
+        $user = $data['user'];
+        \assert($user instanceof User);
+
+        $user->setUsername($data['username']);
+
+        if ($data['new_password']) {
+            $user->setPassword($passwordEncoder->encodePassword($user, $data['new_password']));
+        }
+
         $entityManager->persist($user);
         $entityManager->flush();
     }

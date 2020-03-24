@@ -26,7 +26,7 @@ class AtLeastOneAdminValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, AtLeastOneAdmin::class);
         }
 
-        if ($this->userRepository->isLastAdmin($value)) {
+        if ($this->userRepository->isLastAdmin($value->getUsername())) {
             $this->context->getRoot()->addError(new FormError($constraint->message));
         }
     }

@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\PlaceType;
+use App\Form\UpdateAccountType;
 use App\Services\DataExporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
+use App\Validator\Constraints\UniqueUsername;
+use App\Validator\Constraints\UpdatePassword;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -16,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -294,6 +298,35 @@ class ConfigurationController extends AbstractAppController
             'place' => $place,
             'form' => $form->createView(),
             'cancel' => 'config'
+        ]);
+    }
+
+    /**
+     * @Route("/configuration/user", name="config.user.update")
+     */
+    public function userUpdateAction(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        /** @var \Symfony\Component\Form\FormBuilder $configForm */
+        $userForm = $this->createForm(UpdateAccountType::class, $this->getUser(), [
+            'data_class' => null,
+            'constraints' => [
+                new UniqueUsername(),
+                new UpdatePassword(),
+            ],
+        ]);
+
+        if('POST' === $request->getMethod()) {
+            $userForm->handleRequest($request);
+            if ($userForm->isValid()) {
+                UpdateAccountType::handleSubmit($entityManager, $passwordEncoder, $userForm->getData());
+                $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
+                return $this->redirectToRoute('config');
+            }
+        }
+
+        return $this->render('configuration/users_form.html.twig', [
+            'title' => 'Mettre à jour ses données',
+            'user_form' => $userForm->createView()
         ]);
     }
 }

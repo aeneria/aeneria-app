@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Validator\Constraints\AtLeastOneAdmin;
+use App\Validator\Constraints\UniqueUsername;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,10 @@ class AdministrationController extends AbstractController
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $userForm = $this->createForm(UserType::class, null, [
                 'data_class' => null,
+                'constraints' => [
+                    new AtLeastOneAdmin(),
+                    new UniqueUsername()
+                ],
             ])
         ;
 
@@ -78,6 +83,10 @@ class AdministrationController extends AbstractController
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
         $userForm = $this->createForm(UserType::class, $user, [
             'data_class' => null,
+            'constraints' => [
+                new AtLeastOneAdmin(),
+                new UniqueUsername(),
+            ],
         ]);
 
         if('POST' === $request->getMethod()) {

@@ -7,6 +7,8 @@
 {% block body %}
   <div class="container-fluid row">
     <div class="col-md-6">
+        {% include "configuration/account.html.twig" %}
+
         {% include "configuration/place_list.html.twig" with places%}
         {% if is_granted('ROLE_ADMIN') %}
           {% include "configuration/administration.html.twig" with places%}
