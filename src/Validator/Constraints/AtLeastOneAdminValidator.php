@@ -2,6 +2,7 @@
 
 namespace App\Validator\Constraints;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Validator\Constraint;
@@ -26,7 +27,13 @@ class AtLeastOneAdminValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, AtLeastOneAdmin::class);
         }
 
-        if ($this->userRepository->isLastAdmin($value->getUsername())) {
+        if ($value instanceof User) {
+            $username = $value->getUsername();
+        } else {
+            $username = $value['username'];
+        }
+
+        if ($this->userRepository->isLastAdmin($username)) {
             $this->context->getRoot()->addError(new FormError($constraint->message));
         }
     }

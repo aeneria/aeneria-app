@@ -160,7 +160,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/users/{id}/delete", name="admin.user.delete")
      */
-    public function removeUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
+    public function removeUserAction(Request $request, UserRepository $userRepository, string $id)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
@@ -175,12 +175,13 @@ class AdministrationController extends AbstractController
         }
 
         $form = $this
-            ->createFormBuilder()
-            ->add('username', Form\HiddenType::class, [
-                'data' => $user->getUsername(),
+            ->createFormBuilder([], [
                 'constraints' => [
                     new AtLeastOneAdmin(),
                 ],
+            ])
+            ->add('username', Form\HiddenType::class, [
+                'data' => $user->getUsername(),
             ])
             ->add('are_you_sure', Form\CheckboxType::class, [
                 'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer cet utilisateur",
@@ -197,7 +198,7 @@ class AdministrationController extends AbstractController
 
         if('POST' === $request->getMethod()) {
             if ($form->isValid()) {
-                $entityManager->getRepository('App:User')->purge($user);
+                $userRepository->purge($user);
                 $this->addFlash('success', 'L\'utilisateur a bien été supprimé !');
                 return $this->redirectToRoute('admin.user.list');
             }
