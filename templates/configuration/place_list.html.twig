@@ -16,12 +16,12 @@
           {% endif %}
         </li>
         {% endfor %}
-        {% if pilea_place_can_be_public() %}
+        {% if aeneria_place_can_be_public() %}
         <li>
           <i class="fas fa-unlock-alt"></i> {{ place.public ? 'L\'adresse est publique' | trans : 'L\'adresse est privée' | trans }}
         </li>
         {% endif %}
-        {% if pilea_user_can_share_place() %}
+        {% if aeneria_user_can_share_place() %}
         <li>
           {% set allowed = '' %}
           {% for allowedUser in place.allowedUsers %}
@@ -35,12 +35,12 @@
         <a class="btn btn-sm btn-primary" href="{{ path('config.place.update', {id: place.id}) }}" title="{{ 'Modifier' | trans }}">
           <i class="fas fa-pen"></i>
         </a>
-        {% if pilea_user_can_fetch() %}
+        {% if aeneria_user_can_fetch() %}
         <a class="btn btn-sm btn-warning" href="{{ path('config.place.fetch', {id: place.id}) }}" title="{{ 'Recharger des dates' | trans }}">
           <i class="fas fa-download"></i>
         </a>
         {% endif %}
-        {% if pilea_user_can_export() %}
+        {% if aeneria_user_can_export() %}
         <a class="btn btn-sm btn-warning" href="{{ path('config.place.export', {id: place.id}) }}" title="{{ 'Exporter des données' | trans }}">
           <i class="fas fa-upload"></i>
         </a>
@@ -56,7 +56,7 @@
         <hr>
       {% endfor %}
 
-      {% if pilea_user_can_add_place(user) %}
+      {% if aeneria_user_can_add_place(user) %}
       <a class="btn btn-primary" href="{{ path('config.place.add') }}">
         <i class="fas fa-plus-square"></i> {{ 'Ajouter une adresse' | trans }}
       </a>

@@ -19,7 +19,7 @@ nav {
     span{
       font-family: $font-logo;
       color: $white;
-      margin-left: 0px;
+      margin-left: 5px;
       vertical-align: middle;
       font-size: 1.7em;
     }
@@ -37,9 +37,12 @@ nav {
 /* SELECTION */
 .selection-form {
   .row {
-    display: flex;
     .col {
       display: flex;
+
+      .btn {
+        margin: 0px;
+      }
 
       .start-input {
         border-radius: 20px 0 0 20px;
@@ -59,15 +62,15 @@ nav {
         margin: 0 !important;
       }
 
-      .pilea-start-date,
-      .pilea-end-date {
+      .aeneria-start-date,
+      .aeneria-end-date {
         border-radius: 0;
         border: none;
         width: 130px;
         height: 36px;
       }
 
-      .pilea-inter-date {
+      .aeneria-inter-date {
         background: $white;
         margin: 0;
         width: 7px ;
@@ -75,30 +78,30 @@ nav {
         padding-top: 9px;
       }
 
-      .pilea-select-period button {
+      .aeneria-select-period button {
         background-color: $white;
         border-radius: 0;
         color: black;
         font-size: 0.9em;
       }
 
-      .pilea-select-period .dropdown-toggle::after {
+      .aeneria-select-period .dropdown-toggle::after {
         display: none !important;
       }
 
-      .pilea-refresh {
+      .aeneria-refresh {
         border-radius: 20px 20px 20px 20px;
         margin: 0 5px 0 5px;
         vertical-align: middle;
       }
 
-      .pilea-select-date {
+      .aeneria-select-date {
         border-radius: 0 20px 20px 0;
         margin-left: 0 ;
       }
 
-      .pilea-select-place button,
-      .pilea-select-frequency button {
+      .aeneria-select-place button,
+      .aeneria-select-frequency button {
         border-radius: 0 20px 20px 0;
         margin-left: 0;
       }

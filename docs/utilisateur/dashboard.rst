@@ -1,7 +1,7 @@
 Les différents tableaux de bords
 #######################################
 
-Cette page décrit les différents tableaux de bord disponible sur Pilea.
+Cette page décrit les différents tableaux de bord disponible sur æneria.
 
 |icon_accueil| L'accueil
 ===========================
@@ -9,7 +9,7 @@ Cette page décrit les différents tableaux de bord disponible sur Pilea.
 .. |icon_accueil| image:: ../img/icon_accueil.png
              :alt: icone accueil
 
-Lors de la connexion à Pilea, vous atterissez sur la page d'accueil.
+Lors de la connexion à æneria, vous atterissez sur la page d'accueil.
 
 Cette page contient une première carte résumant les données du mois en cours et une seconde résumant
 les données du mois précédent.

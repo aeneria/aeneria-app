@@ -6,6 +6,11 @@ The idea of æneria is to display electricity consumption and weather data on a 
 
 * Better understand his electricity consumption,
 * Analyse his electricity consumption throw weather data (in a first time, essentialy temperature).
+*
+![preview](docs/img/dash_accueil.png "Homepage")
+
+**For more informations, see [æneria's documentation on Read the Docs](https://docs.aeneria.com/)**
+(sorry it's in french cause this project is based on Linky and Enedis, main users will be french)
 
 ## Disclaimer
 
@@ -21,5 +26,3 @@ There's no API (or maybe there's one but any documentation can't be found) to pr
 
 I want to thanks [KibOost](https://github.com/KiboOst/) for [the retroengineering he has done](https://github.com/KiboOst/php-LinkyAPI).
 
-**For more informations, see [æneria's documentation on Read the Docs](https://pilea.readthedocs.io/fr/latest/)**
-(sorry it's in french cause this project is based on Linky and Enedis, main users will be french)

@@ -18,7 +18,7 @@
       }
 
       // Initiate place button label.
-      $('.pilea-select-place').each((index, element) => {
+      $('.aeneria-select-place').each((index, element) => {
         var button = $(element).children('button');
         var placeLabel = places[place].name;
         button[0].innerHTML = placeLabel;
@@ -33,15 +33,15 @@
       initFrequency(place);
 
       // Add event on change.
-      $('.pilea-select-place a').click(function(e) {
+      $('.aeneria-select-place a').click(function(e) {
         place = e.target.getAttribute('data');
         setCurrentPlace(e.target.getAttribute('data'));
 
-        $('.pilea-select-place button').each((i, element) => {
+        $('.aeneria-select-place button').each((i, element) => {
           element.innerHTML = places[place].name;
         });
 
-        $('.pilea-select-place').prev().each((i, element) => {
+        $('.aeneria-select-place').prev().each((i, element) => {
           let placeClass = 'fas fa-' + places[place].icon + ' start-input';
           element.classList = placeClass;
         });
@@ -94,8 +94,8 @@
       }
 
       // Initiate datepicker.
-      $('.pilea-start-date').val(startString);
-      $('.pilea-end-date').val(endString);
+      $('.aeneria-start-date').val(startString);
+      $('.aeneria-end-date').val(endString);
 
       $('.selection-form .input-daterange').datepicker({
         format: 'dd/mm/yyyy',
@@ -105,9 +105,9 @@
       });
 
       // Add event on refresh button.
-      $('.pilea-select-date').click(function(e) {
-        var startDate = $(e.target).parent().find(".pilea-start-date");
-        var endDate = $(e.target).parent().find(".pilea-end-date");
+      $('.aeneria-select-date').click(function(e) {
+        var startDate = $(e.target).parent().find(".aeneria-start-date");
+        var endDate = $(e.target).parent().find(".aeneria-end-date");
 
         // Store new value in localStorage.
         setCurrentStartDate(startDate.val());
@@ -119,7 +119,7 @@
         e.preventDefault();
       });
 
-      $('.pilea-select-period a').click(function(e) {
+      $('.aeneria-select-period a').click(function(e) {
 
         var now = new Date();
         var startDate = new Date();
@@ -197,8 +197,8 @@
         setCurrentStartDate(startString);
         setCurrentEndDate(endString);
 
-        $('.pilea-start-date').val(startString);
-        $('.pilea-end-date').val(endString);
+        $('.aeneria-start-date').val(startString);
+        $('.aeneria-end-date').val(endString);
 
         $('.input-daterange').datepicker('destroy');
         $('.input-daterange').datepicker({
@@ -227,16 +227,16 @@
       }
 
       // Initiate frequency button label
-      $('.pilea-select-frequency').each((index, element) => {
+      $('.aeneria-select-frequency').each((index, element) => {
         var button = $(element).children('button');
         var frequencyLabel = $(element).find('[data="' + frequency + '"]')[0].innerHTML;
         button[0].innerHTML = frequencyLabel;
       });
 
       // Add event on change
-      $('.pilea-select-frequency a').click(function(e) {
+      $('.aeneria-select-frequency a').click(function(e) {
         setCurrentFrequency(e.target.getAttribute('data'));
-        $('.pilea-select-frequency button')[0].innerHTML =  e.target.innerHTML;
+        $('.aeneria-select-frequency button')[0].innerHTML =  e.target.innerHTML;
 
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
@@ -256,16 +256,16 @@
       }
 
       // Initiate frequency button label
-      $('.pilea-select-meteo').each((index, element) => {
+      $('.aeneria-select-meteo').each((index, element) => {
         var button = $(element).children('button');
         var meteoLabel = $(element).find('[data="' + meteo + '"]')[0].innerHTML;
         button[0].innerHTML = meteoLabel;
       });
 
       // Add event on change
-      $('.pilea-select-meteo a').click(function(e) {
+      $('.aeneria-select-meteo a').click(function(e) {
         setCurrentMeteo(e.target.getAttribute('data'));
-        $('.pilea-select-meteo button')[0].innerHTML =  e.target.innerHTML;
+        $('.aeneria-select-meteo button')[0].innerHTML =  e.target.innerHTML;
 
         e.preventDefault(); // avoid to execute the actual submit of the form.
 

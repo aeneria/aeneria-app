@@ -17,27 +17,29 @@
         <li><i class="fas fa-clipboard"></i> License : <a target="_blank" href="https://en.wikipedia.org/wiki/MIT_License">MIT</a></li>
       </ul>
       <hr>
-      <h2><i class="fas fa-bullhorn"></i> {{ 'Envie d\'aider æneria ?' | trans }}</h2>
+      <h2><i class="fas fa-bullhorn"></i> - {{ 'Envie d\'aider æneria ?' | trans }}</h2>
       <div class="row justify-content-center">
-        <div class="col-7">
+        {# <div class="col-7">
           <p>Combien de personnes utilisent æneria ?</p>
           <a href="https://aeneria.com/coucou" class="btn btn-primary" name="coucou"/>
             <i class="fas fa-paper-plane"></i> Faire coucou
           </a>
-        </div>
-        <div class="col-5">
-          <p>Payez-moi une petite bière</p>
+        </div> #}
+        <div class="col">
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
             <input type="hidden" name="cmd" value="_s-xclick" />
             <input type="hidden" name="hosted_button_id" value="EXHAXM6FUG8C6" />
-            <button class="btn btn-primary" name="submit" title="Via le site de PayPal" />
-              <i class="fab fa-paypal"></i> Faire un don
-            </button>
+            <p>
+              <i class="fas fa-beer"></i> Payez-nous une petite bière
+              <button class="btn btn-primary ml-1" name="submit" title="Via le site de PayPal" />
+                <i class="fab fa-paypal"></i> Faire un don
+              </button>
+            </p>
           </form>
         </div>
       </div>
       <hr>
-      <h2><i class="fas fa-bug"></i> {{ 'Un bug ou une proposition d\'amélioration ?' | trans }}</h2>
+      <h2><i class="fas fa-bug"></i> - {{ 'Un bug ou une proposition d\'amélioration ?' | trans }}</h2>
       <p>{{ 'Faites-le savoir un ouvrant une issue sur' | trans }} <a target="_blank" href="{{ aeneria_repo_git() }}/issues">{{ 'le dépôt <i class="fab fa-gitlab" style="font-size: xx-large;"></i> d\'æneria ' | trans | raw }}</a>!</p>
       <hr>
       <p>{{ 'Développé avec <i class="fas fa-heart"></i> par Simon Mellerin, avec l\'aide de&nbsp;:' | trans | raw }}</p>

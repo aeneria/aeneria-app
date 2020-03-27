@@ -4,11 +4,11 @@ Glossaire
 .. glossary::
     .. dju:
     DJU
-        Degrés Jour Unifié est la différence entre la température extérieure et une température de référence (18°C pour Pilea)
+        Degrés Jour Unifié est la différence entre la température extérieure et une température de référence (18°C pour æneria)
 
         Plus le nombre de DJU est grand pour une période donnée et plus il a fait froid.
 
-        Pilea utilise la méthode chauffagiste pour calculer les DJU.
+        æneria utilise la méthode chauffagiste pour calculer les DJU.
 
         .. seealso::
             `Le DJU sur Wikipédia <https://fr.wikipedia.org/wiki/Degr%C3%A9_jour_unifi%C3%A9>`_

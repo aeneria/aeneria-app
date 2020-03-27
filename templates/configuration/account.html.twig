@@ -7,7 +7,7 @@
         {% if user.places|length > 1 %}
           <li><i class="fas fa-home"></i> <strong>Mes adresses :</strong> {{ user.places|map(p => p.name)|join(', ') }}</li>
         {% endif %}
-        {% if pilea_user_can_share_place() %}
+        {% if aeneria_user_can_share_place() %}
           <li><i class="fas fa-user-friends"></i> <strong>Adresses partagées avec moi :</strong> {{ user.sharedPlaces|length > 0 ? user.sharedPlaces|map(p => p.name)|join(', ') : ('Aucune'|trans) }}</li>
         {% endif %}
       </ul>

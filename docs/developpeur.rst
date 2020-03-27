@@ -30,7 +30,7 @@ Pour monter un environement de dev :
     # Génére des données pour les 3 derniers mois pour un utilisateur user-test/password
     # attention, la génération peut-être un peu longue, vous pouvez réduire le nombre de
     # de données créées avec l'option --from
-    php7.3 bin/console pilea:dev:generate-fake-data
+    php7.3 bin/console aeneria:dev:generate-fake-data
 
 Et voilà !
 

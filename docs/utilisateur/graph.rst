@@ -1,7 +1,7 @@
 Comprendre les différents graphiques
 ########################################
 
-Cette page rescence les différents types de graphique présents dans Pilea et apporte
+Cette page rescence les différents types de graphique présents dans æneria et apporte
 quelques éléments pour commencer à les analyser.
 
 Graphique d'évolution temporelle
@@ -129,7 +129,7 @@ Aperçus
 Comment lire le graphique
 ---------------------------
 
-Comme le graphique d'analyse croisée, le graphique papillon permet de chercher des corrélations entre 2 grandeurs. Dans le cas de Pilea, on
+Comme le graphique d'analyse croisée, le graphique papillon permet de chercher des corrélations entre 2 grandeurs. Dans le cas de æneria, on
 compare toujours la consommation d'électicité et une grandeur météorologique.
 
 Si 2 grandeurs sont directement corrélées, le graphique devrait ressembler à un papillon, c'est à dire être symétrique, d'où sont nom.

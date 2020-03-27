@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'æneria'
+project = 'aeneria'
 copyright = '2020, Simon Mellerin'
 author = 'Simon Mellerin'
 
@@ -90,7 +90,12 @@ html_theme_path = ["_themes", ]
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logo_only': True,
+    'navigation_depth': 5,
+}
+
+html_logo = "img/logo.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -142,7 +147,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'aeneria.tex', 'æneria Documentation',
+    (master_doc, 'aeneria.tex', 'aeneria Documentation',
      author, 'manual'),
 ]
 
@@ -152,7 +157,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'æneria', 'æneria Documentation',
+    (master_doc, 'aeneria', 'æneria Documentation',
      [author], 1)
 ]
 
@@ -163,8 +168,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'æneria', 'æneria Documentation',
-     author, 'æneria', 'A little dashboard to analyse your electricity consumption data from Linky.',
+    (master_doc, 'aeneria', 'æneria Documentation',
+     author, 'aeneria', 'A little dashboard to analyse your electricity consumption data from Linky.',
      'Miscellaneous'),
 ]
 
