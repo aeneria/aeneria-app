@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class AdministrationController extends AbstractController
 {
@@ -66,7 +68,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/users/{id}/update", name="admin.user.update")
      */
-    public function updateUserAction(Request $request, $id, EntityManagerInterface $entityManager)
+    public function updateUserAction(Request $request, $id, EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
@@ -84,7 +86,17 @@ class AdministrationController extends AbstractController
         $userForm = $this->createForm(UserType::class, $user, [
             'data_class' => null,
             'constraints' => [
-                new AtLeastOneAdmin(),
+                new Callback([ 'callback' => static function ($data, ExecutionContextInterface $context) use ($userRepository) {
+                        if (!$data->isActive() || !$data->isAdmin()) {
+                            if ($userRepository->isLastAdmin($data->getUsername())) {
+                                $context
+                                    ->buildViolation("Vous ne pouvez pas désactiver cet utilisateur, c'est le dernier administrateur !")
+                                    ->addViolation()
+                                ;
+                            }
+                        }
+                    }
+                ]),
                 new UniqueUsername(),
             ],
         ]);

@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, Serializable
 {
     public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_USER = 'ROLE_USER';
 
     /**
      * @ORM\Id()
@@ -93,7 +94,7 @@ class User implements UserInterface, Serializable
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = self::ROLE_USER;
 
         return array_unique($roles);
     }
@@ -103,6 +104,11 @@ class User implements UserInterface, Serializable
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function isAdmin(): bool
+    {
+        return \in_array(self::ROLE_ADMIN, $this->roles);
     }
 
     /**

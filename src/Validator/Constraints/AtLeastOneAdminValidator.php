@@ -30,7 +30,7 @@ class AtLeastOneAdminValidator extends ConstraintValidator
         if ($value instanceof User) {
             $username = $value->getUsername();
         } else {
-            $username = $value['username'];
+            $username = $value;
         }
 
         if ($this->userRepository->isLastAdmin($username)) {
