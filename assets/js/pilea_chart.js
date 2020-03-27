@@ -77,7 +77,7 @@
       .style('text-anchor', 'left')
       .style('fill', AXE_COLOR)
       .attr('transform', function (d, i) {
-          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 2) + ')'
+          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 5) + ')'
       })
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
@@ -91,7 +91,7 @@
       .style('text-anchor', 'left')
       .style('fill', AXE_COLOR)
       .attr('transform', function (d, i) {
-        return 'translate(0,' + (i * DAY_SIZE + margin_top + 15) + ')'
+        return 'translate(0,' + (i * DAY_SIZE + margin_top + 12) + ')'
       })
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
@@ -211,7 +211,7 @@
       .style('text-anchor', 'left')
       .style('fill', AXE_COLOR)
       .attr('transform', function (d, i) {
-          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 14) + ')'
+          return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 12) + ')'
       })
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
@@ -474,7 +474,7 @@
       .style('text-anchor', 'left')
       .style('fill', AXE_COLOR)
       .attr('transform', function (d, i) {
-        return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 15) + ')'
+        return 'rotate(-90)translate(-45,' + (i * DAY_SIZE + margin_left + 12) + ')'
       })
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
@@ -837,13 +837,13 @@
 
   var displayLegendTick = function (target, margin_left, index, label, value) {
     target.append("text")
-    .attr("x", 0)
-    .attr("y", index * DAY_SIZE + 10)
+    .attr("x", 7)
+    .attr("y", index * DAY_SIZE + 11)
     .text(label);
 
     target.append("text")
-    .attr("x", margin_left + 21)
-    .attr("y", index * DAY_SIZE + 10)
+    .attr("x", margin_left + 20)
+    .attr("y", index * DAY_SIZE + 11)
     .text(value);
   }
 

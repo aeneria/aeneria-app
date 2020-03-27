@@ -16,7 +16,7 @@ if (document.getElementById('dju_x_conso_tab')) {
     var endDate = endArray[2] + '-' + endArray[1] + '-' + endArray[0];
     var frequency = pileaCurrent.getFrequency();
     var meteo = pileaCurrent.getMeteo();
-    var meteoUnit = $('.pilea-select-meteo').find('[data="' + meteo + '"]')[0].getAttribute('unit');
+    var meteoUnit = $('.aeneria-select-meteo').find('[data="' + meteo + '"]')[0].getAttribute('unit');
 
     // Refresh conso x dju.
     pilea.loadingAnimation('conso-x-dju');
