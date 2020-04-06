@@ -110,26 +110,27 @@ class GenerateFakeDataCommand extends Command
         if (!$place = $this->placeRepository->findOneBy($criteria)) {
 
             // First we create a Meteo and an electricity feed
-            $meteoFeed = new Feed();
-            $meteoFeed->setName(Feed::FEED_TYPE_METEO);
-            $meteoFeed->setFeedType(Feed::FEED_TYPE_METEO);
-            $meteoFeed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_FAKE);
-            $meteoFeed->setParam([]);
+            $meteoFeed = (new Feed())
+                ->setName(Feed::FEED_TYPE_METEO)
+                ->setFeedType(Feed::FEED_TYPE_METEO)
+                ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_FAKE)
+                ->setParam([])
+            ;
 
+            $electricityFeed = (new Feed())
+                ->setName(Feed::FEED_TYPE_ELECTRICITY)
+                ->setFeedType(Feed::FEED_TYPE_ELECTRICITY)
+                ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_FAKE)
+                ->setParam([])
+            ;
 
-            $electricityFeed = new Feed();
-            $electricityFeed->setName(Feed::FEED_TYPE_ELECTRICITY);
-            $electricityFeed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
-            $electricityFeed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_FAKE);
-            $electricityFeed->setParam([]);
-
-            $place = new Place();
-
-            $place->setName($placeName);
-            $place->setPublic(true);
-            $place->setUser($user);
-            $place->addFeed($meteoFeed);
-            $place->addFeed($electricityFeed);
+            $place = (new Place())
+                ->setName($placeName)
+                ->setPublic(true)
+                ->setUser($user)
+                ->addFeed($meteoFeed)
+                ->addFeed($electricityFeed)
+            ;
 
             $this->entityManager->persist($place);
 

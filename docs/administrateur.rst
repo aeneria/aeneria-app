@@ -128,6 +128,7 @@ Commandes de gestion des utilisateurs
 * ``aeneria:user:deactivate`` : Désactiver un utilisateur
 * ``aeneria:user:exist`` : Savoir si un utilisateur existe déjà
 * ``aeneria:user:grant`` : Donner à un utilisateur le rôle d'admin
+* ``aeneria:user:ungrant`` : Retirer à un utilisateur le rôle d'admin
 
 Commandes de développement
 ----------------------------

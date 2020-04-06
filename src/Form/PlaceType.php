@@ -3,13 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Place;
-use App\Entity\User;
 use App\Form\LinkyFeedType;
 use App\Form\MeteoFranceFeedType;
-use App\Repository\FeedRepository;
 use App\Repository\UserRepository;
 use App\Validator\Constraints\LogsToEnedis;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -119,21 +116,5 @@ class PlaceType extends AbstractType
             'user_can_share_place' => null,
             'place_can_be_public' => null,
         ]);
-    }
-
-    public static function handleSubmit(EntityManagerInterface $entityManager, Place $place, User $user)
-    {
-        $place->setUser($user);
-
-        $entityManager->persist($place);
-        $feedRepository = $entityManager->getRepository('App:Feed');
-        \assert($feedRepository instanceof FeedRepository);
-
-        foreach ($place->getFeeds() as $feed) {
-            $entityManager->persist($feed);
-            $feedRepository->createDependentFeedData($feed);
-        }
-
-        $entityManager->flush();
     }
 }

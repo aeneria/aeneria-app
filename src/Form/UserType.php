@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -84,11 +83,5 @@ class UserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
 
-    }
-
-    public static function handleSubmit(EntityManagerInterface $entityManager, User $user)
-    {
-        $entityManager->persist($user);
-        $entityManager->flush();
     }
 }

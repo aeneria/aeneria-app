@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\PlaceType;
 use App\Form\UpdateAccountType;
+use App\Repository\FeedRepository;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
@@ -12,7 +13,7 @@ use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
 use App\Validator\Constraints\UpdatePassword;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -43,7 +44,8 @@ class ConfigurationController extends AbstractAppController
     /**
      * @Route("/configuration/place/add", name="config.place.add")
      */
-    public function placeAddAction(int $userMaxPlaces, bool $userCanSharePlace, bool $placeCanBePublic, Request $request, EntityManagerInterface $entityManager)
+    public function placeAddAction(int $userMaxPlaces, bool $userCanSharePlace, bool $placeCanBePublic, Request $request,
+        EntityManagerInterface $entityManager, FeedRepository $feedRepository)
     {
         $user = $this->getUser();
         \assert($user instanceof User);
@@ -66,7 +68,20 @@ class ConfigurationController extends AbstractAppController
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-                PlaceType::handleSubmit($entityManager, $configForm->getData(), $this->getUser());
+
+                $place = $configForm->getData();
+
+                $place->setUser($this->getUser());
+
+                $entityManager->persist($place);
+
+                foreach ($place->getFeeds() as $feed) {
+                    $entityManager->persist($feed);
+                    $feedRepository->createDependentFeedData($feed);
+                }
+
+                $entityManager->flush();
+
                 $this->addFlash('success', 'La nouvelle adresse a bien été enregistrée !');
 
                 return $this->redirectToRoute('config');
@@ -82,7 +97,8 @@ class ConfigurationController extends AbstractAppController
     /**
      * @Route("/configuration/place/{id}/update", name="config.place.update")
      */
-    public function placeUpdateAction(bool $userCanSharePlace, bool $placeCanBePublic, Request $request, string $id, EntityManagerInterface $entityManager)
+    public function placeUpdateAction(bool $userCanSharePlace, bool $placeCanBePublic, Request $request, string $id,
+        EntityManagerInterface $entityManager, FeedRepository $feedRepository)
     {
         $place = $this->checkPlace($id);
 
@@ -97,7 +113,19 @@ class ConfigurationController extends AbstractAppController
         if('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-                PlaceType::handleSubmit($entityManager, $configForm->getData(), $this->getUser());
+                $place = $configForm->getData();
+
+                $place->setUser($this->getUser());
+
+                $entityManager->persist($place);
+
+                foreach ($place->getFeeds() as $feed) {
+                    $entityManager->persist($feed);
+                    $feedRepository->createDependentFeedData($feed);
+                }
+
+                $entityManager->flush();
+
                 $this->addFlash('success', 'Votre configuration a bien été enregistrée !');
 
                 return $this->redirectToRoute('config');
@@ -320,7 +348,20 @@ class ConfigurationController extends AbstractAppController
         if('POST' === $request->getMethod()) {
             $userForm->handleRequest($request);
             if ($userForm->isValid()) {
-                UpdateAccountType::handleSubmit($entityManager, $passwordEncoder, $userForm->getData());
+                $data = $userForm->getData();
+
+                $user = $data['user'];
+                \assert($user instanceof User);
+
+                $user->setUsername($data['username']);
+
+                if ($data['new_password']) {
+                    $user->setPassword($passwordEncoder->encodePassword($user, $data['new_password']));
+                }
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
                 $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
                 return $this->redirectToRoute('config');
             }

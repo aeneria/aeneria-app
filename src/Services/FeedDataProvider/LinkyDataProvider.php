@@ -77,7 +77,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         // Persist hours data.
         foreach ($data['hours'] as $hour => $value) {
             if ($value && (int)$value !== -1) {
-                $this->feedDataRepository->updateOrCreateValue(
+                $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
                     DataValue::FREQUENCY['HOUR'],
@@ -89,7 +89,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         // Persist day data.
         $value = \end($data['days']);
         if ($value && (int)$value !== -1) {
-            $this->feedDataRepository->updateOrCreateValue(
+            $this->dataValueRepository->updateOrCreateValue(
                 $feedData,
                 $date,
                 DataValue::FREQUENCY['DAY'],
@@ -101,14 +101,17 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         $this->entityManager->flush();
 
         // Persist week data.
-        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->entityManager->flush();
 
         // Before, we used to get month value from enedis directly. But, this have two inconveniants :
         //  * First, data can be insconsistent : sum of days value for a month could be different than month value
         //  * When you get data for a date, it gives you the consumption as it was this particular day, so when you
         //    try to refetch data for a date, you have to refetch it also for the last date of the date's month.
-        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
-        $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->entityManager->flush();
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+        $this->entityManager->flush();
     }
 
     private function getDataPerHour(\DateTimeImmutable $date)

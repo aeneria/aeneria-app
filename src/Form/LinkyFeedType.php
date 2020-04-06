@@ -65,8 +65,6 @@ class LinkyFeedType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'entityManager' => null,
-        ]);
+
     }
 }

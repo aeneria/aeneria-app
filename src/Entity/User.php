@@ -70,7 +70,7 @@ class User implements UserInterface, Serializable
         return $this->active;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -99,7 +99,7 @@ class User implements UserInterface, Serializable
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): User
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -119,7 +119,7 @@ class User implements UserInterface, Serializable
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -148,14 +148,28 @@ class User implements UserInterface, Serializable
         return $this->places;
     }
 
+    public function setPlaces(array $places): self
+    {
+        $this->places = $places;
+
+        return $this;
+    }
+
     public function getSharedPlaces(): iterable
     {
         return $this->sharedPlaces;
     }
 
-    public function addSharedPlace(Place $place): User
+    public function addSharedPlace(Place $place): self
     {
         $this->sharedPlaces[] = $place;
+
+        return $this;
+    }
+
+    public function setSharedPlaces(array $places): self
+    {
+        $this->sharedPlaces = $places;
 
         return $this;
     }

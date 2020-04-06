@@ -71,7 +71,7 @@ class FeedRepository extends ServiceEntityRepository
     public function findAllActive($feedDataProviderType = null)
     {
         $queryBuilder = $this
-            ->createQueryBuilder('f')
+            ->createQueryBuilder('f', 'f.id')
             ->select()
             ->innerJoin('f.place', 'p')
             ->innerJoin('p.user', 'u')
