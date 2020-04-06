@@ -43,14 +43,11 @@ class UserRepository extends ServiceEntityRepository
      */
     public function purge(User $user)
     {
-        $placeRepository = $this
-            ->getEntityManager()
-            ->getRepository('App:Place')
-        ;
+        $placeRepository = $this->getEntityManager()->getRepository('App:Place');
+        \assert($placeRepository instanceof PlaceRepository);
 
         foreach ($placeRepository->findByUser($user) as $place) {
             $placeRepository->purge($place);
-
         }
 
         $this

@@ -68,7 +68,7 @@ class EditUserCommand extends Command
         if ($password = $input->getOption('password')) {
             $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
         }
-        if ($active = $input->getOption('active')) {
+        if (!\is_null($active = $input->getOption('active'))) {
             $user->setActive($active);
         }
 

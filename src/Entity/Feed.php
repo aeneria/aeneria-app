@@ -98,16 +98,16 @@ class Feed
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['DATA_PROVIDER_TYPE'];
         } else {
-            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
+            throw new \InvalidArgumentException("Feed type " . $feedType . " does not exist !");
         }
     }
 
-    public static function getNameFor(string $feedType): array
+    public static function getNameFor(string $feedType): string
     {
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['NAME'];
         } else {
-            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
+            throw new \InvalidArgumentException("Feed type " . $feedType . " does not exist !");
         }
     }
 
@@ -116,7 +116,7 @@ class Feed
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['FREQUENCIES'];
         } else {
-            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
+            throw new \InvalidArgumentException("Feed type " . $feedType . " does not exist !");
         }
     }
 
@@ -125,7 +125,7 @@ class Feed
         if (\key_exists($feedType, self::getAllFeedTypes())) {
             return self::getAllFeedTypes()[$feedType]['DATA_TYPE'];
         } else {
-            throw new \InvalidArgumentException("Feed type " . $feedType . "does not exist !");
+            throw new \InvalidArgumentException("Feed type " . $feedType . " does not exist !");
         }
     }
 
@@ -134,14 +134,14 @@ class Feed
         return $this->id;
     }
 
-    public function setId(int $id): Feed
+    public function setId(int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function setName(string $name): Feed
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -153,7 +153,7 @@ class Feed
         return $this->name;
     }
 
-    public function setParam(array $param): Feed
+    public function setParam(array $param): self
     {
         $this->param = $param;
 
@@ -170,31 +170,7 @@ class Feed
         return $this->param ?? [];
     }
 
-    public function setPublic(bool $public): Feed
-    {
-        $this->public = $public;
-
-        return $this;
-    }
-
-    public function isPublic(): ?bool
-    {
-        return $this->public;
-    }
-
-    public function setCreator(string $creator): Feed
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    public function getCreator(): int
-    {
-        return $this->creator;
-    }
-
-    public function setFeedType(string $feedType): Feed
+    public function setFeedType(string $feedType): self
     {
         $this->feedType = $feedType;
 
@@ -206,7 +182,7 @@ class Feed
         return $this->feedType;
     }
 
-    public function setFeedDataProviderType(string $feedDataProviderType): Feed
+    public function setFeedDataProviderType(string $feedDataProviderType): self
     {
         $this->feedDataProviderType = $feedDataProviderType;
 
@@ -218,7 +194,7 @@ class Feed
         return $this->feedDataProviderType;
     }
 
-    public function setPlace(Place $place): Feed
+    public function setPlace(Place $place): self
     {
         $this->place = $place;
 

@@ -8,7 +8,7 @@ use App\Repository\UserRepository;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -53,8 +53,11 @@ class AdministrationController extends AbstractController
         if('POST' === $request->getMethod()) {
             $userForm->handleRequest($request);
             if ($userForm->isValid()) {
-                UserType::handleSubmit($entityManager, $userForm->getData());
+                $entityManager->persist($userForm->getData());
+                $entityManager->flush();
+
                 $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
+
                 return $this->redirectToRoute('admin.user.list');
             }
         }
@@ -104,8 +107,11 @@ class AdministrationController extends AbstractController
         if('POST' === $request->getMethod()) {
             $userForm->handleRequest($request);
             if ($userForm->isValid()) {
-                UserType::handleSubmit($entityManager, $userForm->getData());
+                $entityManager->persist($userForm->getData());
+                $entityManager->flush();
+
                 $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
+
                 return $this->redirectToRoute('admin.user.list');
             }
         }

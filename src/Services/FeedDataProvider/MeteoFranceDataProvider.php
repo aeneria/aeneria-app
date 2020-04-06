@@ -5,6 +5,10 @@ namespace App\Services\FeedDataProvider;
 
 use App\Entity\Feed;
 use App\Entity\DataValue;
+use App\Repository\DataValueRepository;
+use App\Repository\FeedDataRepository;
+use App\Repository\FeedRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Meteo France API to get SYNOP Observations.
@@ -41,6 +45,16 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         'DJU' => '',
     ];
 
+    /** @var string */
+    private $projectDir;
+
+    public function __construct(string $projectDir, EntityManagerInterface $entityManager, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
+    {
+        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository);
+
+        $this->projectDir = $projectDir;
+    }
+
     /**
      * @inheritdoc
      */
@@ -55,13 +69,13 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     /**
      * Get all available station on MeteoFrance for SYNOP observation.
      */
-    public static function getAvailableStations(): array
+    public function getAvailableStations(): array
     {
         $stations = [];
         $header = [];
 
         // Reads csv files containing stations info.
-        $stationsData = \file(\getcwd() . self::SYNOP_POSTES);
+        $stationsData = \file(\sprintf("%s/public%s", $this->projectDir, self::SYNOP_POSTES));
 
         foreach($stationsData as $row) {
             $row = \str_getcsv ($row, ';');
@@ -160,7 +174,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
             foreach ($feedDataList as $feedData) {
                 $dataType = $feedData->getDataType();
                 if ($fastenData[$dataType] !== NULL) {
-                    $this->feedDataRepository->updateOrCreateValue(
+                    $this->dataValueRepository->updateOrCreateValue(
                         $feedData,
                         $date,
                         DataValue::FREQUENCY['DAY'],
@@ -172,9 +186,12 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
             // Flush all persisted DataValue.
             $this->entityManager->flush();
 
-            $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
-            $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
-            $this->performAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+            $this->entityManager->flush();
+            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+            $this->entityManager->flush();
+            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+            $this->entityManager->flush();
         }
     }
 

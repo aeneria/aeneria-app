@@ -99,6 +99,13 @@ class FeedData
         }
     }
 
+    public function setId(int $id): FeedData
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     /**
      * Get id
      */

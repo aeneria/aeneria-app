@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Feed;
-use App\FeedObject\MeteoFrance;
 use App\Services\FeedDataProvider\MeteoFranceDataProvider;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -13,10 +12,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MeteoFranceFeedType extends AbstractType
 {
+    private $meteoFranceDataProvider;
+
+    public function __construct(MeteoFranceDataProvider $meteoFranceDataProvider)
+    {
+        $this->meteoFranceDataProvider = $meteoFranceDataProvider;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // Set MeteoStation parameter.
-        $stations = MeteoFranceDataProvider::getAvailableStations();
+        $stations = $this->meteoFranceDataProvider->getAvailableStations();
         $builder
             ->add('station', ChoiceType::class, [
                 'choices' => $stations,

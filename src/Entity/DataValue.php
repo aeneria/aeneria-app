@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 /**
  * DataValue
@@ -99,6 +100,13 @@ class DataValue
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     /**
      * Set value
      */
@@ -123,6 +131,21 @@ class DataValue
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Update hour, weekDay, week, month and year from current date & frequency
+     */
+    public function updateDateRelatedData(): self
+    {
+        if ($this->frequency <= DataValue::FREQUENCY['HOUR']) $this->setHour($this->date->format('H'));
+        $weekDay = $this->date->format('w') == 0 ? 6 : $this->date->format('w') - 1;
+        if ($this->frequency <= DataValue::FREQUENCY['DAY']) $this->setWeekDay($weekDay);
+        if ($this->frequency <= DataValue::FREQUENCY['WEEK']) $this->setWeek($this->date->format('W'));
+        if ($this->frequency <= DataValue::FREQUENCY['MONTH']) $this->setMonth($this->date->format('m'));
+        if ($this->frequency <= DataValue::FREQUENCY['YEAR']) $this->setYear($this->date->format('Y'));
 
         return $this;
     }
@@ -333,7 +356,7 @@ class DataValue
                 $firstDay = \DateTime::createFromImmutable($dateToAdapt);
                 $lastDay = \DateTime::createFromImmutable($dateToAdapt);
 
-                $lastDay->add(new \DateInterval('P1D'));
+                $lastDay->add(new \DateInterval('PT23H'));
 
                 $previousFrequency = DataValue::FREQUENCY['HOUR'];
                 break;
@@ -352,18 +375,19 @@ class DataValue
                 $firstDay->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
 
                 $lastDay = clone $firstDay;
-                $lastDay->add(new \DateInterval('P' . ($date->format('t')) . 'D'));
+                $lastDay->add(new \DateInterval('P' . ($date->format('t') - 1) . 'D'));
 
                 $previousFrequency = DataValue::FREQUENCY['DAY'];
                 break;
             case DataValue::FREQUENCY['YEAR']:
-                $firstDay = new \DateTime($date->format("Y-1-1 00:00:00"));;
+                $firstDay = new \DateTime($date->format("Y-01-01 00:00:00"));
 
-                $lastDay = clone $firstDay;
-                $lastDay->add(new \DateInterval('P1Y'));
+                $lastDay = new \DateTime($date->format("Y-12-31 00:00:00"));
 
                 $previousFrequency = DataValue::FREQUENCY['MONTH'];
                 break;
+            default:
+                throw new InvalidArgumentException("Can't adapt boundaries for this frequency !");
         }
 
         return [

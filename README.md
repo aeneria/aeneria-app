@@ -1,5 +1,3 @@
-[![Documentation Status](https://readthedocs.org/projects/pilea/badge/?version=latest)](https://docs.aeneria.com/fr/latest/?badge=latest)
-
 # æneria - A little dashboard to analyse your electricity consumption data from Linky
 
 The idea of æneria is to display electricity consumption and weather data on a little dashboard that allow the user to:

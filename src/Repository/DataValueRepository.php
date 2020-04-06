@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Controller\DataController;
 use App\Entity\DataValue;
+use App\Entity\Feed;
 use App\Entity\FeedData;
 use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,6 +26,115 @@ class DataValueRepository extends ServiceEntityRepository
     }
 
     /**
+     * Update or Create a new DataValue and persist it.
+     *
+     * @param \DateInterval $date
+     * @param int $frequency
+     * @param string $value
+     * @param EntityManager $entityManager
+     */
+    public function updateOrCreateValue(FeedData $feedData, \DateTimeImmutable $date, $frequency, $value)
+    {
+        // Update date according to frequnecy
+        $date = DataValue::adaptToFrequency($date, $frequency);
+
+        $criteria = [
+            'feedData' => $feedData,
+            'date' => $date,
+            'frequency' => $frequency,
+        ];
+
+        // Try to get the corresponding DataValue.
+        $dataValue = $this->findOneBy($criteria);
+
+        // Create it if it doesn't exist.
+        if (!isset($dataValue)) {
+            $dataValue = (new DataValue())
+                ->setFrequency($frequency)
+                ->setFeedData($feedData)
+                ->setDate($date)
+                ->updateDateRelatedData()
+            ;
+        }
+
+        $dataValue->setValue($value);
+
+        // Persit the dataValue.
+        $this->getEntityManager()->persist($dataValue);
+    }
+
+    /**
+     * Agregate Values for a and a frequency date and persist it to EntityManager.
+     */
+    public function updateOrCreateAgregateValue(\DateTimeImmutable $date, Feed $feed, int $frequency)
+    {
+        $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
+        \assert($feedDataRepository instanceof FeedDataRepository);
+
+        list('from' => $firstDay, 'to' => $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
+
+        // Get all feedData.
+        $feedDataList = $feedDataRepository->findByFeed($feed);
+
+        /** @var \App\Entity\FeedData $feedData */
+        foreach ($feedDataList as $feedData) {
+            switch ($feedData->getDataType()) {
+                case FeedData::FEED_DATA_DJU:
+                case FeedData::FEED_DATA_RAIN:
+                case FeedData::FEED_DATA_CONSO_ELEC:
+                    $agregateData = $this
+                        ->getSumValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+                case FeedData::FEED_DATA_TEMPERATURE_MAX:
+                    $agregateData = $this
+                        ->getMaxValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+                case FeedData::FEED_DATA_TEMPERATURE_MIN:
+                    $agregateData = $this
+                        ->getMinValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+                default:
+                    $agregateData = $this
+                        ->getAverageValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+            }
+
+            if (isset($agregateData[0]['value'])) {
+                $this->updateOrCreateValue(
+                    $feedData,
+                    $firstDay,
+                    $frequency,
+                    \round($agregateData[0]['value'], 1)
+                );
+            }
+        }
+    }
+
+    /**
      * Get an average value
      *
      * @param \DateTime $startDate
@@ -32,7 +142,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param int $frequency
      */
-    public function getAverageValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency)
+    public function getAverageValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -53,7 +163,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param int $frequency
      */
-    public function getMinValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency)
+    public function getMinValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -74,7 +184,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param int $frequency
      */
-    public function getMaxValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency)
+    public function getMaxValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -120,7 +230,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param String $frequency
      * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
      */
-    public function getXY(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedDataX, FeedData $feedDataY, $frequency)
+    public function getXY(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedDataX, FeedData $feedDataY, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('dx');
@@ -159,7 +269,7 @@ class DataValueRepository extends ServiceEntityRepository
     * @param \DateTime $endDate
     * @param string $frequency
     */
-    public function getNumberInfValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency, $value)
+    public function getNumberInfValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency, $value)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -204,7 +314,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param string $frequency
      */
-    public function getValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency)
+    public function getValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -225,7 +335,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param string $frequency
      */
-    public function getRepartitionValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $axeX, $axeY, $frequency, $repartitionType)
+    public function getRepartitionValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $axeX, $axeY, $frequency, $repartitionType)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -256,7 +366,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param string $frequency
      * @param string $groupBy
      */
-    public function getSumValueGroupBy(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency, $groupBy)
+    public function getSumValueGroupBy(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency, $groupBy)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -297,7 +407,6 @@ class DataValueRepository extends ServiceEntityRepository
             ->setParameter('frequency', $frequency)
         ;
     }
-
 
     /**
      * Get date interval of data.

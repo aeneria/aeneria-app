@@ -48,7 +48,7 @@ class FeedDataRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOneByPlaceAndDataType(Place $place, string $dataType)
+    public function findOneByPlaceAndDataType(Place $place, string $dataType): ?FeedData
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('fd');
@@ -65,52 +65,6 @@ class FeedDataRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
-    }
-
-    /**
-     * Update or Create a new DataValue and persist it.
-     *
-     * @param \DateInterval $date
-     * @param int $frequency
-     * @param string $value
-     * @param EntityManager $entityManager
-     */
-    public function updateOrCreateValue(FeedData $feedData, \DateTimeImmutable $date, $frequency, $value)
-    {
-        $dataValueRepository = $this->getEntityManager()->getRepository('App:DataValue');
-        \assert($dataValueRepository instanceof DataValueRepository);
-
-        // Update date according to frequnecy
-        $date = DataValue::adaptToFrequency($date, $frequency);
-
-        $criteria = [
-            'feedData' => $feedData,
-            'date' => $date,
-            'frequency' => $frequency,
-        ];
-
-        // Try to get the corresponding DataValue.
-        $dataValue = $dataValueRepository->findOneBy($criteria);
-
-        // Create it if it doesn't exist.
-        if (!isset($dataValue)) {
-            $dataValue = new DataValue();
-            $dataValue->setFrequency($frequency);
-            $dataValue->setFeedData($feedData);
-            $dataValue->setDate($date);
-        }
-
-        if ($frequency <= DataValue::FREQUENCY['HOUR']) $dataValue->setHour($date->format('H'));
-        $weekDay = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
-        if ($frequency <= DataValue::FREQUENCY['DAY']) $dataValue->setWeekDay($weekDay);
-        if ($frequency <= DataValue::FREQUENCY['WEEK']) $dataValue->setWeek($date->format('W'));
-        if ($frequency <= DataValue::FREQUENCY['MONTH']) $dataValue->setMonth($date->format('m'));
-        if ($frequency <= DataValue::FREQUENCY['YEAR']) $dataValue->setYear($date->format('Y'));
-
-        $dataValue->setValue($value);
-
-        // Persit the dataValue.
-        $this->getEntityManager()->persist($dataValue);
     }
 
     /**
