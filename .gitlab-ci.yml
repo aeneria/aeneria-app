@@ -71,8 +71,8 @@ on_tag:
       default: false
   stage: release
   only:
-    -tags
+    - tags
   script:
     - curl --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
-     --data '{ "name": "v$CI_COMMIT_TAG", "tag_name": $CI_COMMIT_TAG, "description": ""}' \
-     --request POST $CI_API_V4_URL/projects/$CI_PROJECT_PATH/releases
+    --data '{ "name": "v$CI_COMMIT_TAG", "tag_name": $CI_COMMIT_TAG, "description": ""}' \
+    --request POST $CI_API_V4_URL/projects/$CI_PROJECT_PATH/releases
