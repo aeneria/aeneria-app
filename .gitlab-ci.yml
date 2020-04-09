@@ -28,11 +28,23 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - vendor/
+    - node_modules/
 
 stages:
+  - build
   - tests
 
-php-coverage-test:
+build-asset:
+  image: node:9-alpine
+  script:
+    - yarn install
+    - yarn build
+  artifacts:
+    paths:
+    - public/build
+    expire_in: 1 week
+
+php-test:
   inherit:
       default: true
   stage: tests
