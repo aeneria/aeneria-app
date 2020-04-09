@@ -1,0 +1,3 @@
+[submodule "local/sphinx-aeneria-theme"]
+	path = local/sphinx-aeneria-theme
+	url = https://gitlab.com/aeneria/sphinx-aeneria-theme.git

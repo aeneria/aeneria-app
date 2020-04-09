@@ -103,7 +103,7 @@ Aperçus
 Comment lire le graphique
 --------------------------
 
-Si on prend le cas où l'on observe la consommation d'électricité et les :term:`DJU`s et si l'on considère que le chauffage est électrique.
+Si on prend le cas où l'on observe la consommation d'électricité et les :term:`DJU` et si l'on considère que le chauffage est électrique.
 Si l'on sélectionne une péridoe d'hiver, les points affichés devraient se regrouper le long d'une ligne.
 
 L'analyse de la pente de cette droite permet de caractériser l'isolation et le système de chauffage de votre habitation.
