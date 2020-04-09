@@ -35,6 +35,8 @@ stages:
   - tests
 
 build-asset:
+  inherit:
+      default: false
   stage: build
   image: node:9-alpine
   script:
