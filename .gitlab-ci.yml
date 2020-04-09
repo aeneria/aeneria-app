@@ -76,11 +76,10 @@ release-on-tag:
     - apk add --update curl && rm -rf /var/cache/apk/*
   script:
     - >
-      echo --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
+      echo $CI_COMMIT_TAG --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
       --data '{ "name": "v${CI_COMMIT_TAG}", "tag_name": "${CI_COMMIT_TAG}", "description": ""}' \
       --request POST $CI_API_V4_URL/projects/$CI_PROJECT_PATH/releases
     - >
-      curl --header 'Content-Type: application/json' \
-      --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
+      curl --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
       --data '{ "name": "v$CI_COMMIT_TAG", "tag_name": "$CI_COMMIT_TAG", "description": ""}' \
-      --request POST $CI_API_V4_URL/projects/$CI_PROJECT_PATH/releases
+      --request POST $CI_API_V4_URL/projects/$CI_PROJECT_ID/releases
