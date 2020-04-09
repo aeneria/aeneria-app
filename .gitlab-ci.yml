@@ -46,23 +46,40 @@ build-asset:
     paths:
       - public/build
 
-php-test:
-  inherit:
-    default: true
-  stage: tests
-  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
-  script:
-    - php bin/phpunit --coverage-text --colors=never
+# php-test:
+#   inherit:
+#     default: true
+#   stage: tests
+#   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+#   script:
+#     - php bin/phpunit --coverage-text --colors=never
 
-documentation-build-test:
+# documentation-build-test:
+#   inherit:
+#     default: false
+#   stage: tests
+#   image: python:3.7-alpine
+#   script:
+#     - pip install -U sphinx
+#     - cd docs
+#     - sphinx-build -b html . _build
+
+release-aarchive:
   inherit:
     default: false
-  stage: tests
-  image: python:3.7-alpine
+  stage: release
+  image: docker:stable
+  before_script:
+    - apk add --update curl tar zip && rm -rf /var/cache/apk/*
   script:
-    - pip install -U sphinx
-    - cd docs
-    - sphinx-build -b html . _build
+    - cd ..
+    - ls
+    # - >
+    #   curl \
+    #     --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+    #     --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\"}" \
+    #     --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
+
 
 release-on-tag:
   inherit:
@@ -72,8 +89,10 @@ release-on-tag:
     - tags
   image: docker:stable
   before_script:
-    - apk add --update curl && rm -rf /var/cache/apk/*
+    - apk add --update curl tar zip && rm -rf /var/cache/apk/*
   script:
+    - cd ..
+    - ls
     - >
       curl \
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
