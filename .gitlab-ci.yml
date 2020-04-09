@@ -75,13 +75,9 @@ release-on-tag:
   before_script:
     - apk add --update curl git && rm -rf /var/cache/apk/*
   script:
-    - echo $CI_COMMIT_TAG
-    - CURRENT_TAG=$(git describe --tags --abbrev=0)
-    - release-cli create --name v$CURRENT_TAG --tag-name $CURRENT_TAG
-
-    # - >
-    #   curl \
-    #     --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${RELEASES_TOKEN}" \
-    #     --data "{ \"name\": \"V${CURRENT_TAG}\", \"tag_name\": \"${CURRENT_TAG}\"}" \
-    #     --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
+    - >
+      curl \
+        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${CI_JO_TOKEN}" \
+        --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\"}" \
+        --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
 
