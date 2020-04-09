@@ -50,4 +50,4 @@ documentation-build:
   script:
     - pip install -U sphinx
     - cd docs
-    - sphinx-build -b html . public
+    - sphinx-build -b html . _build
