@@ -9,7 +9,6 @@ cache:
 stages:
   - tests
 
-
 before_script:
   - apt-get update -yqq
   - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev -yqq
@@ -44,3 +43,11 @@ php-coverage-test:
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - php bin/phpunit --coverage-text --colors=never
+
+documentation-build:
+  stage: tests
+  image: python:3.6-alpine
+  script:
+    - pip install -U sphinx
+    - cd docs
+    - make html
