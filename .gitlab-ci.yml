@@ -32,12 +32,10 @@ cache:
 stages:
   - tests
 
-php-test:
+php-coverage-test:
   inherit:
       default: true
   stage: tests
-  script:
-  only: [master, ci-test]
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - php bin/phpunit --coverage-text --colors=never
