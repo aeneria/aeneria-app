@@ -65,13 +65,18 @@ documentation-build-test:
     - cd docs
     - sphinx-build -b html . _build
 
-on_tag:
+release-on-tag:
   inherit:
       default: false
   stage: release
   only:
     - tags
+  image: docker:stable
+  before_script:
+    - apk add --update curl && rm -rf /var/cache/apk/*
   script:
-    - curl --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
-      --data '{ "name": "v$CI_COMMIT_TAG", "tag_name": "$CI_COMMIT_TAG", "description": ""}' \
-      --request POST $CI_API_V4_URL/projects/$CI_PROJECT_PATH/releases
+    - >
+    curl --header 'Content-Type: application/json' \
+    --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
+    --data '{ "name": "v$CI_COMMIT_TAG", "tag_name": "$CI_COMMIT_TAG", "description": ""}' \
+    --request POST $CI_API_V4_URL/projects/$CI_PROJECT_PATH/releases
