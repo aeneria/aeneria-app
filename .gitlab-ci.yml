@@ -77,6 +77,11 @@ release-on-tag:
   script:
     - CURRENT_TAG=$(git describe --tags --abbrev=0)
     - >
+      echo \
+        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" \
+        --data "{ \"name\": \"Release ${CURRENT_TAG}\", \"tag_name\": \"v${CURRENT_TAG}\", \"assets\": { \"count\": 4, \"sources\": [ { \"format\": \"zip\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.zip\" }, { \"format\": \"tar.gz\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.tar.gz\" }, { \"format\": \"tar.bz2\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.tar.bz2\" }, { \"format\": \"tar\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.tar\" } ] } }" \
+        --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
+    - >
       curl \
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" \
         --data "{ \"name\": \"Release ${CURRENT_TAG}\", \"tag_name\": \"v${CURRENT_TAG}\", \"assets\": { \"count\": 4, \"sources\": [ { \"format\": \"zip\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.zip\" }, { \"format\": \"tar.gz\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.tar.gz\" }, { \"format\": \"tar.bz2\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.tar.bz2\" }, { \"format\": \"tar\", \"url\": \"https://${CI_SERVER_HOST}${CI_PROJECT_PATH}/-/archive/${CI_COMMIT_REF_NAME}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_NAME}.tar\" } ] } }" \
