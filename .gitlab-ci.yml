@@ -14,11 +14,13 @@ default:
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
     - php bin/console aeneria:user:grant admin
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
-  services:
-    - mysql:5.5
-  variables:
-    MYSQL_DATABASE: db
-    MYSQL_ROOT_PASSWORD: password
+
+services:
+  - mysql:5.5
+
+variables:
+  MYSQL_DATABASE: db
+  MYSQL_ROOT_PASSWORD: password
 
 
 # Select what we should cache
