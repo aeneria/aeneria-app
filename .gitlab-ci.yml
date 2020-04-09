@@ -72,7 +72,7 @@ release-on-tag:
   stage: release
   only:
     - tags
-  image: python:3.6-alpine
+  image: inetprocess/gitlab-release
   before_script:
     - pip install --no-cache-dir requests
   script:
