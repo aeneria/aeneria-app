@@ -74,8 +74,11 @@ release-aarchive:
   script:
     - cd ..
     - tar -cvf aeneria-toto.tar aeneria-app/
+    - mv aeneria-toto.tar aeneria-app/.
     - tar -zcvf aeneria-toto.tar.gz aeneria-app/
+    - mv aeneria-toto.tar.gz aeneria-app/.
     - zip -r aeneria-toto.zip aeneria-app/
+    - mv aeneria-toto.zip aeneria-app/.
   artifacts:
     paths:
       - ../aeneria-toto.tar
@@ -100,8 +103,11 @@ release-on-tag:
   script:
     - cd ..
     - tar -cvf aeneria-$CI_COMMIT_TAG.tar aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.tar aeneria-app/.
     - tar -zcvf aeneria-$CI_COMMIT_TAG.tar.gz aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.tar.gz aeneria-app/.
     - zip -r aeneria-$CI_COMMIT_TAG.zip aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.zip aeneria-app/.
     - >
       curl \
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
@@ -109,7 +115,7 @@ release-on-tag:
         --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
   artifacts:
     paths:
-      - ../aeneria-$CI_COMMIT_TAG.tar
-      - ../aeneria-$CI_COMMIT_TAG.tar.gz
-      - ../aeneria-$CI_COMMIT_TAG.zip
+      - aeneria-$CI_COMMIT_TAG.tar
+      - aeneria-$CI_COMMIT_TAG.tar.gz
+      - aeneria-$CI_COMMIT_TAG.zip
 
