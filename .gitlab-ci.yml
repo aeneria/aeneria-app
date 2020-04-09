@@ -78,7 +78,7 @@ release-on-tag:
     - CURRENT_TAG=$(git describe --tags --abbrev=0)
     - >
       curl \
-        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${RELEASES_TOKEN}" \
         --data "{ \"name\": \"V${CURRENT_TAG}\", \"tag_name\": \"${CURRENT_TAG}\"}" \
         --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
 
