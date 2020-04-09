@@ -3,8 +3,9 @@ image: php:7.3
 
 # Select what we should cache
 cache:
+  key: ${CI_COMMIT_REF_SLUG}
   paths:
-  - vendor/
+    - vendor/
 
 stages:
   - tests
@@ -46,7 +47,9 @@ php-coverage-test:
 
 documentation-build:
   stage: tests
-  image: python:3.6-alpine
+  image: python:3.7-alpine
+  before_script:
+    - pip install -U sphinx
   script:
     - pip install -U sphinx
     - cd docs
