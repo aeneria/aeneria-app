@@ -37,13 +37,6 @@ php-test:
       default: true
   stage: tests
   script:
-    - php bin/phpunit
-
-php-coverage-test:
-  inherit:
-      default: true
-  stage: tests
-  script:
   only: [master, ci-test]
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
@@ -57,4 +50,4 @@ documentation-build:
   script:
     - pip install -U sphinx
     - cd docs
-    - make html
+    - sphinx-build -b html . public
