@@ -40,7 +40,10 @@ build-asset:
   stage: build
   image: node:9-alpine
   script:
-    - apk add python2
+    - apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
     - yarn install
     - yarn build
   artifacts:
