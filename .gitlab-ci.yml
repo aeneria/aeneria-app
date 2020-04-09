@@ -81,9 +81,9 @@ release-aarchive:
     - mv aeneria-toto.zip aeneria-app/.
   artifacts:
     paths:
-      - ../aeneria-toto.tar
-      - ../aeneria-toto.tar.gz
-      - ../aeneria-toto.zip
+      - aeneria-toto.tar
+      - aeneria-toto.tar.gz
+      - aeneria-toto.zip
     # - >
     #   curl \
     #     --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
