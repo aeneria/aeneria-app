@@ -21,7 +21,7 @@ services:
 variables:
   MYSQL_DATABASE: db
   MYSQL_ROOT_PASSWORD: password
-
+  GIT_SUBMODULE_STRATEGY: recursive
 
 # Select what we should cache
 cache:
