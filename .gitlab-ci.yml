@@ -50,6 +50,8 @@ php-coverage-test:
     - php bin/phpunit --coverage-text --colors=never
 
 documentation-build:
+  inherit:
+      default: false
   stage: tests
   image: python:3.7-alpine
   script:
