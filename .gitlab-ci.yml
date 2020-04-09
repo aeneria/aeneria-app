@@ -1,46 +1,51 @@
 # Select image from https://hub.docker.com/_/php/
-image: php:7.3
+default:
+  image: php:7.3
+  before_script:
+    - apt-get update -yqq
+    - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev -yqq
+    - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
+    - pecl install xdebug \
+      && docker-php-ext-enable xdebug
 
-# Select what we should cache
-cache:
-  paths:
-  - vendor/
-
-stages:
-  - tests
-
-
-before_script:
-  - apt-get update -yqq
-  - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev -yqq
-  - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
-  - pecl install xdebug \
-    && docker-php-ext-enable xdebug
-
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install
-  - php bin/console aeneria:install -n
-  - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
-  - php bin/console aeneria:user:grant admin
-  - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
+    - php bin/console aeneria:install -n
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
+    - php bin/console aeneria:user:grant admin
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
 
 services:
   - mysql:5.5
 
 variables:
-  # Configure mysql service (https://hub.docker.com/_/mysql/)
   MYSQL_DATABASE: db
   MYSQL_ROOT_PASSWORD: password
+  GIT_SUBMODULE_STRATEGY: recursive
 
-php-test:
-  stage: tests
-  script:
-    - php bin/phpunit
+# Select what we should cache
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+
+stages:
+  - tests
 
 php-coverage-test:
+  inherit:
+      default: true
   stage: tests
-  script:
-  only: [master, ci-test]
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - php bin/phpunit --coverage-text --colors=never
+
+documentation-build:
+  inherit:
+      default: false
+  stage: tests
+  image: python:3.7-alpine
+  script:
+    - pip install -U sphinx
+    - cd docs
+    - sphinx-build -b html . _build
