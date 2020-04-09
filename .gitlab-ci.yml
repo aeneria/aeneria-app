@@ -35,6 +35,7 @@ stages:
   - tests
 
 build-asset:
+  stage: build
   image: node:9-alpine
   script:
     - yarn install
