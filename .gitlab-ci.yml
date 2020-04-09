@@ -44,6 +44,7 @@ stages:
 #     - yarn install
 #     - yarn build
 #   artifacts:
+      # expire_in: '1 hour'
 #     paths:
 #       - public/build
 
@@ -71,13 +72,14 @@ release-on-tag:
   stage: release
   only:
     - tags
-  image: docker:stable
+  image: python:3.6-alpine
   before_script:
-    - apk add --update curl git && rm -rf /var/cache/apk/*
+    - pip install --no-cache-dir requests
   script:
-    - >
-      curl \
-        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
-        --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\"}" \
-        --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
+    - gitlab-release
+    # - >
+    #   curl \
+    #     --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+    #     --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\"}" \
+    #     --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
 
