@@ -1,5 +1,25 @@
 # Select image from https://hub.docker.com/_/php/
-image: php:7.3
+default:
+  image: php:7.3
+  before_script:
+    - apt-get update -yqq
+    - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev -yqq
+    - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
+    - pecl install xdebug \
+      && docker-php-ext-enable xdebug
+
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
+    - php bin/console aeneria:install -n
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
+    - php bin/console aeneria:user:grant admin
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
+  services:
+    - mysql:5.5
+  variables:
+    MYSQL_DATABASE: db
+    MYSQL_ROOT_PASSWORD: password
+
 
 # Select what we should cache
 cache:
@@ -10,34 +30,16 @@ cache:
 stages:
   - tests
 
-before_script:
-  - apt-get update -yqq
-  - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev -yqq
-  - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
-  - pecl install xdebug \
-    && docker-php-ext-enable xdebug
-
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install
-  - php bin/console aeneria:install -n
-  - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
-  - php bin/console aeneria:user:grant admin
-  - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
-
-services:
-  - mysql:5.5
-
-variables:
-  # Configure mysql service (https://hub.docker.com/_/mysql/)
-  MYSQL_DATABASE: db
-  MYSQL_ROOT_PASSWORD: password
-
 php-test:
+  inherit:
+      default: true
   stage: tests
   script:
     - php bin/phpunit
 
 php-coverage-test:
+  inherit:
+      default: true
   stage: tests
   script:
   only: [master, ci-test]
@@ -48,8 +50,6 @@ php-coverage-test:
 documentation-build:
   stage: tests
   image: python:3.7-alpine
-  before_script:
-    - pip install -U sphinx
   script:
     - pip install -U sphinx
     - cd docs
