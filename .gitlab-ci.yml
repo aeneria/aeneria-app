@@ -40,7 +40,7 @@ build-asset:
   stage: build
   image: node:9-alpine
   script:
-    - apk add python
+    - apk add python2
     - yarn install
     - yarn build
   artifacts:
