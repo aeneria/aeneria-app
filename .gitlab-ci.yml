@@ -6,8 +6,6 @@ default:
     - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
     - pecl install xdebug \
       && docker-php-ext-enable xdebug
-    - curl -sS https://getcomposer.org/installer | php
-    - php composer.phar install
     - php bin/console aeneria:install -n
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
     - php bin/console aeneria:user:grant admin
@@ -21,18 +19,12 @@ variables:
   MYSQL_ROOT_PASSWORD: password
   GIT_SUBMODULE_STRATEGY: recursive
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - vendor/
-    - node_modules/
-
 stages:
   - build
   - tests
   - release
 
-build-asset:
+build:assets:
   inherit:
     default: false
   stage: build
@@ -45,6 +37,18 @@ build-asset:
     expire_in: '1 hour'
     paths:
       - public/build
+
+build:composer-install:
+  inherit:
+    default: true
+  stage: build
+  script:
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
+  artifacts:
+    expire_in: '1 hour'
+    paths:
+      - vendor
 
 # php-test:
 #   inherit:
@@ -64,39 +68,12 @@ build-asset:
 #     - cd docs
 #     - sphinx-build -b html . _build
 
-release-aarchive:
-  inherit:
-    default: false
-  stage: release
-  image: docker:stable
-  before_script:
-    - apk add --update curl tar zip && rm -rf /var/cache/apk/*
-  script:
-    - cd ..
-    - tar -cvf aeneria-toto.tar aeneria-app/
-    - mv aeneria-toto.tar aeneria-app/.
-    - tar -zcvf aeneria-toto.tar.gz aeneria-app/
-    - mv aeneria-toto.tar.gz aeneria-app/.
-    - zip -r aeneria-toto.zip aeneria-app/
-    - mv aeneria-toto.zip aeneria-app/.
-  artifacts:
-    paths:
-      - aeneria-toto.tar
-      - aeneria-toto.tar.gz
-      - aeneria-toto.zip
-    # - >
-    #   curl \
-    #     --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
-    #     --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\"}" \
-    #     --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
-
-
 release-on-tag:
   inherit:
     default: false
   stage: release
-  only:
-    - tags
+  # only:
+  #   - tags
   image: docker:stable
   before_script:
     - apk add --update curl tar zip && rm -rf /var/cache/apk/*
@@ -111,7 +88,7 @@ release-on-tag:
     - >
       curl \
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
-        --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\"}" \
+        --data "{ \"name\": \"V${CI_COMMIT_TAG}\", \"tag_name\": \"${CI_COMMIT_TAG}\" "assets": { "links": [{ "name": "aeneria-$CI_COMMIT_TAG.tar", "url": "https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.tar?job=${CI_JOB_NAME}", "filepath": "/" }] } }" \
         --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
   artifacts:
     paths:
