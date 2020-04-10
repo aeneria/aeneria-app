@@ -65,10 +65,10 @@ Téléchargez et décompressez `le dernière version au format *tar.gz* <https:/
     wget https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag
     tar -xvzf https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag [app_folder]
 
-2. Créer et rensiegner la base de données
+2. Créer et renseigner la base de données
 ------------------------------------------
 
-Créez une base de donnés puis adaptez les fichiers ``.env`` et ``config/packages/doctrine.yaml``
+Créez une base de données puis adaptez les fichiers ``.env`` et ``config/packages/doctrine.yaml``
 
 .. code-block:: bash
 
@@ -126,7 +126,7 @@ Lancez le commande d'installation d'aeneria :
 
     php7.3 bin/console aeneria:install
 
-4. Créer un utilisateur administrateur
+4. Créer un administrateur
 ----------------------------------------
 
 Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
@@ -136,8 +136,8 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
     php7.3 bin/console aeneria:user:add [username] [password]
     php7.3 bin/console aeneria:user:grant [username]
 
-5. Mise en place du CRON
--------------------------
+5. Mettre en place le CRON
+----------------------------
 
 Mettez en place le CRON en exécutant la commande suivante :
 
@@ -147,7 +147,7 @@ Mettez en place le CRON en exécutant la commande suivante :
     # où [user] est l'utilisateur linux qui lancera le cron
 
 
-6. Configuration du serveur web
+6. Configurer le serveur web
 --------------------------------
 
 Enfin, configurez `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
