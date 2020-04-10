@@ -20,6 +20,7 @@ stages:
   - tests
   - release
 
+# On build la CSS et le JS
 build:assets:
   inherit:
     default: false
@@ -34,6 +35,7 @@ build:assets:
     paths:
       - public/build
 
+# On descend les paquets composer
 build:composer-install:
   inherit:
     default: true
@@ -46,28 +48,31 @@ build:composer-install:
     paths:
       - vendor
 
-# test:phpunit:
-#   inherit:
-#     default: true
-#   stage: tests
-#   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
-#   script:
-#     - php bin/console aeneria:install -n
-#     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
-#     - php bin/console aeneria:user:grant admin
-#     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
-#     - php bin/phpunit --coverage-text --colors=never
+# Tests PHPUNIT
+test:phpunit:
+  inherit:
+    default: true
+  stage: tests
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  script:
+    - php bin/console aeneria:install -n
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
+    - php bin/console aeneria:user:grant admin
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
+    - php bin/phpunit --coverage-text --colors=never
 
-# test:documentation-build:
-#   inherit:
-#     default: false
-#   stage: tests
-#   image: python:3.7-alpine
-#   script:
-#     - pip install -U sphinx
-#     - cd docs
-#     - sphinx-build -b html . _build
+# On vérifie que la documentation build correctement
+test:documentation-build:
+  inherit:
+    default: false
+  stage: tests
+  image: python:3.7-alpine
+  script:
+    - pip install -U sphinx
+    - cd docs
+    - sphinx-build -b html . _build
 
+# Sur un tag sur master, on crée une release contenant un lien vers les builds
 release:on-tag:
   inherit:
     default: false
@@ -123,5 +128,6 @@ release:on-tag:
     paths:
       - aeneria-$CI_COMMIT_TAG.tar
       - aeneria-$CI_COMMIT_TAG.tar.gz
+      - aeneria-$CI_COMMIT_TAG.tar.bz2
       - aeneria-$CI_COMMIT_TAG.zip
 
