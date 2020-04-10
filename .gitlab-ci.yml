@@ -6,6 +6,7 @@ default:
     - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
     - pecl install xdebug \
       && docker-php-ext-enable xdebug
+    - curl -sS https://getcomposer.org/installer | php
 
 services:
   - mysql:5.5
@@ -41,7 +42,6 @@ build:composer-install:
     default: true
   stage: build
   script:
-    - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
   artifacts:
     expire_in: '1 hour'
