@@ -8,7 +8,7 @@ Tout d'abord pour utiliser æneria,
 * Via ce compte, vous devez activer l'option *Courbe de charge* pour pouvoir avoir accès à votre consommation horaire
 
 Installation via YunoHost
-=================================
+**************************
 
 `YunoHost <https://yunohost.org/>`_ est un projet ayant pour but de promouvoir l'autohébergement.
 Son but est de faciliter l'administration d'un serveur : `en savoir plus <https://yunohost.org/#/whatsyunohost_fr>`_
@@ -27,12 +27,13 @@ avec et c'est le cas de æneria.
 
 
 Installation à la main
-========================
+***********************
 
 æneria est une application basée sur le framework Symfony. Elle s'installe sur un serveur web disposant
 d'un PHP récent et d'un serveur de base de données MySQL.
 
-**Prérequis :**
+Prérequis
+==========
 
 * PHP 7.3 et supérieur
 * MySQL (5.5 et supérieur) / PostreSQL (9.6 et supérieur)
@@ -49,37 +50,96 @@ d'un PHP récent et d'un serveur de base de données MySQL.
     Les migrations de æneria sont uniquement générées pour MySQL, si vous utilisez un autre type de serveur, gardez à l'esprit qu'il
     faudra vérifier chaque migration avant de la lancer !
 
-**Installation :**
+Installation
+=============
 
-Télécharger `le dépot <https://gitlab.com/aeneria/aeneria>`_ :
+La dernière version d'æneria se trouve sur son dépos Gitlab sur `la page des Releases <https://gitlab.com/aeneria/aeneria-app/-/releases>`_.
 
-.. code-block:: sh
+1. Récupérer les sources
+-------------------------
 
-    git clone https://gitlab.com/aeneria/aeneria.git [app_folder]
-
-Créer un base de donnés puis adapter les fichiers ``.env`` et ``config/packages/doctrine.yaml``
-
-Installer les dépendance `Composer <https://getcomposer.org/>`_ :
+Téléchargez et décompressez `le dernière version au format *tar.gz* <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag>`_ :
 
 .. code-block:: sh
 
-    cd [app_folder]
-    php7.3 composer.phar install --no-dev
+    wget https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag
+    tar -xvzf https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag [app_folder]
 
-Lancer le script d'installation :
+2. Créer et renseigner la base de données
+------------------------------------------
+
+Créez une base de données puis adaptez les fichiers ``.env`` et ``config/packages/doctrine.yaml``
+
+.. code-block:: bash
+
+    # fichier .env
+
+    ...
+
+    ###> doctrine/doctrine-bundle ###
+    # Format described at http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url
+    # For MysSQL database use: "pgsql://[database_user]:[database_password]@127.0.0.1:5432/[database_name]
+    # For PostgreSQL database use: "mysql://[database_user]:[database_password]@127.0.0.1:3306/[database_name]
+    # For an SQLite database, use: "sqlite:///%kernel.project_dir%/var/data.db"
+    # Configure your db driver and server_version in config/packages/doctrine.yaml
+    DATABASE_URL=[VOTRE CONFIG ICI]
+    ###< doctrine/doctrine-bundle ###
+
+    ...
+
+.. code-block:: yaml
+
+    # fichier config/packages/doctrine.yaml
+
+    ...
+
+    # Renseigner ici les info de votre dbal
+    doctrine:
+        dbal:
+            # Configure these for your database server
+
+            # Mysql
+            driver: 'pdo_mysql'
+            server_version: '5.2'
+            charset: utf8mb4
+            default_table_options:
+                charset: utf8mb4
+                collate: utf8mb4_unicode_ci
+
+            # PostgreSQL
+            # driver: 'pdo_pgsql'
+            # server_version: '9.6'
+            # charset: utf8
+
+            #SQLLite
+            # driver:   pdo_sqlite
+            # charset: utf8
+
+    ...
+
+3. Générer la base de données
+-------------------------------
+
+Lancez le commande d'installation d'aeneria :
 
 .. code-block:: sh
 
     php7.3 bin/console aeneria:install
 
-Ajouter une premier utilisateur et lui donner les droits administrateur :
+4. Créer un administrateur
+----------------------------------------
+
+Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
 
 .. code-block:: sh
 
     php7.3 bin/console aeneria:user:add [username] [password]
     php7.3 bin/console aeneria:user:grant [username]
 
-Mettre en place le cron :
+5. Mettre en place le CRON
+----------------------------
+
+Mettez en place le CRON en exécutant la commande suivante :
 
 .. code-block:: sh
 
@@ -87,5 +147,9 @@ Mettre en place le cron :
     # où [user] est l'utilisateur linux qui lancera le cron
 
 
-Enfin, configurer `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
-`Apache <https://symfony.com/doc/current/setup/web_server_configuration.html>`_ comme pour une application Symfony 4 classique
+6. Configurer le serveur web
+--------------------------------
+
+Enfin, configurez `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
+`Apache <https://symfony.com/doc/current/setup/web_server_configuration.html#apache-with-php-fpm>`_ comme pour une
+application Symfony 5 classique

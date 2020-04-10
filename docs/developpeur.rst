@@ -54,7 +54,7 @@ Les assets sont gérer avec `Webpack Encore <https://symfony.com/doc/current/fro
     yarn dev --watch
 
 Générer cette Documentation
---------------------------
+-----------------------------
 
 La documentation est automatiquement générer à chaque nouveau tag à l'aide de `Read the Docs <https://readthedocs.org/>`_.
 Tout est donc basé sur `Sphinx <https://www.sphinx-doc.org/>`_ et écrit en RST.

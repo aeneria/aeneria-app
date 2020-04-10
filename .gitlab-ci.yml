@@ -1,4 +1,3 @@
-# Select image from https://hub.docker.com/_/php/
 default:
   image: php:7.3
   before_script:
@@ -7,13 +6,7 @@ default:
     - docker-php-ext-install pdo_mysql zip xml intl mbstring gd curl bcmath opcache ldap
     - pecl install xdebug \
       && docker-php-ext-enable xdebug
-
     - curl -sS https://getcomposer.org/installer | php
-    - php composer.phar install
-    - php bin/console aeneria:install -n
-    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
-    - php bin/console aeneria:user:grant admin
-    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
 
 services:
   - mysql:5.5
@@ -23,29 +16,118 @@ variables:
   MYSQL_ROOT_PASSWORD: password
   GIT_SUBMODULE_STRATEGY: recursive
 
-# Select what we should cache
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - vendor/
-
 stages:
+  - build
   - tests
+  - release
 
-php-coverage-test:
+# On build la CSS et le JS
+build:assets:
   inherit:
-      default: true
+    default: false
+  stage: build
+  image: node:10-alpine
+  script:
+    - apk add --no-cache jq python gcc g++ make
+    - yarn install
+    - yarn build
+  artifacts:
+    expire_in: '1 hour'
+    paths:
+      - public/build
+
+# On descend les paquets composer
+build:composer-install:
+  inherit:
+    default: true
+  stage: build
+  script:
+    - php composer.phar install
+  artifacts:
+    expire_in: '1 hour'
+    paths:
+      - vendor
+
+# Tests PHPUNIT
+test:phpunit:
+  inherit:
+    default: true
   stage: tests
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
+    - php bin/console aeneria:install -n
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
+    - php bin/console aeneria:user:grant admin
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
     - php bin/phpunit --coverage-text --colors=never
 
-documentation-build:
+# On vérifie que la documentation build correctement
+test:documentation-build:
   inherit:
-      default: false
+    default: false
   stage: tests
   image: python:3.7-alpine
   script:
     - pip install -U sphinx
     - cd docs
     - sphinx-build -b html . _build
+
+# Sur un tag sur master, on crée une release contenant un lien vers les builds
+release:on-tag:
+  inherit:
+    default: false
+  stage: release
+  only:
+    - tags
+  image: docker:stable
+  before_script:
+    - apk add --update curl tar zip && rm -rf /var/cache/apk/*
+  script:
+    - cd ..
+    - tar -cvf aeneria-$CI_COMMIT_TAG.tar aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.tar aeneria-app/.
+    - tar -zcvf aeneria-$CI_COMMIT_TAG.tar.gz aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.tar.gz aeneria-app/.
+    - tar -cjvf aeneria-$CI_COMMIT_TAG.tar.bz2 aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.tar.bz2 aeneria-app/.
+    - zip -r aeneria-$CI_COMMIT_TAG.zip aeneria-app/
+    - mv aeneria-$CI_COMMIT_TAG.zip aeneria-app/.
+    - >
+      curl \
+        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+        --data "{ \
+          \"name\": \"v${CI_COMMIT_TAG}\", \
+          \"tag_name\": \"${CI_COMMIT_TAG}\", \
+          \"assets\": { \
+            \"links\": [\
+              { \
+                \"name\": \"aeneria-$CI_COMMIT_TAG.tar\", \
+                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.tar?job=${CI_JOB_NAME}\", \
+                \"filepath\": \"/\" \
+              }, \
+              { \
+                \"name\": \"aeneria-$CI_COMMIT_TAG.tar.gz\", \
+                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.tar.gz?job=${CI_JOB_NAME}\", \
+                \"filepath\": \"/\" \
+              }, \
+              { \
+                \"name\": \"aeneria-$CI_COMMIT_TAG.tar.bz2\", \
+                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.tar.bz2?job=${CI_JOB_NAME}\", \
+                \"filepath\": \"/\" \
+              }, \
+              { \
+                \"name\": \"aeneria-$CI_COMMIT_TAG.zip\", \
+                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.zip?job=${CI_JOB_NAME}\", \
+                \"filepath\": \"/\" \
+              }\
+            ] \
+          } \
+        }" \
+        --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
+  artifacts:
+    paths:
+      - aeneria-$CI_COMMIT_TAG.tar
+      - aeneria-$CI_COMMIT_TAG.tar.gz
+      - aeneria-$CI_COMMIT_TAG.tar.bz2
+      - aeneria-$CI_COMMIT_TAG.zip
+
