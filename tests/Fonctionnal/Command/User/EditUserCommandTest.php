@@ -27,7 +27,7 @@ final class EditUserCommandTest extends AppTestCase
             'username' => $user->getUsername(),
             '--username' => $newUsername = 'test' . \rand(),
             '--password' => $newPassword = 'test' . \rand(),
-            '--active' => false
+            '--active' => false,
         ]);
         $this->assertEquals($commandTester->getStatusCode(), 0);
 

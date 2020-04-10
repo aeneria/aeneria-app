@@ -13,10 +13,10 @@ abstract class AbstractAppController extends AbstractController
     /** @var PlaceRepository */
     protected $placeRepository;
 
-    /**@var bool */
+    /** @var bool */
     protected $userCanSharePlace;
 
-    /**@var bool */
+    /** @var bool */
     protected $placeCanBePublic;
 
     public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, PlaceRepository $placeRepository)

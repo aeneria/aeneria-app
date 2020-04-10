@@ -4,8 +4,8 @@ namespace App\Twig;
 
 use App\Entity\User;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Twig\TwigFunction;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 final class AppExtension extends AbstractExtension
 {
@@ -54,12 +54,14 @@ final class AppExtension extends AbstractExtension
     {
         $documentationBaseUri = $this->parameters->get('aeneria.documentation');
         $version = $this->parameters->get('aeneria.version');
+
         return \sprintf("%s%s/%s", $documentationBaseUri, $version, $path);
     }
 
     public function getHelpIconLink(?string $path, ?string $title = null, ?string $class = null): string
     {
         $link = self::getDocumentation(\sprintf("%s", $path));
+
         return \sprintf(
             '<a href="%s" target="_blank" class="%s" title="%s"><i class="fas fa-question-circle"></i></a>',
             $link,
@@ -71,34 +73,35 @@ final class AppExtension extends AbstractExtension
     public function getGraphHelp(?string $graph): string
     {
         $path = \sprintf("utilisateur/graph.html#%s", $graph);
+
         return self::getHelpIconLink($path, "Comment lire ce graphique ?", "help");
     }
 
     public function getUserMaxPlaces(): ?int
     {
-        $userMaxPlaces = (int)$this->parameters->get('aeneria.user.max_places');
+        $userMaxPlaces = (int) $this->parameters->get('aeneria.user.max_places');
 
-        return $userMaxPlaces === -1 ? null : $userMaxPlaces;
+        return -1 === $userMaxPlaces ? null : $userMaxPlaces;
     }
 
     public function canUserSharePlace(): bool
     {
-        return (bool)$this->parameters->get('aeneria.user.can_share_place');
+        return (bool) $this->parameters->get('aeneria.user.can_share_place');
     }
 
     public function canUserFetchData(): bool
     {
-        return (bool)$this->parameters->get('aeneria.user.can_fetch');
+        return (bool) $this->parameters->get('aeneria.user.can_fetch');
     }
 
     public function canUserExportData(): bool
     {
-        return (bool)$this->parameters->get('aeneria.user.can_export');
+        return (bool) $this->parameters->get('aeneria.user.can_export');
     }
 
     public function canPlaceBePublic(): bool
     {
-        return (bool)$this->parameters->get('aeneria.place_can_be_public');
+        return (bool) $this->parameters->get('aeneria.place_can_be_public');
     }
 
     public function canUserAddPlace(User $user): bool

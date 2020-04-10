@@ -55,8 +55,9 @@ class AddUserCommand extends Command
 
         $this->io = new SymfonyStyle($input, $output);
 
-        if ( $this->userRepository->findOneByUsername($input->getArgument('username'))) {
+        if ($this->userRepository->findOneByUsername($input->getArgument('username'))) {
             $this->io->error("User with this username already exists !");
+
             return 1;
         }
 

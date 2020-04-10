@@ -27,7 +27,6 @@ final class FeedRepositoryTest extends AppTestCase
         $entityManager = $this->getEntityManager();
         $feedRepository = $this->getFeedRepository();
 
-
         $feed = $this->createPersistedFeed();
 
         $entityManager->flush();
@@ -54,7 +53,7 @@ final class FeedRepositoryTest extends AppTestCase
 
         $feeds = $feedDataRepository->findByFeed($feed);
 
-        self::assertTrue(\count($feeds) === 8);
+        self::assertTrue(8 === \count($feeds));
     }
 
     public function testfindAllActive()

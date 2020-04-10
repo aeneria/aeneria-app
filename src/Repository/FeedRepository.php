@@ -33,8 +33,8 @@ class FeedRepository extends ServiceEntityRepository
         // and create it if not.
         foreach (Feed::getDataTypeFor($feed->getFeedType()) as $label) {
             $feedData = $feedDataRepository->findOneBy([
-                'feed' =>  $feed,
-                'dataType' => $label
+                'feed' => $feed,
+                'dataType' => $label,
             ]);
 
             if (!$feedData) {
@@ -117,7 +117,7 @@ class FeedRepository extends ServiceEntityRepository
                 $lastUpToDate = $feedDataLastUpToDate;
             }
 
-            $lastUpToDate = max($lastUpToDate, $feedDataLastUpToDate);
+            $lastUpToDate = \max($lastUpToDate, $feedDataLastUpToDate);
         }
 
         // If we have no data, we start with yesterday

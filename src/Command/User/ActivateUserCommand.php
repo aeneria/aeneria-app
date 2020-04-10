@@ -51,8 +51,9 @@ class ActivateUserCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
         $this->defaultInput = $input;
 
-        if ( !$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
+        if (!$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
             $this->io->error("User can't be found.");
+
             return 1;
         }
 

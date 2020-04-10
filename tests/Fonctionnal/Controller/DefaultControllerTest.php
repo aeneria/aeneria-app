@@ -6,7 +6,6 @@ use App\Tests\AppWebTestCase;
 
 final class DefaultControllerTest extends AppWebTestCase
 {
-
     public function urlsProvider()
     {
         return [

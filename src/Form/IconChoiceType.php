@@ -21,7 +21,7 @@ class IconChoiceType extends AbstractType
     {
         $resolver->setDefaults([
             'attr' => [
-                'class' => "bootstrap-multiselect-fa"
+                'class' => "bootstrap-multiselect-fa",
             ],
             'choices' => $this->getFontAwesomeIconChoices(),
         ]);

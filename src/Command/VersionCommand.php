@@ -28,7 +28,8 @@ class VersionCommand extends Command
     {
         $this
             ->setName('aeneria:version')
-            ->setDescription('Get aeneria version.');
+            ->setDescription('Get aeneria version.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

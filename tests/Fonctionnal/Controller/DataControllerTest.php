@@ -11,7 +11,7 @@ final class DataControllerTest extends AppWebTestCase
         $user = $this->login('user-test');
         $places = $user->getPlaces();
 
-        foreach(['week', 'year_h', 'year_v'] as $repartitionType) {
+        foreach (['week', 'year_h', 'year_v'] as $repartitionType) {
             $this->client->request('GET', \sprintf(
                 "/data/%s/repartition/conso_elec/%s/%s/%s",
                 $places[0]->getId(),

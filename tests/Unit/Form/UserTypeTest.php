@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Form\Type;
 
 use App\Entity\User;
@@ -45,7 +46,7 @@ class UserTypeTest extends AppTypeTestCase
 
         $objectToCompare = $this->createUser();
 
-        $form = $this->factory->create(UserType::class, null,['data_class' => null]);
+        $form = $this->factory->create(UserType::class, null, ['data_class' => null]);
 
         // submit the data to the form directly
         $form->submit($formData);
@@ -61,7 +62,7 @@ class UserTypeTest extends AppTypeTestCase
         $view = $form->createView();
         $children = $view->children;
 
-        foreach (array_keys($formData) as $key) {
+        foreach (\array_keys($formData) as $key) {
             $this->assertArrayHasKey($key, $children);
         }
     }

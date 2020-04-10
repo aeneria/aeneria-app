@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\DataValue;
@@ -11,14 +12,14 @@ use App\Entity\FeedData;
  * @warning Only use for development purpose
  * @see App\Command\Dev\GenerateFakeDataCommand
  */
-class FakeDataProvider extends AbstractFeedDataProvider {
-
+class FakeDataProvider extends AbstractFeedDataProvider
+{
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
                 switch ($feed->getFeedType()) {
-                    case Feed::FEED_TYPE_METEO :
+                    case Feed::FEED_TYPE_METEO:
                         $this->generateMeteoData($date, $feed);
                         break;
                     case Feed::FEED_TYPE_ELECTRICITY:
@@ -79,10 +80,9 @@ class FakeDataProvider extends AbstractFeedDataProvider {
                 $feedData,
                 $date,
                 DataValue::FREQUENCY['DAY'],
-                \rand($min * 10, $max * 10)/10
+                \rand($min * 10, $max * 10) / 10
             );
             $this->entityManager->flush();
-
         }
 
         $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
@@ -102,26 +102,26 @@ class FakeDataProvider extends AbstractFeedDataProvider {
         $feedData = $this->feedDataRepository->findOneByFeed($feed);
 
         // 0 -> 5 kWh
-        for ($hour = 0; $hour < 24; $hour++) {
-            $value = \rand(0, 50)/10;
+        for ($hour = 0; $hour < 24; ++$hour) {
+            $value = \rand(0, 50) / 10;
 
             // Try to generate nice value for 24*7 graph
-            switch((int)$date->format('N')) {
+            switch ((int) $date->format('N')) {
                 case 6:
                 case 7:
                     // Saturday and sunday
-                    if (\in_array($hour, [9, 10 ,11 ,12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])) {
-                        $value = \rand(0, 50)/10;
+                    if (\in_array($hour, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])) {
+                        $value = \rand(0, 50) / 10;
                     } else {
-                        $value = \rand(0, 50)/100;
+                        $value = \rand(0, 50) / 100;
                     }
                 break;
                 default:
                     // weekday
                     if (\in_array($hour, [7, 8, 9, 17, 18, 19, 20, 21, 22, 23])) {
-                        $value = \rand(0, 50)/10;
+                        $value = \rand(0, 50) / 10;
                     } else {
-                        $value = \rand(0, 50)/100;
+                        $value = \rand(0, 50) / 100;
                     }
             }
 

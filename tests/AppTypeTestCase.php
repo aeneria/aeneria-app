@@ -6,7 +6,6 @@ namespace App\Tests;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\Test\TypeTestCase;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class AppTypeTestCase extends TypeTestCase
 {

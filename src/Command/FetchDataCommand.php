@@ -2,13 +2,13 @@
 
 namespace App\Command;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Get newly data from all feeds
@@ -65,8 +65,7 @@ class FetchDataCommand extends Command
 
             foreach ($feedDataProviderTypes as $feedDataProviderType) {
                 // We fetch all Feeds data.
-                if ($feeds = $this->feedRepository->findAllActive($feedDataProviderType))
-                {
+                if ($feeds = $this->feedRepository->findAllActive($feedDataProviderType)) {
                     $this->fetchFor($input, $feeds);
                 }
             }
@@ -77,7 +76,7 @@ class FetchDataCommand extends Command
 
     private function fetchFor(InputInterface $input, array $feeds)
     {
-        if($date = $input->getOption('date')) {
+        if ($date = $input->getOption('date')) {
             // If a date is given, we update only for this date.
 
             $date = new \DateTimeImmutable($date);

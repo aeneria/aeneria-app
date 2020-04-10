@@ -2,9 +2,8 @@
 
 namespace App\Services\FeedDataProvider;
 
-
-use App\Entity\Feed;
 use App\Entity\DataValue;
+use App\Entity\Feed;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
@@ -13,8 +12,8 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Meteo France API to get SYNOP Observations.
  */
-class MeteoFranceDataProvider extends AbstractFeedDataProvider {
-
+class MeteoFranceDataProvider extends AbstractFeedDataProvider
+{
     /**
      * Different usefull URIs.
      */
@@ -56,7 +55,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getParametersName(Feed $feed): array
     {
@@ -77,34 +76,34 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
         // Reads csv files containing stations info.
         $stationsData = \file(\sprintf("%s/public%s", $this->projectDir, self::SYNOP_POSTES));
 
-        foreach($stationsData as $row) {
-            $row = \str_getcsv ($row, ';');
+        foreach ($stationsData as $row) {
+            $row = \str_getcsv($row, ';');
 
-            if(\count($header) == 0) {
+            if (0 == \count($header)) {
                 $header = $row;
             } else {
                 $row = \array_combine($header, $row);
 
                 // We only keep ID and name for each station.
-                $stations[\ucwords(\strtolower($row['Nom']))] = (int)$row['ID'];
+                $stations[\ucwords(\strtolower($row['Nom']))] = (int) $row['ID'];
             }
         }
 
         // Sort stations.
-        \ksort($stations,SORT_STRING);
+        \ksort($stations, \SORT_STRING);
 
         return $stations;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         $synopData = $this->fetchSynopData($date);
 
         foreach ($feeds as $feed) {
-            if ( (!$feed instanceof Feed) || $feed->getFeedDataProviderType() !== 'METEO_FRANCE') {
+            if ((!$feed instanceof Feed) || 'METEO_FRANCE' !== $feed->getFeedDataProviderType()) {
                 throw new \InvalidArgumentException("Should be an array of MeteoFrance Feeds overhere !");
             }
 
@@ -132,16 +131,16 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
 
             // We get the raw CSV.
             $response = $this->httpClient->request('GET', $uri, $clientOption);
-            if ($response->getStatusCode() == 200) {
+            if (200 == $response->getStatusCode()) {
                 $partialSynopData = $response->getContent();
 
                 // We parse it.
                 $rows = \array_filter(\preg_split('/\R/', $partialSynopData));
                 $header = [];
 
-                foreach($rows as $row) {
-                    $row = \str_getcsv ($row, ';');
-                    if(\count($header) == 0) {
+                foreach ($rows as $row) {
+                    $row = \str_getcsv($row, ';');
+                    if (0 == \count($header)) {
                         // If the first line doesn't start with the right data, then we have an error in the response
                         if ($row[0] !== self::SYNOP_DATA_NAME['STATION_ID']) {
                             break;
@@ -173,7 +172,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
             // Foreach feedData store the value for yesterday.
             foreach ($feedDataList as $feedData) {
                 $dataType = $feedData->getDataType();
-                if ($fastenData[$dataType] !== NULL) {
+                if (null !== $fastenData[$dataType]) {
                     $this->dataValueRepository->updateOrCreateValue(
                         $feedData,
                         $date,
@@ -205,14 +204,14 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
     private function fastenRawData($rawData)
     {
         $fastenData = [
-            'TEMPERATURE' => NULL,
-            'TEMPERATURE_MAX' => NULL,
-            'TEMPERATURE_MIN' => NULL,
-            'DJU' => NULL,
-            'HUMIDITY' => NULL,
-            'NEBULOSITY' => NULL,
-            'PRESSURE' => NULL,
-            'RAIN' => NULL,
+            'TEMPERATURE' => null,
+            'TEMPERATURE_MAX' => null,
+            'TEMPERATURE_MIN' => null,
+            'DJU' => null,
+            'HUMIDITY' => null,
+            'NEBULOSITY' => null,
+            'PRESSURE' => null,
+            'RAIN' => null,
         ];
 
         $nbNebulosity = 0;
@@ -223,34 +222,33 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
 
         foreach ($rawData as $hourData) {
             if (isset($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])
-                && \is_numeric($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])){
+                && \is_numeric($hourData[self::SYNOP_DATA_NAME['NEBULOSITY']])) {
                 $fastenData['NEBULOSITY'] += $hourData[self::SYNOP_DATA_NAME['NEBULOSITY']];
-                $nbNebulosity++;
+                ++$nbNebulosity;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['PRESSURE']])
-            && \is_numeric($hourData[self::SYNOP_DATA_NAME['PRESSURE']])){
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['PRESSURE']])) {
                 $fastenData['PRESSURE'] += $hourData[self::SYNOP_DATA_NAME['PRESSURE']];
-                $nbPressure++;
+                ++$nbPressure;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])
-            && \is_numeric($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])){
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['HUMIDITY']])) {
                 $fastenData['HUMIDITY'] += $hourData[self::SYNOP_DATA_NAME['HUMIDITY']];
-                $nbHumidity++;
+                ++$nbHumidity;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['RAIN']])
-            && \is_numeric($hourData[self::SYNOP_DATA_NAME['RAIN']])){
+            && \is_numeric($hourData[self::SYNOP_DATA_NAME['RAIN']])) {
                 if ($hourData[self::SYNOP_DATA_NAME['RAIN']] >= 0) {
                     $fastenData['RAIN'] += $hourData[self::SYNOP_DATA_NAME['RAIN']];
                 }
-                $nbRain++;
+                ++$nbRain;
             }
             if (isset($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])
             && \is_numeric($hourData[self::SYNOP_DATA_NAME['TEMPERATURE']])) {
-
                 // Temp avg.
                 $curTemp = $hourData[self::SYNOP_DATA_NAME['TEMPERATURE']] - self::KELVIN_TO_CELSIUS;
                 $fastenData['TEMPERATURE'] += $curTemp;
-                $nbTemperature++;
+                ++$nbTemperature;
 
                 // Temp max.
                 if (empty($fastenData['TEMPERATURE_MAX'])) {
@@ -304,16 +302,15 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider {
      */
     public static function calculateDju($tempMin, $tempMax)
     {
-        $tempAvg = ($tempMax + $tempMin)/2;
+        $tempAvg = ($tempMax + $tempMin) / 2;
         if (self::BASE_DJU > $tempMax) {
             return self::BASE_DJU - $tempAvg;
-        }
-        elseif (self::BASE_DJU <= $tempMin) {
+        } elseif (self::BASE_DJU <= $tempMin) {
             return 0;
-        }
-        else {
+        } else {
             // If $tempMin == $tempMax then we have 0.42 * infinite ≈ 0
             $extra = $tempMax !== $tempMin ? 0.42 * (self::BASE_DJU - $tempMin) / ($tempMax - $tempMin) : 0;
+
             return (self::BASE_DJU - $tempMin) * (0.08 + $extra);
         }
     }

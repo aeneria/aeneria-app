@@ -140,12 +140,22 @@ class DataValue
      */
     public function updateDateRelatedData(): self
     {
-        if ($this->frequency <= DataValue::FREQUENCY['HOUR']) $this->setHour($this->date->format('H'));
-        $weekDay = $this->date->format('w') == 0 ? 6 : $this->date->format('w') - 1;
-        if ($this->frequency <= DataValue::FREQUENCY['DAY']) $this->setWeekDay($weekDay);
-        if ($this->frequency <= DataValue::FREQUENCY['WEEK']) $this->setWeek($this->date->format('W'));
-        if ($this->frequency <= DataValue::FREQUENCY['MONTH']) $this->setMonth($this->date->format('m'));
-        if ($this->frequency <= DataValue::FREQUENCY['YEAR']) $this->setYear($this->date->format('Y'));
+        if ($this->frequency <= DataValue::FREQUENCY['HOUR']) {
+            $this->setHour($this->date->format('H'));
+        }
+        $weekDay = 0 == $this->date->format('w') ? 6 : $this->date->format('w') - 1;
+        if ($this->frequency <= DataValue::FREQUENCY['DAY']) {
+            $this->setWeekDay($weekDay);
+        }
+        if ($this->frequency <= DataValue::FREQUENCY['WEEK']) {
+            $this->setWeek($this->date->format('W'));
+        }
+        if ($this->frequency <= DataValue::FREQUENCY['MONTH']) {
+            $this->setMonth($this->date->format('m'));
+        }
+        if ($this->frequency <= DataValue::FREQUENCY['YEAR']) {
+            $this->setYear($this->date->format('Y'));
+        }
 
         return $this;
     }
@@ -197,7 +207,7 @@ class DataValue
     /**
      * Set week
      *
-     * @param integer $week
+     * @param int $week
      */
     public function setWeek(int $week): self
     {
@@ -217,7 +227,7 @@ class DataValue
     /**
      * Set month
      *
-     * @param integer $month
+     * @param int $month
      */
     public function setMonth(int $month): self
     {
@@ -302,21 +312,21 @@ class DataValue
 
         // Update date according to frequency.
         switch ($frequency) {
-            case DataValue::FREQUENCY['HOUR'] :
+            case DataValue::FREQUENCY['HOUR']:
                 $date = new \DateTimeImmutable($date->format("Y-m-d H:00:00"));
                 break;
-            case DataValue::FREQUENCY['DAY'] :
+            case DataValue::FREQUENCY['DAY']:
                 $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
                 break;
-            case DataValue::FREQUENCY['WEEK'] :
-                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+            case DataValue::FREQUENCY['WEEK']:
+                $w = 0 == $date->format('w') ? 6 : $date->format('w') - 1;
                 $date->sub(new \DateInterval('P' . $w . 'D'));
                 $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
                 break;
-            case DataValue::FREQUENCY['MONTH'] :
+            case DataValue::FREQUENCY['MONTH']:
                 $date = new \DateTimeImmutable($date->format("Y-m-01 00:00:00"));
                 break;
-            case DataValue::FREQUENCY['YEAR'] :
+            case DataValue::FREQUENCY['YEAR']:
                 $date = new \DateTimeImmutable($date->format("Y-01-01 00:00:00"));
                 break;
         }
@@ -362,7 +372,7 @@ class DataValue
                 break;
             case DataValue::FREQUENCY['WEEK']:
                 $firstDay = \DateTime::createFromImmutable($dateToAdapt);
-                $w = $date->format('w') == 0 ? 6 : $date->format('w') - 1;
+                $w = 0 == $date->format('w') ? 6 : $date->format('w') - 1;
                 $firstDay->sub(new \DateInterval('P' . $w . 'D'));
 
                 $lastDay = clone $firstDay;

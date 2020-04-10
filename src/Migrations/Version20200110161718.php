@@ -13,15 +13,15 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200110161718 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('UPDATE feed SET feed_data_provider_type = "' . Feed::FEED_DATA_PROVIDER_LINKY . '" WHERE feed_type="LINKY";');
         $this->addSql('UPDATE feed SET feed_data_provider_type = "' . Feed::FEED_DATA_PROVIDER_METEO_FRANCE . '" WHERE feed_type="METEO_FRANCE";');
@@ -30,7 +30,7 @@ final class Version20200110161718 extends AbstractMigration
         $this->addSql('UPDATE feed SET feed_type = "' . Feed::FEED_TYPE_METEO . '" WHERE feed_type="METEO_FRANCE";');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException("Always move forward.");
     }

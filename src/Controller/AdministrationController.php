@@ -8,12 +8,12 @@ use App\Repository\UserRepository;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -29,7 +29,7 @@ class AdministrationController extends AbstractController
         $users = $userRepository->findAll();
 
         return $this->render('administration/users_list.html.twig', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -45,12 +45,12 @@ class AdministrationController extends AbstractController
                 'data_class' => null,
                 'constraints' => [
                     new AtLeastOneAdmin(),
-                    new UniqueUsername()
+                    new UniqueUsername(),
                 ],
             ])
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $userForm->handleRequest($request);
             if ($userForm->isValid()) {
                 $entityManager->persist($userForm->getData());
@@ -64,7 +64,7 @@ class AdministrationController extends AbstractController
 
         return $this->render('administration/users_form.html.twig', [
             'title' => 'Ajouter un utilisateur',
-            'user_form' => $userForm->createView()
+            'user_form' => $userForm->createView(),
         ]);
     }
 
@@ -89,22 +89,22 @@ class AdministrationController extends AbstractController
         $userForm = $this->createForm(UserType::class, $user, [
             'data_class' => null,
             'constraints' => [
-                new Callback([ 'callback' => static function ($data, ExecutionContextInterface $context) use ($userRepository) {
-                        if (!$data->isActive() || !$data->isAdmin()) {
-                            if ($userRepository->isLastAdmin($data->getUsername())) {
-                                $context
+                new Callback(['callback' => static function ($data, ExecutionContextInterface $context) use ($userRepository) {
+                    if (!$data->isActive() || !$data->isAdmin()) {
+                        if ($userRepository->isLastAdmin($data->getUsername())) {
+                            $context
                                     ->buildViolation("Vous ne pouvez pas désactiver cet utilisateur, c'est le dernier administrateur !")
                                     ->addViolation()
                                 ;
-                            }
                         }
                     }
+                },
                 ]),
                 new UniqueUsername(),
             ],
         ]);
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $userForm->handleRequest($request);
             if ($userForm->isValid()) {
                 $entityManager->persist($userForm->getData());
@@ -118,7 +118,7 @@ class AdministrationController extends AbstractController
 
         return $this->render('administration/users_form.html.twig', [
             'title' => 'Mettre à jour un utilisateur',
-            'user_form' => $userForm->createView()
+            'user_form' => $userForm->createView(),
         ]);
     }
 
@@ -159,11 +159,12 @@ class AdministrationController extends AbstractController
             ->handleRequest($request)
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             if ($form->isValid()) {
                 $user->setActive(false);
                 $entityManager->flush();
                 $this->addFlash('success', 'L\'utilisateur a bien été désactivé !');
+
                 return $this->redirectToRoute('admin.user.list');
             }
         }
@@ -171,7 +172,7 @@ class AdministrationController extends AbstractController
         return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Désactiver un utilisateur',
             'form' => $form->createView(),
-            'cancel' => 'admin.user.list'
+            'cancel' => 'admin.user.list',
         ]);
     }
 
@@ -214,10 +215,11 @@ class AdministrationController extends AbstractController
             ->handleRequest($request)
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             if ($form->isValid()) {
                 $userRepository->purge($user);
                 $this->addFlash('success', 'L\'utilisateur a bien été supprimé !');
+
                 return $this->redirectToRoute('admin.user.list');
             }
         }
@@ -225,7 +227,7 @@ class AdministrationController extends AbstractController
         return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Supprimer un utilisateur',
             'form' => $form->createView(),
-            'cancel' => 'admin.user.list'
+            'cancel' => 'admin.user.list',
         ]);
     }
 
@@ -240,11 +242,11 @@ class AdministrationController extends AbstractController
 
         $latestCTime = 0;
         $latestLogfile = '';
-        if ($dirHandle = \dir($logDir )) {
-            while (($entry = $dirHandle->read()) !== false) {
+        if ($dirHandle = \dir($logDir)) {
+            while (false !== ($entry = $dirHandle->read())) {
                 $filepath = "{$logDir}/{$entry}";
-                if (is_file($filepath) && filectime($filepath) > $latestCTime) {
-                    $latestCTime = filectime($filepath);
+                if (\is_file($filepath) && \filectime($filepath) > $latestCTime) {
+                    $latestCTime = \filectime($filepath);
                     $latestLogfile = $entry;
                 }
             }
@@ -252,8 +254,8 @@ class AdministrationController extends AbstractController
 
         return $this->render('administration/log.html.twig', [
             'title' => 'Supprimer un utilisateur',
-            'logs' => \file("{$logDir}/{$latestLogfile}", FILE_IGNORE_NEW_LINES),//\file_get_contents("{$logDir}/{$latestLogfile}") ?? false,
-            'cancel' => 'admin.user.list'
+            'logs' => \file("{$logDir}/{$latestLogfile}", \FILE_IGNORE_NEW_LINES), //\file_get_contents("{$logDir}/{$latestLogfile}") ?? false,
+            'cancel' => 'admin.user.list',
         ]);
     }
 }

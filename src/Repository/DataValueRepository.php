@@ -150,9 +150,11 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder->select('AVG(d.value) AS value');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
         $queryBuilder->addGroupBy('d.feedData');
+
         return $queryBuilder
             ->getQuery()
-            ->getScalarResult();
+            ->getScalarResult()
+        ;
     }
 
     /**
@@ -171,9 +173,11 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder->select('MIN(d.value) AS value, d.date');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
         $queryBuilder->addGroupBy('d.feedData');
+
         return $queryBuilder
             ->getQuery()
-            ->getScalarResult();
+            ->getScalarResult()
+        ;
     }
 
     /**
@@ -192,9 +196,11 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder->select('MAX(d.value) AS value, d.date');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
         $queryBuilder->addGroupBy('d.feedData');
+
         return $queryBuilder
             ->getQuery()
-            ->getScalarResult();
+            ->getScalarResult()
+        ;
     }
 
     /**
@@ -203,8 +209,8 @@ class DataValueRepository extends ServiceEntityRepository
      * @param \DateTime $startDate
      * @param \DateTime $endDate
      * @param FeedData $feedData
-     * @param String $frequency
-     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     * @param string $frequency
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|null
      */
     public function getSumValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency)
     {
@@ -217,7 +223,8 @@ class DataValueRepository extends ServiceEntityRepository
 
         return $queryBuilder
             ->getQuery()
-            ->getScalarResult();
+            ->getScalarResult()
+        ;
     }
 
     /**
@@ -227,8 +234,8 @@ class DataValueRepository extends ServiceEntityRepository
      * @param \DateTime $endDate
      * @param FeedData $feedDataX
      * @param FeedData $feedDataY
-     * @param String $frequency
-     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     * @param string $frequency
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|null
      */
     public function getXY(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedDataX, FeedData $feedDataY, $frequency)
     {
@@ -242,7 +249,7 @@ class DataValueRepository extends ServiceEntityRepository
             ->andWhere('dx.date BETWEEN :start AND :end')
             ->andWhere('dy.date BETWEEN :start AND :end')
             ->setParameter('start', $startDate)
-            ->setParameter('end',   $endDate)
+            ->setParameter('end', $endDate)
             // Add condition on feedData
             ->andWhere('dx.feedData = :feedDataX')
             ->setParameter('feedDataX', $feedDataX->getId())
@@ -255,20 +262,22 @@ class DataValueRepository extends ServiceEntityRepository
             ->addGroupBy('dx.value')
             ->addGroupBy('dy.value')
             ->addGroupBy('dx.date')
-            ->orderBy('dx.date', 'asc');
+            ->orderBy('dx.date', 'asc')
+        ;
 
         return $queryBuilder
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
-    * Get number of item inferior than value
-    *
-    * @param \DateTime $startDate
-    * @param \DateTime $endDate
-    * @param string $frequency
-    */
+     * Get number of item inferior than value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param string $frequency
+     */
     public function getNumberInfValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency, $value)
     {
         // Create the query builder
@@ -282,7 +291,8 @@ class DataValueRepository extends ServiceEntityRepository
 
         return $queryBuilder
             ->getQuery()
-            ->getScalarResult();
+            ->getScalarResult()
+        ;
     }
 
     /**
@@ -290,7 +300,7 @@ class DataValueRepository extends ServiceEntityRepository
      *
      * @param FeedData $feedData
      * @param string $frequency
-     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|null
      */
     public function getLastValue(FeedData $feedData, $frequency)
     {
@@ -324,7 +334,8 @@ class DataValueRepository extends ServiceEntityRepository
         return $queryBuilder
             ->addGroupBy('d.id')
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -346,9 +357,9 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder->addGroupBy('d.' . $axeY);
 
         // If this is a year repartition, we also group by year.
-        if (in_array($repartitionType, [DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION])) {
-          $queryBuilder->addSelect('d.year AS year');
-          $queryBuilder->addGroupBy('d.year');
+        if (\in_array($repartitionType, [DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION])) {
+            $queryBuilder->addSelect('d.year AS year');
+            $queryBuilder->addGroupBy('d.year');
         }
 
         return $queryBuilder
@@ -377,7 +388,8 @@ class DataValueRepository extends ServiceEntityRepository
 
         return $queryBuilder
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -390,7 +402,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param string $frequency
      * @param QueryBuilder $queryBuilder
-    */
+     */
     public function betweenDateWithFeedDataAndFrequency(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
     {
         $startDate = DataValue::adaptToFrequency($startDate, $frequency);
@@ -398,7 +410,7 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder
             ->andWhere('d.date BETWEEN :start AND :end')
             ->setParameter('start', $startDate)
-            ->setParameter('end',   $endDate)
+            ->setParameter('end', $endDate)
             // Add condition on feedData
             ->andWhere('d.feedData = :feedData')
             ->setParameter('feedData', $feedData->getId())
@@ -411,7 +423,7 @@ class DataValueRepository extends ServiceEntityRepository
     /**
      * Get date interval of data.
      *
-     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|NULL
+     * @return array|mixed|\Doctrine\DBAL\Driver\Statement|null
      */
     public function getPeriodDataAmplitude(Place $place)
     {

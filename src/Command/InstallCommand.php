@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -9,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Doctrine\ORM\EntityManagerInterface;
 
 /***
  * Inspired by Wallabag install command.
@@ -43,7 +43,8 @@ class InstallCommand extends Command
             ->setName('aeneria:install')
             ->setDescription('aeneria installer.')
             ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'Linux user who will run aeneria cron')
-            ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database');
+            ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,7 +59,8 @@ class InstallCommand extends Command
             ->checkRequirements()
             ->setupDatabase()
             ->setupMigration()
-            ->clearCache();
+            ->clearCache()
+        ;
 
         $this->io->success('aeneria has been successfully installed.');
 
@@ -105,7 +107,7 @@ class InstallCommand extends Command
             $version = $conn->query('select version()')->fetchColumn();
             $minimalVersion = '5.5.4';
 
-            if (false === version_compare($version, $minimalVersion, '>')) {
+            if (false === \version_compare($version, $minimalVersion, '>')) {
                 $fulfilled = false;
                 $status = '<error>ERROR!</error>';
                 $help = 'Your MySQL version (' . $version . ') is too old, consider upgrading (' . $minimalVersion . '+).';
@@ -117,9 +119,9 @@ class InstallCommand extends Command
             // return version should be like "PostgreSQL 9.5.4 on x86_64-apple-darwin15.6.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.38), 64-bit"
             $version = $doctrineManager->getConnection()->query('SELECT version();')->fetchColumn();
 
-            preg_match('/PostgreSQL ([0-9\.]+)/i', $version, $matches);
+            \preg_match('/PostgreSQL ([0-9\.]+)/i', $version, $matches);
 
-            if (isset($matches[1]) & version_compare($matches[1], '9.6.0', '<')) {
+            if (isset($matches[1]) & \version_compare($matches[1], '9.6.0', '<')) {
                 $fulfilled = false;
                 $status = '<error>ERROR!</error>';
                 $help = 'PostgreSQL should be greater than 9.1 (actual version: ' . $matches[1] . ')';
@@ -150,7 +152,8 @@ class InstallCommand extends Command
             $this
                 ->runCommand('doctrine:database:drop', ['--force' => true])
                 ->runCommand('doctrine:database:create')
-                ->runCommand('doctrine:schema:create');
+                ->runCommand('doctrine:schema:create')
+            ;
 
             $this->io->newLine();
 
@@ -162,7 +165,8 @@ class InstallCommand extends Command
 
             $this
                 ->runCommand('doctrine:database:create')
-                ->runCommand('doctrine:schema:create');
+                ->runCommand('doctrine:schema:create')
+            ;
 
             $this->io->newLine();
 
@@ -175,20 +179,20 @@ class InstallCommand extends Command
             $this
                 ->runCommand('doctrine:database:drop', ['--force' => true])
                 ->runCommand('doctrine:database:create')
-                ->runCommand('doctrine:schema:create');
-
+                ->runCommand('doctrine:schema:create')
+            ;
         } elseif ($this->isSchemaPresent()) {
             if ($this->io->confirm('Seems like your database contains schema. Do you want to reset it?', false)) {
                 $this->io->text('Dropping schema and creating schema...');
 
                 $this
                     ->runCommand('doctrine:schema:drop', ['--force' => true])
-                    ->runCommand('doctrine:schema:create');
+                    ->runCommand('doctrine:schema:create')
+                ;
             }
         } else {
             $this->io->text('Creating schema...');
             $this->runCommand('doctrine:schema:create');
-
         }
 
         $this->io->newLine();
@@ -222,7 +226,7 @@ class InstallCommand extends Command
      */
     protected function runCommand($command, $parameters = [])
     {
-        $parameters = array_merge(
+        $parameters = \array_merge(
             ['command' => $command],
             $parameters,
             [
@@ -232,7 +236,7 @@ class InstallCommand extends Command
             );
 
         if ($this->defaultInput->getOption('no-interaction')) {
-            $parameters = array_merge($parameters, ['--no-interaction' => true]);
+            $parameters = \array_merge($parameters, ['--no-interaction' => true]);
         }
 
         $this->getApplication()->setAutoExit(false);
@@ -269,12 +273,12 @@ class InstallCommand extends Command
             $schemaManager = $connection->getSchemaManager();
         } catch (\Exception $exception) {
             // mysql & sqlite
-            if (false !== strpos($exception->getMessage(), sprintf("Unknown database '%s'", $databaseName))) {
+            if (false !== \strpos($exception->getMessage(), \sprintf("Unknown database '%s'", $databaseName))) {
                 return false;
             }
 
             // pgsql
-            if (false !== strpos($exception->getMessage(), sprintf('database "%s" does not exist', $databaseName))) {
+            if (false !== \strpos($exception->getMessage(), \sprintf('database "%s" does not exist', $databaseName))) {
                 return false;
             }
 

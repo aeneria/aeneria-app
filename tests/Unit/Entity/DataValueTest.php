@@ -22,11 +22,11 @@ final class DataValueTest extends AppTestCase
         self::assertSame($dataValue->getFeedData(), $feedData);
         self::assertSame($dataValue->getFrequency(), DataValue::FREQUENCY['HOUR']);
         self::assertSame($dataValue->getDate(), $date);
-        self::assertSame($dataValue->getHour(), (int)$date->format('H'));
-        self::assertSame($dataValue->getWeekDay(), (int)($date->format('w') == 0 ? 6 : $date->format('w') - 1));
-        self::assertSame($dataValue->getWeek(), (int)$date->format('W'));
-        self::assertSame($dataValue->getMonth(), (int)$date->format('m'));
-        self::assertSame($dataValue->getYear(), (int)$date->format('Y'));
+        self::assertSame($dataValue->getHour(), (int) $date->format('H'));
+        self::assertSame($dataValue->getWeekDay(), (int) (0 == $date->format('w') ? 6 : $date->format('w') - 1));
+        self::assertSame($dataValue->getWeek(), (int) $date->format('W'));
+        self::assertSame($dataValue->getMonth(), (int) $date->format('m'));
+        self::assertSame($dataValue->getYear(), (int) $date->format('Y'));
     }
 
     public function testAdaptToFrequency()

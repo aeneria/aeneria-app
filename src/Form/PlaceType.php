@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Place;
-use App\Form\LinkyFeedType;
-use App\Form\MeteoFranceFeedType;
 use App\Repository\UserRepository;
 use App\Validator\Constraints\LogsToEnedis;
 use Symfony\Component\Form\AbstractType;
@@ -32,7 +30,7 @@ class PlaceType extends AbstractType
                 'label' => 'Nom du compteur',
             ])
             ->add('icon', IconChoiceType::class, [
-                'label' => 'Icone'
+                'label' => 'Icone',
             ])
         ;
 
@@ -40,7 +38,7 @@ class PlaceType extends AbstractType
             $builder->add('public', CheckboxType::class, [
                 'label' => 'Public',
                 'help' => 'Un compteur public est visible par tous les utilisateurs de æneria.',
-                'required' => false
+                'required' => false,
             ]);
         }
 

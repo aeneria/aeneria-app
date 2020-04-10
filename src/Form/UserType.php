@@ -32,17 +32,17 @@ class UserType extends AbstractType
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
-                'always_empty' => FALSE,
-                'required' => !$data ?? FALSE
+                'always_empty' => false,
+                'required' => !$data ?? false,
             ])
             ->add('is_admin', CheckboxType::class, [
                 'label' => 'L\'utilisateur est Administrateur',
                 'help' => 'S\'il est administrateur, il pourra ajouter/modifier/supprimer les autres utilisateurs',
-                'required' => FALSE
+                'required' => false,
             ])
             ->add('is_active', CheckboxType::class, [
                 'label' => 'L\'utilisateur est actif',
-                'required' => FALSE,
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',
@@ -82,6 +82,5 @@ class UserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
     }
 }

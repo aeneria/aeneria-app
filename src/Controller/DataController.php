@@ -45,8 +45,8 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $repartitionType = strtoupper($repartitionType);
-        $dataType = strtoupper($dataType);
+        $repartitionType = \strtoupper($repartitionType);
+        $dataType = \strtoupper($dataType);
         $start = new \DateTimeImmutable($start);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -59,12 +59,13 @@ class DataController extends AbstractAppController
         // Build data object.
         $data = $this->buildRepartitionDataObject($axe, $values, $repartitionType);
 
-        $result =(Object)[
+        $result = (object) [
             'axe' => $axe,
             'data' => $data,
         ];
 
-        $jsonResult = json_encode($result);
+        $jsonResult = \json_encode($result);
+
         return new JsonResponse($jsonResult, 200);
     }
 
@@ -84,8 +85,8 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $frequency = strtoupper($frequency);
-        $dataType = strtoupper($dataType);
+        $frequency = \strtoupper($frequency);
+        $dataType = \strtoupper($dataType);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -97,7 +98,8 @@ class DataController extends AbstractAppController
         $axe = $this->buildEvolutionAxes($frequency, $start, $end);
         $data = $this->buildEvolutionDataObject($result, $frequency, $axe);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -117,11 +119,10 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $frequency = strtoupper($frequency);
-        $dataType = strtoupper($dataType);
+        $frequency = \strtoupper($frequency);
+        $dataType = \strtoupper($dataType);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
-
 
         // Find feedData with the good dataType.
         $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
@@ -129,7 +130,7 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $result = $this->dataValueRepository->getSumValueGroupBy($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $groupBy);
 
-        $axe = (object)[
+        $axe = (object) [
             'x' => [
                 $translator->trans('Lun.'),
                 $translator->trans('Mar.'),
@@ -151,7 +152,8 @@ class DataController extends AbstractAppController
         ];
         $data = $this->buildSumGroupByDataObject($result, $axe);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -169,7 +171,7 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = strtoupper($dataType);
+        $dataType = \strtoupper($dataType);
         $start = new \DateTimeImmutable($start);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -179,7 +181,8 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $data = $this->dataValueRepository->getSumValue($start, $end, $feedData, DataValue::FREQUENCY['DAY']);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -197,8 +200,8 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = strtoupper($dataType);
-        $frequency = strtoupper($frequency);
+        $dataType = \strtoupper($dataType);
+        $frequency = \strtoupper($frequency);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -208,7 +211,8 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $data = $this->dataValueRepository->getAverageValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -226,8 +230,8 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = strtoupper($dataType);
-        $frequency = strtoupper($frequency);
+        $dataType = \strtoupper($dataType);
+        $frequency = \strtoupper($frequency);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -237,7 +241,8 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $data = $this->dataValueRepository->getMaxValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -255,8 +260,8 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = strtoupper($dataType);
-        $frequency = strtoupper($frequency);
+        $dataType = \strtoupper($dataType);
+        $frequency = \strtoupper($frequency);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -266,7 +271,8 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $data = $this->dataValueRepository->getMinValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -284,8 +290,8 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = strtoupper($dataType);
-        $frequency = strtoupper($frequency);
+        $dataType = \strtoupper($dataType);
+        $frequency = \strtoupper($frequency);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -295,7 +301,8 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $data = $this->dataValueRepository->getNumberInfValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $value);
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -315,9 +322,9 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataTypeX = strtoupper($dataTypeX);
-        $dataTypeY = strtoupper($dataTypeY);
-        $frequency = strtoupper($frequency);
+        $dataTypeX = \strtoupper($dataTypeX);
+        $dataTypeY = \strtoupper($dataTypeY);
+        $frequency = \strtoupper($frequency);
         $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -328,10 +335,10 @@ class DataController extends AbstractAppController
         // Get data between $start & $end for requested frequency.
         $results = $this->dataValueRepository->getXY($start, $end, $feedDataX, $feedDataY, DataValue::FREQUENCY[$frequency]);
 
-        $data = (object)[
+        $data = (object) [
             'axeX' => [],
             'axeY' => [],
-            'date' => []
+            'date' => [],
         ];
 
         $dateFormat = '';
@@ -355,7 +362,8 @@ class DataController extends AbstractAppController
             $data->date[] = $result['date']->format($dateFormat);
         }
 
-        $jsonData = json_encode($data);
+        $jsonData = \json_encode($data);
+
         return new JsonResponse($jsonData, 200);
     }
 
@@ -367,7 +375,7 @@ class DataController extends AbstractAppController
      */
     private function buildRepartitionAxes(string $repartitionType, \DateTimeInterface $start, \DateTimeInterface $end, TranslatorInterface $translator): array
     {
-        $axe = (object)[
+        $axe = (object) [
             'x' => [],
             'y' => [],
         ];
@@ -389,8 +397,8 @@ class DataController extends AbstractAppController
                     $translator->trans('Dim.'),
                 ];
 
-                for($i = 0; $i<=24; $i++) {
-                    $axe->y[$i] = sprintf("%02d", $i) . 'h';
+                for ($i = 0; $i <= 24; ++$i) {
+                    $axe->y[$i] = \sprintf("%02d", $i) . 'h';
                 }
                 //$axe->y = array_reverse($axe->y);
                 break;
@@ -415,10 +423,10 @@ class DataController extends AbstractAppController
 
                 $currentDate = \DateTime::createFromImmutable($start);
                 $endWeek = \DateTime::createFromImmutable($end);
-                $endWeek->add(new \DateInterval('P'.(7-$end->format('w')).'D'));
-                while($currentDate <= $endWeek) {
-                    $axe->x[] = (int)$currentDate->format('W');
-                    $axe->year[] = (int)$currentDate->format('o');
+                $endWeek->add(new \DateInterval('P' . (7 - $end->format('w')) . 'D'));
+                while ($currentDate <= $endWeek) {
+                    $axe->x[] = (int) $currentDate->format('W');
+                    $axe->year[] = (int) $currentDate->format('o');
                     $currentDate->add(new \DateInterval('P1W'));
                 }
                 break;
@@ -443,16 +451,16 @@ class DataController extends AbstractAppController
 
                 $currentDate = \DateTime::createFromImmutable($start);
                 $endWeek = \DateTime::createFromImmutable($end);
-                $endWeek->add(new \DateInterval('P'.(7-$end->format('w')).'D'));
-                while($currentDate <= $endWeek) {
-                    $axe->y[] = (int)$currentDate->format('W');
-                    $axe->year[] = (int)$currentDate->format('o');
+                $endWeek->add(new \DateInterval('P' . (7 - $end->format('w')) . 'D'));
+                while ($currentDate <= $endWeek) {
+                    $axe->y[] = (int) $currentDate->format('W');
+                    $axe->year[] = (int) $currentDate->format('o');
                     $currentDate->add(new \DateInterval('P1W'));
                 }
                 break;
 
             default:
-                return NULL;
+                return null;
         }
 
         return [$axe, $axeX, $axeY, $frequency];
@@ -482,7 +490,7 @@ class DataController extends AbstractAppController
                 break;
 
             default:
-                $axeReverse = (object)[
+                $axeReverse = (object) [
                     'x' => [],
                     'y' => [],
                     'year' => [],
@@ -491,13 +499,14 @@ class DataController extends AbstractAppController
                 $axeReverse->x = $axe->y;
                 $axeReverse->y = $axe->x;
                 $axeReverse->year = $axe->year;
+
                 return $this->buildYearRepartitionDataObject($axeReverse, $values);
         }
     }
 
     private function buildWeekRepartitionDataObject($axe, $values)
     {
-        $data = (object)[
+        $data = (object) [
             'values' => [],
             'dates' => [],
         ];
@@ -505,8 +514,8 @@ class DataController extends AbstractAppController
         // Initialize data object with empty values and build dates.
         foreach ($axe->x as $xKey => $xValue) {
             foreach ($axe->y as $yKey => $yValue) {
-                $index = $xKey * (count($axe->y)-1) + $yKey;
-                if ($yKey<24) {
+                $index = $xKey * (\count($axe->y) - 1) + $yKey;
+                if ($yKey < 24) {
                     $data->values[$index] = '';
                     // Date will be for example 'monday 12h->13h'.
                     $data->dates[$index] = $xValue . ' ' . $yValue . ' -> ' . $axe->y[$yKey + 1];
@@ -518,7 +527,7 @@ class DataController extends AbstractAppController
         foreach ($values as $value) {
             $xKey = $value['axeX'];
             $yKey = $value['axeY'];
-            $index = $xKey * (count($axe->y) - 1) + $yKey;
+            $index = $xKey * (\count($axe->y) - 1) + $yKey;
             // We store the value in the object.
             $data->values[$index] = $value['value'];
         }
@@ -528,7 +537,7 @@ class DataController extends AbstractAppController
 
     private function buildYearRepartitionDataObject($axe, $values)
     {
-        $data = (object)[
+        $data = (object) [
             'values' => [],
             'dates' => [],
         ];
@@ -536,7 +545,7 @@ class DataController extends AbstractAppController
         // Initialize data object with empty values and build dates.
         foreach ($axe->x as $xKey => $xValue) {
             foreach ($axe->y as $yKey => $yValue) {
-                $index = $xKey * count($axe->y) + $yKey;
+                $index = $xKey * \count($axe->y) + $yKey;
                 $data->values[$index] = '';
                 // We rebuild the datetime, will be for example '13/02/2018'.
                 $currentDate = new \DateTime();
@@ -550,19 +559,20 @@ class DataController extends AbstractAppController
             $currentDate = new \DateTime();
             $currentDate->setISODate($value['year'], $value['axeX'], $value['axeY'] + 1);
             $currentDate = $currentDate->format('d/m/y');
-            $index = array_search($currentDate, $data->dates);
+            $index = \array_search($currentDate, $data->dates);
 
             // We store the value in the object.
-            if ($index !== FALSE) {
+            if (false !== $index) {
                 $data->values[$index] = $value['value'];
             }
         }
+
         return $data;
     }
 
     private function buildEvolutionDataObject($results, $frequency, $axe)
     {
-        $data = (object)[
+        $data = (object) [
             'label' => $axe->label,
             'axeX' => $axe->x,
             'axeY' => [],
@@ -586,23 +596,24 @@ class DataController extends AbstractAppController
         }
 
         foreach ($results as $result) {
-            $index = array_search($result->getDate()->format($axeFormat), $axe->x);
+            $index = \array_search($result->getDate()->format($axeFormat), $axe->x);
             $data->axeY[$index] = $result->getValue();
         }
 
-        foreach (array_keys($axe->x) as $key) {
-            if (!isset($data->axeY[$key]))
+        foreach (\array_keys($axe->x) as $key) {
+            if (!isset($data->axeY[$key])) {
                 $data->axeY[$key] = 0;
+            }
         }
 
-        ksort($data->axeY);
+        \ksort($data->axeY);
 
         return $data;
     }
 
     private function buildSumGroupByDataObject($results, $axe)
     {
-        $data = (object)[
+        $data = (object) [
             'label' => $axe->label,
             'axeX' => $axe->x,
             'axeY' => [],
@@ -613,19 +624,20 @@ class DataController extends AbstractAppController
             $data->axeY[$index] = $result['value'];
         }
 
-        foreach (array_keys($axe->x) as $key) {
-            if (!isset($data->axeY[$key]))
+        foreach (\array_keys($axe->x) as $key) {
+            if (!isset($data->axeY[$key])) {
                 $data->axeY[$key] = 0;
+            }
         }
 
-        ksort($data->axeY);
+        \ksort($data->axeY);
 
         return $data;
     }
 
     private function buildEvolutionAxes(string $frequency, \DateTimeImmutable $start, \DateTimeImmutable $end)
     {
-        $axe = (object)[
+        $axe = (object) [
             'x' => [],
             'label' => [],
         ];
@@ -660,7 +672,7 @@ class DataController extends AbstractAppController
         }
 
         $currentDate = \DateTime::createFromImmutable($start);
-        while($currentDate <= $end) {
+        while ($currentDate <= $end) {
             $axe->x[] = $currentDate->format($axeFormat);
             $axe->label[] = $currentDate->format($labelFormat);
             $currentDate->add(new \DateInterval($step));

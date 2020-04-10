@@ -23,16 +23,16 @@ class UpdateAccountType extends AbstractType
             ])
             ->add('old_password', PasswordType::class, [
                 'label' => 'Mot de passe actuel',
-                'always_empty' => FALSE,
-                'required' => !$data ?? FALSE
+                'always_empty' => false,
+                'required' => !$data ?? false,
             ])
             ->add('new_password', PasswordType::class, [
                 'label' => 'Nouveau mot de passe',
-                'required' => FALSE
+                'required' => false,
             ])
             ->add('new_password2', PasswordType::class, [
                 'label' => 'Confirmez votre nouveau mot de passe',
-                'required' => FALSE,
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',
