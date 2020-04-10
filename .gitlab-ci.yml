@@ -89,13 +89,15 @@ release:on-tag:
       echo \
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
         --data "{ \
-          \"name\": \"V${CI_COMMIT_TAG}\", \
-          \"tag_name\": \"${CI_COMMIT_TAG}\" \
+          \"name\": \"v${CI_COMMIT_TAG}\", \
+          \"tag_name\": \"${CI_COMMIT_TAG}\", \
           \"assets\": { \
             \"links\": [{ \
               \"name\": \"aeneria-$CI_COMMIT_TAG.tar\", \
               \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.tar?job=${CI_JOB_NAME}\", \
-              \"filepath\": \"/\" }] } \
+              \"filepath\": \"/\" \
+            }] \
+          } \
         }" \
         --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
     - >
@@ -103,12 +105,14 @@ release:on-tag:
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
         --data "{ \
           \"name\": \"V${CI_COMMIT_TAG}\", \
-          \"tag_name\": \"${CI_COMMIT_TAG}\" \
+          \"tag_name\": \"${CI_COMMIT_TAG}\", \
           \"assets\": { \
             \"links\": [{ \
               \"name\": \"aeneria-$CI_COMMIT_TAG.tar\", \
               \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-${CI_COMMIT_TAG}.tar?job=${CI_JOB_NAME}\", \
-              \"filepath\": \"/\" }] } \
+              \"filepath\": \"/\" \
+            }] \
+          } \
         }" \
         --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
   artifacts:
