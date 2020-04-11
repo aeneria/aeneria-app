@@ -64,12 +64,6 @@ class GenerateFakeDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!\in_array($input->getOption('env'), ['dev', 'test'])) {
-            $output->writeln("<error>Cette commande ne doit être lancée qu'en environnement de développement !</error>");
-
-            return 1;
-        }
-
         $username = $input->getOption('user-name') ?? 'user-test';
         $password = $input->getOption('user-password') ?? 'password';
         $placeName = $input->getOption('place-name') ?? 'place-test';
