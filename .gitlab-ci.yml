@@ -42,7 +42,7 @@ build:composer-install:
     default: true
   stage: build
   script:
-    - php composer.phar install
+    - php composer.phar install --no-dev
   artifacts:
     expire_in: '1 hour'
     paths:
