@@ -55,6 +55,7 @@ test:phpunit:
   stage: tests
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
+    - php composer.phar install
     - php bin/console aeneria:install -n
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
     - php bin/console aeneria:user:grant admin
