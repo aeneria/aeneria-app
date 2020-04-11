@@ -56,9 +56,9 @@ test:phpunit:
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - php bin/console aeneria:install -n
-    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password --env=dev
     - php bin/console aeneria:user:grant admin
-    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
+    - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password --env=dev
     - php bin/phpunit --coverage-text --colors=never
 
 # On vérifie que la documentation build correctement
@@ -130,4 +130,3 @@ release:on-tag:
       - aeneria-$CI_COMMIT_TAG.tar.gz
       - aeneria-$CI_COMMIT_TAG.tar.bz2
       - aeneria-$CI_COMMIT_TAG.zip
-
