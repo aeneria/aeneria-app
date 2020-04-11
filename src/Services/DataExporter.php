@@ -13,8 +13,8 @@ use Box\Spout\Writer\WriterMultiSheetsAbstract;
 /**
  * Data exporter services.
  */
-class DataExporter {
-
+class DataExporter
+{
     private $feedDataRepository;
     private $dataValueRepository;
 
@@ -39,7 +39,6 @@ class DataExporter {
             $from->format('Ymd'),
             $to->format('Ymd')
         );
-
 
         $writer = WriterEntityFactory::createODSWriter();
         $writer->openToFile($filename);
@@ -75,7 +74,7 @@ class DataExporter {
             foreach ($values as $value) {
                 $row = WriterEntityFactory::createRowFromArray([
                     $value->getDate()->format('d/m/Y H:i'),
-                    $value->getValue()
+                    $value->getValue(),
                 ]);
                 $writer->addRow($row);
             }

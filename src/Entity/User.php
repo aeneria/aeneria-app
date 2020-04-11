@@ -96,7 +96,7 @@ class User implements UserInterface, Serializable
         // guarantee every user at least has ROLE_USER
         $roles[] = self::ROLE_USER;
 
-        return array_unique($roles);
+        return \array_unique($roles);
     }
 
     public function setRoles(array $roles): self
@@ -233,7 +233,7 @@ class User implements UserInterface, Serializable
             $this->password,
             $this->places,
             $this->roles,
-            $this->sharedPlaces
+            $this->sharedPlaces,
         ]);
     }
 

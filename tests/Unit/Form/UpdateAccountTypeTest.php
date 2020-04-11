@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Tests\Form\Type;
 
-use App\Entity\User;
 use App\Form\UpdateAccountType;
 use App\Tests\AppTypeTestCase;
 
@@ -18,7 +18,7 @@ class UpdateAccountTypeTest extends AppTypeTestCase
 
         $objectToCompare = $this->createUser();
 
-        $form = $this->factory->create(UpdateAccountType::class, $objectToCompare,['data_class' => null]);
+        $form = $this->factory->create(UpdateAccountType::class, $objectToCompare, ['data_class' => null]);
 
         // submit the data to the form directly
         $form->submit($formData);
@@ -36,8 +36,8 @@ class UpdateAccountTypeTest extends AppTypeTestCase
         $view = $form->createView();
         $children = $view->children;
 
-        foreach (array_keys($formData) as $key) {
-            if ($key !== 'user') {
+        foreach (\array_keys($formData) as $key) {
+            if ('user' !== $key) {
                 $this->assertArrayHasKey($key, $children);
             }
         }

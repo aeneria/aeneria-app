@@ -27,7 +27,7 @@ class MeteoFranceFeedType extends AbstractType
             ->add('station', ChoiceType::class, [
                 'choices' => $stations,
                 'label' => 'Station d\'observation',
-                'required' => TRUE,
+                'required' => true,
             ])
         ;
 
@@ -55,7 +55,7 @@ class MeteoFranceFeedType extends AbstractType
 
                 $param = [
                     'STATION_ID' => $data['station'] ?? null,
-                    'CITY' => array_search($data['station'], $stations),
+                    'CITY' => \array_search($data['station'], $stations),
                 ];
                 $meteoFranceFeed->setParam($param);
 
@@ -66,6 +66,5 @@ class MeteoFranceFeedType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
     }
 }

@@ -4,7 +4,6 @@ namespace App\Validator\Constraints;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use InvalidArgumentException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

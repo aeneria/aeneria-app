@@ -1,17 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Doctrine\ORM\Query\ResultSetMapping;
-use App\Repository\FeedDataRepository;
-use App\FeedObject\MeteoFrance;
-use App\Entity\DataValue;
-use Doctrine\ORM\NativeQuery;
 
 /**
  * Cean -1 values from FeedData from Enedis.
@@ -20,7 +16,7 @@ final class Version20190909180600 extends AbstractMigration implements Container
 {
     use ContainerAwareTrait;
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // Cean -1 values from FeedData from Enedis.
         $this->addSql('
@@ -33,7 +29,7 @@ final class Version20190909180600 extends AbstractMigration implements Container
         ');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException("Always move forward.");
     }

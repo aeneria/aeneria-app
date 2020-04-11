@@ -1,17 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use App\Entity\DataValue;
+use App\FeedObject\MeteoFrance;
+use App\Repository\FeedDataRepository;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NativeQuery;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Doctrine\ORM\Query\ResultSetMapping;
-use App\Repository\FeedDataRepository;
-use App\FeedObject\MeteoFrance;
-use App\Entity\DataValue;
-use Doctrine\ORM\NativeQuery;
 
 /**
  * Empty values from FeedData from MeteoFrance should be set to 0.
@@ -20,7 +22,7 @@ final class Version20190730115904 extends AbstractMigration implements Container
 {
     use ContainerAwareTrait;
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // For each date, if we have data for one of the meteo feeddata
         // we should have data for nebulosity, DJU and rain but until
@@ -39,11 +41,10 @@ final class Version20190730115904 extends AbstractMigration implements Container
             $meteoFrance = new MeteoFrance($meteoFranceFeed, $entityManager);
             $feedDatas = $feedDataRepository->findBy([
                 'feed' => $meteoFranceFeed,
-                'dataType' => ['DJU', 'NEBULOSITY', 'RAIN']
+                'dataType' => ['DJU', 'NEBULOSITY', 'RAIN'],
             ]);
 
-            foreach($feedDatas as $feedData) {
-
+            foreach ($feedDatas as $feedData) {
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('date', 'date', 'datetime');
 
@@ -63,7 +64,7 @@ final class Version20190730115904 extends AbstractMigration implements Container
                     ->getResult(NativeQuery::HYDRATE_ARRAY)
                 ;
 
-                foreach($results as $result) {
+                foreach ($results as $result) {
                     $feedData->updateOrCreateValue(
                         $result['date'],
                         DataValue::FREQUENCY['DAY'],
@@ -74,11 +75,9 @@ final class Version20190730115904 extends AbstractMigration implements Container
                 }
             }
         }
-
-
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException("Always move forward.");
     }

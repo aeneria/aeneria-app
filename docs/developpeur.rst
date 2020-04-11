@@ -2,7 +2,7 @@ Documentation développeur
 ##########################
 
 Mettre en place un environnement de développement
------------------------------------------------------
+******************************************************
 
 Il n'y pas encore de docker ou de truc comme ça pour installer facilement le projet.
 Pour monter un environement de dev :
@@ -35,7 +35,7 @@ Pour monter un environement de dev :
 Et voilà !
 
 Générer les assets
-------------------------------
+*************************
 
 Les assets sont gérer avec `Webpack Encore <https://symfony.com/doc/current/frontend.html>`_
 
@@ -54,7 +54,7 @@ Les assets sont gérer avec `Webpack Encore <https://symfony.com/doc/current/fro
     yarn dev --watch
 
 Générer cette Documentation
------------------------------
+*******************************
 
 La documentation est automatiquement générer à chaque nouveau tag à l'aide de `Read the Docs <https://readthedocs.org/>`_.
 Tout est donc basé sur `Sphinx <https://www.sphinx-doc.org/>`_ et écrit en RST.
@@ -88,10 +88,13 @@ Pour se faire, suivez ces étapes :
 
 La page d'accueil de la documentation ainsi générée se trouve ici : ``docs/_build/html.index.html``
 
-Tests
------------------------------
+Tests & CS fixer
+******************
 
-Pour lancer les tests PHP, il faut préalablement avoir créé un minimum de données de tests :
+PHPUNIT
+---------
+
+Pour lancer les tests PHPUNIT, il faut préalablement avoir créé un minimum de données de tests :
 
 .. code-block:: bash
 
@@ -111,3 +114,12 @@ Pour lancer les tests PHP, il faut préalablement avoir créé un minimum de don
 
   # On peut maintenant lancer les tests l'esprit tranquille:
   php7.3  bin/phpunit
+
+CS Fixer
+-------------
+
+Avant de commiter, passez-donc un petit coup de CS-Fixer pour s'assurer que le style de code reste homogène :
+
+.. code-block:: bash
+
+    vendor/bin/php-cs-fixer fix --allow-risky=yes

@@ -13,7 +13,6 @@ use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
 use App\Validator\Constraints\UpdatePassword;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -22,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -37,7 +37,7 @@ class ConfigurationController extends AbstractAppController
         $places = $this->placeRepository->findByUser($this->getUser());
 
         return $this->render('configuration/configuration.html.twig', [
-            'places' => $places
+            'places' => $places,
         ]);
     }
 
@@ -50,11 +50,11 @@ class ConfigurationController extends AbstractAppController
         $user = $this->getUser();
         \assert($user instanceof User);
 
-        if($userMaxPlaces != -1 && \count($user->getPlaces()) >= $userMaxPlaces) {
+        if (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces) {
             throw new AccessDeniedHttpException(\sprintf(
                 "Vous ne pouvez créer que %s adresse%s.",
                 $userMaxPlaces,
-                $userMaxPlaces>1 ? 's' : ''
+                $userMaxPlaces > 1 ? 's' : ''
             ));
         }
 
@@ -65,10 +65,9 @@ class ConfigurationController extends AbstractAppController
             'place_can_be_public' => $placeCanBePublic,
         ]);
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
-
                 $place = $configForm->getData();
 
                 $place->setUser($this->getUser());
@@ -90,7 +89,7 @@ class ConfigurationController extends AbstractAppController
 
         return $this->render('configuration/place_form.html.twig', [
             'title' => "Ajouter une adresse",
-            'form_config' => $configForm->createView()
+            'form_config' => $configForm->createView(),
         ]);
     }
 
@@ -110,7 +109,7 @@ class ConfigurationController extends AbstractAppController
             ])
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $configForm->handleRequest($request);
             if ($configForm->isValid()) {
                 $place = $configForm->getData();
@@ -134,7 +133,7 @@ class ConfigurationController extends AbstractAppController
 
         return $this->render('configuration/place_form.html.twig', [
             'title' => "Ajouter une adresse",
-            'form_config' => $configForm->createView()
+            'form_config' => $configForm->createView(),
         ]);
     }
 
@@ -160,7 +159,7 @@ class ConfigurationController extends AbstractAppController
             ->handleRequest($request)
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             if ($form->isValid()) {
                 $place = $this->placeRepository->purge($place);
                 $this->addFlash('success', 'L\'adresse a bien été supprimée !');
@@ -172,7 +171,7 @@ class ConfigurationController extends AbstractAppController
         return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Supprimer une adresse',
             'form' => $form->createView(),
-            'cancel' => 'config'
+            'cancel' => 'config',
         ]);
     }
 
@@ -198,7 +197,7 @@ class ConfigurationController extends AbstractAppController
                 ->createNamedBuilder($feedId)
                 ->add('start_date_' . $feedId, Form\TextType::class, [
                     'label' => false,
-                    'help' => $feed->getFeedType() === 'METEO' ?
+                    'help' => 'METEO' === $feed->getFeedType() ?
                         "Attention, les données météorologiques ne sont plus accessibles après 2 semaines."
                         :
                         "Le processus de rechargement des données pouvant être long, il n'est possible de recharger que par lot de 2 semaines",
@@ -220,8 +219,8 @@ class ConfigurationController extends AbstractAppController
                                     ->addViolation()
                                 ;
                             }
-                        }
-                    ])]
+                        },
+                    ])],
                 ])
                 ->add('force_' . $feedId, Form\CheckboxType::class, [
                     'label' => 'Forcer',
@@ -239,7 +238,7 @@ class ConfigurationController extends AbstractAppController
             ;
         }
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             foreach ($forms as $feedId => $form) {
                 if ($request->request->has($feedId) && $form->isSubmitted() && $form->isValid()) {
                     $data = $form->getData();
@@ -270,7 +269,7 @@ class ConfigurationController extends AbstractAppController
             'place' => $place,
             'feeds' => $feeds,
             'forms' => $views,
-            'cancel' => 'config'
+            'cancel' => 'config',
         ]);
     }
 
@@ -308,14 +307,14 @@ class ConfigurationController extends AbstractAppController
             ->handleRequest($request)
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             if ($form->isValid()) {
                 $data = $form->getData();
 
                 $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date']);
                 $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date']);
                 $filename = $dataExporter->exportPlace($place, $startDate, $endDate);
-                $file =new File($filename);
+                $file = new File($filename);
 
                 $response = new BinaryFileResponse($file);
                 $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getFilename());
@@ -327,7 +326,7 @@ class ConfigurationController extends AbstractAppController
         return $this->render('configuration/place_export.html.twig', [
             'place' => $place,
             'form' => $form->createView(),
-            'cancel' => 'config'
+            'cancel' => 'config',
         ]);
     }
 
@@ -345,7 +344,7 @@ class ConfigurationController extends AbstractAppController
             ],
         ]);
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $userForm->handleRequest($request);
             if ($userForm->isValid()) {
                 $data = $userForm->getData();
@@ -363,13 +362,14 @@ class ConfigurationController extends AbstractAppController
                 $entityManager->flush();
 
                 $this->addFlash('success', 'L\'utilisateur a bien été enregistrée !');
+
                 return $this->redirectToRoute('config');
             }
         }
 
         return $this->render('configuration/account_form.html.twig', [
             'title' => 'Mettre à jour ses données',
-            'user_form' => $userForm->createView()
+            'user_form' => $userForm->createView(),
         ]);
     }
 
@@ -394,15 +394,15 @@ class ConfigurationController extends AbstractAppController
                 'always_empty' => true,
                 'required' => true,
                 'constraints' => [
-                    new Callback([ 'callback' => static function ($data, ExecutionContextInterface $context) use ($passwordEncoder, $user) {
+                    new Callback(['callback' => static function ($data, ExecutionContextInterface $context) use ($passwordEncoder, $user) {
                         if (!$passwordEncoder->isPasswordValid($user, $data)) {
                             $context
                                 ->buildViolation("Mot de passe invalide.")
                                 ->addViolation()
                             ;
                         }
-                    }
-                ])],
+                    },
+                ]), ],
             ])
             ->add('are_you_sure', Form\CheckboxType::class, [
                 'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer votre compte et toutes ses données",
@@ -417,10 +417,11 @@ class ConfigurationController extends AbstractAppController
             ->handleRequest($request)
         ;
 
-        if('POST' === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             if ($form->isValid()) {
                 $userRepository->purge($user);
                 $this->addFlash('success', 'Votre compte a bien été supprimé !');
+
                 return $this->redirectToRoute('homepage');
             }
         }
@@ -432,7 +433,7 @@ class ConfigurationController extends AbstractAppController
         return $this->render('misc/confirmation_form.html.twig', [
             'title' => 'Supprimer votre compte',
             'form' => $form->createView(),
-            'cancel' => 'config'
+            'cancel' => 'config',
         ]);
     }
 }

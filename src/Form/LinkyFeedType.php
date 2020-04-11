@@ -21,14 +21,14 @@ class LinkyFeedType extends AbstractType
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
-                'always_empty' => FALSE,
-                'required' => FALSE
+                'always_empty' => false,
+                'required' => false,
             ])
         ;
 
         $builder->addModelTransformer(new CallbackTransformer(
             function (?Feed $linkyFeed) {
-                if($linkyFeed) {
+                if ($linkyFeed) {
                     $data['feed'] = $linkyFeed;
                     $param = $linkyFeed->getParam();
 
@@ -53,7 +53,7 @@ class LinkyFeedType extends AbstractType
                 ;
 
                 $param = [];
-                foreach (array_keys(LinkyDataProvider::getParametersName($linkyFeed)) as $name) {
+                foreach (\array_keys(LinkyDataProvider::getParametersName($linkyFeed)) as $name) {
                     $param[$name] = $data[\strtolower($name)] ?? $linkyFeed->getParam()[$name] ?? null;
                 }
                 $linkyFeed->setParam($param);
@@ -65,6 +65,5 @@ class LinkyFeedType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
     }
 }

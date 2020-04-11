@@ -1,0 +1,57 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . '/src')
+    ->in(__DIR__ . '/tests')
+;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        'array_syntax' => [
+            'syntax' => 'short',
+        ],
+        // On ne peut pas le configurer assez finement. Par exemple il est
+        // impossible de lui dire que les deux variantes } else { ou
+        // }\nelse { sont OK.
+        'braces' => [
+            'allow_single_line_closure' => false,
+            'position_after_anonymous_constructs' => 'same',
+            'position_after_control_structures' => 'same',
+            'position_after_functions_and_oop_constructs' => 'next',
+        ],
+        'class_definition' => [
+            // La déclaration d'une classe c'est long parfois...
+            'single_line' => false,
+        ],
+        'concat_space' => [
+            'spacing' => 'one',
+        ],
+        'multiline_whitespace_before_semicolons' => [
+            'strategy' => 'new_line_for_chained_calls',
+        ],
+        'native_constant_invocation' => true,
+        'native_function_casing' => true,
+        'native_function_invocation' => true,
+        'no_empty_phpdoc' => false,
+        'no_superfluous_phpdoc_tags' => false,
+        'ordered_imports' => true,
+        // Tout ce qui concerne la PHPdoc provient du projet Schapi, merci
+        // @qde et @pac pour avoir expérimenté sur le sujet. Les conventions
+        // de Symfony sur la PHPdoc rendent de toute façon complètement
+        // illisible ces dernières dans le code.
+        'phpdoc_align' => false,
+        'phpdoc_annotation_without_dot' => false,
+        'phpdoc_separation' => false,
+        'phpdoc_summary' => false,
+        'phpdoc_to_comment' => false,
+        'phpdoc_trim' => false,
+        'phpdoc_trim_consecutive_blank_line_separation' => false,
+        'phpdoc_types_order' => false,
+        // En compactant les throw, il rend pas mal de code illisible.
+        'single_line_throw' => false,
+        // Les quotes ' comme " sont OK, il n'est pas nécessaire de les changer.
+        'single_quote' => false,
+    ])
+    ->setFinder($finder)
+;

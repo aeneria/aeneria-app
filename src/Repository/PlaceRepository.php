@@ -39,7 +39,6 @@ class PlaceRepository extends ServiceEntityRepository
 
         foreach ($feedRepository->findByPlace($place) as $feed) {
             $feedRepository->purge($feed);
-
         }
 
         $this
@@ -60,7 +59,7 @@ class PlaceRepository extends ServiceEntityRepository
             ->orWhere('p.user = :user')
         ;
 
-        if($this->userCanSharePlace) {
+        if ($this->userCanSharePlace) {
             $queryBuilder->orWhere(':user MEMBER OF p.allowedUsers');
         }
 

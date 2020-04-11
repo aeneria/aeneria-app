@@ -48,7 +48,6 @@ class Place
      */
     private $user;
 
-
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"}, inversedBy="sharedPlaces")
      */
@@ -122,7 +121,7 @@ class Place
     public function addFeed(Feed $feed): self
     {
         // If the feed we try to add is already there, we delete it
-        foreach( $this->feeds as $key => $currentFeed) {
+        foreach ($this->feeds as $key => $currentFeed) {
             if ($currentFeed->getId() && $currentFeed->getId() === $feed->getId()) {
                 unset($this->feeds[$key]);
             }

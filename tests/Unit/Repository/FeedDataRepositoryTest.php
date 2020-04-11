@@ -2,7 +2,6 @@
 
 namespace App\Tests\Unit\Repository;
 
-use App\Entity\DataValue;
 use App\Entity\FeedData;
 use App\Tests\AppTestCase;
 
@@ -42,7 +41,6 @@ final class FeedDataRepositoryTest extends AppTestCase
     {
         $entityManager = $this->getEntityManager();
         $feedDataRepository = $this->getFeedDataRepository();
-
 
         $place = $this->createPersistedPlace();
 

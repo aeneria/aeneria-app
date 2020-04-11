@@ -1,17 +1,16 @@
 <?php
+
 namespace App\Services\FeedDataProvider;
 
-use App\Entity\DataValue;
 use App\Entity\Feed;
-use App\Entity\FeedData;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 
-abstract class AbstractFeedDataProvider {
-
+abstract class AbstractFeedDataProvider
+{
     protected $entityManager;
     protected $feedRepository;
     protected $feedDataRepository;
@@ -45,6 +44,7 @@ abstract class AbstractFeedDataProvider {
     public static function getParametersName(Feed $feed): array
     {
         throw new \Exception("Your custom feedDataProvider should implement this method !");
+
         return [];
     }
 
@@ -56,7 +56,7 @@ abstract class AbstractFeedDataProvider {
         $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
         $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
-        while($lastUpToDate <= $date) {
+        while ($lastUpToDate <= $date) {
             $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds);
             $lastUpToDate->add(new \DateInterval('P1D'));
         }

@@ -2,7 +2,6 @@
 
 namespace App\Services\FeedDataProvider;
 
-
 use App\Entity\DataValue;
 use App\Entity\Feed;
 
@@ -28,7 +27,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     private $curlHdl = null;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getParametersName(Feed $feed): array
     {
@@ -46,15 +45,14 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
-            if ( (!$feed instanceof Feed) || $feed->getFeedDataProviderType() !== 'LINKY') {
+            if ((!$feed instanceof Feed) || 'LINKY' !== $feed->getFeedDataProviderType()) {
                 throw new \InvalidArgumentException("Should be an array of Linky Feeds overhere !");
             }
 
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
                 $feedParam = $feed->getParam();
 
-                if ( $this->auth($feedParam['LOGIN'], $feedParam['PASSWORD'])) {
-
+                if ($this->auth($feedParam['LOGIN'], $feedParam['PASSWORD'])) {
                     $data = $this->getAll($date);
                     $this->persistData($date, $feed, $data);
                 }
@@ -76,7 +74,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
 
         // Persist hours data.
         foreach ($data['hours'] as $hour => $value) {
-            if ($value && (int)$value !== -1) {
+            if ($value && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
@@ -88,7 +86,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
 
         // Persist day data.
         $value = \end($data['days']);
-        if ($value && (int)$value !== -1) {
+        if ($value && -1 !== (int) $value) {
             $this->dataValueRepository->updateOrCreateValue(
                 $feedData,
                 $date,
@@ -135,8 +133,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
 
             $end = \count($data);
             for ($i = $end - 1; $i >= $end - 48; $i -= 2) {
-
-                if ($data[$i]['valeur'] == -2 || $data[$i - 1]['valeur'] == -2) {
+                if (-2 == $data[$i]['valeur'] || -2 == $data[$i - 1]['valeur']) {
                     $value = null;
                 } else {
                     $value = $data[$i]['valeur'] + $data[$i - 1]['valeur'];
@@ -155,7 +152,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         // Max 31 days:
         if (($startDate->getTimestamp() - $startDate->getTimestamp()) / 86400 > 31) {
             return [
-                'etat' => null, 'error' => 'Max number of days can not exceed 31 days'
+                'etat' => null, 'error' => 'Max number of days can not exceed 31 days',
             ];
         }
 
@@ -166,8 +163,8 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         $returnData = [];
         if (!empty($result['graphe']) && !empty($result['graphe']['data'])) {
             $currentDate = clone $startDate;
-            foreach ((array)$result['graphe']['data'] as $day) {
-                $value = $day['valeur'] != -2 ? $day['valeur'] : null;
+            foreach ((array) $result['graphe']['data'] as $day) {
+                $value = -2 != $day['valeur'] ? $day['valeur'] : null;
 
                 $returnData[$currentDate->format("d/m/Y")] = $value;
                 $currentDate->modify('+1 day');
@@ -188,8 +185,8 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         if (!empty($result['graphe']) && !empty($result['graphe']['data'])) {
             $currentMonth = clone $startDate;
 
-            foreach ((array)$result['graphe']['data'] as $month) {
-                $value = $month['valeur'] != -2 ? $month['valeur'] : null;
+            foreach ((array) $result['graphe']['data'] as $month) {
+                $value = -2 != $month['valeur'] ? $month['valeur'] : null;
 
                 $returnData[$currentMonth->format('M Y')] = $value;
                 $currentMonth->modify('+1 month');
@@ -212,8 +209,8 @@ class LinkyDataProvider extends AbstractFeedDataProvider
             $c = \count($data) - 1;
             $currentYear = new \DateTime('1 years ago');
 
-            foreach ((array)$data as $year) {
-                $value = $year['valeur'] != -2 ? $year['valeur'] : null;
+            foreach ((array) $data as $year) {
+                $value = -2 != $year['valeur'] ? $year['valeur'] : null;
 
                 $returnData[$currentYear->format('Y')] = $value;
                 $currentYear->modify('+1 year');
@@ -226,7 +223,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     /**
      * Get data for all frequencies for $date.
      */
-    private function getAll(\DateTimeImmutable $date) : array
+    private function getAll(\DateTimeImmutable $date): array
     {
         $data = [];
         // Get per hour for date:
@@ -259,43 +256,43 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     {
         if (!isset($this->curlHdl)) {
             $this->curlHdl = \curl_init();
-            \curl_setopt($this->curlHdl, CURLOPT_COOKIEJAR, $this->cookFile);
-            \curl_setopt($this->curlHdl, CURLOPT_COOKIEFILE, $this->cookFile);
+            \curl_setopt($this->curlHdl, \CURLOPT_COOKIEJAR, $this->cookFile);
+            \curl_setopt($this->curlHdl, \CURLOPT_COOKIEFILE, $this->cookFile);
 
-            \curl_setopt($this->curlHdl, CURLOPT_SSL_VERIFYHOST, false);
-            \curl_setopt($this->curlHdl, CURLOPT_SSL_VERIFYPEER, false);
+            \curl_setopt($this->curlHdl, \CURLOPT_SSL_VERIFYHOST, false);
+            \curl_setopt($this->curlHdl, \CURLOPT_SSL_VERIFYPEER, false);
 
-            \curl_setopt($this->curlHdl, CURLOPT_HEADER, true);
-            \curl_setopt($this->curlHdl, CURLOPT_RETURNTRANSFER, true);
-            \curl_setopt($this->curlHdl, CURLOPT_FOLLOWLOCATION, true);
+            \curl_setopt($this->curlHdl, \CURLOPT_HEADER, true);
+            \curl_setopt($this->curlHdl, \CURLOPT_RETURNTRANSFER, true);
+            \curl_setopt($this->curlHdl, \CURLOPT_FOLLOWLOCATION, true);
 
-            \curl_setopt($this->curlHdl, CURLOPT_USERAGENT, 'User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0');
+            \curl_setopt($this->curlHdl, \CURLOPT_USERAGENT, 'User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0');
         }
 
-        $url = \filter_var($url, FILTER_SANITIZE_URL);
-        \curl_setopt($this->curlHdl, CURLOPT_URL, $url);
+        $url = \filter_var($url, \FILTER_SANITIZE_URL);
+        \curl_setopt($this->curlHdl, \CURLOPT_URL, $url);
 
-        if ($method == 'POST') {
-            \curl_setopt($this->curlHdl, CURLOPT_RETURNTRANSFER, true);
-            \curl_setopt($this->curlHdl, CURLOPT_POST, true);
+        if ('POST' == $method) {
+            \curl_setopt($this->curlHdl, \CURLOPT_RETURNTRANSFER, true);
+            \curl_setopt($this->curlHdl, \CURLOPT_POST, true);
         } else {
-            \curl_setopt($this->curlHdl, CURLOPT_POST, false);
+            \curl_setopt($this->curlHdl, \CURLOPT_POST, false);
         }
 
         if (isset($postdata)) {
-            \curl_setopt($this->curlHdl, CURLOPT_CUSTOMREQUEST, 'POST');
-            \curl_setopt($this->curlHdl, CURLOPT_POSTFIELDS, $postdata);
+            \curl_setopt($this->curlHdl, \CURLOPT_CUSTOMREQUEST, 'POST');
+            \curl_setopt($this->curlHdl, \CURLOPT_POSTFIELDS, $postdata);
         }
 
         $response = \curl_exec($this->curlHdl);
 
         $this->error = null;
-        if ($response === false) {
+        if (false === $response) {
             $this->error = \curl_error($this->curlHdl);
         }
 
         if (!$withHeader) {
-            $header_size = \curl_getinfo($this->curlHdl, CURLINFO_HEADER_SIZE);
+            $header_size = \curl_getinfo($this->curlHdl, \CURLINFO_HEADER_SIZE);
             $response = \substr($response, $header_size);
         }
 
@@ -320,7 +317,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
             $postdata = \http_build_query(
                 [
                     '_' . $p_p_id . '_dateDebut' => $startDate,
-                    '_' . $p_p_id . '_dateFin' => $endDate
+                    '_' . $p_p_id . '_dateFin' => $endDate,
                 ]
             );
         }
@@ -340,9 +337,9 @@ class LinkyDataProvider extends AbstractFeedDataProvider
             [
                 'IDToken1' => $login,
                 'IDToken2' => $password,
-                'SunQueryParamsString' => base64_encode('realm=particuliers'),
+                'SunQueryParamsString' => \base64_encode('realm=particuliers'),
                 'encoded' => 'true',
-                'gx_charset' => 'UTF-8'
+                'gx_charset' => 'UTF-8',
             ]
         );
 
@@ -358,6 +355,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         }
         if (!\array_key_exists('iPlanetDirectoryPro', $cookies)) {
             $this->error = 'Sorry, could not connect. Check your credentials.';
+
             return false;
         }
 

@@ -5,15 +5,15 @@ namespace App\Command\Dev;
 use App\Entity\Feed;
 use App\Entity\Place;
 use App\Entity\User;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
 use App\Services\FeedDataProvider\FakeDataProvider;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -34,7 +34,7 @@ class GenerateFakeDataCommand extends Command
     public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository,
             PlaceRepository $placeRepository, FeedRepository $feedRepository,
             FakeDataProvider $fakeDataProvider, UserPasswordEncoderInterface $passwordEncoder
-    ){
+    ) {
         $this->entityManager = $entityManager;
 
         $this->userRepository = $userRepository;
@@ -64,8 +64,9 @@ class GenerateFakeDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ( ! \in_array($input->getOption('env'),['dev', 'test']) ) {
+        if (!\in_array($input->getOption('env'), ['dev', 'test'])) {
             $output->writeln("<error>Cette commande ne doit être lancée qu'en environnement de développement !</error>");
+
             return 1;
         }
 
@@ -76,7 +77,7 @@ class GenerateFakeDataCommand extends Command
         $to = $input->getOption('to') ? new \DateTimeImmutable($input->getOption('to')) : new \DateTimeImmutable('today');
         $force = $input->getOption('force');
 
-        $user = $this->createOrUpdateUser($username , $password);
+        $user = $this->createOrUpdateUser($username, $password);
         $place = $this->createOrGetPlace($user, $placeName);
 
         $this->fakeDataProvider->fetchDataBetween($from, $to, \iterator_to_array($place->getFeeds()), $force);
@@ -108,7 +109,6 @@ class GenerateFakeDataCommand extends Command
         ];
 
         if (!$place = $this->placeRepository->findOneBy($criteria)) {
-
             // First we create a Meteo and an electricity feed
             $meteoFeed = (new Feed())
                 ->setName(Feed::FEED_TYPE_METEO)

@@ -21,7 +21,7 @@ class UserRepository extends ServiceEntityRepository
 
     public function isLastAdmin(string $username)
     {
-        $users =  $this->createQueryBuilder('u')
+        $users = $this->createQueryBuilder('u')
             ->where('u.username <> :username')
             ->setParameter('username', $username)
             ->andWhere('u.active = true')
@@ -75,6 +75,6 @@ class UserRepository extends ServiceEntityRepository
             ;
         }
 
-        return array_column($queryBuilder->getQuery()->getResult() ?? [], "id", 'username');
+        return \array_column($queryBuilder->getQuery()->getResult() ?? [], "id", 'username');
     }
 }

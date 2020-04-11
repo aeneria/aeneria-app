@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
 /***
  * Ungrant user as admin command
  */
@@ -50,8 +51,9 @@ class UngrantUserCommand extends Command
 
         $this->io = new SymfonyStyle($input, $output);
 
-        if ( !$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
+        if (!$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
             $this->io->error("User can't be found.");
+
             return 1;
         }
 
