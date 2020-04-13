@@ -58,7 +58,7 @@ La dernière version d'æneria se trouve sur son dépos Gitlab sur `la page des 
 1. Récupérer les sources
 -------------------------
 
-Téléchargez et décompressez `le dernière version au format *tar.gz* <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag>`_ :
+Téléchargez et décompressez `le dernière version au format tar.gz <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag>`_ :
 
 .. code-block:: sh
 
@@ -71,6 +71,7 @@ Téléchargez et décompressez `le dernière version au format *tar.gz* <https:/
 Créez une base de données.
 
 Copiez le fichier ``.env.dist`` puis adaptez-le :
+
 .. code-block:: bash
 
     cp .env.dist .env

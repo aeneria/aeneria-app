@@ -1,5 +1,5 @@
-æneria
-########
+æneria : Analyser votre consommation d'énergie
+################################################
 
 .. image:: img/favicon.png
    :align: center
@@ -14,6 +14,15 @@ L'idée derrière æneria est de permettre à l'utilsateur de pouvoir, au traver
 
 .. image:: img/dash_accueil.png
    :align: center
+
+
+Installer æneria facilement avec YunoHost !
+***********************************************
+
+.. image:: https://install-app.yunohost.org/install-with-yunohost.png
+    :target: https://install-app.yunohost.org/?app=pilea
+    :align: center
+
 
 .. toctree::
    :maxdepth: 2
