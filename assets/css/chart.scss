@@ -15,23 +15,24 @@
     font-family: RobotoSlab;
     min-width: 100px;
     max-width: 100%;
-    background-color: #686868;
+    background-color: $sidebar-bg-color;
+    opacity: 100%;
 }
 
 .bs-tooltip-right .arrow::before {
-    border-right-color: #686868 ;
+    border-right-color: $sidebar-bg-color ;
 }
 
 .bs-tooltip-left .arrow::before {
-    border-left-color: #686868 ;
+    border-left-color: $sidebar-bg-color ;
 }
 
 .bs-tooltip-bottom .arrow::before {
-    border-bottom-color: #686868 ;
+    border-bottom-color: $sidebar-bg-color ;
 }
 
 .bs-tooltip-top .arrow::before {
-    border-top-color: #686868 ;
+    border-top-color: $sidebar-bg-color ;
 }
 
 text {

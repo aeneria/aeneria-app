@@ -7,6 +7,7 @@ const $ = require('jquery');
 global.$ = global.jQuery = $;
 require('popper.js');
 require('bootstrap');
+require('util');
 require('bootstrap-datepicker');
 require('bootstrap-datepicker/js/locales/bootstrap-datepicker.fr');
 require('bootstrap-multiselect');

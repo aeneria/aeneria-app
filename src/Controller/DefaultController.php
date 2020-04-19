@@ -29,7 +29,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/electricity", name="general")
+     * @Route("/electricity", name="electricity")
      */
     public function electricityAction(Request $request)
     {

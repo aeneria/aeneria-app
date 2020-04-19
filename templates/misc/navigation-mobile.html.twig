@@ -6,7 +6,7 @@
     </div>
 
     <div class="navbar-brand" title="æneria :{{ 'Analyser votre consommation d\'électricité' | trans }}">
-        <img src="{{ asset('image/icon/aeneria.svg') }}" alt='logo' class='logo'>
+        <img src="{{ asset('image/aeneria.svg') }}" alt='logo' class='logo'>
         <span>æneria</span>
     </div>
 
@@ -20,22 +20,26 @@
     <nav class="nav sidebar">
         <div class="nav flex-column">
             <a href="{{ path('homepage') }}" class="{% if app.request.attributes.get('_route') == 'homepage' %}active{% endif %}">
-                <img src="{{ asset('image/icon/home.png') }}" alt="*"> {{ 'Accueil' | trans }}
+                <img src="{{ asset('image/home-w.png') }}" alt="*"> {{ 'Accueil' | trans }}
             </a>
-            <a href="{{ path('general') }}" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
-                <img src="{{ asset('image/icon/electricity.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
+            <a href="{{ path('electricity') }}" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
+                <img src="{{ asset('image/electricity-w.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
             </a>
             <a href="{{ path('meteo') }}" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
-                <img src="{{ asset('image/icon/meteo.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
+                <img src="{{ asset('image/meteo-w.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
             </a>
             <a href="{{ path('energy_x_meteo') }}" class="{% if app.request.attributes.get('_route') == 'energy_x_meteo' %}active{% endif %}">
-                <img src="{{ asset('image/icon/analyse.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
+                <img src="{{ asset('image/analyze-w.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
             </a>
-            <a href="{{ path('config') }}" class="{% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
-                <img src="{{ asset('image/icon/config.png') }}" alt="*" > {{ 'Configuration' | trans }}
+
+            <a title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" class="config {% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
+                <img src="{{ asset('image/config.png') }}" alt="*" >
             </a>
-            <a href="{{ path('app_logout') }}">
-                <img src="{{ asset('image/icon/shutdown.png') }}" alt="*" > {{ 'Déconnexion' | trans }}
+            <a title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}" class="documentation" >
+                <img src="{{ asset('image/about.png') }}" alt="*" >
+            </a>
+            <a title="{{ 'Déconnexion' | trans }}"  href="{{ path('app_logout') }}" class="logout">
+                <img src="{{ asset('image/shutdown.png') }}" alt="*" >
             </a>
         </div>
     </nav>
