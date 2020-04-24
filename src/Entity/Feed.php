@@ -201,7 +201,7 @@ class Feed
     /**
      * @return FeedData[]
      */
-    public function getFeedDatas(): iterable
+    public function getFeedDatas(): ?iterable
     {
         return $this->feedDatas;
     }

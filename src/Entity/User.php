@@ -138,7 +138,7 @@ class User implements UserInterface, Serializable
         // $this->plainPassword = null;
     }
 
-    public function getPlaces(): iterable
+    public function getPlaces(): ?iterable
     {
         return $this->places;
     }
@@ -150,7 +150,7 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
-    public function getSharedPlaces(): iterable
+    public function getSharedPlaces(): ?iterable
     {
         return $this->sharedPlaces;
     }

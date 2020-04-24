@@ -15,7 +15,7 @@
         <field name="password" column="password" type="string"/>
         <field name="roles" column="roles" type="json"/>
 
-        <one-to-many field="places" target-entity="App\Entity\Place" mapped-by="user" />
-        <many-to-many field="sharedPlaces" target-entity="App\Entity\Place" mapped-by="allowedUsers" />
+        <one-to-many field="places" target-entity="App\Entity\Place" mapped-by="user"/>
+        <many-to-many field="sharedPlaces" target-entity="App\Entity\Place" mapped-by="allowedUsers"/>
     </entity>
 </doctrine-mapping>

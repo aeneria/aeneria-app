@@ -129,7 +129,7 @@ class Place
         return $this->feeds;
     }
 
-    public function getAllowedUsers(): iterable
+    public function getAllowedUsers(): ?iterable
     {
         return $this->allowedUsers;
     }

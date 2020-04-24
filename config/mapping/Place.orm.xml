@@ -16,6 +16,6 @@
         <many-to-many field="allowedUsers" target-entity="App\Entity\User" inversed-by="sharedPlaces">
             <cascade><cascade-persist/></cascade>
         </many-to-many>
-        <one-to-many field="feeds" target-entity="App\Entity\Feed" mapped-by="place" />
+        <one-to-many field="feeds" target-entity="App\Entity\Feed" mapped-by="place"/>
     </entity>
 </doctrine-mapping>
