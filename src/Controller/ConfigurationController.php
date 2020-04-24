@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -29,7 +28,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class ConfigurationController extends AbstractAppController
 {
     /**
-     * @Route("/configuration", name="config")
+     * Configuration view
      */
     public function configAction(Request $request)
     {
@@ -42,7 +41,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/place/add", name="config.place.add")
+     * Add Place form view
      */
     public function placeAddAction(int $userMaxPlaces, bool $userCanSharePlace, bool $placeCanBePublic, Request $request,
         EntityManagerInterface $entityManager, FeedRepository $feedRepository)
@@ -94,7 +93,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/place/{id}/update", name="config.place.update")
+     * Update Place form view
      */
     public function placeUpdateAction(bool $userCanSharePlace, bool $placeCanBePublic, Request $request, string $id,
         EntityManagerInterface $entityManager, FeedRepository $feedRepository)
@@ -138,7 +137,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/place/{id}/delete", name="config.place.delete")
+     * Delete Place form view
      */
     public function placeDeleteAction(Request $request, string $id)
     {
@@ -176,7 +175,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/place/{id}/fetch", name="config.place.fetch")
+     * Fetch Place data form view
      */
     public function placeFetchAction(bool $userCanFetch, Request $request, GenericFeedDataProvider $feedDataProvider, FormFactoryInterface $formFactory, string $id)
     {
@@ -274,7 +273,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/place/{id}/export", name="config.place.export")
+     * Export Place data form view
      */
     public function placeExportAction(bool $userCanExport, Request $request, DataExporter $dataExporter, string $id)
     {
@@ -331,7 +330,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/user/update", name="config.user.update")
+     * Update account user form view
      */
     public function userUpdateAction(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -374,7 +373,7 @@ class ConfigurationController extends AbstractAppController
     }
 
     /**
-     * @Route("/configuration/user/delete", name="config.user.delete")
+     * Delete user account form view
      */
     public function userDeleteAction(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder)
     {

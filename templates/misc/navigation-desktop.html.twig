@@ -13,27 +13,27 @@
         <a class="navbar-item" title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}">
                 <img src="{{ asset('image/about.png') }}" height=25 alt="{{ 'Aide' | trans }}" >
         </a>
-        <a class="navbar-item" title="{{ 'Déconnexion' | trans }}" href="{{ path('app_logout') }}">
+        <a class="navbar-item" title="{{ 'Déconnexion' | trans }}" href="{{ path('security.logout') }}">
                 <img src="{{ asset('image/shutdown.png') }}" height=25 alt="{{ 'Déconnexion' | trans }}" >
         </a>
     </div>
 </nav>
 <nav class="nav sidebar desktop">
     <div class="nav flex-column">
-        {% set active = app.request.attributes.get('_route') == 'homepage' %}
-        <a href="{{ path('homepage') }}" title="{{ 'Accueil' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
+        {% set active = app.request.attributes.get('_route') == 'dashboard.home' %}
+        <a href="{{ path('dashboard.home') }}" title="{{ 'Accueil' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
             <img src="{{ asset('image/home-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Accueil' | trans }}">
         </a>
-        {% set active = app.request.attributes.get('_route') == 'electricity' %}
-        <a href="{{ path('electricity') }}" title="{{ 'Consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
+        {% set active = app.request.attributes.get('_route') == 'dashboard.electricity' %}
+        <a href="{{ path('dashboard.electricity') }}" title="{{ 'Consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
             <img src="{{ asset('image/electricity-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Consommation d\'électricité' | trans }}" >
         </a>
-        {% set active = app.request.attributes.get('_route') == 'meteo' %}
-        <a href="{{ path('meteo') }}" title="{{ 'Analyse de la météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
+        {% set active = app.request.attributes.get('_route') == 'dashboard.meteo' %}
+        <a href="{{ path('dashboard.meteo') }}" title="{{ 'Analyse de la météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
             <img src="{{ asset('image/meteo-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Analyse de la météo' | trans }}" >
         </a>
-        {% set active = app.request.attributes.get('_route') == 'energy_x_meteo' %}
-        <a href="{{ path('energy_x_meteo') }}" title="{{ 'Analyse croisée Energie/Météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
+        {% set active = app.request.attributes.get('_route') == 'dashboard.energy_x_meteo' %}
+        <a href="{{ path('dashboard.energy_x_meteo') }}" title="{{ 'Analyse croisée Energie/Météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
             <img src="{{ asset('image/analyze-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Analyse croisée Energie/Météo' | trans }}" >
         </a>
     </div>

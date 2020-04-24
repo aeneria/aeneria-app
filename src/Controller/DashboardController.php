@@ -5,9 +5,8 @@ namespace App\Controller;
 use App\Repository\PlaceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
-class DefaultController extends AbstractController
+class DashboardController extends AbstractController
 {
     private $placeRepository;
 
@@ -16,9 +15,6 @@ class DefaultController extends AbstractController
         $this->placeRepository = $placeRepository;
     }
 
-    /**
-     * @Route("/", name="homepage")
-     */
     public function homepageAction(Request $request)
     {
         if (!$this->canUserSeeAtLeastOnPlace()) {
@@ -28,9 +24,6 @@ class DefaultController extends AbstractController
         return $this->render('dashboards/homepage.html.twig');
     }
 
-    /**
-     * @Route("/electricity", name="electricity")
-     */
     public function electricityAction(Request $request)
     {
         if (!$this->canUserSeeAtLeastOnPlace()) {
@@ -40,10 +33,7 @@ class DefaultController extends AbstractController
         return $this->render('dashboards/electricity.html.twig');
     }
 
-    /**
-     * @Route("/energy_x_meteo", name="energy_x_meteo")
-     */
-    public function energymeteoAction(Request $request)
+    public function energyMeteoAction(Request $request)
     {
         if (!$this->canUserSeeAtLeastOnPlace()) {
             return $this->render('welcome.html.twig');
@@ -52,9 +42,6 @@ class DefaultController extends AbstractController
         return $this->render('dashboards/energy_x_meteo.html.twig');
     }
 
-    /**
-     * @Route("/meteo", name="meteo")
-     */
     public function meteoAction(Request $request)
     {
         if (!$this->canUserSeeAtLeastOnPlace()) {

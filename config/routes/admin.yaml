@@ -1,0 +1,27 @@
+# Users related routes
+
+admin.user.list:
+  path: /admin/users
+  controller: App\Controller\AdministrationController::userListAction
+
+admin.user.add:
+  path: /admin/users/add
+  controller: App\Controller\AdministrationController::addUserAction
+
+admin.user.update:
+  path: /admin/users/{id}/update
+  controller: App\Controller\AdministrationController::updateUserAction
+
+admin.user.disable:
+  path: /admin/users/{id}/disable
+  controller: App\Controller\AdministrationController::disableUserAction
+
+admin.user.delete:
+  path: /admin/users/{id}/delete
+  controller: App\Controller\AdministrationController::deleteUserAction
+
+  # Admin other
+
+admin.log:
+  path: /admin/log
+  controller: App\Controller\AdministrationController::displayLogAction

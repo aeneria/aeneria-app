@@ -8,7 +8,6 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\PlaceRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DataController extends AbstractAppController
@@ -33,8 +32,6 @@ class DataController extends AbstractAppController
 
     /**
      * Get json to build an heatmap graph between two date.
-     *
-     * @Route("/data/{placeId}/repartition/{dataType}/{repartitionType}/{start}/{end}", name="data-api-repartition")
      *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
@@ -72,8 +69,6 @@ class DataController extends AbstractAppController
     /**
      * Get json to build an evolution graph between two date.
      *
-     * @Route("/data/{placeId}/evolution/{dataType}/{frequency}/{start}/{end}", name="data-api-evolution")
-     *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
@@ -105,8 +100,6 @@ class DataController extends AbstractAppController
 
     /**
      * Get json to build an sum of value graph group by a dataValue column between two date.
-     *
-     * @Route("/data/{placeId}/sum-group/{dataType}/{frequency}/{groupBy}/{start}/{end}", name="data-api-sum-group-by")
      *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
@@ -160,8 +153,6 @@ class DataController extends AbstractAppController
     /**
      * Get sum between two date.
      *
-     * @Route("/data/{placeId}/sum/{dataType}/{start}/{end}", name="data-api-sum")
-     *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
@@ -188,8 +179,6 @@ class DataController extends AbstractAppController
 
     /**
      * Get average by <frequency> between two date.
-     *
-     * @Route("/data/{placeId}/avg/{dataType}/{frequency}/{start}/{end}", name="data-api-average")
      *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
@@ -219,8 +208,6 @@ class DataController extends AbstractAppController
     /**
      * Get max by <frequency> between two date.
      *
-     * @Route("/data/{placeId}/max/{dataType}/{frequency}/{start}/{end}", name="data-api-max")
-     *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
@@ -248,8 +235,6 @@ class DataController extends AbstractAppController
 
     /**
      * Get minimum by <frequency> between two date.
-     *
-     * @Route("/data/{placeId}/min/{dataType}/{frequency}/{start}/{end}", name="data-api-min")
      *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
@@ -279,8 +264,6 @@ class DataController extends AbstractAppController
     /**
      * Get number of value inferior of <value> by <frequency> between two date.
      *
-     * @Route("/data/{placeId}/inf/{dataType}/{value}/{frequency}/{start}/{end}", name="data-api-number")
-     *
      * @param string $dataType
      *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $frequency
@@ -309,8 +292,6 @@ class DataController extends AbstractAppController
     /**
      * Get XY by <frequency> between two date.
      *
-     * @Route("/data/{placeId}/xy/{dataTypeX}/{dataTypeY}/{frequency}/{start}/{end}", name="data-api-xy")
-     *
      * @param string $dataTypeX
      *     Type of data we want on x axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
      * @param string $dataTypeY
@@ -318,7 +299,7 @@ class DataController extends AbstractAppController
      * @param string $frequency
      *     Frequency we want for the evolution (day, week, month)
      */
-    public function getXY(string $placeId, string $dataTypeX, string $dataTypeY, string $frequency, string $start, string $end): JsonResponse
+    public function getXYAction(string $placeId, string $dataTypeX, string $dataTypeY, string $frequency, string $start, string $end): JsonResponse
     {
         $place = $this->canSeePlace($placeId);
 

@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class AdministrationController extends AbstractController
 {
     /**
-     * @Route("/admin/users", name="admin.user.list")
+     * User list view
      */
     public function userListAction(UserRepository $userRepository)
     {
@@ -34,7 +34,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/add", name="admin.user.add")
+     * Add new user form view
      */
     public function addUserAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -69,7 +69,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/update", name="admin.user.update")
+     * Update user form view
      */
     public function updateUserAction(Request $request, $id, EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
@@ -123,7 +123,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/disable", name="admin.user.disable")
+     * Disable user form view
      */
     public function disableUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
     {
@@ -177,9 +177,9 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/delete", name="admin.user.delete")
+     * Delete user form veiw
      */
-    public function removeUserAction(Request $request, UserRepository $userRepository, string $id)
+    public function deleteUserAction(Request $request, UserRepository $userRepository, string $id)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
@@ -232,9 +232,9 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/log", name="admin.log")
+     * Log view
      */
-    public function displayLog(ContainerInterface $container)
+    public function displayLogAction(ContainerInterface $container)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
