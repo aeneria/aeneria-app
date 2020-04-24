@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+
+    <entity name="App\Entity\DataValue" table="data_value">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="value" column="value" type="float"/>
+        <field name="date" column="date" type="datetime"/>
+        <field name="hour" column="hour" type="integer" nullable="true"/>
+        <field name="weekDay" column="week_day" type="integer" nullable="true"/>
+        <field name="week" column="week" type="integer" nullable="true"/>
+        <field name="month" column="month" type="integer" nullable="true"/>
+        <field name="year" column="year" type="integer" nullable="true"/>
+        <field name="frequency" column="frequency" type="integer"/>
+
+        <many-to-one field="feedData" target-entity="App\Entity\FeedData">
+            <join-column nullable="false"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
