@@ -40,6 +40,11 @@ class Feed
     private $param;
 
     /**
+     * @var FeedData[]
+     */
+    private $feedDatas;
+
+    /**
      * @var Place
      */
     private $place;
@@ -191,5 +196,13 @@ class Feed
     public function getFrequencies(): array
     {
         return self::getFrequenciesFor($this->getFeedType());
+    }
+
+    /**
+     * @return FeedData[]
+     */
+    public function getFeedDatas(): iterable
+    {
+        return $this->feedDatas;
     }
 }

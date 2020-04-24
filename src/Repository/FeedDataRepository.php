@@ -16,9 +16,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FeedDataRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /** @var DataValueRepository */
+    private $dataValueRepository;
+
+    public function __construct(ManagerRegistry $registry, DataValueRepository $dataValueRepository)
     {
         parent::__construct($registry, FeedData::class);
+
+        $this->dataValueRepository = $dataValueRepository;
     }
 
     /**
@@ -26,10 +31,7 @@ class FeedDataRepository extends ServiceEntityRepository
      */
     public function purge(FeedData $feedData)
     {
-        $dataValueRepository = $this->getEntityManager()->getRepository('App:DataValue');
-        \assert($dataValueRepository instanceof DataValueRepository);
-
-        $dataValueRepository
+        $this->dataValueRepository
             ->createQueryBuilder('v')
             ->delete()
             ->where('v.feedData = :id')
@@ -76,12 +78,8 @@ class FeedDataRepository extends ServiceEntityRepository
      */
     public function getLastUpToDate(FeedData $feedData)
     {
-        $dataValueRepository = $this->getEntityManager()->getRepository('App:DataValue');
-        \assert($dataValueRepository instanceof DataValueRepository);
-
         // Try to get the corresponding DataValue.
-
-        $result = $dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY['DAY']);
+        $result = $this->dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY['DAY']);
 
         if (!empty($result[0]['date'])) {
             return new \DateTime($result[0]['date']);
@@ -109,7 +107,7 @@ class FeedDataRepository extends ServiceEntityRepository
             ];
 
             // Try to get the corresponding DataValue.
-            $dataValue = $this->getEntityManager()->getRepository('App:DataValue')->findBy($criteria);
+            $dataValue = $this->dataValueRepository->findBy($criteria);
 
             // A feed is up to date only if all its feedData are up to date.
             $isUpToDate = $isUpToDate && !empty($dataValue);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DoctrineMigrations;
 
 use App\Entity\Place;
+use App\Repository\FeedDataRepository;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -21,12 +22,11 @@ final class Version20190213145900 extends AbstractMigration implements Container
     {
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
+        $feedDataRepository = $this->container->get(FeedDataRepository::class);
 
         // Create place for Linky Feed.
-        $linkyFeed = $doctrine
-            ->getRepository('App:Feed')
-            ->findOneByFeedType('LINKY')
-        ;
+        $linkyFeed = $feedDataRepository->findOneByFeedType('LINKY');
+
         if ($linkyFeed) {
             $param = $linkyFeed->getParam();
             $address = $param['ADDRESS'];
@@ -39,10 +39,7 @@ final class Version20190213145900 extends AbstractMigration implements Container
             $linkyFeed->setPlace($place);
 
             // Link MeteoFrance feed with place.
-            $meteoFranceFeed = $doctrine
-                ->getRepository('App:Feed')
-                ->findOneByFeedType('METEO_FRANCE')
-            ;
+            $meteoFranceFeed = $feedDataRepository->findOneByFeedType('METEO_FRANCE');
 
             $meteoFranceFeed->setPlace($place);
 

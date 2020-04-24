@@ -72,6 +72,7 @@ final class DataValueRepositoryTest extends AppTestCase
     {
         $entityManager = $this->getEntityManager();
         $dataValueRepository = $this->getDataValueRepository();
+        $feedRepository = $this->getFeedRepository();
 
         $feed = $this->createPersistedFeed();
         $feedData = $this->createPersistedFeedData([
@@ -103,6 +104,8 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
         $entityManager->clear();
 
+        $feed = $feedRepository->find($feed->getId());
+
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
@@ -121,6 +124,7 @@ final class DataValueRepositoryTest extends AppTestCase
     {
         $entityManager = $this->getEntityManager();
         $dataValueRepository = $this->getDataValueRepository();
+        $feedRepository = $this->getFeedRepository();
 
         $feed = $this->createPersistedFeed();
         $feedData = $this->createPersistedFeedData([
@@ -149,6 +153,8 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
         $entityManager->clear();
 
+        $feed = $feedRepository->find($feed->getId());
+
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
@@ -167,6 +173,7 @@ final class DataValueRepositoryTest extends AppTestCase
     {
         $entityManager = $this->getEntityManager();
         $dataValueRepository = $this->getDataValueRepository();
+        $feedRepository = $this->getFeedRepository();
 
         $feed = $this->createPersistedFeed();
         $feedData = $this->createPersistedFeedData([
@@ -195,6 +202,8 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
         $entityManager->clear();
 
+        $feed = $feedRepository->find($feed->getId());
+
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
@@ -213,6 +222,7 @@ final class DataValueRepositoryTest extends AppTestCase
     {
         $entityManager = $this->getEntityManager();
         $dataValueRepository = $this->getDataValueRepository();
+        $feedRepository = $this->getFeedRepository();
 
         $feed = $this->createPersistedFeed();
         $feedData = $this->createPersistedFeedData([
@@ -240,6 +250,8 @@ final class DataValueRepositoryTest extends AppTestCase
 
         $entityManager->flush();
         $entityManager->clear();
+
+        $feed = $feedRepository->find($feed->getId());
 
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),

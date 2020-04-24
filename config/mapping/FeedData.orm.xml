@@ -8,7 +8,7 @@
 
         <field name="dataType" column="data_type" type="string" length="150"/>
 
-        <many-to-one field="feed" target-entity="App\Entity\Feed">
+        <many-to-one field="feed" target-entity="App\Entity\Feed" inversed-by="feedDatas">
             <join-column nullable="false"/>
         </many-to-one>
     </entity>

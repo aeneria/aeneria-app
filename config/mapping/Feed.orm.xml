@@ -14,5 +14,8 @@
         <many-to-one field="place" target-entity="App\Entity\Place" inversed-by="feeds">
             <join-column nullable="false"/>
         </many-to-one>
+        <one-to-many field="feedDatas" target-entity="App\Entity\FeedData" mapped-by="feed">
+            <join-column nullable="false"/>
+        </one-to-many>
     </entity>
 </doctrine-mapping>

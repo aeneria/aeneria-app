@@ -75,11 +75,7 @@ class AdministrationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $user = $this
-            ->getDoctrine()
-            ->getRepository('App:User')
-            ->find($id)
-        ;
+        $user = $userRepository->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('Utilisateur non trouvé');
@@ -125,15 +121,11 @@ class AdministrationController extends AbstractController
     /**
      * Disable user form view
      */
-    public function disableUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
+    public function disableUserAction(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, string $id)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $user = $this
-            ->getDoctrine()
-            ->getRepository('App:User')
-            ->find($id)
-        ;
+        $user = $userRepository->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('Utilisateur non trouvé');
@@ -183,24 +175,19 @@ class AdministrationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $user = $this
-            ->getDoctrine()
-            ->getRepository('App:User')
-            ->find($id)
-        ;
+        $user = $userRepository->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('Utilisateur non trouvé');
         }
 
         $form = $this
-            ->createFormBuilder([], [
+            ->createFormBuilder()
+            ->add('username', Form\HiddenType::class, [
+                'data' => $user->getUsername(),
                 'constraints' => [
                     new AtLeastOneAdmin(),
                 ],
-            ])
-            ->add('username', Form\HiddenType::class, [
-                'data' => $user->getUsername(),
             ])
             ->add('are_you_sure', Form\CheckboxType::class, [
                 'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer cet utilisateur",
