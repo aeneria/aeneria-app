@@ -1,5 +1,3 @@
-# Users related routes
-
 security.login:
   path: /login
   controller: App\Controller\SecurityController::login

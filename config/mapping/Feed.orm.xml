@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
-
     <entity name="App\Entity\Feed" table="feed">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-
         <field name="name" column="name" type="string" length="150"/>
         <field name="feedType" column="feed_type" type="string" length="150"/>
         <field name="feedDataProviderType" column="feed_data_provider_type" type="string" length="150"/>
         <field name="param" column="param" type="json_array"/>
-
         <many-to-one field="place" target-entity="App\Entity\Place" inversed-by="feeds">
             <join-column nullable="false"/>
         </many-to-one>

@@ -3,7 +3,7 @@ config:
   controller: App\Controller\ConfigurationController::configAction
 
 # Places related routes
-
+####################################
 config.place.add:
   path: /configuration/place/add
   controller: App\Controller\ConfigurationController::placeAddAction

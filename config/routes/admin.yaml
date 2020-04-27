@@ -1,5 +1,5 @@
 # Users related routes
-
+####################################
 admin.user.list:
   path: /admin/users
   controller: App\Controller\AdministrationController::userListAction
@@ -20,8 +20,8 @@ admin.user.delete:
   path: /admin/users/{id}/delete
   controller: App\Controller\AdministrationController::deleteUserAction
 
-  # Admin other
-
+# Admin other
+####################################
 admin.log:
   path: /admin/log
   controller: App\Controller\AdministrationController::displayLogAction

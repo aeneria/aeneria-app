@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
-
     <entity name="App\Entity\FeedData" table="feed_data">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-
         <field name="dataType" column="data_type" type="string" length="150"/>
-
         <many-to-one field="feed" target-entity="App\Entity\Feed" inversed-by="feedDatas">
             <join-column nullable="false"/>
         </many-to-one>
