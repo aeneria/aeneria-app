@@ -19,16 +19,16 @@
 <div class="collapse mobile" id="sideBar">
     <nav class="nav sidebar">
         <div class="nav flex-column">
-            <a href="{{ path('homepage') }}" class="{% if app.request.attributes.get('_route') == 'homepage' %}active{% endif %}">
+            <a href="{{ path('dashboard.home') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.home' %}active{% endif %}">
                 <img src="{{ asset('image/home-w.png') }}" alt="*"> {{ 'Accueil' | trans }}
             </a>
-            <a href="{{ path('electricity') }}" class="{% if app.request.attributes.get('_route') == 'general' %}active{% endif %}">
+            <a href="{{ path('dashboard.electricity') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.electricity' %}active{% endif %}">
                 <img src="{{ asset('image/electricity-w.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
             </a>
-            <a href="{{ path('meteo') }}" class="{% if app.request.attributes.get('_route') == 'meteo' %}active{% endif %}">
+            <a href="{{ path('dashboard.meteo') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.meteo' %}active{% endif %}">
                 <img src="{{ asset('image/meteo-w.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
             </a>
-            <a href="{{ path('energy_x_meteo') }}" class="{% if app.request.attributes.get('_route') == 'energy_x_meteo' %}active{% endif %}">
+            <a href="{{ path('dashboard.energy_x_meteo') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.energy_x_meteo' %}active{% endif %}">
                 <img src="{{ asset('image/analyze-w.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
             </a>
 
@@ -38,7 +38,7 @@
             <a title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}" class="documentation" >
                 <img src="{{ asset('image/about.png') }}" alt="*" >
             </a>
-            <a title="{{ 'Déconnexion' | trans }}"  href="{{ path('app_logout') }}" class="logout">
+            <a title="{{ 'Déconnexion' | trans }}"  href="{{ path('security.logout') }}" class="logout">
                 <img src="{{ asset('image/shutdown.png') }}" alt="*" >
             </a>
         </div>

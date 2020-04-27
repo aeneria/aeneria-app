@@ -13,14 +13,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class AdministrationController extends AbstractController
 {
     /**
-     * @Route("/admin/users", name="admin.user.list")
+     * User list view
      */
     public function userListAction(UserRepository $userRepository)
     {
@@ -34,7 +33,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/add", name="admin.user.add")
+     * Add new user form view
      */
     public function addUserAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -69,17 +68,13 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/update", name="admin.user.update")
+     * Update user form view
      */
     public function updateUserAction(Request $request, $id, EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $user = $this
-            ->getDoctrine()
-            ->getRepository('App:User')
-            ->find($id)
-        ;
+        $user = $userRepository->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('Utilisateur non trouvé');
@@ -123,17 +118,13 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/disable", name="admin.user.disable")
+     * Disable user form view
      */
-    public function disableUserAction(Request $request, EntityManagerInterface $entityManager, string $id)
+    public function disableUserAction(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, string $id)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $user = $this
-            ->getDoctrine()
-            ->getRepository('App:User')
-            ->find($id)
-        ;
+        $user = $userRepository->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('Utilisateur non trouvé');
@@ -177,30 +168,25 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}/delete", name="admin.user.delete")
+     * Delete user form veiw
      */
-    public function removeUserAction(Request $request, UserRepository $userRepository, string $id)
+    public function deleteUserAction(Request $request, UserRepository $userRepository, string $id)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $user = $this
-            ->getDoctrine()
-            ->getRepository('App:User')
-            ->find($id)
-        ;
+        $user = $userRepository->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('Utilisateur non trouvé');
         }
 
         $form = $this
-            ->createFormBuilder([], [
+            ->createFormBuilder()
+            ->add('username', Form\HiddenType::class, [
+                'data' => $user->getUsername(),
                 'constraints' => [
                     new AtLeastOneAdmin(),
                 ],
-            ])
-            ->add('username', Form\HiddenType::class, [
-                'data' => $user->getUsername(),
             ])
             ->add('are_you_sure', Form\CheckboxType::class, [
                 'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer cet utilisateur",
@@ -232,9 +218,9 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/log", name="admin.log")
+     * Log view
      */
-    public function displayLog(ContainerInterface $container)
+    public function displayLogAction(ContainerInterface $container)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 

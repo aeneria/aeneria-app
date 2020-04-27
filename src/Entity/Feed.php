@@ -2,13 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Feed
- *
- * @ORM\Table(name="feed")
- * @ORM\Entity(repositoryClass="App\Repository\FeedRepository")
  */
 class Feed
 {
@@ -21,44 +16,36 @@ class Feed
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="feed_type", type="string", length=150)
      */
     private $feedType;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="feed_data_provider_type", type="string", length=150)
      */
     private $feedDataProviderType;
 
     /**
      * @var array
-     *
-     * @ORM\Column(name="param", type="json_array")
      */
     private $param;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Place", inversedBy="feeds")
-     * @ORM\JoinColumn(nullable=false)
+     * @var FeedData[]
+     */
+    private $feedDatas;
+
+    /**
+     * @var Place
      */
     private $place;
 
@@ -209,5 +196,13 @@ class Feed
     public function getFrequencies(): array
     {
         return self::getFrequenciesFor($this->getFeedType());
+    }
+
+    /**
+     * @return FeedData[]
+     */
+    public function getFeedDatas(): ?iterable
+    {
+        return $this->feedDatas;
     }
 }

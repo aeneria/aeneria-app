@@ -14,9 +14,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /** @var PlaceRepository */
+    private $placeRepository;
+
+    public function __construct(ManagerRegistry $registry, PlaceRepository $placeRepository)
     {
         parent::__construct($registry, User::class);
+
+        $this->placeRepository = $placeRepository;
     }
 
     public function isLastAdmin(string $username)
@@ -43,11 +48,8 @@ class UserRepository extends ServiceEntityRepository
      */
     public function purge(User $user)
     {
-        $placeRepository = $this->getEntityManager()->getRepository('App:Place');
-        \assert($placeRepository instanceof PlaceRepository);
-
-        foreach ($placeRepository->findByUser($user) as $place) {
-            $placeRepository->purge($place);
+        foreach ($this->placeRepository->findByUser($user) as $place) {
+            $this->placeRepository->purge($place);
         }
 
         $this

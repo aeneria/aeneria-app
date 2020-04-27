@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="App\Entity\Place" table="place">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" column="name" type="string" length="150"/>
+        <field name="icon" column="icon" type="string" length="50"/>
+        <field name="public" column="public" type="boolean"/>
+        <many-to-one field="user" target-entity="App\Entity\User" inversed-by="places">
+            <join-column nullable="false"/>
+        </many-to-one>
+        <many-to-many field="allowedUsers" target-entity="App\Entity\User" inversed-by="sharedPlaces">
+            <cascade><cascade-persist/></cascade>
+        </many-to-many>
+        <one-to-many field="feeds" target-entity="App\Entity\Feed" mapped-by="place"/>
+    </entity>
+</doctrine-mapping>

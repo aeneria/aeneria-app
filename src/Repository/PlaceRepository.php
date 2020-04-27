@@ -21,10 +21,14 @@ class PlaceRepository extends ServiceEntityRepository
     /** @var bool */
     private $placeCanBePublic;
 
-    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, ManagerRegistry $registry)
+    /** @var FeedRepository */
+    private $feedRepository;
+
+    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, ManagerRegistry $registry, FeedRepository $feedRepository)
     {
         $this->userCanSharePlace = $userCanSharePlace;
         $this->placeCanBePublic = $placeCanBePublic;
+        $this->feedRepository = $feedRepository;
 
         parent::__construct($registry, Place::class);
     }
@@ -34,11 +38,8 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function purge(Place $place)
     {
-        $feedRepository = $this->getEntityManager()->getRepository('App:Feed');
-        \assert($feedRepository instanceof FeedRepository);
-
-        foreach ($feedRepository->findByPlace($place) as $feed) {
-            $feedRepository->purge($feed);
+        foreach ($this->feedRepository->findByPlace($place) as $feed) {
+            $this->feedRepository->purge($feed);
         }
 
         $this

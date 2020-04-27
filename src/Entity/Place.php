@@ -2,59 +2,43 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * Pace
- *
- * @ORM\Table(name="place")
- * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
+ * Place
  */
 class Place
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="icon", type="string", length=50)
      */
     private $icon = 'home';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="public", type="boolean")
      */
     private $public;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="places")
-     * @ORM\JoinColumn(nullable=false)
+     * @var User|null
      */
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"}, inversedBy="sharedPlaces")
+     * @var User[]|null
      */
     private $allowedUsers;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="place")
+     * @var Feed[]|null
      */
     private $feeds = [];
 
@@ -145,7 +129,7 @@ class Place
         return $this->feeds;
     }
 
-    public function getAllowedUsers(): iterable
+    public function getAllowedUsers(): ?iterable
     {
         return $this->allowedUsers;
     }

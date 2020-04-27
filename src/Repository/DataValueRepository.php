@@ -64,72 +64,67 @@ class DataValueRepository extends ServiceEntityRepository
     }
 
     /**
-     * Agregate Values for a and a frequency date and persist it to EntityManager.
+     * Agregate Values for a frequency and a date and persist it to EntityManager.
      */
     public function updateOrCreateAgregateValue(\DateTimeImmutable $date, Feed $feed, int $frequency)
     {
-        $feedDataRepository = $this->getEntityManager()->getRepository('App:FeedData');
-        \assert($feedDataRepository instanceof FeedDataRepository);
-
         list('from' => $firstDay, 'to' => $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
 
-        // Get all feedData.
-        $feedDataList = $feedDataRepository->findByFeed($feed);
+        if ($feedDatas = $feed->getFeedDatas()) {
+            foreach ($feedDatas as $feedData) {
+                switch ($feedData->getDataType()) {
+                    case FeedData::FEED_DATA_DJU:
+                    case FeedData::FEED_DATA_RAIN:
+                    case FeedData::FEED_DATA_CONSO_ELEC:
+                        $agregateData = $this
+                            ->getSumValue(
+                                $firstDay,
+                                $lastDay,
+                                $feedData,
+                                $previousFrequency
+                            )
+                        ;
+                        break;
+                    case FeedData::FEED_DATA_TEMPERATURE_MAX:
+                        $agregateData = $this
+                            ->getMaxValue(
+                                $firstDay,
+                                $lastDay,
+                                $feedData,
+                                $previousFrequency
+                            )
+                        ;
+                        break;
+                    case FeedData::FEED_DATA_TEMPERATURE_MIN:
+                        $agregateData = $this
+                            ->getMinValue(
+                                $firstDay,
+                                $lastDay,
+                                $feedData,
+                                $previousFrequency
+                            )
+                        ;
+                        break;
+                    default:
+                        $agregateData = $this
+                            ->getAverageValue(
+                                $firstDay,
+                                $lastDay,
+                                $feedData,
+                                $previousFrequency
+                            )
+                        ;
+                        break;
+                }
 
-        /** @var \App\Entity\FeedData $feedData */
-        foreach ($feedDataList as $feedData) {
-            switch ($feedData->getDataType()) {
-                case FeedData::FEED_DATA_DJU:
-                case FeedData::FEED_DATA_RAIN:
-                case FeedData::FEED_DATA_CONSO_ELEC:
-                    $agregateData = $this
-                        ->getSumValue(
-                            $firstDay,
-                            $lastDay,
-                            $feedData,
-                            $previousFrequency
-                        )
-                    ;
-                    break;
-                case FeedData::FEED_DATA_TEMPERATURE_MAX:
-                    $agregateData = $this
-                        ->getMaxValue(
-                            $firstDay,
-                            $lastDay,
-                            $feedData,
-                            $previousFrequency
-                        )
-                    ;
-                    break;
-                case FeedData::FEED_DATA_TEMPERATURE_MIN:
-                    $agregateData = $this
-                        ->getMinValue(
-                            $firstDay,
-                            $lastDay,
-                            $feedData,
-                            $previousFrequency
-                        )
-                    ;
-                    break;
-                default:
-                    $agregateData = $this
-                        ->getAverageValue(
-                            $firstDay,
-                            $lastDay,
-                            $feedData,
-                            $previousFrequency
-                        )
-                    ;
-                    break;
-            }
-
-            if (isset($agregateData[0]['value'])) {
-                $this->updateOrCreateValue(
-                    $feedData,
-                    $firstDay,
-                    $frequency,
-                    \round($agregateData[0]['value'], 1)
-                );
+                if (isset($agregateData[0]['value'])) {
+                    $this->updateOrCreateValue(
+                        $feedData,
+                        $firstDay,
+                        $frequency,
+                        \round($agregateData[0]['value'], 1)
+                    );
+                }
             }
         }
     }

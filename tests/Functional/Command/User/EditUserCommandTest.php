@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Fonctionnal\Command;
+namespace App\Tests\Functional\Command;
 
 use App\Tests\AppTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

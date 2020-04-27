@@ -7,6 +7,7 @@ namespace DoctrineMigrations;
 use App\Entity\DataValue;
 use App\FeedObject\MeteoFrance;
 use App\Repository\FeedDataRepository;
+use App\Repository\FeedRepository;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\ORM\EntityManager;
@@ -33,9 +34,9 @@ final class Version20190730115904 extends AbstractMigration implements Container
         $doctrine = $this->container->get('doctrine');
         /** @var EntityManager $entityManager */
         $entityManager = $doctrine->getManager();
-        $feedRepository = $doctrine->getRepository('App:Feed');
+        $feedRepository = $this->container->get(FeedRepository::class);
         /** @var FeedDataRepository $feedDataRepository */
-        $feedDataRepository = $doctrine->getRepository('App:FeedData');
+        $feedDataRepository = $this->container->get(FeedDataRepository::class);
 
         if ($meteoFranceFeed = $feedRepository->findOneBy(['feedType' => 'METEO_FRANCE'])) {
             $meteoFrance = new MeteoFrance($meteoFranceFeed, $entityManager);

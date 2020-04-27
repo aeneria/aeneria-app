@@ -2,13 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(name="users")
+ * Place
  */
 class User implements UserInterface, Serializable
 {
@@ -16,40 +14,37 @@ class User implements UserInterface, Serializable
     public const ROLE_USER = 'ROLE_USER';
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(name="id", type="integer")
+     * @var int
      */
     private $id;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : true})
+     * @var bool
      */
     private $active;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @var string
      */
     private $username;
 
     /**
-     * @ORM\Column(type="json")
+     * @var array
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
      */
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Place", mappedBy="user")
+     * @var Place[]
      */
     private $places;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Place", mappedBy="allowedUsers")
+     * @var Place[]
      */
     private $sharedPlaces;
 
@@ -58,7 +53,7 @@ class User implements UserInterface, Serializable
         return $this->id;
     }
 
-    public function setActive(bool $isActive)
+    public function setActive(bool $isActive): self
     {
         $this->active = $isActive;
 
@@ -143,7 +138,7 @@ class User implements UserInterface, Serializable
         // $this->plainPassword = null;
     }
 
-    public function getPlaces(): iterable
+    public function getPlaces(): ?iterable
     {
         return $this->places;
     }
@@ -155,7 +150,7 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
-    public function getSharedPlaces(): iterable
+    public function getSharedPlaces(): ?iterable
     {
         return $this->sharedPlaces;
     }

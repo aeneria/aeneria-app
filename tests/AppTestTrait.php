@@ -14,6 +14,7 @@ use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
+use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -44,7 +45,7 @@ trait AppTestTrait
      */
     final protected function getUserRepository(): UserRepository
     {
-        return $this->getEntityManager()->getRepository('App:User');
+        return $this->getContainer()->get(UserRepository::class);
     }
 
     /**
@@ -52,7 +53,7 @@ trait AppTestTrait
      */
     final protected function getPlaceRepository(): PlaceRepository
     {
-        return $this->getEntityManager()->getRepository('App:Place');
+        return $this->getContainer()->get(PlaceRepository::class);
     }
 
     /**
@@ -60,7 +61,7 @@ trait AppTestTrait
      */
     final protected function getFeedRepository(): FeedRepository
     {
-        return $this->getEntityManager()->getRepository('App:Feed');
+        return $this->getContainer()->get(FeedRepository::class);
     }
 
     /**
@@ -68,7 +69,7 @@ trait AppTestTrait
      */
     final protected function getFeedDataRepository(): FeedDataRepository
     {
-        return $this->getEntityManager()->getRepository('App:FeedData');
+        return $this->getContainer()->get(FeedDataRepository::class);
     }
 
     /**
@@ -76,7 +77,7 @@ trait AppTestTrait
      */
     final protected function getDataValueRepository(): DataValueRepository
     {
-        return $this->getEntityManager()->getRepository('App:DataValue');
+        return $this->getContainer()->get(DataValueRepository::class);
     }
 
     /**

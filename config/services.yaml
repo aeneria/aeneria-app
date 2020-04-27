@@ -35,6 +35,11 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\Repository\:
+        public: true # For unit tests
+        resource: '../src/Repository'
+        tags: ['doctrine.repository']
+
     App\Twig\:
         resource: '../src/Twig'
         tags: ['twig.extension', 'container.hot_path']

@@ -2,13 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * FeedData
- *
- * @ORM\Table(name="feed_data")
- * @ORM\Entity(repositoryClass="App\Repository\FeedDataRepository")
  */
 class FeedData
 {
@@ -24,23 +19,16 @@ class FeedData
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Feed")
-     * @ORM\JoinColumn(nullable=false)
+     * @var Feed
      */
     private $feed;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="data_type", type="string", length=150)
      */
     private $dataType;
 

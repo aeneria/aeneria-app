@@ -2,14 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 /**
  * DataValue
- *
- * @ORM\Table(name="data_value")
- * @ORM\Entity(repositoryClass="App\Repository\DataValueRepository")
  */
 class DataValue
 {
@@ -23,72 +19,51 @@ class DataValue
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="value", type="float")
      */
     private $value;
 
     /**
      * @var \DateTimeInterface
-     *
-     * @ORM\Column(name="date", type="datetime")
      */
     private $date;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="hour", type="integer", nullable=true)
      */
     private $hour;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="week_day", type="integer", nullable=true)
      */
     private $weekDay;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="week", type="integer", nullable=true)
      */
     private $week;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="month", type="integer", nullable=true, nullable=true)
      */
     private $month;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="year", type="integer", nullable=true)
      */
     private $year;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FeedData")
-     * @ORM\JoinColumn(nullable=false)
+     * @var FeedData
      */
     private $feedData;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="frequency", type="integer")
      */
     private $frequency;
 

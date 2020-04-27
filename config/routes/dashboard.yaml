@@ -1,0 +1,15 @@
+dashboard.home:
+  path: /
+  controller: App\Controller\DashboardController::homepageAction
+
+dashboard.electricity:
+  path: /electricity
+  controller: App\Controller\DashboardController::electricityAction
+
+dashboard.energy_x_meteo:
+  path: /energy_x_meteo
+  controller: App\Controller\DashboardController::energyMeteoAction
+
+dashboard.meteo:
+  path: /meteo
+  controller: App\Controller\DashboardController::meteoAction

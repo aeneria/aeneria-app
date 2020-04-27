@@ -7,7 +7,7 @@
     {% block stylesheets %}
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('image/icon/favicon.png') }}" />
-    <link rel="stylesheet" href="{{path('homepage')}}build/app.css">
+    <link rel="stylesheet" href="{{path('dashboard.home')}}build/app.css">
 </head>
 <body>
 
@@ -40,7 +40,7 @@
         {% endblock %}
     </main>
     <script>
-        var appRoute = "{{ path('homepage')|escape('js') }}";
+        var appRoute = "{{ path('dashboard.home')|escape('js') }}";
         {% if (places) %}
             var places = {{ places|json_encode|raw }};
         {% endif %}
@@ -49,8 +49,8 @@
         {% endif %}
     </script>
 
-    <script src="{{path('homepage')}}build/runtime.js"></script>
-    <script src="{{path('homepage')}}build/app.js"></script>
+    <script src="{{path('dashboard.home')}}build/runtime.js"></script>
+    <script src="{{path('dashboard.home')}}build/app.js"></script>
     {% block javascripts %}
     {% endblock %}
 </body>
