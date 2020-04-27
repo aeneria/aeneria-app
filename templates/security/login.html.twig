@@ -18,31 +18,34 @@
                     {% endif %}
 
                     {% if app.user %}
-                        <div class="checkbox mb-3">{{ 'Vous êtes déjà connecté en tant que' | trans }} {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        <div class="checkbox mb-3">
+                            <p>{{ 'Vous êtes déjà connecté en tant que' | trans }} {{ app.user.username }}</p>
+                            <a href="{{ path('dashboard.home') }}" class="btn btn-primary">Aller à la page d'accueil</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">Se déconnecter</a>
+                        </div>
+                    {% else %}
+                        <div class="form-group row">
+                            <label for="inputUsername" >{{ 'Identifiant' | trans }}</label>
+                            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'Identifiant' | trans }}" required autofocus>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" >{{ 'Mot de passe' | trans }}</label>
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}"
+                        >
+
+                        <div class="checkbox mb-3">
+                            <label>
+                                <input type="checkbox" name="_remember_me"> Rester connecté
+                            </label>
+                        </div>
+
+                        <button class="btn btn-lg btn-primary" type="submit">
+                            Connexion
+                        </button>
                     {% endif %}
-
-                    <div class="form-group row">
-                        <label for="inputUsername" >{{ 'Identifiant' | trans }}</label>
-                        <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'Identifiant' | trans }}" required autofocus>
-                    </div>
-                    <div class="form-group row">
-                        <label for="inputPassword" >{{ 'Mot de passe' | trans }}</label>
-                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                    </div>
-
-                    <input type="hidden" name="_csrf_token"
-                        value="{{ csrf_token('authenticate') }}"
-                    >
-
-                    <div class="checkbox mb-3">
-                        <label>
-                            <input type="checkbox" name="_remember_me"> Rester connecté
-                        </label>
-                    </div>
-
-                    <button class="btn btn-lg btn-primary" type="submit">
-                        Connexion
-                    </button>
                 </form>
             </div>
         </div>

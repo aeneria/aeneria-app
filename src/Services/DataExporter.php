@@ -30,7 +30,7 @@ class DataExporter
      * @param string $destination no trailing slash !
      * @return string filename
      */
-    final public function exportPlace(Place $place, \Datetime $from, \DateTime $to, string $destination = null): string
+    final public function exportPlace(Place $place, \DateTimeImmutable $from, \DateTimeImmutable $to, string $destination = null): string
     {
         $filename = \sprintf(
             '%s/aeneria-%s-%s-to-%s',
@@ -52,14 +52,14 @@ class DataExporter
         return $filename;
     }
 
-    private function exportFeed(WriterMultiSheetsAbstract $writer, Feed $feed, \DateTime $from, \DateTime $to): void
+    private function exportFeed(WriterMultiSheetsAbstract $writer, Feed $feed, \DateTimeImmutable $from, \DateTimeImmutable $to): void
     {
         foreach ($this->feedDataRepository->findBy(['feed' => $feed]) as $feedData) {
             $this->exporFeedData($writer, $feed, $feedData, $from, $to);
         }
     }
 
-    private function exporFeedData(WriterMultiSheetsAbstract $writer, Feed $feed, FeedData $feedData, \DateTime $from, \DateTime $to): void
+    private function exporFeedData(WriterMultiSheetsAbstract $writer, Feed $feed, FeedData $feedData, \DateTimeImmutable $from, \DateTimeImmutable $to): void
     {
         $sheetName = $feedData->getDisplayDataType();
         $sheet = $writer->getCurrentSheet();

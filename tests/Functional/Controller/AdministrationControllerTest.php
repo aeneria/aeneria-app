@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Fonctionnal\Controller;
+namespace App\Tests\Functional\Controller;
 
 use App\Tests\AppWebTestCase;
 

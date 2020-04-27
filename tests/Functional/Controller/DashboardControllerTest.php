@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Fonctionnal\Controller;
+namespace App\Tests\Functional\Controller;
 
 use App\Tests\AppWebTestCase;
 
-final class DefaultControllerTest extends AppWebTestCase
+final class DashboardControllerTest extends AppWebTestCase
 {
     public function urlsProvider()
     {

@@ -310,8 +310,8 @@ class ConfigurationController extends AbstractAppController
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date']);
-                $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date']);
+                $startDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['start_date']);
+                $endDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['end_date']);
                 $filename = $dataExporter->exportPlace($place, $startDate, $endDate);
                 $file = new File($filename);
 
@@ -421,7 +421,7 @@ class ConfigurationController extends AbstractAppController
                 $userRepository->purge($user);
                 $this->addFlash('success', 'Votre compte a bien été supprimé !');
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('dashboard.home');
             }
         }
 
