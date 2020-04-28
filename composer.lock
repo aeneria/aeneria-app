@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f50a6ac32c4949f94a306c7e02460f6",
+    "content-hash": "8767dba89010f5249c30b2cc195fa453",
     "packages": [
+        {
+            "name": "aeneria/enedis-data-connect",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/aeneria/enedis-data-connect.git",
+                "reference": "dd9da3fe77dfa72b40ca2af94780d54519d812c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fenedis-data-connect/repository/archive.zip?sha=dd9da3fe77dfa72b40ca2af94780d54519d812c7",
+                "reference": "dd9da3fe77dfa72b40ca2af94780d54519d812c7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "symfony/http-client": "5.0.*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aeneria\\EnedisDataConnectApi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simon Mellerin",
+                    "email": "bonjour@aeneria.com"
+                }
+            ],
+            "description": "A small library to use a part of Enedis Data Connect API with PHP : https://datahub-enedis.fr/data-connect/",
+            "time": "2020-04-28T09:58:27+00:00"
+        },
         {
             "name": "box/spout",
             "version": "v3.1.0",
@@ -6108,6 +6149,7 @@
                 "monolog",
                 "productivity"
             ],
+            "abandoned": true,
             "time": "2019-10-24T07:13:31+00:00"
         },
         {

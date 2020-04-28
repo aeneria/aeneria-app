@@ -10,6 +10,7 @@ class Feed
     const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
     const FEED_TYPE_METEO = 'METEO';
 
+    const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT = 'ENEDIS_DATA_CONNECT';
     const FEED_DATA_PROVIDER_LINKY = 'LINKY';
     const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
     const FEED_DATA_PROVIDER_FAKE = 'FAKE';
@@ -55,7 +56,7 @@ class Feed
             self::FEED_TYPE_ELECTRICITY => [
                 'NAME' => 'Electricity',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
-                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_LINKY],
+                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT],
                 'FREQUENCIES' => DataValue::FREQUENCY,
             ],
             self::FEED_TYPE_METEO => [
