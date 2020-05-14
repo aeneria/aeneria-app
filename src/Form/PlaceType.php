@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Place;
 use App\Repository\UserRepository;
-use App\Validator\Constraints\LogsToEnedis;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -27,17 +26,18 @@ class PlaceType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom du compteur',
+                'label' => 'Nom de l\'adresse :',
+                'attr' => ['placeholder' => 'ex : Rue de la paix à Nantes'],
             ])
             ->add('icon', IconChoiceType::class, [
-                'label' => 'Icone',
+                'label' => 'Icone :',
             ])
         ;
 
         if ($options['place_can_be_public']) {
             $builder->add('public', CheckboxType::class, [
                 'label' => 'Public',
-                'help' => 'Un compteur public est visible par tous les utilisateurs de æneria.',
+                'help' => 'Les données d\'une adress public sont visibles par tous les utilisateurs d\'æneria.',
                 'required' => false,
             ]);
         }
@@ -53,18 +53,6 @@ class PlaceType extends AbstractType
         }
 
         $builder
-            ->add('electricity', LinkyFeedType::class, [
-                'label' => false,
-                'constraints' => [
-                    new LogsToEnedis(),
-                ],
-            ])
-            ->add('meteo', MeteoFranceFeedType::class, [
-                'label' => false,
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer',
-            ])
             ->addModelTransformer(new CallbackTransformer(
                 function (?Place $place) {
                     if ($place) {
@@ -77,10 +65,6 @@ class PlaceType extends AbstractType
                         $data['shared'] = [];
                         foreach ($place->getAllowedUsers() as $user) {
                             $data['shared'][] = $user->getId();
-                        }
-
-                        foreach ($place->getFeeds() as $feed) {
-                            $data[\strtolower($feed->getFeedType())] = $feed;
                         }
 
                         return $data;
@@ -97,8 +81,6 @@ class PlaceType extends AbstractType
                         ->setIcon($data['icon'])
                         ->setPublic($data['public'] ?? false)
                         ->setAllowedUsers($this->userRepository->findById($data['shared'] ?? []))
-                        ->addFeed($data['meteo'])
-                        ->addFeed($data['electricity'])
                     ;
 
                     return $place;

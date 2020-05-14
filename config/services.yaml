@@ -52,8 +52,8 @@ services:
         resource: '../src/Twig'
         tags: ['twig.extension', 'container.hot_path']
 
-    Aeneria\EnedisDataConnectApi\Services\DataConnectService:
-        class: Aeneria\EnedisDataConnectApi\Services\DataConnectService
+    Aeneria\EnedisDataConnectApi\Service\DataConnectService:
+        class: Aeneria\EnedisDataConnectApi\Service\DataConnectService
         arguments:
             $authEndpoint: "%aeneria.enedis.endpoint_auth%"
             $dataEndpoint: "%aeneria.enedis.endpoint_data%"

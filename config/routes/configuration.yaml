@@ -3,19 +3,6 @@ config:
   controller: App\Controller\ConfigurationController::configAction
 
 # Places related routes
-####################################
-config.place.add:
-  path: /configuration/place/add
-  controller: App\Controller\ConfigurationController::placeAddAction
-
-config.place.update:
-  path: /configuration/place/{id}/update
-  controller: App\Controller\ConfigurationController::placeUpdateAction
-
-config.place.delete:
-  path: /configuration/place/{id}/delete
-  controller: App\Controller\ConfigurationController::placeDeleteAction
-
 config.place.fetch:
   path: /configuration/place/{id}/fetch
   controller: App\Controller\ConfigurationController::placeFetchAction
@@ -25,7 +12,6 @@ config.place.export:
   controller: App\Controller\ConfigurationController::placeExportAction
 
 # User related route
-
 config.user.update:
   path: /configuration/user/update
   controller: App\Controller\ConfigurationController::userUpdateAction

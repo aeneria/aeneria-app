@@ -25,7 +25,7 @@ class Place
     /**
      * @var bool
      */
-    private $public;
+    private $public = false;
 
     /**
      * @var User|null
@@ -35,7 +35,7 @@ class Place
     /**
      * @var User[]|null
      */
-    private $allowedUsers;
+    private $allowedUsers = [];
 
     /**
      * @var Feed[]|null
@@ -127,6 +127,26 @@ class Place
     public function getFeeds(): iterable
     {
         return $this->feeds;
+    }
+
+    public function getFeed(string $feedType): ?Feed
+    {
+        if ( !\array_key_exists($feedType, Feed::getAllFeedTypes())) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Le type de Feed %s n\'existe pas',
+                $feedType
+            ));
+        }
+
+        if ($this->feeds) {
+            foreach($this->feeds as $feed) {
+                if ($feedType === $feed->getFeedType()) {
+                    return $feed;
+                }
+            }
+        }
+
+        return null;
     }
 
     public function getAllowedUsers(): ?iterable

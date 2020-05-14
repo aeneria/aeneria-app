@@ -38,7 +38,7 @@ class Feed
     /**
      * @var array
      */
-    private $param;
+    private $param = [];
 
     /**
      * @var FeedData[]
@@ -148,6 +148,13 @@ class Feed
         return $this;
     }
 
+    public function setSingleParam(string $name, $value): self
+    {
+        $this->param[$name] = $value;
+
+        return $this;
+    }
+
     /**
      * Get param
      *
@@ -205,5 +212,26 @@ class Feed
     public function getFeedDatas(): ?iterable
     {
         return $this->feedDatas;
+    }
+
+
+    public function getFeedData(string $feedDataType): ?FeedData
+    {
+        if ( !\array_key_exists($feedDataType, FeedData::getAllTypeLabels())) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Le type de FeedData %s n\'existe pas',
+                $feedDataType
+            ));
+        }
+
+        if ($this->feedDatas) {
+            foreach($this->feedDatas as $feedData) {
+                if ($feedDataType === $feedData->getDataType()) {
+                    return $feedData;
+                }
+            }
+        }
+
+        return null;
     }
 }

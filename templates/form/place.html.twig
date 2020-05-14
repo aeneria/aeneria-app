@@ -1,16 +1,11 @@
 {% macro form(placeType) %}
-  {% from "form/linky.html.twig" import form as linkyForm %}
-  {% from "form/meteo_france.html.twig" import form as meteoFranceForm %}
-
-  <h2><i class="fas fa-clipboard-check"></i> {{ 'Informations générales' | trans }}</h2>
-
   {{ form_row(placeType.icon) }}
 
   <div class="form-group row">
-    <div class="col-sm-5 col-form-label">
+    <div class="col-sm-4 col-form-label">
       {{ form_label(placeType.name) }}
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-8">
       {{ form_widget(placeType.name) }}
       {{ form_errors(placeType.name) }}
       {{ form_help(placeType.name) }}
@@ -18,32 +13,16 @@
   </div>
 
   <div class="form-group row">
-    {% if placeType.shared is defined %}
-    <div class="col-9">
+    <div class="col">
       {{ form_row(placeType.shared) }}
     </div>
-    {% endif %}
+  </div>
+
+  <div class="form-group row">
     {% if placeType.public is defined %}
-    <div class="col-3">
-      {{ form_widget(placeType.public, {label_attr: {class: 'checkbox-custom'} }) }}
-      {{ form_errors(placeType.public) }}
+    <div class="col">
+      {{ form_row(placeType.public, {label_attr: {class: 'checkbox-custom'}}) }}
     </div>
     {% endif %}
   </div>
-  {% if placeType.public is defined %}
-  <div class="row">
-    <div class="col">
-      {{ form_help(placeType.public, {label_attr: {class: 'checkbox-custom'} }) }}
-    </div>
-  </div>
-  {% endif %}
-
-  <hr>
-
-  {{ linkyForm(placeType.electricity) }}
-
-  <hr>
-
-  {{ meteoFranceForm(placeType.meteo)}}
-
 {% endmacro %}

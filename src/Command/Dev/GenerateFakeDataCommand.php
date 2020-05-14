@@ -67,8 +67,10 @@ class GenerateFakeDataCommand extends Command
         $username = $input->getOption('user-name') ?? 'user-test';
         $password = $input->getOption('user-password') ?? 'password';
         $placeName = $input->getOption('place-name') ?? 'place-test';
-        $from = $input->getOption('from') ? new \DateTimeImmutable($input->getOption('from')) : new \DateTimeImmutable('3 months ago');
-        $to = $input->getOption('to') ? new \DateTimeImmutable($input->getOption('to')) : new \DateTimeImmutable('today');
+        $from = $input->getOption('from') ? new \DateTimeImmutable($input->getOption('from')) : new \DateTimeImmutable('3 months ago midnight');
+        $from = \DateTimeImmutable::createFromFormat('!Y-m-d', $from->format('Y-m-d'));
+        $to = $input->getOption('to') ? new \DateTimeImmutable($input->getOption('to')) : new \DateTimeImmutable('today midnight');
+        $to = \DateTimeImmutable::createFromFormat('!Y-m-d', $to->format('Y-m-d'));
         $force = $input->getOption('force');
 
         $user = $this->createOrUpdateUser($username, $password);

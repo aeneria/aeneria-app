@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Services\JwtService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -31,9 +32,13 @@ class InstallCommand extends Command
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    /** @var JwtService */
+    private $jwtService;
+
+    public function __construct(EntityManagerInterface $entityManager, JwtService $jwtService)
     {
         $this->entityManager = $entityManager;
+        $this->jwtService = $jwtService;
         parent::__construct();
     }
 
@@ -60,6 +65,7 @@ class InstallCommand extends Command
             ->setupDatabase()
             ->setupMigration()
             ->clearCache()
+            ->generateRsaKey()
         ;
 
         $this->io->success('aeneria has been successfully installed.');
@@ -69,7 +75,7 @@ class InstallCommand extends Command
 
     protected function checkRequirements()
     {
-        $this->io->section('Step 1 of 3: Checking system requirements.');
+        $this->io->section('Step 1 of 4: Checking system requirements.');
 
         $doctrineManager = $this->entityManager;
 
@@ -143,7 +149,7 @@ class InstallCommand extends Command
 
     protected function setupDatabase()
     {
-        $this->io->section('Step 2 of 3: Setting up database.');
+        $this->io->section('Step 2 of 4: Setting up database.');
 
         // user want to reset everything? Don't care about what is already here
         if (true === $this->defaultInput->getOption('reset')) {
@@ -203,7 +209,7 @@ class InstallCommand extends Command
 
     protected function setupMigration()
     {
-        $this->io->section('Step 3 of 3: Setting up migration mechanism.');
+        $this->io->section('Step 3 of 4: Setting up migration mechanism.');
         $this->runCommand('doctrine:migrations:version', ['--add' => true, '--all' => true, '--no-interaction' => true]);
         $this->io->text('<info>Migration mechanism successfully setup.</info>');
 
@@ -216,6 +222,13 @@ class InstallCommand extends Command
         $this->runCommand('cache:clear');
 
         return $this;
+    }
+
+    protected function generateRsaKey()
+    {
+        $this->io->section('Step 4 of 4: Creating RSA key.');
+        $this->io->text('Creating key...');
+        $this->jwtService->generateRsaKey();
     }
 
     /**

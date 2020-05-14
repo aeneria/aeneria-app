@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\PlaceType;
 use App\Form\UpdateAccountType;
-use App\Repository\FeedRepository;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
@@ -19,7 +17,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Callback;
@@ -37,140 +34,6 @@ class ConfigurationController extends AbstractAppController
 
         return $this->render('configuration/configuration.html.twig', [
             'places' => $places,
-        ]);
-    }
-
-    /**
-     * Add Place form view
-     */
-    public function placeAddAction(int $userMaxPlaces, bool $userCanSharePlace, bool $placeCanBePublic, Request $request,
-        EntityManagerInterface $entityManager, FeedRepository $feedRepository)
-    {
-        $user = $this->getUser();
-        \assert($user instanceof User);
-
-        if (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces) {
-            throw new AccessDeniedHttpException(\sprintf(
-                "Vous ne pouvez créer que %s adresse%s.",
-                $userMaxPlaces,
-                $userMaxPlaces > 1 ? 's' : ''
-            ));
-        }
-
-        $configForm = $this->createForm(PlaceType::class, null, [
-            'data_class' => null,
-            'user' => $this->getUser(),
-            'user_can_share_place' => $userCanSharePlace,
-            'place_can_be_public' => $placeCanBePublic,
-        ]);
-
-        if ('POST' === $request->getMethod()) {
-            $configForm->handleRequest($request);
-            if ($configForm->isValid()) {
-                $place = $configForm->getData();
-
-                $place->setUser($this->getUser());
-
-                $entityManager->persist($place);
-
-                foreach ($place->getFeeds() as $feed) {
-                    $entityManager->persist($feed);
-                    $feedRepository->createDependentFeedData($feed);
-                }
-
-                $entityManager->flush();
-
-                $this->addFlash('success', 'La nouvelle adresse a bien été enregistrée !');
-
-                return $this->redirectToRoute('config');
-            }
-        }
-
-        return $this->render('configuration/place_form.html.twig', [
-            'title' => "Ajouter une adresse",
-            'form_config' => $configForm->createView(),
-        ]);
-    }
-
-    /**
-     * Update Place form view
-     */
-    public function placeUpdateAction(bool $userCanSharePlace, bool $placeCanBePublic, Request $request, string $id,
-        EntityManagerInterface $entityManager, FeedRepository $feedRepository)
-    {
-        $place = $this->checkPlace($id);
-
-        $configForm = $this->createForm(PlaceType::class, $place, [
-                'data_class' => null,
-                'user' => $this->getUser(),
-                'user_can_share_place' => $userCanSharePlace,
-                'place_can_be_public' => $placeCanBePublic,
-            ])
-        ;
-
-        if ('POST' === $request->getMethod()) {
-            $configForm->handleRequest($request);
-            if ($configForm->isValid()) {
-                $place = $configForm->getData();
-
-                $place->setUser($this->getUser());
-
-                $entityManager->persist($place);
-
-                foreach ($place->getFeeds() as $feed) {
-                    $entityManager->persist($feed);
-                    $feedRepository->createDependentFeedData($feed);
-                }
-
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Votre configuration a bien été enregistrée !');
-
-                return $this->redirectToRoute('config');
-            }
-        }
-
-        return $this->render('configuration/place_form.html.twig', [
-            'title' => "Ajouter une adresse",
-            'form_config' => $configForm->createView(),
-        ]);
-    }
-
-    /**
-     * Delete Place form view
-     */
-    public function placeDeleteAction(Request $request, string $id)
-    {
-        $place = $this->checkPlace($id);
-
-        $form = $this
-            ->createFormBuilder()
-            ->add('are_you_sure', Form\CheckboxType::class, [
-                'label' => "Veuillez cocher cette case si vous êtes sûr de vouloir supprimer cette adresse",
-                'help' => "Attention, cette action entrainera la suppression de TOUTES les données associées à cette adresse.",
-                'required' => true,
-            ])
-            ->add('submit', Form\SubmitType::class, [
-                'attr' => ['class' => 'btn btn-danger'],
-                'label' => "Supprimer l'adresse et TOUTES ses données",
-            ])
-            ->getForm()
-            ->handleRequest($request)
-        ;
-
-        if ('POST' === $request->getMethod()) {
-            if ($form->isValid()) {
-                $place = $this->placeRepository->purge($place);
-                $this->addFlash('success', 'L\'adresse a bien été supprimée !');
-
-                return $this->redirectToRoute('config');
-            }
-        }
-
-        return $this->render('misc/confirmation_form.html.twig', [
-            'title' => 'Supprimer une adresse',
-            'form' => $form->createView(),
-            'cancel' => 'config',
         ]);
     }
 

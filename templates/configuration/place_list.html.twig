@@ -9,6 +9,8 @@
         <li>
           {% if feed.feedDataProviderType == "LINKY" %}
           <i class="fas fa-tachometer-alt"></i> {{ 'Compte Enedis' | trans }} : {{ feed.param['LOGIN'] }}</h>
+          {% elseif feed.feedDataProviderType == "ENEDIS_DATA_CONNECT" %}
+          <i class="fas fa-cube"></i> {{ 'Linky' | trans}} : {{ aeneria_feed_get_address(feed) }}
           {% elseif feed.feedDataProviderType == "METEO_FRANCE" %}
           <i class="fas fa-cloud-sun"></i> {{ 'Météo' | trans}} : {{ feed.param['CITY'] }}
           {% elseif feed.feedDataProviderType == "FAKE" %}
@@ -32,7 +34,7 @@
         {% endif %}
       </ul>
       <div class="container-fluid">
-        <a class="btn btn-sm btn-primary" href="{{ path('config.place.update', {id: place.id}) }}" title="{{ 'Modifier' | trans }}">
+        <a class="btn btn-sm btn-primary" href="{{ path('config.place.edit', {id: place.id}) }}" title="{{ 'Modifier' | trans }}">
           <i class="fas fa-pen"></i>
         </a>
         {% if aeneria_user_can_fetch() %}
@@ -57,8 +59,8 @@
       {% endfor %}
 
       {% if aeneria_user_can_add_place(user) %}
-      <a class="btn btn-primary" href="{{ path('config.place.add') }}">
-        <i class="fas fa-plus-square"></i> {{ 'Ajouter une adresse' | trans }}
+      <a class="btn btn-primary" href="{{ path('config.place.new') }}">
+        <i class="fas fa-plus-circle"></i> {{ 'Ajouter une adresse' | trans }}
       </a>
       {% endif %}
 

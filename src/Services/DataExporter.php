@@ -15,7 +15,10 @@ use Box\Spout\Writer\WriterMultiSheetsAbstract;
  */
 class DataExporter
 {
+    /** @var FeedDataRepository */
     private $feedDataRepository;
+
+    /** @var DataValueRepository */
     private $dataValueRepository;
 
     public function __construct(FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)

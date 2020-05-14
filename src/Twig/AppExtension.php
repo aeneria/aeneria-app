@@ -2,7 +2,10 @@
 
 namespace App\Twig;
 
+use Aeneria\EnedisDataConnectApi\Model\Address;
+use App\Entity\Feed;
 use App\Entity\User;
+use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -12,12 +15,18 @@ final class AppExtension extends AbstractExtension
     /** @var ContainerBagInterface */
     private $parameters;
 
+    /** @var EnedisDataConnectProvider */
+    private $enedisDataConnectProvider;
+
     /**
      * Default constructor
      */
-    public function __construct(ContainerBagInterface $parameters)
-    {
+    public function __construct(
+        ContainerBagInterface $parameters,
+        EnedisDataConnectProvider $enedisDataConnectProvider
+    ) {
         $this->parameters = $parameters;
+        $this->enedisDataConnectProvider = $enedisDataConnectProvider;
     }
 
     /**
@@ -37,6 +46,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_user_can_export', [$this, 'canUserExportData']),
             new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
             new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
+            new TwigFunction('aeneria_feed_get_address', [$this, 'getFeedAddress']),
         ];
     }
 
@@ -111,5 +121,10 @@ final class AppExtension extends AbstractExtension
         }
 
         return true;
+    }
+
+    public function getFeedAddress(Feed $feed): ?Address
+    {
+        return $this->enedisDataConnectProvider->getAddressFrom($feed);
     }
 }

@@ -30,3 +30,6 @@ require('./electricity_tab.js');
 require('./energy_x_meteo_tab.js');
 require('./meteo_tab.js');
 require('./configuration.js');
+
+// Initate Tooltip
+$('[data-toggle=\'tooltip\']').tooltip();
