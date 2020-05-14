@@ -101,7 +101,6 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         $endDate = \DateTime::createFromImmutable($date);
         $endDate->add(new \DateInterval('P1D'));
         $startDate = \DateTime::createFromImmutable($date);
-        $startDate->sub(new \DateInterval('P2D'));
 
         $meteringData = $this
             ->dataConnect
@@ -120,7 +119,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             \assert($meteringValue instanceof MeteringValue);
             $key = $meteringValue
                 ->getDate()
-                ->format('Y-m-d h:00')
+                ->format('Y-m-d H:00')
             ;
             if (\array_key_exists($key, $data)) {
                 $data[$key] += $meteringValue->getValue();
@@ -139,7 +138,6 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         $endDate = \DateTime::createFromImmutable($date);
         $endDate->add(new \DateInterval('P1D'));
         $startDate = \DateTime::createFromImmutable($date);
-        $startDate->sub(new \DateInterval('P2D'));
 
         $meteringData = $this
             ->dataConnect
@@ -178,7 +176,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             if ($value && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
-                    \DateTimeImmutable::createFromFormat('!Y-m-d h:m', $currentDate),
+                    \DateTimeImmutable::createFromFormat('!Y-m-d H:m', $currentDate),
                     DataValue::FREQUENCY['HOUR'],
                     $value
                 );

@@ -105,8 +105,8 @@ class ConfigurationController extends AbstractAppController
                 if ($request->request->has($feedId) && $form->isSubmitted() && $form->isValid()) {
                     $data = $form->getData();
 
-                    $startDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
-                    $endDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['end_date_' . $feedId]);
+                    $startDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['start_date_' . $feedId]);
+                    $endDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['end_date_' . $feedId]);
 
                     $feedDataProvider->fetchDataBetween($startDate, $endDate, [$feeds[$feedId]], $data['force_' . $feedId]);
 
