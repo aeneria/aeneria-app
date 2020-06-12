@@ -54,13 +54,13 @@ class Feed
     {
         return [
             self::FEED_TYPE_ELECTRICITY => [
-                'NAME' => 'Electricity',
+                'NAME' => 'Électricité',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT],
                 'FREQUENCIES' => DataValue::FREQUENCY,
             ],
             self::FEED_TYPE_METEO => [
-                'NAME' => 'Meteo',
+                'NAME' => 'Météo',
                 'DATA_TYPE' => [
                     FeedData::FEED_DATA_TEMPERATURE,
                     FeedData::FEED_DATA_TEMPERATURE_MIN,
@@ -96,6 +96,21 @@ class Feed
             return self::getAllFeedTypes()[$feedType]['NAME'];
         } else {
             throw new \InvalidArgumentException("Feed type " . $feedType . " does not exist !");
+        }
+    }
+
+    public static function getFeedDataProviderNameFor(string $feedDataProviderType): ?string
+    {
+        switch ($feedDataProviderType) {
+            case self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
+                case self::FEED_DATA_PROVIDER_LINKY:
+                return 'Compteur Linky';
+            case self::FEED_DATA_PROVIDER_METEO_FRANCE:
+                return 'Météo France';
+            case self::FEED_DATA_PROVIDER_FAKE:
+                return 'Fake data provider';
+            default:
+                return null;
         }
     }
 
@@ -187,6 +202,11 @@ class Feed
     public function getFeedDataProviderType(): string
     {
         return $this->feedDataProviderType;
+    }
+
+    public function getFeedDataProviderTypeName(): ?string
+    {
+        return self::getFeedDataProviderNameFor($this->feedDataProviderType);
     }
 
     public function setPlace(Place $place): self
