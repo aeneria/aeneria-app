@@ -32,7 +32,7 @@ final class FeedTest extends AppTestCase
 
     public function testAllowedDataProvidersFor()
     {
-        self::assertSame(Feed::getAllowedDataProvidersFor(Feed::FEED_TYPE_ELECTRICITY), [Feed::FEED_DATA_PROVIDER_LINKY]);
+        self::assertSame(Feed::getAllowedDataProvidersFor(Feed::FEED_TYPE_ELECTRICITY), [Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT]);
         self::assertSame(Feed::getAllowedDataProvidersFor(Feed::FEED_TYPE_METEO), [Feed::FEED_DATA_PROVIDER_METEO_FRANCE]);
 
         $this->expectExceptionMessageRegExp('/Feed type .* does not exist !/');
@@ -41,8 +41,8 @@ final class FeedTest extends AppTestCase
 
     public function testNameFor()
     {
-        self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_ELECTRICITY), 'Electricity');
-        self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_METEO), 'Meteo');
+        self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_ELECTRICITY), 'Électricité');
+        self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_METEO), 'Météo');
 
         $this->expectExceptionMessageRegExp('/Feed type .* does not exist !/');
         Feed::getNameFor('Toto');

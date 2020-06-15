@@ -30,14 +30,14 @@ final class ConfigurationControllerTest extends AppWebTestCase
     {
         $this->login('user-test');
 
-        $this->client->request('GET', "/configuration/place/add");
+        $this->client->request('GET', "/configuration/place/new");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function placeRelatedUrlsProvider()
     {
         return [
-            ['update'],
+            ['edit'],
             ['delete'],
             ['fetch'],
             ['export'],

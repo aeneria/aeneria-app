@@ -70,7 +70,7 @@ final class AppExtension extends AbstractExtension
 
     public function getHelpIconLink(?string $path, ?string $title = null, ?string $class = null): string
     {
-        $link = self::getDocumentation(\sprintf("%s", $path));
+        $link = $this->getDocumentation(\sprintf("%s", $path));
 
         return \sprintf(
             '<a href="%s" target="_blank" class="%s" title="%s"><i class="fas fa-question-circle"></i></a>',
@@ -84,7 +84,7 @@ final class AppExtension extends AbstractExtension
     {
         $path = \sprintf("utilisateur/graph.html#%s", $graph);
 
-        return self::getHelpIconLink($path, "Comment lire ce graphique ?", "help");
+        return $this->getHelpIconLink($path, "Comment lire ce graphique ?", "help");
     }
 
     public function getUserMaxPlaces(): ?int
@@ -116,7 +116,7 @@ final class AppExtension extends AbstractExtension
 
     public function canUserAddPlace(User $user): bool
     {
-        if ($userMaxPlaces = self::getUserMaxPlaces()) {
+        if ($userMaxPlaces = $this->getUserMaxPlaces()) {
             return \count($user->getPlaces()) < $userMaxPlaces;
         }
 
@@ -125,6 +125,10 @@ final class AppExtension extends AbstractExtension
 
     public function getFeedAddress(Feed $feed): ?Address
     {
-        return $this->enedisDataConnectProvider->getAddressFrom($feed);
+        if ($feed->getFeedDataProviderType() === Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT) {
+            return $this->enedisDataConnectProvider->getAddressFrom($feed);
+        }
+
+        return null;
     }
 }

@@ -21,7 +21,7 @@
       <h2><i class="fas fa-cube"></i> {{ 'Compteur linky' | trans }}</h2>
       <div class="row">
         <div class="col-sm-8">
-          <p>{{ aeneria_feed_get_address(linky) }}</p>
+          <p>{{ aeneria_feed_get_address(linky) ?: ('Inconnu' | trans) }}</p>
         </div>
         <div class="col-sm-4">
           <a href="{{ enedis_url }}" class="btn btn-sm btn-outline-secondary">Changer de compteur</a>
