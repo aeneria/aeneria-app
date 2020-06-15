@@ -131,7 +131,7 @@ class Place
 
     public function getFeed(string $feedType): ?Feed
     {
-        if ( !\array_key_exists($feedType, Feed::getAllFeedTypes())) {
+        if (!\array_key_exists($feedType, Feed::getAllFeedTypes())) {
             throw new \InvalidArgumentException(\sprintf(
                 'Le type de Feed %s n\'existe pas',
                 $feedType
@@ -139,7 +139,7 @@ class Place
         }
 
         if ($this->feeds) {
-            foreach($this->feeds as $feed) {
+            foreach ($this->feeds as $feed) {
                 if ($feedType === $feed->getFeedType()) {
                     return $feed;
                 }

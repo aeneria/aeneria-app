@@ -234,10 +234,9 @@ class Feed
         return $this->feedDatas;
     }
 
-
     public function getFeedData(string $feedDataType): ?FeedData
     {
-        if ( !\array_key_exists($feedDataType, FeedData::getAllTypeLabels())) {
+        if (!\array_key_exists($feedDataType, FeedData::getAllTypeLabels())) {
             throw new \InvalidArgumentException(\sprintf(
                 'Le type de FeedData %s n\'existe pas',
                 $feedDataType
@@ -245,7 +244,7 @@ class Feed
         }
 
         if ($this->feedDatas) {
-            foreach($this->feedDatas as $feedData) {
+            foreach ($this->feedDatas as $feedData) {
                 if ($feedDataType === $feedData->getDataType()) {
                     return $feedData;
                 }

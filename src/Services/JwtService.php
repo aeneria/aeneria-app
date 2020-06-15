@@ -9,7 +9,6 @@ use Firebase\JWT\JWT;
  */
 class JwtService
 {
-
     private $privateKey;
     private $publicKey;
 
@@ -30,14 +29,14 @@ class JwtService
         $res = \openssl_pkey_new([
             "digest_alg" => "sha512",
             "private_key_bits" => 4096,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+            "private_key_type" => \OPENSSL_KEYTYPE_RSA,
         ]);
 
         \openssl_pkey_export($res, $privKey);
         \file_put_contents($this->privateKey, $privKey);
 
         $pubKey = \openssl_pkey_get_details($res);
-        \file_put_contents( $this->publicKey, $pubKey["key"]);
+        \file_put_contents($this->publicKey, $pubKey["key"]);
     }
 
     public function encode($payload): string

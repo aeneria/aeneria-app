@@ -6,7 +6,6 @@ use App\Tests\AppWebTestCase;
 
 final class SecurityControllerTest extends AppWebTestCase
 {
-
     public function testLogin()
     {
         $crawler = $this->client->request('GET', '/login');

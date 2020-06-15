@@ -2,8 +2,8 @@
 
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
 use Aeneria\EnedisDataConnectApi\Model\Address;
+use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
 use Aeneria\EnedisDataConnectApi\Model\Token;
 use Aeneria\EnedisDataConnectApi\Service\DataConnectService;
 use App\Entity\DataValue;
@@ -115,7 +115,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         // Data can be with PT30M PT10M and PT60M, we reconstitute a PT60M interval dataset
         $data = [];
-        foreach( $meteringData->getValues() as $meteringValue) {
+        foreach ($meteringData->getValues() as $meteringValue) {
             \assert($meteringValue instanceof MeteringValue);
             $key = $meteringValue
                 ->getDate()
@@ -151,7 +151,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         ;
 
         $data = [];
-        foreach( $meteringData->getValues() as $meteringValue) {
+        foreach ($meteringData->getValues() as $meteringValue) {
             \assert($meteringValue instanceof MeteringValue);
             if (\array_key_exists($key = $meteringValue->getDate()->format('Y-m-d'), $data)) {
                 $data[$key] += $meteringValue->getValue();

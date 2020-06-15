@@ -73,7 +73,7 @@ class ConfigurationPlaceController extends AbstractAppController
         $form = $this
             ->createFormBuilder([
                 'place' => $place,
-                'meteo' => $place->getFeed(Feed::FEED_TYPE_METEO)
+                'meteo' => $place->getFeed(Feed::FEED_TYPE_METEO),
             ])
             ->add('place', PlaceType::class, [
                 'data_class' => null,
@@ -108,6 +108,7 @@ class ConfigurationPlaceController extends AbstractAppController
                 $entityManager->flush();
 
                 $this->addFlash('success', "L'adresse a été correctement enregistrée.");
+
                 return $this->redirectToRoute('config');
             }
         }
@@ -157,11 +158,12 @@ class ConfigurationPlaceController extends AbstractAppController
         if ($token = $enedisDataConnectProvider->getTokenFrom($linkyFeed)) {
             if ($token->getRefreshTokenIssuedAt() <= new \DateTimeImmutable()) {
                 $address = $enedisDataConnectProvider->getAddressFrom($linkyFeed);
+
                 return $this->render('configuration/place/enedis_step.html.twig', [
                     'from_callback' => true,
                     'place' => $place,
                     'address' => $address,
-                    'token' => $token
+                    'token' => $token,
                 ]);
             }
         }
