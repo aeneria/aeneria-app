@@ -56,12 +56,22 @@ test:phpunit:
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - cp .env.dist .env
+    - sed -i -e "s/%%DB_USER%%/root/g" .env
+    - sed -i -e "s/%%DB_PASSWORD%%/password/g" .env
+    - sed -i -e "s/%%DB_HOST%%/mysql/g" .env
+    - sed -i -e "s/%%DB_PORT%%/3306/g" .env
+    - sed -i -e "s/%%DB_NAME%%/db/g" .env
+    - sed -i -e "s/%%ENEDIS_CLIENT_ID%%/${ENEDIS_CLIENT_ID}/g" .env
+    - sed -i -e "s/%%ENEDIS_CLIENT_SECRET%%/${ENEDIS_CLIENT_SECRET}/g" .env
+    - sed -i -e "s/%%ENEDIS_REDIRECT_URI%%/${ENEDIS_REDIRECT_URI}/g" .env
+    - sed -i -e "s/%%ENEDIS_ENDPOINT_AUTH%%/https:\/\/gw.hml.api.enedis.fr/g" .env
+    - sed -i -e "s/%%ENEDIS_ENDPOINT_DATA%%/https:\/\/gw.hml.api.enedis.fr/g" .env
     - php composer.phar install
     - php bin/console aeneria:install -n
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
     - php bin/console aeneria:user:grant admin
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
-    - php bin/phpunit --coverage-text --colors=never -vvv
+    - php bin/phpunit --coverage-text --colors=never
 
 # On vérifie que la documentation build correctement
 test:documentation-build:
