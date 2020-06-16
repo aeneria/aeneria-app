@@ -56,11 +56,6 @@ test:phpunit:
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - cp .env.dist .env
-    - sed -i -e "s/%%DB_USER%%/root/g" .env
-    - sed -i -e "s/%%DB_PASSWORD%%/password/g" .env
-    - sed -i -e "s/%%DB_HOST%%/mysql/g" .env
-    - sed -i -e "s/%%DB_PORT%%/3306/g" .env
-    - sed -i -e "s/%%DB_NAME%%/db/g" .env
     - sed -i -e "s/%%ENEDIS_CLIENT_ID%%/${ENEDIS_CLIENT_ID}/g" .env
     - sed -i -e "s/%%ENEDIS_CLIENT_SECRET%%/${ENEDIS_CLIENT_SECRET}/g" .env
     - sed -i -e "s/%%ENEDIS_REDIRECT_URI%%/${ENEDIS_REDIRECT_URI}/g" .env
