@@ -61,7 +61,7 @@ test:phpunit:
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
     - php bin/console aeneria:user:grant admin
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
-    - php bin/phpunit --coverage-text --colors=never
+    - php bin/phpunit --coverage-text --colors=never -vvv
 
 # On vérifie que la documentation build correctement
 test:documentation-build:
