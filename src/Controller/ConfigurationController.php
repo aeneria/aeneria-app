@@ -161,7 +161,14 @@ class ConfigurationController extends AbstractAppController
             ->add('submit', Form\SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-warning',
-                    'title' => 'Recharger',
+                    'title' => 'Exporter',
+                ],
+                'label' => '',
+            ])
+            ->add('submit_all', Form\SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-warning',
+                    'formnovalidate' => 'formnovalidate',
                 ],
                 'label' => '',
             ])
@@ -173,8 +180,8 @@ class ConfigurationController extends AbstractAppController
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $startDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['start_date']);
-                $endDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['end_date']);
+                $startDate = $data['start_date'] ? \DateTimeImmutable::createFromFormat('d/m/Y', $data['start_date']) : null;
+                $endDate = $data['end_date'] ? \DateTimeImmutable::createFromFormat('d/m/Y', $data['end_date']) : null;
                 $filename = $dataExporter->exportPlace($place, $startDate, $endDate);
                 $file = new File($filename);
 

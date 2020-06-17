@@ -33,15 +33,23 @@ class DataExporter
      * @param string $destination no trailing slash !
      * @return string filename
      */
-    final public function exportPlace(Place $place, \DateTimeImmutable $from, \DateTimeImmutable $to, string $destination = null): string
+    final public function exportPlace(Place $place, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to, string $destination = null): string
     {
         $filename = \sprintf(
-            '%s/aeneria-%s-%s-to-%s',
+            '%s/aeneria-%s',
             $destination ?? \sys_get_temp_dir(),
-            $place->getName(),
-            $from->format('Ymd'),
-            $to->format('Ymd')
+            $place->getName()
         );
+
+        if ($from && $to) {
+            $filename .= \sprintf(
+                '-%s-to-%s',
+                $destination ?? \sys_get_temp_dir(),
+                $place->getName(),
+                $from->format('Ymd'),
+                $to->format('Ymd')
+            );
+        }
 
         $writer = WriterEntityFactory::createODSWriter();
         $writer->openToFile($filename);
@@ -55,16 +63,16 @@ class DataExporter
         return $filename;
     }
 
-    private function exportFeed(WriterMultiSheetsAbstract $writer, Feed $feed, \DateTimeImmutable $from, \DateTimeImmutable $to): void
+    private function exportFeed(WriterMultiSheetsAbstract $writer, Feed $feed, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to): void
     {
         foreach ($this->feedDataRepository->findBy(['feed' => $feed]) as $feedData) {
             $this->exporFeedData($writer, $feed, $feedData, $from, $to);
         }
     }
 
-    private function exporFeedData(WriterMultiSheetsAbstract $writer, Feed $feed, FeedData $feedData, \DateTimeImmutable $from, \DateTimeImmutable $to): void
+    private function exporFeedData(WriterMultiSheetsAbstract $writer, Feed $feed, FeedData $feedData, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to): void
     {
-        $sheetName = $feedData->getDisplayDataType();
+        $sheetName = $feedData->getDataType();
         $sheet = $writer->getCurrentSheet();
         $sheet->setName($sheetName);
 
