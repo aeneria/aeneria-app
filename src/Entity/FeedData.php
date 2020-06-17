@@ -59,32 +59,36 @@ class FeedData
     }
 
     /**
+     * Get all labels for FeedDataType
+     */
+    public static function getAllTypeLabels(): array
+    {
+        return [
+            self::FEED_DATA_CONSO_ELEC => "Consommation d'électricité",
+            self::FEED_DATA_TEMPERATURE => "Température",
+            self::FEED_DATA_TEMPERATURE_MIN => "Température minimale",
+            self::FEED_DATA_TEMPERATURE_MAX => "Température maximale",
+            self::FEED_DATA_DJU => 'Degrés Jour Unifié',
+            self::FEED_DATA_PRESSURE => 'Pression',
+            self::FEED_DATA_HUMIDITY => 'Humidité',
+            self::FEED_DATA_NEBULOSITY => 'Nébulosité',
+            self::FEED_DATA_RAIN => 'Précipiations',
+        ];
+    }
+
+    /**
      * Get unit for a type of data.
      */
     public static function getLabelFor(string $feedDataType): string
     {
-        switch ($feedDataType) {
-            case self::FEED_DATA_CONSO_ELEC:
-                return "Consommation d'électricité";
-            case self::FEED_DATA_TEMPERATURE:
-                return "Température";
-            case self::FEED_DATA_TEMPERATURE_MIN:
-                return "Température minimale";
-            case self::FEED_DATA_TEMPERATURE_MAX:
-                return "Température maximale";
-            case self::FEED_DATA_DJU:
-                return 'Degrés Jour Unifié';
-            case self::FEED_DATA_PRESSURE:
-                return 'Pression';
-            case self::FEED_DATA_HUMIDITY:
-                return 'Humidité';
-            case self::FEED_DATA_NEBULOSITY:
-                return 'Nébulosité';
-            case self::FEED_DATA_RAIN:
-                return 'Précipiations';
-            default:
-                return '';
+        if (!\array_key_exists($feedDataType, self::getAllTypeLabels())) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Le type de FeedData %s n\'existe pas',
+                $feedDataType
+            ));
         }
+
+        return self::getAllTypeLabels()[$feedDataType];
     }
 
     public function setId(int $id): FeedData

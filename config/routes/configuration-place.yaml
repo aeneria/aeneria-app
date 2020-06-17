@@ -1,0 +1,16 @@
+config.place.new:
+  path: /configuration/place/new
+  controller: App\Controller\ConfigurationPlaceController::placeNewAction
+
+config.place.edit:
+  path: /configuration/place/{id}/edit
+  controller: App\Controller\ConfigurationPlaceController::placeEditAction
+
+config.place.enedis_consent_callback:
+  path: /configuration/data-connect-consent
+  controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentCallbackAction
+
+config.place.delete:
+  path: /configuration/place/{id}/delete
+  controller: App\Controller\ConfigurationPlaceController::placeDeleteAction
+

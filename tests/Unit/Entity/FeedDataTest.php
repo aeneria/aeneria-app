@@ -34,7 +34,5 @@ final class FeedDataTest extends AppTestCase
     {
         self::assertSame(FeedData::getLabelFor(FeedData::FEED_DATA_DJU), 'Degrés Jour Unifié');
         self::assertSame(FeedData::getLabelFor(FeedData::FEED_DATA_NEBULOSITY), 'Nébulosité');
-
-        self::assertSame(FeedData::getLabelFor('toto'), '');
     }
 }

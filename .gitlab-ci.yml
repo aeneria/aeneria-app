@@ -56,12 +56,15 @@ test:phpunit:
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
     - cp .env.dist .env
+    - sed -i -e "s/%%ENEDIS_CLIENT_ID%%/${ENEDIS_CLIENT_ID}/g" .env
+    - sed -i -e "s/%%ENEDIS_CLIENT_SECRET%%/${ENEDIS_CLIENT_SECRET}/g" .env
+    - sed -i -e "s/%%ENEDIS_REDIRECT_URI%%/${ENEDIS_REDIRECT_URI}/g" .env
     - php composer.phar install
     - php bin/console aeneria:install -n
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
     - php bin/console aeneria:user:grant admin
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
-    - php bin/phpunit --coverage-text --colors=never
+    - php bin/phpunit --coverage-text --colors=never -vvv
 
 # On vérifie que la documentation build correctement
 test:documentation-build:

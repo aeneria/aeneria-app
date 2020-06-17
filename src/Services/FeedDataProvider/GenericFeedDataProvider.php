@@ -10,14 +10,29 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class GenericFeedDataProvider extends AbstractFeedDataProvider
 {
+    /** @var EnedisDataConnectProvider */
+    private $enedisDataConnectProvider;
+
+    /** @deprecated @var LinkyDataProvider */
     private $linkyDataProvider;
+
+    /** @var MeteoFranceDataProvider */
     private $meteoFranceDataProvider;
+
+    /** @var FakeDataProvider */
     private $fakeDataProvider;
 
-    public function __construct(EntityManagerInterface $entityManager, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository,
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        FeedRepository $feedRepository,
+        FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        LinkyDataProvider $linkyDataProvider, MeteoFranceDataProvider $meteoFranceDataProvider, FakeDataProvider $fakeDataProvider
+        EnedisDataConnectProvider $enedisDataConnectProvider,
+        LinkyDataProvider $linkyDataProvider,
+        MeteoFranceDataProvider $meteoFranceDataProvider,
+        FakeDataProvider $fakeDataProvider
     ) {
+        $this->enedisDataConnectProvider = $enedisDataConnectProvider;
         $this->linkyDataProvider = $linkyDataProvider;
         $this->meteoFranceDataProvider = $meteoFranceDataProvider;
         $this->fakeDataProvider = $fakeDataProvider;
@@ -39,6 +54,9 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider
         }
 
         switch ($feedDataProviderId) {
+            case Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
+                $this->enedisDataConnectProvider->fetchData($date, $feeds, $force);
+                break;
             case Feed::FEED_DATA_PROVIDER_LINKY:
                 $this->linkyDataProvider->fetchData($date, $feeds, $force);
                 break;
@@ -61,6 +79,8 @@ class GenericFeedDataProvider extends AbstractFeedDataProvider
         switch ($feed->getFeedDataProviderType()) {
             case Feed::FEED_DATA_PROVIDER_LINKY:
                 return LinkyDataProvider::getParametersName($feed);
+            case Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
+                return EnedisDataConnectProvider::getParametersName($feed);
             case Feed::FEED_DATA_PROVIDER_METEO_FRANCE:
                 return MeteoFranceDataProvider::getParametersName($feed);
             case Feed::FEED_DATA_PROVIDER_FAKE:

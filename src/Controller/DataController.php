@@ -499,7 +499,7 @@ class DataController extends AbstractAppController
                 if ($yKey < 24) {
                     $data->values[$index] = '';
                     // Date will be for example 'monday 12h->13h'.
-                    $data->dates[$index] = $xValue . ' ' . $yValue . ' -> ' . $axe->y[$yKey + 1];
+                    $data->dates[$index] = $xValue . ' de ' . $yValue . ' à ' . $axe->y[$yKey + 1];
                 }
             }
         }

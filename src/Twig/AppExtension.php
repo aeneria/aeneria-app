@@ -2,7 +2,10 @@
 
 namespace App\Twig;
 
+use Aeneria\EnedisDataConnectApi\Model\Address;
+use App\Entity\Feed;
 use App\Entity\User;
+use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -12,12 +15,18 @@ final class AppExtension extends AbstractExtension
     /** @var ContainerBagInterface */
     private $parameters;
 
+    /** @var EnedisDataConnectProvider */
+    private $enedisDataConnectProvider;
+
     /**
      * Default constructor
      */
-    public function __construct(ContainerBagInterface $parameters)
-    {
+    public function __construct(
+        ContainerBagInterface $parameters,
+        EnedisDataConnectProvider $enedisDataConnectProvider
+    ) {
         $this->parameters = $parameters;
+        $this->enedisDataConnectProvider = $enedisDataConnectProvider;
     }
 
     /**
@@ -37,6 +46,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_user_can_export', [$this, 'canUserExportData']),
             new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
             new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
+            new TwigFunction('aeneria_feed_get_address', [$this, 'getFeedAddress']),
         ];
     }
 
@@ -60,7 +70,7 @@ final class AppExtension extends AbstractExtension
 
     public function getHelpIconLink(?string $path, ?string $title = null, ?string $class = null): string
     {
-        $link = self::getDocumentation(\sprintf("%s", $path));
+        $link = $this->getDocumentation(\sprintf("%s", $path));
 
         return \sprintf(
             '<a href="%s" target="_blank" class="%s" title="%s"><i class="fas fa-question-circle"></i></a>',
@@ -74,7 +84,7 @@ final class AppExtension extends AbstractExtension
     {
         $path = \sprintf("utilisateur/graph.html#%s", $graph);
 
-        return self::getHelpIconLink($path, "Comment lire ce graphique ?", "help");
+        return $this->getHelpIconLink($path, "Comment lire ce graphique ?", "help");
     }
 
     public function getUserMaxPlaces(): ?int
@@ -106,10 +116,19 @@ final class AppExtension extends AbstractExtension
 
     public function canUserAddPlace(User $user): bool
     {
-        if ($userMaxPlaces = self::getUserMaxPlaces()) {
+        if ($userMaxPlaces = $this->getUserMaxPlaces()) {
             return \count($user->getPlaces()) < $userMaxPlaces;
         }
 
         return true;
+    }
+
+    public function getFeedAddress(Feed $feed): ?Address
+    {
+        if ($feed->getFeedDataProviderType() === Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT) {
+            return $this->enedisDataConnectProvider->getAddressFrom($feed);
+        }
+
+        return null;
     }
 }

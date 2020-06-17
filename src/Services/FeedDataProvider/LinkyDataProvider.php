@@ -9,8 +9,9 @@ use App\Entity\Feed;
  * Linky Data Provider
  *
  * @see https://github.com/KiboOst/php-LinkyAPI
- * @todo simplify curl requests
  *
+ * @deprecated le site d'enedis a une nouvelle version, ce code
+ * n'est plus valide !
  */
 class LinkyDataProvider extends AbstractFeedDataProvider
 {
@@ -45,7 +46,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
     {
         foreach ($feeds as $feed) {
-            if ((!$feed instanceof Feed) || 'LINKY' !== $feed->getFeedDataProviderType()) {
+            if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_LINKY !== $feed->getFeedDataProviderType()) {
                 throw new \InvalidArgumentException("Should be an array of Linky Feeds overhere !");
             }
 

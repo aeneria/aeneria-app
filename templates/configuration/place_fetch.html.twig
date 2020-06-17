@@ -8,11 +8,12 @@
 <div class="container-fluid row justify-content-center align-items-center users">
   <div class='card config-form col-lg-6 col-md-8'>
     <div class="card-body">
-      <h1> Recharger les données de <i>{{ place.name }}</i> </h1>
-
+      <h1> Recharger des données</h1>
+      <p>Pour l'adresse&nbsp;:&nbsp;{{ place.name }}</p>
+      <hr>
       {% for key, form in forms %}
         <div class="place-fetch-form">
-          <h2>{{ feeds[key].name|capitalize }}</h2>
+          <h2>{{ feeds[key].getFeedDataProviderTypeName }}</h2>
           {{ form_start(form) }}
           {{ form_errors(form) }}
           <div class="form-group row">

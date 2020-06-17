@@ -14,7 +14,6 @@ use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
-use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 

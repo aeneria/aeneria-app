@@ -7,7 +7,7 @@
         <field name="name" column="name" type="string" length="150"/>
         <field name="feedType" column="feed_type" type="string" length="150"/>
         <field name="feedDataProviderType" column="feed_data_provider_type" type="string" length="150"/>
-        <field name="param" column="param" type="json_array"/>
+        <field name="param" column="param" type="json"/>
         <many-to-one field="place" target-entity="App\Entity\Place" inversed-by="feeds">
             <join-column nullable="false"/>
         </many-to-one>

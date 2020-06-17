@@ -8,11 +8,19 @@ parameters:
     aeneria.version: '0.5.4'
     aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
     aeneria.documentation: 'https://docs.aeneria.com/fr/'
+    # aeneria features
     aeneria.user.max_places: "%env(AENERIA_USER_MAX_PLACES)%"
     aeneria.user.can_share_place: "%env(AENERIA_USER_CAN_SHARE_PLACE)%"
     aeneria.user.can_fetch: "%env(AENERIA_USER_CAN_FETCH)%"
     aeneria.user.can_export: "%env(AENERIA_USER_CAN_EXPORT)%"
     aeneria.place_can_be_public: "%env(AENERIA_PLACE_CAN_BE_PUBLIC)%"
+    aeneria.use_enedis_data_connect: "%env(AENERIA_USE_ENEDIS_DATA_CONNECT)%"
+    # Enedis Data Connect
+    aeneria.enedis.client_id: "%env(ENEDIS_CLIENT_ID)%"
+    aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"
+    aeneria.enedis.redirect_uri: "%env(ENEDIS_REDIRECT_URI)%"
+    aeneria.enedis.endpoint_auth: "%env(ENEDIS_ENDPOINT_AUTH)%"
+    aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
 
 services:
     # default configuration for services in *this* file
@@ -43,3 +51,12 @@ services:
     App\Twig\:
         resource: '../src/Twig'
         tags: ['twig.extension', 'container.hot_path']
+
+    Aeneria\EnedisDataConnectApi\Service\DataConnectService:
+        class: Aeneria\EnedisDataConnectApi\Service\DataConnectService
+        arguments:
+            $authEndpoint: "%aeneria.enedis.endpoint_auth%"
+            $dataEndpoint: "%aeneria.enedis.endpoint_data%"
+            $clientId: "%aeneria.enedis.client_id%"
+            $clientSecret: "%aeneria.enedis.client_secret%"
+            $redirectUri: "%aeneria.enedis.redirect_uri%"

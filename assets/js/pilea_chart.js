@@ -789,7 +789,7 @@
               inf = color.quantiles()[colors.length - 2 - i];
               break;
           }
-          return parseFloat(inf).toFixed(precision) + unit + ' -> ' + parseFloat(sup).toFixed(precision) + unit;
+          return 'de ' + parseFloat(inf).toFixed(precision) + unit + ' à ' + parseFloat(sup).toFixed(precision) + unit;
       });
 
     // Get min, max, avg.

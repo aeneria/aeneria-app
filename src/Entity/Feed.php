@@ -10,6 +10,7 @@ class Feed
     const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
     const FEED_TYPE_METEO = 'METEO';
 
+    const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT = 'ENEDIS_DATA_CONNECT';
     const FEED_DATA_PROVIDER_LINKY = 'LINKY';
     const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
     const FEED_DATA_PROVIDER_FAKE = 'FAKE';
@@ -37,7 +38,7 @@ class Feed
     /**
      * @var array
      */
-    private $param;
+    private $param = [];
 
     /**
      * @var FeedData[]
@@ -53,13 +54,13 @@ class Feed
     {
         return [
             self::FEED_TYPE_ELECTRICITY => [
-                'NAME' => 'Electricity',
+                'NAME' => 'Électricité',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
-                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_LINKY],
+                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT],
                 'FREQUENCIES' => DataValue::FREQUENCY,
             ],
             self::FEED_TYPE_METEO => [
-                'NAME' => 'Meteo',
+                'NAME' => 'Météo',
                 'DATA_TYPE' => [
                     FeedData::FEED_DATA_TEMPERATURE,
                     FeedData::FEED_DATA_TEMPERATURE_MIN,
@@ -95,6 +96,21 @@ class Feed
             return self::getAllFeedTypes()[$feedType]['NAME'];
         } else {
             throw new \InvalidArgumentException("Feed type " . $feedType . " does not exist !");
+        }
+    }
+
+    public static function getFeedDataProviderNameFor(string $feedDataProviderType): ?string
+    {
+        switch ($feedDataProviderType) {
+            case self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
+                case self::FEED_DATA_PROVIDER_LINKY:
+                return 'Compteur Linky';
+            case self::FEED_DATA_PROVIDER_METEO_FRANCE:
+                return 'Météo France';
+            case self::FEED_DATA_PROVIDER_FAKE:
+                return 'Fake data provider';
+            default:
+                return null;
         }
     }
 
@@ -147,6 +163,13 @@ class Feed
         return $this;
     }
 
+    public function setSingleParam(string $name, $value): self
+    {
+        $this->param[$name] = $value;
+
+        return $this;
+    }
+
     /**
      * Get param
      *
@@ -181,6 +204,11 @@ class Feed
         return $this->feedDataProviderType;
     }
 
+    public function getFeedDataProviderTypeName(): ?string
+    {
+        return self::getFeedDataProviderNameFor($this->feedDataProviderType);
+    }
+
     public function setPlace(Place $place): self
     {
         $this->place = $place;
@@ -204,5 +232,25 @@ class Feed
     public function getFeedDatas(): ?iterable
     {
         return $this->feedDatas;
+    }
+
+    public function getFeedData(string $feedDataType): ?FeedData
+    {
+        if (!\array_key_exists($feedDataType, FeedData::getAllTypeLabels())) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Le type de FeedData %s n\'existe pas',
+                $feedDataType
+            ));
+        }
+
+        if ($this->feedDatas) {
+            foreach ($this->feedDatas as $feedData) {
+                if ($feedDataType === $feedData->getDataType()) {
+                    return $feedData;
+                }
+            }
+        }
+
+        return null;
     }
 }

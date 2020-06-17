@@ -1,4 +1,7 @@
 {
+    "aeneria/enedis-data-connect": {
+        "version": "1.0.1"
+    },
     "box/spout": {
         "version": "v3.1.0"
     },
@@ -71,14 +74,8 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
-    "easycorp/easy-log-handler": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
-        }
+    "firebase/php-jwt": {
+        "version": "v5.2.0"
     },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
