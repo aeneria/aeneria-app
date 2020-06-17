@@ -3,29 +3,40 @@
 namespace App\Services;
 
 use Firebase\JWT\JWT;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Data exporter services.
  */
 class JwtService
 {
+    private $privateDir;
     private $privateKey;
     private $publicKey;
 
     public function __construct(string $projectDir)
     {
-        $this->privateKey = \sprintf(
-            '%s/private/id_rsa',
+        $this->privateDir = \sprintf(
+            '%s/private',
             $projectDir
         );
+        $this->privateKey = \sprintf(
+            '%s/id_rsa',
+            $this->privateDir
+        );
         $this->publicKey = \sprintf(
-            '%s/private/id_rsa.pub',
-            $projectDir
+            '%s/id_rsa.pub',
+            $this->privateDir
         );
     }
 
     public function generateRsaKey(): void
     {
+        // Ensure private direrctory exists
+        if (!\is_dir($this->privateDir)) {
+            \mkdir($this->privateDir);
+        }
+
         $res = \openssl_pkey_new([
             "digest_alg" => "sha512",
             "private_key_bits" => 4096,
@@ -33,10 +44,20 @@ class JwtService
         ]);
 
         \openssl_pkey_export($res, $privKey);
-        \file_put_contents($this->privateKey, $privKey);
+        if (false === \file_put_contents($this->privateKey, $privKey)) {
+            throw new IOException(\sprintf(
+                "Error while writting %s",
+                $this->privateKey
+            ));
+        }
 
         $pubKey = \openssl_pkey_get_details($res);
-        \file_put_contents($this->publicKey, $pubKey["key"]);
+        if (false === \file_put_contents($this->publicKey, $pubKey["key"])) {
+            throw new IOException(\sprintf(
+                "Error while writting %s",
+                $this->publicKey
+            ));
+        }
     }
 
     public function encode($payload): string

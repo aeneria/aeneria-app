@@ -118,7 +118,7 @@ class ConfigurationPlaceController extends AbstractAppController
             ->getAuthorizeV1Service()
             ->getConsentPageUrl(
                 'P12M',
-                'toto'//$jwtService->encode(['user' => $user->getId(), 'feed' => $linkyFeed->getId()])
+                $jwtService->encode(['user' => $user->getId(), 'feed' => $linkyFeed->getId()])
             )
         ;
 
