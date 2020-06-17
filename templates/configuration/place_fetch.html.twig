@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recharger les données de {{ place.name }}{% endblock %}
+{% block title %}{{ 'Rafraîchir les données de' | trans }} {{ place.name }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -8,8 +8,8 @@
 <div class="container-fluid row justify-content-center align-items-center users">
   <div class='card config-form col-lg-6 col-md-8'>
     <div class="card-body">
-      <h1> Recharger des données</h1>
-      <p>Pour l'adresse&nbsp;:&nbsp;{{ place.name }}</p>
+      <h1>{{ 'Rafraîchir des données' | trans }}</h1>
+      <p>{{ 'Pour l\'adresse&nbsp;:&nbsp;' | trans | raw }}{{ place.name }}</p>
       <hr>
       {% for key, form in forms %}
         <div class="place-fetch-form">
@@ -18,9 +18,9 @@
           {{ form_errors(form) }}
           <div class="form-group row">
             <div class="col-auto input-daterange">
-              <span class="input-group-addon">{{ 'Recharger du'|trans }}</span>
+              <span class="input-group-addon">{{ 'Rafraîchir du' | trans }}</span>
               {{- form_widget(form['start_date_' ~ key]) -}}
-              <span class="input-group-addon">{{ 'au'|trans }}</span>
+              <span class="input-group-addon">{{ 'au' | trans }}</span>
               {{- form_widget(form['end_date_' ~ key]) -}}
             </div>
             <div class="col-auto">
@@ -46,6 +46,7 @@
         {% endif %}
 
       {% endfor %}
+      <a class="btn btn-primary" href="{{ path('config') }}">{{ 'Annuler' | trans }}</a>
 
     </div>
   </div>

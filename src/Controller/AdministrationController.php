@@ -143,7 +143,7 @@ class AdministrationController extends AbstractController
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
-                'attr' => ['class' => 'btn btn-danger'],
+                'attr' => ['class' => 'btn btn-danger float-right'],
                 'label' => "Désactiver l'utilisateur",
             ])
             ->getForm()
@@ -194,7 +194,7 @@ class AdministrationController extends AbstractController
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
-                'attr' => ['class' => 'btn btn-danger'],
+                'attr' => ['class' => 'btn btn-danger float-right'],
                 'label' => "Supprimer l'utilisateur et TOUTES ses données",
             ])
             ->getForm()

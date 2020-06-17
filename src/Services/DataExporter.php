@@ -72,7 +72,7 @@ class DataExporter
             $from,
             $to,
             $feedData,
-             \min($feed->getFrequencies())
+            \min($feed->getFrequencies())
         )) {
             foreach ($values as $value) {
                 $row = WriterEntityFactory::createRowFromArray([

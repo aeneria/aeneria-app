@@ -279,7 +279,7 @@ class ConfigurationPlaceController extends AbstractAppController
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
-                'attr' => ['class' => 'btn btn-danger'],
+                'attr' => ['class' => 'btn btn-danger float-right'],
                 'label' => "Supprimer l'adresse et TOUTES ses données",
             ])
             ->getForm()

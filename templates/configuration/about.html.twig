@@ -6,27 +6,27 @@
       <ul class="about-list row ">
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="https://docs.aeneria.com" class="btn btn-primary ml-1">
-            <i class="fa fa-globe-europe"></i> Site web
+            <i class="fa fa-globe-europe"></i> {{ 'Site web' | trans }}
           </a>
         </li>
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="{{ aeneria_documentation() }}" class="btn btn-primary ml-1">
-            <i class="fa fa-book"></i> Documentation
+            <i class="fa fa-book"></i> {{ 'Documentation' | trans }}
           </a>
         </li>
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="{{ aeneria_repo_git() }}/-/tags/{{ aeneria_version() }}" class="btn btn-primary ml-1">
-            <i class="fa fa-code-branch"></i> Version {{ aeneria_version() }}
+            <i class="fa fa-code-branch"></i> {{ 'Version' | trans }} {{ aeneria_version() }}
           </a>
         </li>
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="https://en.wikipedia.org/wiki/MIT_License" class="btn btn-primary ml-1">
-            <i class="fa fa-balance-scale"></i> License MIT
+            <i class="fa fa-balance-scale"></i> {{ 'License MIT' | trans }}
           </a>
         </li>
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="https://gitlab.com/aeneria/aeneria-app" class="btn btn-primary ml-1">
-            <i class="fab fa-gitlab"></i> Dépôt Gitlab
+            <i class="fab fa-gitlab"></i> {{ 'Dépôt Gitlab' | trans }}
           </a>
         </li>
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
@@ -38,20 +38,14 @@
       <hr>
       <h2><i class="fas fa-bullhorn"></i> - {{ 'Envie d\'aider æneria ?' | trans }}</h2>
       <div class="row justify-content-center">
-        {# <div class="col-7">
-          <p>Combien de personnes utilisent æneria ?</p>
-          <a href="https://aeneria.com/coucou" class="btn btn-primary" name="coucou"/>
-            <i class="fas fa-paper-plane"></i> Faire coucou
-          </a>
-        </div> #}
         <div class="col">
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
             <input type="hidden" name="cmd" value="_s-xclick" />
             <input type="hidden" name="hosted_button_id" value="EXHAXM6FUG8C6" />
             <p>
-              <i class="fas fa-beer"></i> Payez-nous une petite bière
-              <button class="btn btn-primary ml-1" name="submit" title="Via le site de PayPal">
-                <i class="fab fa-paypal"></i> Faire un don
+              <i class="fas fa-beer"></i> {{ 'Payez-nous une petite bière' | trans }}
+              <button class="btn btn-primary ml-1" name="submit" title="{{ 'Via le site de PayPal' | trans }}">
+                <i class="fab fa-paypal"></i> {{ 'Faire un don' | trans }}
               </button>
             </p>
           </form>
@@ -63,12 +57,12 @@
       <ul class="about-list row ">
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="{{ aeneria_repo_git() }}/-/issues" class="btn btn-primary ml-1">
-            <i class="fab fa-gitlab"></i> Ouvrez une issue sur Gitlab
+            <i class="fab fa-gitlab"></i> {{ 'Ouvrez une issue sur Gitlab' | trans }}
           </a>
         </li>
         <li class="col-lg-6 col-md-12 col-sm-6 col-12">
           <a target="_blank" href="https://twitter.com/aeneria_app" class="btn btn-primary ml-1">
-            <i class="fab fa-twitter"></i> Contactez-nous via Twitter
+            <i class="fab fa-twitter"></i> {{ 'Contactez-nous via Twitter' | trans }}
           </a>
         </li>
       </ul>

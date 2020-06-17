@@ -29,7 +29,7 @@
           {% for allowedUser in place.allowedUsers %}
             {% set allowed = allowed ~ allowedUser.username ~ (loop.last ? '' : ', ') %}
           {% endfor %}
-          <i class="fas fa-user-friends"></i> Partagée avec {{ allowed?: 'personne' | trans }}
+          <i class="fas fa-user-friends"></i> {{ 'Partagée avec' | trans }} {{ allowed?: 'personne' | trans }}
         </li>
         {% endif %}
       </ul>
@@ -38,13 +38,18 @@
           <i class="fas fa-pen"></i>
         </a>
         {% if aeneria_user_can_fetch() %}
-        <a class="btn btn-sm btn-warning" href="{{ path('config.place.fetch', {id: place.id}) }}" title="{{ 'Recharger des dates' | trans }}">
-          <i class="fas fa-download"></i>
+        <a class="btn btn-sm btn-warning" href="{{ path('config.place.fetch', {id: place.id}) }}" title="{{ 'Rafraîchir des données' | trans }}">
+          <i class="fas fa-sync-alt"></i>
         </a>
         {% endif %}
         {% if aeneria_user_can_export() %}
         <a class="btn btn-sm btn-warning" href="{{ path('config.place.export', {id: place.id}) }}" title="{{ 'Exporter des données' | trans }}">
           <i class="fas fa-upload"></i>
+        </a>
+        {% endif %}
+        {% if aeneria_user_can_export() %}
+        <a class="btn btn-sm btn-warning" href="{{ path('config.place.export', {id: place.id}) }}" title="{{ 'Importer des données' | trans }}">
+          <i class="fas fa-download"></i>
         </a>
         {% endif %}
 

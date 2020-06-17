@@ -3,7 +3,7 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une adresse{% endblock %}
+{% block title %}{{ 'Ajouter une adresse' | trans }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -24,8 +24,8 @@
           <p>{{ aeneria_feed_get_address(linky) ?: ('Inconnu' | trans) }}</p>
         </div>
         <div class="col-sm-4">
-          <a href="{{ enedis_url }}" class="btn btn-sm btn-outline-secondary">Changer de compteur</a>
-          <p><small>(via votre espace Enedis)</small></p>
+          <a href="{{ enedis_url }}" class="btn btn-sm btn-outline-secondary">{{ 'Changer de compteur' | trans }}</a>
+          <p><small>{{ '(via votre espace Enedis)' | trans }}</small></p>
         </div>
       </div>
       <hr>
