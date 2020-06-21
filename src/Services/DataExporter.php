@@ -33,7 +33,7 @@ class DataExporter
      * @param string $destination no trailing slash !
      * @return string filename
      */
-    final public function exportPlace(Place $place, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to, string $destination = null): string
+    final public function exportPlace(Place $place, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null, string $destination = null): string
     {
         $filename = \sprintf(
             '%s/aeneria-%s',
@@ -44,8 +44,6 @@ class DataExporter
         if ($from && $to) {
             $filename .= \sprintf(
                 '-%s-to-%s',
-                $destination ?? \sys_get_temp_dir(),
-                $place->getName(),
                 $from->format('Ymd'),
                 $to->format('Ymd')
             );

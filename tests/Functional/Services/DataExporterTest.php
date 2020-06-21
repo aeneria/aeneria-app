@@ -10,7 +10,7 @@ use App\Tests\AppTestCase;
 
 final class DataExporterTest extends AppTestCase
 {
-    public function testDataExporter()
+    public function testDataExporterWithDates()
     {
         $dataExporter = new DataExporter(
             $this->getFeedDataRepository(),
@@ -25,6 +25,21 @@ final class DataExporterTest extends AppTestCase
             new \DateTimeImmutable('7 days ago'),
             new \DateTimeImmutable()
         );
+
+        self::assertTrue(\file_exists($filename));
+    }
+
+    public function testDataExporterWithoutDates()
+    {
+        $dataExporter = new DataExporter(
+            $this->getFeedDataRepository(),
+            $this->getDataValueRepository()
+        );
+
+        $user = $this->getUserRepository()->findOneByUsername('user-test');
+        \assert($user instanceof User);
+
+        $filename = $dataExporter->exportPlace($user->getPlaces()[0]);
 
         self::assertTrue(\file_exists($filename));
     }
