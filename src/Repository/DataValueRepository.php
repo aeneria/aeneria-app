@@ -204,7 +204,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param string $frequency
      */
-    public function getValue(\DateTimeInterface $startDate, \DateTimeInterface $endDate, FeedData $feedData, $frequency)
+    public function getValue(?\DateTimeInterface $startDate, ?\DateTimeInterface $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -281,18 +281,31 @@ class DataValueRepository extends ServiceEntityRepository
      * @param string $frequency
      * @param QueryBuilder $queryBuilder
     */
-    public function betweenDateWithFeedDataAndFrequency(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
+    public function betweenDateWithFeedDataAndFrequency(?\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
     {
-        $startDate = DataValue::adaptToFrequency($startDate, $frequency);
+        // Deal with date
+            if ($startDate) {
+            $startDate = DataValue::adaptToFrequency($startDate, $frequency);
+            $queryBuilder
+                ->andWhere('d.date >= :start')
+                ->setParameter('start', $startDate)
+            ;
+        }
+        if ($endDate) {
+            $queryBuilder
+                ->andWhere('d.date <= :end')
+                ->setParameter('end', $endDate)
+            ;
+        }
 
+        // Add condition on feedData
         $queryBuilder
-            ->andWhere('d.date BETWEEN :start AND :end')
-            ->setParameter('start', $startDate)
-            ->setParameter('end',   $endDate)
-            // Add condition on feedData
             ->andWhere('d.feedData = :feedData')
             ->setParameter('feedData', $feedData->getId())
-            // Add condition on frequency
+        ;
+
+        // Add condition on frequency
+        $queryBuilder
             ->andWhere('d.frequency = :frequency')
             ->setParameter('frequency', $frequency)
         ;

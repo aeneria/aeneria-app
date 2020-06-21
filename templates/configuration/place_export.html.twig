@@ -24,6 +24,15 @@
           {{ form_row(form['submit']) }}
         </div>
       </div>
+      <hr>
+      <div class="form-group row">
+        <div class="col-auto">
+          <p>{{ 'Exporter toutes les données' | trans }}</p>
+        </div>
+        <div class="col-auto">
+          {{ form_row(form['submit_all']) }}
+        </div>
+      </div>
     </div>
 
       {{ form_end(form) }}
