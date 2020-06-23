@@ -67,6 +67,23 @@ class FeedDataRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByPlace(Place $place)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('fd');
+
+        $queryBuilder->select()
+            ->innerJoin('fd.feed', 'f')
+            ->where('f.place = :place')
+            ->setParameter('place', $place)
+        ;
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     /**
      * Update or Create a new DataValue and persist it.
      *

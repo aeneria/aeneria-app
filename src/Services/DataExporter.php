@@ -6,6 +6,7 @@ use App\Entity\DataValue;
 use App\Entity\FeedData;
 use App\Entity\Place;
 use App\Repository\DataValueRepository;
+use App\Repository\FeedDataRepository;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\WriterMultiSheetsAbstract;
 
@@ -17,9 +18,10 @@ class DataExporter {
     private $feedDataRepository;
     private $dataValueRepository;
 
-    public function __construct(DataValueRepository $dataValueRepository)
+    public function __construct(DataValueRepository $dataValueRepository, FeedDataRepository $feedDataRepository)
     {
         $this->dataValueRepository = $dataValueRepository;
+        $this->feedDataRepository = $feedDataRepository;
     }
 
     /**
@@ -46,7 +48,7 @@ class DataExporter {
 
         $filename .= '.ods';
 
-        if (!$feedDatas = $place->getFeedDatas()) {
+        if (!$feedDatas = $this->feedDataRepository->findByPlace($place)) {
             throw new \InvalidArgumentException(\sprintf("L'adresse %s n'a pas de données à exporter.", $place->getName()));
         }
 
