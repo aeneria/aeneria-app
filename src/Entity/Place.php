@@ -139,7 +139,58 @@ class Place
         return $this->feeds;
     }
 
-    public function getAllowedUsers(): iterable
+    public function getFeed(string $feedType): ?Feed
+    {
+        if (!\array_key_exists($feedType, Feed::getAllFeedTypes())) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Le type de Feed %s n\'existe pas',
+                $feedType
+            ));
+        }
+
+        if ($this->feeds) {
+            foreach ($this->feeds as $feed) {
+                if ($feedType === $feed->getFeedType()) {
+                    return $feed;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function getFeedDatas(): array
+    {
+        $feedDatas = [];
+
+        foreach ($this->feeds as $feed) {
+            $feedDatas = \array_merge($feedDatas, \iterator_to_array($feed->getFeedDatas()));
+        }
+
+        return $feedDatas;
+    }
+
+    public function getFeedData(string $feedDataType): ?FeedData
+    {
+        if (!FeedData::getLabelFor($feedDataType)) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Le type de Feed %s n\'existe pas',
+                $feedDataType
+            ));
+        }
+
+        if ($this->feeds) {
+            foreach ($this->feeds as $feed) {
+                if ($feedData = $feed->getFeedData($feedDataType)) {
+                    return $feedData;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function getAllowedUsers(): ?iterable
     {
         return $this->allowedUsers;
     }
