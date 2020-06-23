@@ -334,6 +334,30 @@ class DataValueRepository extends ServiceEntityRepository
     }
 
     /**
+     * Get value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param string $frequency
+     */
+    public function getDateValueArray(?\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+
+        return $queryBuilder
+            ->addGroupBy('d.id')
+            ->select('d.value, d.date')
+            ->indexBy('d', 'd.date')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * Get repartition
      *
      * @param \DateTime $startDate
