@@ -13,7 +13,6 @@ final class DataExporterTest extends AppTestCase
     public function testDataExporterWithDates()
     {
         $dataExporter = new DataExporter(
-            $this->getFeedDataRepository(),
             $this->getDataValueRepository()
         );
 
@@ -32,7 +31,6 @@ final class DataExporterTest extends AppTestCase
     public function testDataExporterWithoutDates()
     {
         $dataExporter = new DataExporter(
-            $this->getFeedDataRepository(),
             $this->getDataValueRepository()
         );
 

@@ -21,6 +21,15 @@ trait AppTestTrait
 {
     private $_entityManager;
 
+
+    /**
+     * Get resource directory
+     */
+    final protected static function getResourceDir(): string
+    {
+        return __DIR__ . '/Resources';
+    }
+
     /**
      * Get EntityManager
      */

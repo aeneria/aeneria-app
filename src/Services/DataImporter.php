@@ -91,7 +91,7 @@ class DataImporter
 
                 foreach ($firstRow as $key => $feedData) {
                     if ('' !== $cells[$key]->getValue()) {
-                        if (false === $value = (float)$cells[$key]->getValue()) {
+                        if (!\is_numeric($value = $cells[$key]->getValue())) {
                             $errors[] = \sprintf(
                                 "Feuille %s - ligne %s - La colone %s n'est pas valide.",
                                 $frequencyMachineName,
@@ -105,16 +105,17 @@ class DataImporter
                             ->setFrequency($frequency)
                             ->setFeedData($feedData)
                             ->setDate($date)
-                            ->setValue($value)
+                            ->setValue((float)$value)
                             ->updateDateRelatedData()
                         ;
                     }
                 }
             }
 
-            $to = $date;
-
-            $this->dataValueRepository->massImport($from, $to, $firstRow, $frequency, $dataValues);
+            if (\count($dataValues)) {
+                $to = \end($dataValues)->getDate();
+                $this->dataValueRepository->massImport($from, $to, $firstRow, $frequency, $dataValues);
+            }
         } else {
             throw new \InvalidArgumentException(\sprintf(
                 "L'adresse '%s' n'a pas de flux (?!)",
