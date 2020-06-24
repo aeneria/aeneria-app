@@ -130,6 +130,36 @@ class DataValueRepository extends ServiceEntityRepository
     }
 
     /**
+     * Insert values between 2 dates for an array of FeedData and for a given frequency.
+     *
+     * Warning : Existing values with given criteria will be deleted in process !
+     *
+     * @param DataValue[] $dataValue
+     */
+    public function massImport(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feedDatas, int $frequency, array $dataValues)
+    {
+        $this
+            ->createQueryBuilder('d')
+            ->delete()
+            ->andWhere('d.feedData IN (:ids)')
+            ->setParameter('ids', \array_map(function ($item) {return $item->getId();}, $feedDatas))
+            ->andWhere('d.frequency = :freq')
+            ->setParameter('freq', $frequency)
+            ->andWhere('d.date BETWEEN :from AND :to')
+            ->setParameter('from', $startDate)
+            ->setParameter('to', $endDate)
+            ->getQuery()
+            ->execute()
+        ;
+
+        foreach ($dataValues as $dataValue) {
+            $this->getEntityManager()->persist($dataValue);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Get an average value
      *
      * @param \DateTime $startDate

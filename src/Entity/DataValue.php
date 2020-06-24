@@ -97,6 +97,18 @@ class DataValue
         return \array_search($frequency, DataValue::getAllFrequencies());
     }
 
+    public static function getFrequencyFromMachineName(string $machineName): int
+    {
+        if (!\array_key_exists($machineName, DataValue::getAllFrequencies())) {
+            throw new \InvalidArgumentException(\sprintf(
+                'La fréquence %s n\'existe pas',
+                $machineName
+            ));
+        }
+
+        return DataValue::getAllFrequencies()[$machineName];
+    }
+
     /**
      * Get id
      */

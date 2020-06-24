@@ -47,8 +47,8 @@
           <i class="fas fa-upload"></i>
         </a>
         {% endif %}
-        {% if aeneria_user_can_export() %}
-        <a class="btn btn-sm btn-warning" href="{{ path('config.place.export', {id: place.id}) }}" title="{{ 'Importer des données' | trans }}">
+        {% if aeneria_user_can_import() %}
+        <a class="btn btn-sm btn-warning" href="{{ path('config.place.import', {id: place.id}) }}" title="{{ 'Importer des données' | trans }}">
           <i class="fas fa-download"></i>
         </a>
         {% endif %}

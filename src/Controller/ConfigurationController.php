@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UpdateAccountType;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
+use App\Services\DataImporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
@@ -193,6 +194,63 @@ class ConfigurationController extends AbstractAppController
         }
 
         return $this->render('configuration/place_export.html.twig', [
+            'place' => $place,
+            'form' => $form->createView(),
+            'cancel' => 'config',
+        ]);
+    }
+
+    /**
+     * Export Place data form view
+     */
+    public function placeImportAction(bool $userCanExport, Request $request, DataImporter $dataImporter, string $id)
+    {
+        if (!$userCanExport) {
+            throw new NotFoundHttpException();
+        }
+
+        $place = $this->checkPlace($id);
+
+        $form = $this
+            ->createFormBuilder()
+            ->add('file', Form\FileType::class, [
+                'label' => false,
+                'required' => true,
+                'constraints' => [new Assert\File([
+                    'mimeTypes' => [
+                        'application/vnd.oasis.opendocument.spreadsheet',
+                    ],
+                    'mimeTypesMessage' => 'Les fichiers d\'export d\'æneria sont des fichiers ODS, veuillez fournir un fichier *.ods',
+                ])],
+            ])
+            ->add('submit', Form\SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-warning',
+                    'title' => 'Importer',
+                ],
+                'label' => '',
+            ])
+            ->getForm()
+            ->handleRequest($request)
+        ;
+
+        if ('POST' === $request->getMethod()) {
+            if ($form->isValid()) {
+                $file = $form->getData()['file'];
+                \assert($file instanceof File);
+
+                if ($errors = $dataImporter->importPlace($place, $file->getPathname())) {
+                    $this->addFlash('warning', 'Les données ont été importées, mais des erreurs sont survenus :');
+                    foreach ($errors as $error) {
+                        $this->addFlash('warning', $error);
+                    }
+                } else {
+                    $this->addFlash('success', 'Les données ont été correctement importés');
+                }
+            }
+        }
+
+        return $this->render('configuration/place_import.html.twig', [
             'place' => $place,
             'form' => $form->createView(),
             'cancel' => 'config',

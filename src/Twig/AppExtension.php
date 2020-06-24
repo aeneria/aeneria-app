@@ -44,6 +44,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_user_can_share_place', [$this, 'canUserSharePlace']),
             new TwigFunction('aeneria_user_can_fetch', [$this, 'canUserFetchData']),
             new TwigFunction('aeneria_user_can_export', [$this, 'canUserExportData']),
+            new TwigFunction('aeneria_user_can_import', [$this, 'canUserImportData']),
             new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
             new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
             new TwigFunction('aeneria_feed_get_address', [$this, 'getFeedAddress']),
@@ -107,6 +108,11 @@ final class AppExtension extends AbstractExtension
     public function canUserExportData(): bool
     {
         return (bool) $this->parameters->get('aeneria.user.can_export');
+    }
+
+    public function canUserImportData(): bool
+    {
+        return (bool) $this->parameters->get('aeneria.user.can_import');
     }
 
     public function canPlaceBePublic(): bool

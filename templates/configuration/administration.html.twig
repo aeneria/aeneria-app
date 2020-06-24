@@ -36,7 +36,11 @@
             </tr>
             <tr scope="row">
               <td>{{ 'Les utilisateurs peuvent exporter leur données via l\'UI' | trans }}</td>
-              <td>{{ aeneria_user_can_fetch() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
+              <td>{{ aeneria_user_can_export() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
+            </tr>
+            <tr scope="row">
+              <td>{{ 'Les utilisateurs peuvent importer leur données via l\'UI' | trans }}</td>
+              <td>{{ aeneria_user_can_import() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
             </tr>
           </tbody>
       </table>

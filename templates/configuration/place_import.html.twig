@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Importer les données de' | trans }} {{ place.name }}{% endblock %}
+
+{% block selection %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid row justify-content-center align-items-center users">
+  <div class='card config-form col-lg-6 col-md-8'>
+    <div class="card-body">
+      <h1>{{ 'Importer des données' | trans }}</h1>
+      <p>{{ 'Pour l\'adresse&nbsp;:&nbsp;' | trans | raw }}{{ place.name }}</p>
+
+      <div class="alert alert-danger">
+        <p>
+          {% trans %}
+          Attention, si des données existent pour les dates importées, elle seront écrasées !
+          {% endtrans %}
+        </p>
+      </div>
+
+      <div class="alert alert-warning">
+        <p>
+          {% trans %}
+          Cette fonctionnalité a été réalisée pour importer des fichiers provenant d'un export
+          de données créé via æneria : si vous essayez d'importer des fichiers provenant d'une autre source,
+          faites-le à vos risques et périls !
+          {% endtrans %}
+        </p>
+      </div>
+
+      <hr>
+
+      <div class="place-fetch-form">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div class="form-row">
+          <div class="col-auto">
+            {{ form_row(form['file']) }}
+          </div>
+          <div class="col-auto">
+            {{ form_row(form['submit']) }}
+          </div>
+        </div>
+      </div>
+      {{ form_end(form) }}
+      <a class="btn btn-primary" href="{{ path('config') }}">{{ 'Annuler' | trans }}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
