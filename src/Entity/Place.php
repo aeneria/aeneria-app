@@ -154,7 +154,9 @@ class Place
         $feedDatas = [];
 
         foreach ($this->feeds as $feed) {
-            $feedDatas = \array_merge($feedDatas, \iterator_to_array($feed->getFeedDatas()));
+            foreach ($feed->getFeedDatas() as $feedData) {
+                $feedDatas[$feedData->getDataType()] = $feedData;
+            }
         }
 
         return $feedDatas;

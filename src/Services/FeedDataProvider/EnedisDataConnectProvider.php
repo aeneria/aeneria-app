@@ -177,7 +177,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d H:m', $currentDate),
-                    DataValue::FREQUENCY['HOUR'],
+                    DataValue::FREQUENCY_HOUR,
                     $value
                 );
             }
@@ -189,7 +189,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),
-                    DataValue::FREQUENCY['DAY'],
+                    DataValue::FREQUENCY_DAY,
                     $value
                 );
             }
@@ -199,15 +199,15 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         $this->entityManager->flush();
 
         // Persist week data.
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
         $this->entityManager->flush();
 
         // Persist month data.
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
         $this->entityManager->flush();
 
         // Persist year data.
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
         $this->entityManager->flush();
     }
 

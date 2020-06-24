@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ConfigurationController extends AbstractAppController
@@ -70,7 +70,7 @@ class ConfigurationController extends AbstractAppController
                     'label' => false,
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
-                    'constraints' => [new Callback([
+                    'constraints' => [new Assert\Callback([
                         'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
                             $data = $context->getRoot()->getData();
                             $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
@@ -263,7 +263,7 @@ class ConfigurationController extends AbstractAppController
                 'always_empty' => true,
                 'required' => true,
                 'constraints' => [
-                    new Callback(['callback' => static function ($data, ExecutionContextInterface $context) use ($passwordEncoder, $user) {
+                    new Assert\Callback(['callback' => static function ($data, ExecutionContextInterface $context) use ($passwordEncoder, $user) {
                         if (!$passwordEncoder->isPasswordValid($user, $data)) {
                             $context
                                 ->buildViolation("Mot de passe invalide.")

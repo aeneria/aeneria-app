@@ -176,7 +176,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
                     $this->dataValueRepository->updateOrCreateValue(
                         $feedData,
                         $date,
-                        DataValue::FREQUENCY['DAY'],
+                        DataValue::FREQUENCY_DAY,
                         $fastenData[$dataType]
                     );
                 }
@@ -185,11 +185,11 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
             // Flush all persisted DataValue.
             $this->entityManager->flush();
 
-            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
             $this->entityManager->flush();
-            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
             $this->entityManager->flush();
-            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+            $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
             $this->entityManager->flush();
         }
     }

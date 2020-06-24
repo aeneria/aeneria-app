@@ -64,6 +64,7 @@ class ConfigurationPlaceController extends AbstractAppController
         bool $userCanSharePlace,
         bool $placeCanBePublic,
         EntityManagerInterface $entityManager,
+        FeedRepository $feedRepository,
         DataConnectService $dataConnectService,
         JwtService $jwtService
     ): Response {
@@ -104,6 +105,8 @@ class ConfigurationPlaceController extends AbstractAppController
                 $place = $data['place'];
                 $place->addFeed($data['meteo']);
                 $entityManager->persist($data['meteo']);
+                $feedRepository->createDependentFeedData($data['meteo']);
+                $entityManager->flush();
                 $entityManager->persist($place);
                 $entityManager->flush();
 
@@ -233,6 +236,8 @@ class ConfigurationPlaceController extends AbstractAppController
             ;
         } catch (DataConnectException $e) {
             $this->addFlash('danger', "Une erreur est survenue, réessayez plus tard.");
+
+            return $this->redirectToRoute('config');
         }
 
         if (!$feed) {
