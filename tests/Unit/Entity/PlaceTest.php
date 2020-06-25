@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Entity;
 
+use App\Entity\Feed;
+use App\Entity\FeedData;
 use App\Tests\AppTestCase;
 
 final class PlaceTest extends AppTestCase
@@ -27,8 +29,8 @@ final class PlaceTest extends AppTestCase
 
     public function testPlaceAddFeeds()
     {
-        $feed = $this->createFeed();
-        $feed2 = $this->createFeed();
+        $feed = $this->createFeed(['feedType' => Feed::FEED_TYPE_ELECTRICITY]);
+        $feed2 = $this->createFeed(['feedType' => Feed::FEED_TYPE_METEO]);
 
         $place = $this
             ->createPlace([
@@ -39,6 +41,11 @@ final class PlaceTest extends AppTestCase
 
         self::assertTrue(\in_array($feed, $place->getFeeds()));
         self::assertTrue(\in_array($feed2, $place->getFeeds()));
+
+        self::assertNotNull($place->getFeed(Feed::FEED_TYPE_ELECTRICITY));
+
+        self::assertCount(0, $place->getFeedDatas());
+        self::assertNull($place->getFeedData(FeedData::FEED_DATA_CONSO_ELEC));
     }
 
     public function testPlaceSetAllowedUsers()

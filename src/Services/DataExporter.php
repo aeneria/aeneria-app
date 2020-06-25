@@ -68,7 +68,6 @@ class DataExporter
      */
     private function exportForFrequency(WriterMultiSheetsAbstract $writer, array $feedDatas, int $frequency, \DateTimeImmutable $from, \DateTimeImmutable $to): void
     {
-
         $sheetName = DataValue::getFrequencyMachineName($frequency);
         $sheet = $writer->getCurrentSheet();
         $sheet->setName($sheetName);

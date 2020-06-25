@@ -66,24 +66,28 @@ class ConfigurationController extends AbstractAppController
                         "Le processus de rechargement des données pouvant être long, il n'est possible de recharger que par lot de 2 semaines",
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
+                    'constraints' => [new Assert\NotBlank()],
                 ])
                 ->add('end_date_' . $feedId, Form\TextType::class, [
                     'label' => false,
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
-                    'constraints' => [new Assert\Callback([
-                        'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
-                            $data = $context->getRoot()->getData();
-                            $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
-                            $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId])->sub(new \DateInterval('P14D'));
-                            if ($startDate < $endDate) {
-                                $context
-                                    ->buildViolation("Vous devez sélectionner une période de moins de 2 semaines.")
-                                    ->addViolation()
-                                ;
-                            }
-                        },
-                    ])],
+                    'constraints' => [
+                            new Assert\NotBlank(),
+                            new Assert\Callback([
+                            'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
+                                $data = $context->getRoot()->getData();
+                                $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
+                                $endDate = $data['end_date_' . $feedId] ? \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId])->sub(new \DateInterval('P14D')) : null;
+                                if ($startDate < $endDate) {
+                                    $context
+                                        ->buildViolation("Vous devez sélectionner une période de moins de 2 semaines.")
+                                        ->addViolation()
+                                    ;
+                                }
+                            },
+                        ])
+                    ],
                 ])
                 ->add('force_' . $feedId, Form\CheckboxType::class, [
                     'label' => 'Forcer',
@@ -94,7 +98,7 @@ class ConfigurationController extends AbstractAppController
                         'class' => 'btn btn-warning',
                         'title' => 'Recharger',
                     ],
-                    'label' => '',
+                    'label' => '',
                 ])
                 ->getForm()
                 ->handleRequest($request)
@@ -152,11 +156,13 @@ class ConfigurationController extends AbstractAppController
             ->add('start_date', Form\TextType::class, [
                 'label' => false,
                 'attr' => ['class' => 'simple-datepicker'],
+                'constraints' => [new Assert\NotBlank()],
                 'required' => true,
             ])
             ->add('end_date', Form\TextType::class, [
                 'label' => false,
                 'attr' => ['class' => 'simple-datepicker'],
+                'constraints' => [new Assert\NotBlank()],
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
@@ -164,14 +170,14 @@ class ConfigurationController extends AbstractAppController
                     'class' => 'btn btn-warning',
                     'title' => 'Exporter',
                 ],
-                'label' => '',
+                'label' => '',
             ])
             ->add('submit_all', Form\SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-warning',
                     'formnovalidate' => 'formnovalidate',
                 ],
-                'label' => '',
+                'label' => '',
             ])
             ->getForm()
             ->handleRequest($request)
@@ -216,12 +222,15 @@ class ConfigurationController extends AbstractAppController
             ->add('file', Form\FileType::class, [
                 'label' => false,
                 'required' => true,
-                'constraints' => [new Assert\File([
-                    'mimeTypes' => [
-                        'application/vnd.oasis.opendocument.spreadsheet',
-                    ],
-                    'mimeTypesMessage' => 'Les fichiers d\'export d\'æneria sont des fichiers ODS, veuillez fournir un fichier *.ods',
-                ])],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\File([
+                        'mimeTypes' => [
+                            'application/vnd.oasis.opendocument.spreadsheet',
+                        ],
+                        'mimeTypesMessage' => 'Les fichiers d\'export d\'æneria sont des fichiers ODS, veuillez fournir un fichier *.ods',
+                    ])
+                ],
             ])
             ->add('submit', Form\SubmitType::class, [
                 'attr' => [

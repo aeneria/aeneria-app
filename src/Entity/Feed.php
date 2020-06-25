@@ -43,7 +43,7 @@ class Feed
     /**
      * @var FeedData[]
      */
-    private $feedDatas;
+    private $feedDatas = [];
 
     /**
      * @var Place
