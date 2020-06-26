@@ -142,7 +142,9 @@ class DataValueRepository extends ServiceEntityRepository
             ->createQueryBuilder('d')
             ->delete()
             ->andWhere('d.feedData IN (:ids)')
-            ->setParameter('ids', \array_map(function ($item) {return $item->getId();}, $feedDatas))
+            ->setParameter('ids', \array_map(function ($item) {
+                return $item->getId();
+            }, $feedDatas))
             ->andWhere('d.frequency = :freq')
             ->setParameter('freq', $frequency)
             ->andWhere('d.date BETWEEN :from AND :to')

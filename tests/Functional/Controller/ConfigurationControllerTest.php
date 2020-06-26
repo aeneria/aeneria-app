@@ -13,6 +13,7 @@ final class ConfigurationControllerTest extends AppWebTestCase
         $this->client->request('GET', "/configuration");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
+
     public function testAdminCanVisitConfigPages()
     {
         $this->login('admin');

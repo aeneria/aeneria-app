@@ -131,7 +131,7 @@ final class AppExtension extends AbstractExtension
 
     public function getFeedAddress(Feed $feed): ?Address
     {
-        if ($feed->getFeedDataProviderType() === Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT) {
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
             return $this->enedisDataConnectProvider->getAddressFrom($feed);
         }
 

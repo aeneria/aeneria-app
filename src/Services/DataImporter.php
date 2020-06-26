@@ -38,7 +38,6 @@ class DataImporter
         $reader->open($filename);
 
         foreach ($reader->getSheetIterator() as $sheet) {
-
             $errors = \array_merge($errors, $this->importSheet($sheet, $place));
         }
 
@@ -55,6 +54,7 @@ class DataImporter
             $frequency = DataValue::getFrequencyFromMachineName($frequencyMachineName);
         } catch (\InvalidArgumentException $e) {
             $frequencies = \implode(', ', \array_keys(DataValue::getAllFrequencies()));
+
             return [\sprintf(
                 "La fréquence '%s' n'existe pas. Les fréquences acceptées sont : %s. Vérifiez le fichier importé.",
                 $frequencyMachineName,
@@ -105,7 +105,7 @@ class DataImporter
                             ->setFrequency($frequency)
                             ->setFeedData($feedData)
                             ->setDate($date)
-                            ->setValue((float)$value)
+                            ->setValue((float) $value)
                             ->updateDateRelatedData()
                         ;
                     }

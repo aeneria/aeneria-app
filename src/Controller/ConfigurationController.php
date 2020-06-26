@@ -86,7 +86,7 @@ class ConfigurationController extends AbstractAppController
                                     ;
                                 }
                             },
-                        ])
+                        ]),
                     ],
                 ])
                 ->add('force_' . $feedId, Form\CheckboxType::class, [
@@ -229,7 +229,7 @@ class ConfigurationController extends AbstractAppController
                             'application/vnd.oasis.opendocument.spreadsheet',
                         ],
                         'mimeTypesMessage' => 'Les fichiers d\'export d\'æneria sont des fichiers ODS, veuillez fournir un fichier *.ods',
-                    ])
+                    ]),
                 ],
             ])
             ->add('submit', Form\SubmitType::class, [

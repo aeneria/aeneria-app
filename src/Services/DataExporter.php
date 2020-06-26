@@ -14,7 +14,6 @@ use Box\Spout\Writer\WriterMultiSheetsAbstract;
  */
 class DataExporter
 {
-
     /** @var DataValueRepository */
     private $dataValueRepository;
 
@@ -54,7 +53,7 @@ class DataExporter
         $writer = WriterEntityFactory::createODSWriter();
         $writer->openToFile($filename);
 
-        foreach(DataValue::getAllFrequencies() as $key => $frequency) {
+        foreach (DataValue::getAllFrequencies() as $key => $frequency) {
             $this->exportForFrequency($writer, $feedDatas, $frequency, $from, $to);
         }
 
@@ -72,7 +71,6 @@ class DataExporter
         $sheet = $writer->getCurrentSheet();
         $sheet->setName($sheetName);
 
-
         $values = [];
         $firstRow = ['DATE'];
         foreach ($feedDatas as $feedData) {
@@ -87,7 +85,7 @@ class DataExporter
             $row = [$currentDate->format('d/m/Y H:i')];
             $stringDate = $currentDate->format('Y-m-d H:i:s');
 
-            foreach($values as $value) {
+            foreach ($values as $value) {
                 $row[] = \array_key_exists($stringDate, $value) ? $value[$stringDate]['value'] : null;
             }
             $writer->addRow(WriterEntityFactory::createRowFromArray($row));

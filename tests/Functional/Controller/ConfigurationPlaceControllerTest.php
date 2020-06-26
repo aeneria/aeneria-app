@@ -38,7 +38,7 @@ final class ConfigurationPlaceControllerTest extends AppWebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $feeds = $places[0]->getFeeds();
-        $form = $crawler->filter('form[name='.$feeds[0]->getId().']')->selectButton('')->form();
+        $form = $crawler->filter('form[name=' . $feeds[0]->getId() . ']')->selectButton('')->form();
 
         $form[$feeds[0]->getId() . '[start_date_' . $feeds[0]->getId() . ']'] = (new \DateTimeImmutable('now'))->format('d/m/Y');
         $form[$feeds[0]->getId() . '[end_date_' . $feeds[0]->getId() . ']'] = (new \DateTimeImmutable('now'))->format('d/m/Y');
