@@ -6,53 +6,67 @@ use App\Tests\AppWebTestCase;
 
 final class ConfigurationControllerTest extends AppWebTestCase
 {
-    public function configUrlsProvider()
-    {
-        return [
-            [''],
-            ['/user/update'],
-            ['/user/delete'],
-        ];
-    }
-
-    /**
-     * @dataProvider configUrlsProvider
-     */
-    public function testUserCanVisitConfigPages($url)
+    public function testUserCanVisitConfigPages()
     {
         $this->login('user-test');
 
-        $this->client->request('GET', "/configuration" . $url);
+        $this->client->request('GET', "/configuration");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testUserCanAddPlace()
+    public function testAdminCanVisitConfigPages()
+    {
+        $this->login('admin');
+
+        $this->client->request('GET', "/configuration");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testUserCanVisitDeleteAccountPages()
     {
         $this->login('user-test');
 
-        $this->client->request('GET', "/configuration/place/new");
+        $this->client->request('GET', "/configuration/user/delete");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function placeRelatedUrlsProvider()
+    public function testUserCanUpdateProfil()
     {
-        return [
-            ['edit'],
-            ['delete'],
-            ['fetch'],
-            ['export'],
+        $this->login('user-test');
+
+        $crawler = $this->client->request('GET', "/configuration/user/update");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $form = $crawler->selectButton('Enregistrer')->form();
+        $form['update_account'] = [
+            'username' => 'user-test',
+            'old_password' => 'password',
+            'new_password' => 'password',
+            'new_password2' => 'password',
         ];
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @dataProvider placeRelatedUrlsProvider
-     */
-    public function testUserCanVisitPlaceRelatedPages($url)
+    public function testUserCanUpdateWithErrorOnPasswordProfil()
     {
-        $user = $this->login('user-test');
-        $places = $user->getPlaces();
+        $this->login('user-test');
 
-        $this->client->request('GET', \sprintf("/configuration/place/%s/%s", $places[0]->getId(), $url));
+        $crawler = $this->client->request('GET', "/configuration/user/update");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $form = $crawler->selectButton('Enregistrer')->form();
+        $form['update_account'] = [
+            'username' => 'user-test',
+            'old_password' => 'password',
+            'new_password' => 'password',
+            'new_password2' => 'password2',
+        ];
+
+        $crawler = $this->client->submit($form);
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

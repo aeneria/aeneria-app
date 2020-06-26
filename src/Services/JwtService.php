@@ -65,7 +65,7 @@ class JwtService
         return JWT::encode($payload, \file_get_contents($this->privateKey));
     }
 
-    public function decode($jwt): \stdClass
+    public function decode($jwt)
     {
         return JWT::decode($jwt, \file_get_contents($this->privateKey), ['HS256']);
     }

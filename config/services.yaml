@@ -13,6 +13,7 @@ parameters:
     aeneria.user.can_share_place: "%env(AENERIA_USER_CAN_SHARE_PLACE)%"
     aeneria.user.can_fetch: "%env(AENERIA_USER_CAN_FETCH)%"
     aeneria.user.can_export: "%env(AENERIA_USER_CAN_EXPORT)%"
+    aeneria.user.can_import: "%env(AENERIA_USER_CAN_IMPORT)%"
     aeneria.place_can_be_public: "%env(AENERIA_PLACE_CAN_BE_PUBLIC)%"
     aeneria.use_enedis_data_connect: "%env(AENERIA_USE_ENEDIS_DATA_CONNECT)%"
     # Enedis Data Connect
@@ -33,6 +34,7 @@ services:
             $userCanSharePlace: "%aeneria.user.can_share_place%"
             $userCanFetch: "%aeneria.user.can_fetch%"
             $userCanExport: "%aeneria.user.can_export%"
+            $userCanIMport: "%aeneria.user.can_import%"
             $placeCanBePublic: "%aeneria.place_can_be_public%"
 
     App\:

@@ -43,7 +43,7 @@ class Feed
     /**
      * @var FeedData[]
      */
-    private $feedDatas;
+    private $feedDatas = [];
 
     /**
      * @var Place
@@ -57,7 +57,7 @@ class Feed
                 'NAME' => 'Électricité',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT],
-                'FREQUENCIES' => DataValue::FREQUENCY,
+                'FREQUENCIES' => DataValue::getAllFrequencies(),
             ],
             self::FEED_TYPE_METEO => [
                 'NAME' => 'Météo',
@@ -73,9 +73,9 @@ class Feed
                 ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_METEO_FRANCE],
                 'FREQUENCIES' => [
-                    DataValue::FREQUENCY['DAY'],
-                    DataValue::FREQUENCY['WEEK'],
-                    DataValue::FREQUENCY['MONTH'],
+                    DataValue::FREQUENCY_DAY,
+                    DataValue::FREQUENCY_WEEK,
+                    DataValue::FREQUENCY_MONTH,
                 ],
             ],
         ];

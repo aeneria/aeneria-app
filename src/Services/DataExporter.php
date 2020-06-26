@@ -2,11 +2,10 @@
 
 namespace App\Services;
 
-use App\Entity\Feed;
+use App\Entity\DataValue;
 use App\Entity\FeedData;
 use App\Entity\Place;
 use App\Repository\DataValueRepository;
-use App\Repository\FeedDataRepository;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\WriterMultiSheetsAbstract;
 
@@ -15,15 +14,11 @@ use Box\Spout\Writer\WriterMultiSheetsAbstract;
  */
 class DataExporter
 {
-    /** @var FeedDataRepository */
-    private $feedDataRepository;
-
     /** @var DataValueRepository */
     private $dataValueRepository;
 
-    public function __construct(FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
+    public function __construct(DataValueRepository $dataValueRepository)
     {
-        $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;
     }
 
@@ -33,8 +28,14 @@ class DataExporter
      * @param string $destination no trailing slash !
      * @return string filename
      */
-    final public function exportPlace(Place $place, \DateTimeImmutable $from, \DateTimeImmutable $to, string $destination = null): string
+    final public function exportPlace(Place $place, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null, string $destination = null): string
     {
+        if (!$from || !$to) {
+            $maxDates = $this->dataValueRepository->getPeriodDataAmplitude($place);
+            $from = $from ?? \DateTimeImmutable::createFromFormat('Y-m-d h:i:s', $maxDates[1]);
+            $to = $to ?? \DateTimeImmutable::createFromFormat('Y-m-d h:i:s', $maxDates[2]);
+        }
+
         $filename = \sprintf(
             '%s/aeneria-%s-%s-to-%s',
             $destination ?? \sys_get_temp_dir(),
@@ -43,11 +44,17 @@ class DataExporter
             $to->format('Ymd')
         );
 
+        $filename .= '.ods';
+
+        if (!$feedDatas = $place->getFeedDatas()) {
+            throw new \InvalidArgumentException(\sprintf("L'adresse %s n'a pas de données à exporter.", $place->getName()));
+        }
+
         $writer = WriterEntityFactory::createODSWriter();
         $writer->openToFile($filename);
 
-        foreach ($place->getFeeds() as $feed) {
-            $this->exportFeed($writer, $feed, $from, $to);
+        foreach (DataValue::getAllFrequencies() as $key => $frequency) {
+            $this->exportForFrequency($writer, $feedDatas, $frequency, $from, $to);
         }
 
         $writer->close();
@@ -55,32 +62,35 @@ class DataExporter
         return $filename;
     }
 
-    private function exportFeed(WriterMultiSheetsAbstract $writer, Feed $feed, \DateTimeImmutable $from, \DateTimeImmutable $to): void
+    /**
+     * @param FeedData[] $feedDatas
+     */
+    private function exportForFrequency(WriterMultiSheetsAbstract $writer, array $feedDatas, int $frequency, \DateTimeImmutable $from, \DateTimeImmutable $to): void
     {
-        foreach ($this->feedDataRepository->findBy(['feed' => $feed]) as $feedData) {
-            $this->exporFeedData($writer, $feed, $feedData, $from, $to);
-        }
-    }
-
-    private function exporFeedData(WriterMultiSheetsAbstract $writer, Feed $feed, FeedData $feedData, \DateTimeImmutable $from, \DateTimeImmutable $to): void
-    {
-        $sheetName = $feedData->getDisplayDataType();
+        $sheetName = DataValue::getFrequencyMachineName($frequency);
         $sheet = $writer->getCurrentSheet();
         $sheet->setName($sheetName);
 
-        if ($values = $this->dataValueRepository->getValue(
-            $from,
-            $to,
-            $feedData,
-             \min($feed->getFrequencies())
-        )) {
+        $values = [];
+        $firstRow = ['DATE'];
+        foreach ($feedDatas as $feedData) {
+            $values[$feedData->getId()] = $this->dataValueRepository->getDateValueArray($from, $to, $feedData, $frequency);
+            $firstRow[] = $feedData->getDataType();
+        }
+
+        $writer->addRow(WriterEntityFactory::createRowFromArray($firstRow));
+
+        $currentDate = DataValue::adaptToFrequency($from, $frequency);
+        while ($currentDate < $to) {
+            $row = [$currentDate->format('d/m/Y H:i')];
+            $stringDate = $currentDate->format('Y-m-d H:i:s');
+
             foreach ($values as $value) {
-                $row = WriterEntityFactory::createRowFromArray([
-                    $value->getDate()->format('d/m/Y H:i'),
-                    $value->getValue(),
-                ]);
-                $writer->addRow($row);
+                $row[] = \array_key_exists($stringDate, $value) ? $value[$stringDate]['value'] : null;
             }
+            $writer->addRow(WriterEntityFactory::createRowFromArray($row));
+
+            $currentDate = DataValue::increaseToNextFrequence($currentDate, $frequency);
         }
 
         $writer->addNewSheetAndMakeItCurrent();

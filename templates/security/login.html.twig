@@ -20,7 +20,7 @@
                     {% if app.user %}
                         <div class="checkbox mb-3">
                             <p>{{ 'Vous êtes déjà connecté en tant que' | trans }} {{ app.user.username }}</p>
-                            <a href="{{ path('dashboard.home') }}" class="btn btn-primary">Aller à la page d'accueil</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">Se déconnecter</a>
+                            <a href="{{ path('dashboard.home') }}" class="btn btn-primary">{{ 'Aller à la page d\'accueil' | trans }}</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">{{ 'Se déconnecter' | trans }}</a>
                         </div>
                     {% else %}
                         <div class="form-group row">
@@ -38,12 +38,12 @@
 
                         <div class="checkbox mb-3">
                             <label>
-                                <input type="checkbox" name="_remember_me"> Rester connecté
+                                <input type="checkbox" name="_remember_me"> {{ 'Rester connecté' | trans }}
                             </label>
                         </div>
 
                         <button class="btn btn-lg btn-primary" type="submit">
-                            Connexion
+                            {{ 'Connexion' | trans }}
                         </button>
                     {% endif %}
                 </form>

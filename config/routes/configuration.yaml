@@ -11,6 +11,10 @@ config.place.export:
   path: /configuration/place/{id}/export
   controller: App\Controller\ConfigurationController::placeExportAction
 
+config.place.import:
+  path: /configuration/place/{id}/import
+  controller: App\Controller\ConfigurationController::placeImportAction
+
 # User related route
 config.user.update:
   path: /configuration/user/update

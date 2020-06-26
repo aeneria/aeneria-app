@@ -15,32 +15,36 @@
         </div>
       </div>
       <hr>
-      <h4>Configurations courantes</h4>
+      <h4>{{ 'Configurations courantes' | trans }}</h4>
       <table class="table table-striped table-hover table-bordered">
           <tbody>
             <tr scope="row">
-              <td>Nombre d'adresses max par utilisateur</td>
-              <td>{{ aeneria_user_max_places() ?: 'Illimité' }}</td>
+              <td>{{ 'Nombre d\'adresses max par utilisateur' | trans }}</td>
+              <td>{{ aeneria_user_max_places() ?: ('Illimité' | trans) }}</td>
             </tr>
             <tr scope="row">
-              <td>Partage d'adresses entre utilisateurs</td>
-              <td>{{ aeneria_user_can_share_place() ? 'Oui' : 'Non' }}</td>
+              <td>{{ 'Partage d\'adresses entre utilisateurs' | trans}}</td>
+              <td>{{ aeneria_user_can_share_place() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
             </tr>
             <tr scope="row">
-              <td>Les adresses peuvent être publiques</td>
-              <td>{{ aeneria_place_can_be_public() ? 'Oui' : 'Non' }}</td>
+              <td>{{ 'Les adresses peuvent être publiques'| trans}}</td>
+              <td>{{ aeneria_place_can_be_public() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
             </tr>
             <tr scope="row">
-              <td>Les utilisateurs peuvent recharger leur données via l'UI</td>
-              <td>{{ aeneria_user_can_fetch() ? 'Oui' : 'Non' }}</td>
+              <td>{{ 'Les utilisateurs peuvent recharger leur données via l\'UI' | trans }}</td>
+              <td>{{ aeneria_user_can_fetch() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
             </tr>
             <tr scope="row">
-              <td>Les utilisateurs peuvent exporter leur données via l'UI</td>
-              <td>{{ aeneria_user_can_fetch() ? 'Oui' : 'Non' }}</td>
+              <td>{{ 'Les utilisateurs peuvent exporter leur données via l\'UI' | trans }}</td>
+              <td>{{ aeneria_user_can_export() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
+            </tr>
+            <tr scope="row">
+              <td>{{ 'Les utilisateurs peuvent importer leur données via l\'UI' | trans }}</td>
+              <td>{{ aeneria_user_can_import() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
             </tr>
           </tbody>
       </table>
-      <p>Ces paramètres peuvent être changés en surchargeant le fichier <i>.env</i>  {{ aeneria_help_icon_link('administrateur.html', 'Voir la documentation')|raw }}</p>
+      <p>{{ 'Ces paramètres peuvent être changés en surchargeant le fichier' | trans }} <i>.env</i> {{ aeneria_help_icon_link('administrateur.html', 'Voir la documentation')|raw }}</p>
     </div>
   </div>
 </div>

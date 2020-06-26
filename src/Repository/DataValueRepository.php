@@ -130,6 +130,38 @@ class DataValueRepository extends ServiceEntityRepository
     }
 
     /**
+     * Insert values between 2 dates for an array of FeedData and for a given frequency.
+     *
+     * Warning : Existing values with given criteria will be deleted in process !
+     *
+     * @param DataValue[] $dataValue
+     */
+    public function massImport(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feedDatas, int $frequency, array $dataValues)
+    {
+        $this
+            ->createQueryBuilder('d')
+            ->delete()
+            ->andWhere('d.feedData IN (:ids)')
+            ->setParameter('ids', \array_map(function ($item) {
+                return $item->getId();
+            }, $feedDatas))
+            ->andWhere('d.frequency = :freq')
+            ->setParameter('freq', $frequency)
+            ->andWhere('d.date BETWEEN :from AND :to')
+            ->setParameter('from', $startDate)
+            ->setParameter('to', $endDate)
+            ->getQuery()
+            ->execute()
+        ;
+
+        foreach ($dataValues as $dataValue) {
+            $this->getEntityManager()->persist($dataValue);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Get an average value
      *
      * @param \DateTime $startDate
@@ -319,7 +351,7 @@ class DataValueRepository extends ServiceEntityRepository
      * @param FeedData $feedData
      * @param string $frequency
      */
-    public function getValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency)
+    public function getValue(?\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate, FeedData $feedData, $frequency)
     {
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
@@ -328,6 +360,30 @@ class DataValueRepository extends ServiceEntityRepository
 
         return $queryBuilder
             ->addGroupBy('d.id')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Get value
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param FeedData $feedData
+     * @param string $frequency
+     */
+    public function getDateValueArray(?\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate, FeedData $feedData, $frequency)
+    {
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+
+        return $queryBuilder
+            ->addGroupBy('d.id')
+            ->select('d.value, d.date')
+            ->indexBy('d', 'd.date')
             ->getQuery()
             ->getResult()
         ;
@@ -398,18 +454,31 @@ class DataValueRepository extends ServiceEntityRepository
      * @param string $frequency
      * @param QueryBuilder $queryBuilder
      */
-    public function betweenDateWithFeedDataAndFrequency(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
+    public function betweenDateWithFeedDataAndFrequency(?\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate, FeedData $feedData, $frequency, QueryBuilder &$queryBuilder)
     {
-        $startDate = DataValue::adaptToFrequency($startDate, $frequency);
+        // Deal with date
+        if ($startDate) {
+            $startDate = DataValue::adaptToFrequency($startDate, $frequency);
+            $queryBuilder
+                ->andWhere('d.date >= :start')
+                ->setParameter('start', $startDate)
+            ;
+        }
+        if ($endDate) {
+            $queryBuilder
+                ->andWhere('d.date <= :end')
+                ->setParameter('end', $endDate)
+            ;
+        }
 
+        // Add condition on feedData
         $queryBuilder
-            ->andWhere('d.date BETWEEN :start AND :end')
-            ->setParameter('start', $startDate)
-            ->setParameter('end', $endDate)
-            // Add condition on feedData
             ->andWhere('d.feedData = :feedData')
             ->setParameter('feedData', $feedData->getId())
-            // Add condition on frequency
+        ;
+
+        // Add condition on frequency
+        $queryBuilder
             ->andWhere('d.frequency = :frequency')
             ->setParameter('frequency', $frequency)
         ;

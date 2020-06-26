@@ -22,6 +22,14 @@ trait AppTestTrait
     private $_entityManager;
 
     /**
+     * Get resource directory
+     */
+    final protected static function getResourceDir(): string
+    {
+        return __DIR__ . '/Resources';
+    }
+
+    /**
      * Get EntityManager
      */
     final protected function getEntityManager(): EntityManagerInterface
@@ -188,7 +196,7 @@ trait AppTestTrait
         return (new DataValue())
             ->setId($data['id'] ?? \rand())
             ->setFeedData($data['feedData'] ?? $this->createFeedData())
-            ->setFrequency(DataValue::FREQUENCY['HOUR'])
+            ->setFrequency(DataValue::FREQUENCY_HOUR)
             ->setValue($data['value'] ?? 12)
             ->setDate($data['date'] ?? $date = new \DateTimeImmutable())
             ->updateDateRelatedData()

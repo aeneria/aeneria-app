@@ -79,17 +79,17 @@ class FakeDataProvider extends AbstractFeedDataProvider
             $this->dataValueRepository->updateOrCreateValue(
                 $feedData,
                 $date,
-                DataValue::FREQUENCY['DAY'],
+                DataValue::FREQUENCY_DAY,
                 \rand($min * 10, $max * 10) / 10
             );
             $this->entityManager->flush();
         }
 
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
         $this->entityManager->flush();
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
         $this->entityManager->flush();
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
         $this->entityManager->flush();
     }
 
@@ -128,19 +128,19 @@ class FakeDataProvider extends AbstractFeedDataProvider
             $this->dataValueRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
-                DataValue::FREQUENCY['HOUR'],
+                DataValue::FREQUENCY_HOUR,
                 $value
             );
         }
         $this->entityManager->flush();
 
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['DAY']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_DAY);
         $this->entityManager->flush();
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
         $this->entityManager->flush();
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
         $this->entityManager->flush();
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
         $this->entityManager->flush();
     }
 }

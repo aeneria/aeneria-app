@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UpdateAccountType;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
+use App\Services\DataImporter;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ConfigurationController extends AbstractAppController
@@ -65,24 +66,28 @@ class ConfigurationController extends AbstractAppController
                         "Le processus de rechargement des données pouvant être long, il n'est possible de recharger que par lot de 2 semaines",
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
+                    'constraints' => [new Assert\NotBlank()],
                 ])
                 ->add('end_date_' . $feedId, Form\TextType::class, [
                     'label' => false,
                     'attr' => ['class' => 'simple-datepicker'],
                     'required' => true,
-                    'constraints' => [new Callback([
-                        'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
-                            $data = $context->getRoot()->getData();
-                            $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
-                            $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId])->sub(new \DateInterval('P14D'));
-                            if ($startDate < $endDate) {
-                                $context
-                                    ->buildViolation("Vous devez sélectionner une période de moins de 2 semaines.")
-                                    ->addViolation()
-                                ;
-                            }
-                        },
-                    ])],
+                    'constraints' => [
+                            new Assert\NotBlank(),
+                            new Assert\Callback([
+                            'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
+                                $data = $context->getRoot()->getData();
+                                $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
+                                $endDate = $data['end_date_' . $feedId] ? \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId])->sub(new \DateInterval('P14D')) : null;
+                                if ($startDate < $endDate) {
+                                    $context
+                                        ->buildViolation("Vous devez sélectionner une période de moins de 2 semaines.")
+                                        ->addViolation()
+                                    ;
+                                }
+                            },
+                        ]),
+                    ],
                 ])
                 ->add('force_' . $feedId, Form\CheckboxType::class, [
                     'label' => 'Forcer',
@@ -93,7 +98,7 @@ class ConfigurationController extends AbstractAppController
                         'class' => 'btn btn-warning',
                         'title' => 'Recharger',
                     ],
-                    'label' => '',
+                    'label' => '',
                 ])
                 ->getForm()
                 ->handleRequest($request)
@@ -151,19 +156,28 @@ class ConfigurationController extends AbstractAppController
             ->add('start_date', Form\TextType::class, [
                 'label' => false,
                 'attr' => ['class' => 'simple-datepicker'],
+                'constraints' => [new Assert\NotBlank()],
                 'required' => true,
             ])
             ->add('end_date', Form\TextType::class, [
                 'label' => false,
                 'attr' => ['class' => 'simple-datepicker'],
+                'constraints' => [new Assert\NotBlank()],
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-warning',
-                    'title' => 'Recharger',
+                    'title' => 'Exporter',
                 ],
-                'label' => '',
+                'label' => '',
+            ])
+            ->add('submit_all', Form\SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-warning',
+                    'formnovalidate' => 'formnovalidate',
+                ],
+                'label' => '',
             ])
             ->getForm()
             ->handleRequest($request)
@@ -173,8 +187,8 @@ class ConfigurationController extends AbstractAppController
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $startDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['start_date']);
-                $endDate = \DateTimeImmutable::createFromFormat('d/m/Y', $data['end_date']);
+                $startDate = $data['start_date'] ? \DateTimeImmutable::createFromFormat('d/m/Y', $data['start_date']) : null;
+                $endDate = $data['end_date'] ? \DateTimeImmutable::createFromFormat('d/m/Y', $data['end_date']) : null;
                 $filename = $dataExporter->exportPlace($place, $startDate, $endDate);
                 $file = new File($filename);
 
@@ -186,6 +200,66 @@ class ConfigurationController extends AbstractAppController
         }
 
         return $this->render('configuration/place_export.html.twig', [
+            'place' => $place,
+            'form' => $form->createView(),
+            'cancel' => 'config',
+        ]);
+    }
+
+    /**
+     * Export Place data form view
+     */
+    public function placeImportAction(bool $userCanExport, Request $request, DataImporter $dataImporter, string $id)
+    {
+        if (!$userCanExport) {
+            throw new NotFoundHttpException();
+        }
+
+        $place = $this->checkPlace($id);
+
+        $form = $this
+            ->createFormBuilder()
+            ->add('file', Form\FileType::class, [
+                'label' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\File([
+                        'mimeTypes' => [
+                            'application/vnd.oasis.opendocument.spreadsheet',
+                        ],
+                        'mimeTypesMessage' => 'Les fichiers d\'export d\'æneria sont des fichiers ODS, veuillez fournir un fichier *.ods',
+                    ]),
+                ],
+            ])
+            ->add('submit', Form\SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-warning',
+                    'title' => 'Importer',
+                ],
+                'label' => '',
+            ])
+            ->getForm()
+            ->handleRequest($request)
+        ;
+
+        if ('POST' === $request->getMethod()) {
+            if ($form->isValid()) {
+                $file = $form->getData()['file'];
+                \assert($file instanceof File);
+
+                if ($errors = $dataImporter->importPlace($place, $file->getPathname())) {
+                    $this->addFlash('warning', 'Les données ont été importées, mais des erreurs sont survenus :');
+                    foreach ($errors as $error) {
+                        $this->addFlash('warning', $error);
+                    }
+                } else {
+                    $this->addFlash('success', 'Les données ont été correctement importés');
+                }
+            }
+        }
+
+        return $this->render('configuration/place_import.html.twig', [
             'place' => $place,
             'form' => $form->createView(),
             'cancel' => 'config',
@@ -256,7 +330,7 @@ class ConfigurationController extends AbstractAppController
                 'always_empty' => true,
                 'required' => true,
                 'constraints' => [
-                    new Callback(['callback' => static function ($data, ExecutionContextInterface $context) use ($passwordEncoder, $user) {
+                    new Assert\Callback(['callback' => static function ($data, ExecutionContextInterface $context) use ($passwordEncoder, $user) {
                         if (!$passwordEncoder->isPasswordValid($user, $data)) {
                             $context
                                 ->buildViolation("Mot de passe invalide.")
@@ -272,7 +346,7 @@ class ConfigurationController extends AbstractAppController
                 'required' => true,
             ])
             ->add('submit', Form\SubmitType::class, [
-                'attr' => ['class' => 'btn btn-danger'],
+                'attr' => ['class' => 'btn btn-danger float-right'],
                 'label' => "Supprimer mon compte et TOUTES mes données",
             ])
             ->getForm()

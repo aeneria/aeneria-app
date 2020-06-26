@@ -138,6 +138,6 @@ class GenerateFakeDataCommand extends Command
             $this->entityManager->flush();
         }
 
-        return $place;
+        return $this->placeRepository->findOneById($place->getId());
     }
 }

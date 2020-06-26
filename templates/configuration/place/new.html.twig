@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une adresse{% endblock %}
+{% block title %}{{ 'Ajouter une adresse' | trans }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -11,24 +11,31 @@
 
       <h2><i class="fas fa-cube"></i>{{ 'Paramètrage du compte Enedis' | trans }}</h2>
       <p>
+        {% trans %}
         En France, <a href="https://www.enedis.fr/profil">Enedis</a> gère le réseau d’électricité jusqu’au compteur d’électricité. Pour permettre à æneria
         d'alimenter ses tableaux de bord, autorisez Enedis à nous transmettre vos données Linky.
+        {% endtrans %}
       </p>
 
-      <p>En cliquant sur ce bouton, vous allez accéder à votre compte personnel Enedis où vous pourrez donner votre accord pour qu’Enedis nous transmette vos données.</p>
+      <p>
+        {% trans %}
+        En cliquant sur ce bouton, vous allez accéder à votre compte personnel Enedis où vous pourrez donner votre accord pour qu’Enedis nous transmette vos données.
+        {% endtrans %}
+      </p>
 
       <div class="text-center">
-        <a href="{{ enedis_url }}" class="text-center"> <img src="{{ asset('image/enedis-consent.png') }}" alt='Accédez à votre espace Enedis'></a>
+        <a href="{{ enedis_url }}" class="text-center"> <img src="{{ asset('image/enedis-consent.png') }}" alt='{{ 'Accédez à votre espace Enedis' | trans }}'></a>
       </div>
 
       <div class="alert alert-warning">
         <p>
+          {% trans %}
           Pour donner votre autorisation, vous devez créer un compte personnel Enedis. Il vous permet également de suivre et gérer vos données de consommation
           d’électricité. Munissez-vous de votre facture d’électricité pour créer votre espace.
+          {% endtrans %}
         </p>
-
         <div class="text-center">
-          <a href="{{ enedis_url }}" class="text-center btn btn-secondary">Je crée mon compte personnel Enedis</a>
+          <a href="{{ enedis_url }}" class="text-center btn btn-secondary">{{ 'Je crée mon compte personnel Enedis' | trans }}</a>
         </div>
       </div>
     </div>
