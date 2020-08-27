@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
-use Aeneria\EnedisDataConnectApi\Service\DataConnectService;
+use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\Feed;
 use App\Entity\Place;
 use App\Entity\User;
@@ -30,7 +30,7 @@ class ConfigurationPlaceController extends AbstractAppController
     public function placeNewAction(
         Request $request,
         int $userMaxPlaces,
-        DataConnectService $dataConnectService,
+        DataConnectServiceInterface $dataConnectService,
         JwtService $jwtService
     ): Response {
         $user = $this->getUser();
@@ -65,7 +65,7 @@ class ConfigurationPlaceController extends AbstractAppController
         bool $placeCanBePublic,
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
-        DataConnectService $dataConnectService,
+        DataConnectServiceInterface $dataConnectService,
         JwtService $jwtService
     ): Response {
         $user = $this->getUser();
@@ -135,7 +135,7 @@ class ConfigurationPlaceController extends AbstractAppController
     public function placeEnedisConsentAction(
         Request $request,
         string $id,
-        DataConnectService $dataConnectService,
+        DataConnectServiceInterface $dataConnectService,
         EnedisDataConnectProvider $enedisDataConnectProvider,
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
@@ -188,7 +188,7 @@ class ConfigurationPlaceController extends AbstractAppController
 
     public function placeEnedisConsentCallbackAction(
         Request $request,
-        DataConnectService $dataConnectService,
+        DataConnectServiceInterface $dataConnectService,
         feedRepository $feedRepository,
         EntityManagerInterface $entityManager,
         JwtService $jwtService,
@@ -251,11 +251,11 @@ class ConfigurationPlaceController extends AbstractAppController
 
             $feed = new Feed();
             $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
-            $feed->setName((string) $address);
             $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
             $feed->setPlace($place);
         }
 
+        $feed->setName((string) $address);
         $feed->setSingleParam('TOKEN', $serializer->serialize($token, 'json'));
         $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
 

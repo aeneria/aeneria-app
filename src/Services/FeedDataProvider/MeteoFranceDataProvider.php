@@ -8,6 +8,7 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Meteo France API to get SYNOP Observations.
@@ -47,11 +48,21 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
     /** @var string */
     private $projectDir;
 
-    public function __construct(string $projectDir, EntityManagerInterface $entityManager, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
-    {
+    /** @var HttpClientInterface */
+    private $httpClient;
+
+    public function __construct(
+        string $projectDir,
+        EntityManagerInterface $entityManager,
+        FeedRepository $feedRepository,
+        FeedDataRepository $feedDataRepository,
+        DataValueRepository $dataValueRepository,
+        HttpClientInterface $httpClient
+    ) {
         parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository);
 
         $this->projectDir = $projectDir;
+        $this->httpClient = $httpClient;
     }
 
     /**
@@ -168,6 +179,13 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
 
             // Get all feedData.
             $feedDataList = $this->feedDataRepository->findByFeed($feed);
+
+            if (!$feedDataList) {
+                throw new \Doctrine\ORM\EntityNotFoundException(\sprintf(
+                    "Could not find feedDatas for feed %s.",
+                    $feed->getId()
+                ));
+            }
 
             // Foreach feedData store the value for yesterday.
             foreach ($feedDataList as $feedData) {

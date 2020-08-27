@@ -5,7 +5,7 @@ namespace App\Services\FeedDataProvider;
 use Aeneria\EnedisDataConnectApi\Model\Address;
 use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
 use Aeneria\EnedisDataConnectApi\Model\Token;
-use Aeneria\EnedisDataConnectApi\Service\DataConnectService;
+use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -13,7 +13,6 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -23,10 +22,10 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
-    /** @var DataConnectService */
+    /** @var DataConnectServiceInterface */
     private $dataConnect;
 
-    /** @var Serializer */
+    /** @var SerializerInterface */
     private $serializer;
 
     public function __construct(
@@ -34,7 +33,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        DataConnectService $dataConnect,
+        DataConnectServiceInterface $dataConnect,
         SerializerInterface $serializer
     ) {
         $this->dataConnect = $dataConnect;
@@ -98,9 +97,8 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     {
         $token = $this->getTokenFrom($feed);
 
-        $endDate = \DateTime::createFromImmutable($date);
-        $endDate->add(new \DateInterval('P1D'));
-        $startDate = \DateTime::createFromImmutable($date);
+        $endDate = $date->add(new \DateInterval('P1D'));
+        $startDate = clone $date;
 
         $meteringData = $this
             ->dataConnect
@@ -122,9 +120,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                 ->format('Y-m-d H:00')
             ;
             if (\array_key_exists($key, $data)) {
-                $data[$key] += $meteringValue->getValue();
+                $data[$key] += $meteringValue->getValue()/1000;
             } else {
-                $data[$key] = $meteringValue->getValue();
+                $data[$key] = $meteringValue->getValue()/1000;
             }
         }
 
@@ -135,9 +133,8 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     {
         $token = $this->getTokenFrom($feed);
 
-        $endDate = \DateTime::createFromImmutable($date);
-        $endDate->add(new \DateInterval('P1D'));
-        $startDate = \DateTime::createFromImmutable($date);
+        $endDate = $date->add(new \DateInterval('P1D'));
+        $startDate = clone $date;
 
         $meteringData = $this
             ->dataConnect
@@ -154,9 +151,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         foreach ($meteringData->getValues() as $meteringValue) {
             \assert($meteringValue instanceof MeteringValue);
             if (\array_key_exists($key = $meteringValue->getDate()->format('Y-m-d'), $data)) {
-                $data[$key] += $meteringValue->getValue();
+                $data[$key] += $meteringValue->getValue()/1000;
             } else {
-                $data[$key] = $meteringValue->getValue();
+                $data[$key] = $meteringValue->getValue()/1000;
             }
         }
 
@@ -169,14 +166,25 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     private function persistData(\DateTimeImmutable $date, Feed $feed, array $data)
     {
         // Get feedData.
-        $feedData = $feed->getFeedData(FeedData::FEED_DATA_CONSO_ELEC);
+        $feedData = $this->feedDataRepository->findOneBy([
+            'feed' => $feed->getId(),
+            'dataType' => FeedData::FEED_DATA_CONSO_ELEC,
+        ]);
+
+        if (!$feedData) {
+            throw new \Doctrine\ORM\EntityNotFoundException(\sprintf(
+                "Could not find feedData of type %s for feed %s.",
+                FeedData::FEED_DATA_CONSO_ELEC,
+                $feed->getId()
+            ));
+        }
 
         // Persist hours data.
         foreach ($data['hours'] as $currentDate => $value) {
             if ($value && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
-                    \DateTimeImmutable::createFromFormat('!Y-m-d H:m', $currentDate),
+                    \DateTimeImmutable::createFromFormat('!Y-m-d H:i', $currentDate),
                     DataValue::FREQUENCY_HOUR,
                     $value
                 );

@@ -7,25 +7,31 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpClient\HttpClient;
 
 abstract class AbstractFeedDataProvider
 {
+    /** @var EntityManagerInterface */
     protected $entityManager;
+
+    /** @var FeedRepository */
     protected $feedRepository;
+
+    /** @var FeedDataRepository */
     protected $feedDataRepository;
+
+    /** @var DataValueRepository */
     protected $dataValueRepository;
 
-    protected $httpClient;
-
-    public function __construct(EntityManagerInterface $entityManager, FeedRepository $feedRepository, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        FeedRepository $feedRepository,
+        FeedDataRepository $feedDataRepository,
+        DataValueRepository $dataValueRepository
+    ) {
         $this->entityManager = $entityManager;
         $this->feedRepository = $feedRepository;
         $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;
-
-        $this->httpClient = HttpClient::create();
     }
 
     /**
