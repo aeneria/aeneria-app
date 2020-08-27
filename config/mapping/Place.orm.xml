@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
-    <entity name="App\Entity\Place" table="place">
+    <entity name="App\Entity\Place" table="place" repository-class="App\Repository\PlaceRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

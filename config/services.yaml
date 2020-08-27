@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
-    aeneria.version: '0.5.4'
+    aeneria.version: '1.x'
     aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
     aeneria.documentation: 'https://docs.aeneria.com/fr/'
     # aeneria features
@@ -57,8 +57,12 @@ services:
     Aeneria\EnedisDataConnectApi\Service\DataConnectService:
         class: Aeneria\EnedisDataConnectApi\Service\DataConnectService
         arguments:
+            $httpClient: "@http_client"
             $authEndpoint: "%aeneria.enedis.endpoint_auth%"
             $dataEndpoint: "%aeneria.enedis.endpoint_data%"
             $clientId: "%aeneria.enedis.client_id%"
             $clientSecret: "%aeneria.enedis.client_secret%"
             $redirectUri: "%aeneria.enedis.redirect_uri%"
+
+    Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface:
+        alias: Aeneria\EnedisDataConnectApi\Service\DataConnectService
