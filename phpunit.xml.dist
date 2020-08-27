@@ -25,11 +25,7 @@
             <exclude>
                 <directory>src/Migrations</directory>
                 <file>src/Kernel.php</file>
-                <file>src/Services/FeedDataProvider/AbstractFeedDataProvider.php</file>
-                <file>src/Services/FeedDataProvider/GenericFeedDataProvider.php</file>
                 <file>src/Services/FeedDataProvider/LinkyDataProvider.php</file>
-                <file>src/Services/FeedDataProvider/MeteoFranceDataProvider.php</file>
-                <file>src/Services/FeedDataProvider/EnedisDataConnectProvider.php</file>
                 <file>src/Command/InstallCommand.php</file>
                 <file>src/Command/Dev/GenerateFakeDataCommand.php</file>
             </exclude>

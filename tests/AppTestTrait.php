@@ -15,84 +15,79 @@ use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 trait AppTestTrait
 {
     private $_entityManager;
 
-    /**
-     * Get resource directory
-     */
     final protected static function getResourceDir(): string
     {
         return __DIR__ . '/Resources';
     }
 
-    /**
-     * Get EntityManager
-     */
     final protected function getEntityManager(): EntityManagerInterface
     {
         return $this->_entityManager ?? (
-            $this->_entityManager = $this->getContainer()->get('doctrine.orm.entity_manager')
+            $this->_entityManager = $this->getContainer()->get('doctrine')->getManager()
         );
     }
 
-    /**
-     * Get parameter
-     */
     final protected function getParameter(string $parameter): string
     {
         return $this->getContainer()->getParameter($parameter);
     }
 
     /**
-     * Get UserRepository
+     * @return UserRepository
      */
-    final protected function getUserRepository(): UserRepository
+    final protected function getUserRepository(): EntityRepository
     {
-        return $this->getContainer()->get(UserRepository::class);
+        return $this->getEntityManager()->getRepository(User::class);
     }
 
     /**
-     * Get PlaceRepository
+     * @return PlaceRepository
      */
-    final protected function getPlaceRepository(): PlaceRepository
+    final protected function getPlaceRepository(): EntityRepository
     {
-        return $this->getContainer()->get(PlaceRepository::class);
+        return $this->getEntityManager()->getRepository(Place::class);
     }
 
     /**
-     * Get FeedRepository
+     * @return FeedRepository
      */
-    final protected function getFeedRepository(): FeedRepository
+    final protected function getFeedRepository(): EntityRepository
     {
-        return $this->getContainer()->get(FeedRepository::class);
+        return $this->getEntityManager()->getRepository(Feed::class);
     }
 
     /**
-     * Get FeedDataRepository
+     * @return FeedDataRepository
      */
-    final protected function getFeedDataRepository(): FeedDataRepository
+    final protected function getFeedDataRepository(): EntityRepository
     {
-        return $this->getContainer()->get(FeedDataRepository::class);
+        return $this->getEntityManager()->getRepository(FeedData::class);
     }
 
     /**
-     * Get DataValueRepository
+     * @return UserRepository
      */
     final protected function getDataValueRepository(): DataValueRepository
     {
-        return $this->getContainer()->get(DataValueRepository::class);
+        return $this->getEntityManager()->getRepository(DataValue::class);
     }
 
-    /**
-     * Get UserPasswordEncoder
-     */
     final protected function getPassordEncoder(): UserPasswordEncoderInterface
     {
         return $this->getContainer()->get('security.password_encoder');
+    }
+
+    final protected function getSerializer(): SerializerInterface
+    {
+        return $this->getContainer()->get('serializer');
     }
 
     /**

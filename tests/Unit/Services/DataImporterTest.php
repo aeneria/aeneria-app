@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services;
+namespace App\Tests\Unit\Services;
 
 use App\Entity\User;
 use App\Services\DataImporter;
