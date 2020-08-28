@@ -27,7 +27,7 @@ final class FeedTest extends AppTestCase
         self::assertSame($feed->getFeedDataProviderType(), Feed::FEED_DATA_PROVIDER_LINKY);
         self::assertSame($feed->getParam(), ['toto' => 'toto']);
         self::assertSame($feed->getPlace(), $place);
-        self::assertSame($feed->getFrequencies(), DataValue::FREQUENCY);
+        self::assertSame($feed->getFrequencies(), DataValue::getAllFrequencies());
     }
 
     public function testAllowedDataProvidersFor()
@@ -52,15 +52,15 @@ final class FeedTest extends AppTestCase
     {
         self::assertSame(Feed::getFrequenciesFor(
             Feed::FEED_TYPE_ELECTRICITY),
-            DataValue::FREQUENCY
+            DataValue::getAllFrequencies()
         );
 
         self::assertSame(
             Feed::getFrequenciesFor(Feed::FEED_TYPE_METEO),
             [
-                DataValue::FREQUENCY['DAY'],
-                DataValue::FREQUENCY['WEEK'],
-                DataValue::FREQUENCY['MONTH'],
+                DataValue::FREQUENCY_DAY,
+                DataValue::FREQUENCY_WEEK,
+                DataValue::FREQUENCY_MONTH,
             ]
         );
 
