@@ -40,8 +40,6 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             ],
         ]);
         $entityManager->flush();
-        // $entityManager->clear();
-        // $feed = $feedRepository->findOneById($feed->getId());
 
         $feedRepository->createDependentFeedData($feed);
         $entityManager->flush();

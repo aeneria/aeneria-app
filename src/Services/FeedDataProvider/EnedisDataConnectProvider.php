@@ -84,7 +84,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             $renewedToken = $this
                 ->dataConnect
                 ->getAuthorizeV1Service()
-                ->requestTokenFromRefreshToken($token->getAccessToken())
+                ->requestTokenFromRefreshToken($token->getRefreshToken())
             ;
             $feed->setSingleParam('TOKEN', $this->serializer->serialize($renewedToken, 'json'));
 

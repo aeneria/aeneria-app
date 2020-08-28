@@ -9,7 +9,7 @@ use InvalidArgumentException;
  */
 class DataValue
 {
-    /** @deprecated */
+    /** @deprecated use DataValue::getAllFrequencies() instead */
     const FREQUENCY = [
         'HOUR' => 1,
         'DAY' => 2,
