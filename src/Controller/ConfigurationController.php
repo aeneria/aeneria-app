@@ -78,8 +78,8 @@ class ConfigurationController extends AbstractAppController
                             'callback' => static function ($value, ExecutionContextInterface $context) use ($feedId) {
                                 $data = $context->getRoot()->getData();
                                 $startDate = \DateTime::createFromFormat('d/m/Y', $data['start_date_' . $feedId]);
-                                $endDate = $data['end_date_' . $feedId] ? \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId])->sub(new \DateInterval('P14D')) : null;
-                                if ($startDate < $endDate) {
+                                $endDate = \DateTime::createFromFormat('d/m/Y', $data['end_date_' . $feedId]);
+                                if ($startDate && $endDate && $startDate < $endDate->sub(new \DateInterval('P14D'))) {
                                     $context
                                         ->buildViolation("Vous devez sélectionner une période de moins de 2 semaines.")
                                         ->addViolation()

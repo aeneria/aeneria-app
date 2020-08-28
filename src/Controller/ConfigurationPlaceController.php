@@ -132,60 +132,6 @@ class ConfigurationPlaceController extends AbstractAppController
         ]);
     }
 
-    public function placeEnedisConsentAction(
-        Request $request,
-        string $id,
-        DataConnectServiceInterface $dataConnectService,
-        EnedisDataConnectProvider $enedisDataConnectProvider,
-        EntityManagerInterface $entityManager,
-        FeedRepository $feedRepository,
-        JwtService $jwtService
-    ): Response {
-        $place = $this->checkPlace($id);
-
-        if (!$linkyFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
-            $linkyFeed = new Feed();
-            $linkyFeed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
-            $linkyFeed->setName(\sprintf('Compteur Linky de %s', $place->getName()));
-            $linkyFeed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
-            $linkyFeed->setPlace($place);
-
-            $entityManager->persist($linkyFeed);
-            $entityManager->flush();
-
-            $feedRepository->createDependentFeedData($linkyFeed);
-            $entityManager->flush();
-        }
-
-        // On regarde si on a déjà le consentement
-        if ($token = $enedisDataConnectProvider->getTokenFrom($linkyFeed)) {
-            if ($token->getRefreshTokenIssuedAt() <= new \DateTimeImmutable()) {
-                $address = $enedisDataConnectProvider->getAddressFrom($linkyFeed);
-
-                return $this->render('configuration/place/enedis_step.html.twig', [
-                    'from_callback' => true,
-                    'place' => $place,
-                    'address' => $address,
-                    'token' => $token,
-                ]);
-            }
-        }
-
-        $enedisUrl = $dataConnectService
-            ->getAuthorizeV1Service()
-            ->getConsentPageUrl(
-                'P12M',
-                $jwtService->encode(['feedId' => $linkyFeed->getId()])
-            )
-        ;
-
-        return $this->render('configuration/place/enedis_step.html.twig', [
-            'from_callback' => false,
-            'enedis_url' => $enedisUrl,
-            'place' => $place,
-        ]);
-    }
-
     public function placeEnedisConsentCallbackAction(
         Request $request,
         DataConnectServiceInterface $dataConnectService,
