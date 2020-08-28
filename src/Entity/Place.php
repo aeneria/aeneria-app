@@ -118,6 +118,7 @@ class Place
         foreach ($this->feeds as $key => $currentFeed) {
             if ($currentFeed->getId() && $currentFeed->getId() === $feed->getId()) {
                 unset($this->feeds[$key]);
+                $feed->removePlace($this);
             }
         }
 

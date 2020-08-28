@@ -142,4 +142,31 @@ class FeedRepository extends ServiceEntityRepository
 
         return $isUpToDate;
     }
+
+    public function getOrCreateMeteoFranceFeed($param): Feed
+    {
+        // Try to find corresponding feed
+        $meteoFranceFeed = $this->findOneBy([
+            'name' => $param['STATION_ID'],
+            'feedType' => Feed::FEED_TYPE_METEO,
+            'feedDataProviderType' => Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
+        ]);
+
+        if (!$meteoFranceFeed) {
+            // Or create it
+            $meteoFranceFeed = new Feed();
+            $meteoFranceFeed
+                ->setFeedType(Feed::FEED_TYPE_METEO)
+                ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_METEO_FRANCE)
+                ->setName($param['STATION_ID'])
+                ->setParam($param)
+            ;
+            $this->createDependentFeedData($meteoFranceFeed);
+
+            $this->getEntityManager()->persist($meteoFranceFeed);
+            $this->getEntityManager()->flush();
+        }
+
+        return $meteoFranceFeed;
+    }
 }

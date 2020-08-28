@@ -101,10 +101,16 @@ class ConfigurationPlaceController extends AbstractAppController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $place = $data['place'];
-                $place->addFeed($data['meteo']);
-                $entityManager->persist($data['meteo']);
-                $feedRepository->createDependentFeedData($data['meteo']);
-                $entityManager->flush();
+                \assert($place instanceof Place);
+
+                // Deal with MeteoFrance Feed
+                if ($oldMeteoFranceFeed = $place->getFeed(Feed::FEED_TYPE_METEO)) {
+                    $place->removeFeed($oldMeteoFranceFeed);
+                }
+                $meteoFeed = $feedRepository->getOrCreateMeteoFranceFeed($data['meteo']);
+                $place->addFeed($meteoFeed);
+                $entityManager->persist($meteoFeed);
+
                 $entityManager->persist($place);
                 $entityManager->flush();
 
