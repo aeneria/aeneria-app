@@ -6,6 +6,7 @@
 /private/
 /var/
 /vendor/
+/test/private/
 ###< symfony/framework-bundle ###
 
 /public/build/
