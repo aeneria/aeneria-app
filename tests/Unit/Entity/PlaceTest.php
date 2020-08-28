@@ -51,7 +51,7 @@ final class PlaceTest extends AppTestCase
         self::assertFalse(\in_array($feed2, $place->getFeeds()));
 
         $place->addFeed($feed2);
-        self::assertFalse(\in_array($feed2, $place->getFeeds()));
+        self::assertTrue(\in_array($feed2, $place->getFeeds()));
     }
 
     public function testPlaceSetAllowedUsers()
