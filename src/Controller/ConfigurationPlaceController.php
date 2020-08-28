@@ -10,7 +10,6 @@ use App\Entity\User;
 use App\Form\MeteoFranceFeedType;
 use App\Form\PlaceType;
 use App\Repository\FeedRepository;
-use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Services\JwtService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -18,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -121,7 +119,7 @@ class ConfigurationPlaceController extends AbstractAppController
             ->getAuthorizeV1Service()
             ->getConsentPageUrl(
                 'P12M',
-                $jwtService->encode(['user' => $user->getId(), 'feed' => $linkyFeed->getId()])
+                $jwtService->encode(['user' => $user->getId(), 'place' => $place->getId()])
             )
         ;
 
@@ -161,12 +159,6 @@ class ConfigurationPlaceController extends AbstractAppController
             throw new AccessDeniedException();
         }
 
-        $feed = null;
-        if (isset($object->feed) && !$feed = $feedRepository->find($object->feed)) {
-            throw new NotFoundHttpException();
-        }
-        \assert($feed instanceof Feed);
-
         try {
             $token = $dataConnectService
                 ->getAuthorizeV1Service()
@@ -186,7 +178,7 @@ class ConfigurationPlaceController extends AbstractAppController
             return $this->redirectToRoute('config');
         }
 
-        if (!$feed) {
+        if(!($place = isset($object->place) ? $this->checkPlace($object->place) : null)) {
             // We are creating a new place
             $place = new Place();
             $place->setName((string) $address);
@@ -194,11 +186,15 @@ class ConfigurationPlaceController extends AbstractAppController
 
             $entityManager->persist($place);
             $entityManager->flush();
+        }
+        \assert($place instanceof Place);
 
+        if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
             $feed = new Feed();
             $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
             $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
-            $feed->setPlace($place);
+            $place->addFeed($feed);
+
         }
 
         $feed->setName((string) $address);
@@ -206,13 +202,14 @@ class ConfigurationPlaceController extends AbstractAppController
         $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
 
         $entityManager->persist($feed);
+        $entityManager->persist($place);
         $entityManager->flush();
 
         // Ensure all dependant FeedData are already existing
         $feedRepository->createDependentFeedData($feed);
         $entityManager->flush();
 
-        return $this->redirectToRoute('config.place.edit', ['id' => $feed->getPlace()->getId()]);
+        return $this->redirectToRoute('config.place.edit', ['id' => $place->getId()]);
     }
 
     /**

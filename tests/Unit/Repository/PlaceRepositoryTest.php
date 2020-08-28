@@ -26,12 +26,37 @@ final class PlaceRepositoryTest extends AppTestCase
         $placeRepository = $this->getPlaceRepository();
 
         $place = $this->createPersistedPlace();
+        $feed = $this->createFeed();
+        $place->addFeed($feed);
+
         $entityManager->flush();
         $entityManager->clear();
 
         $placeRepository->purge($place);
 
         self::assertNull($placeRepository->find($place->getId()));
+        self::assertNull($this->getFeedRepository()->find($feed->getId()));
+    }
+
+    public function testPurgePlaceWithFeedUsedElswhereDontPurgeFeed()
+    {
+        $entityManager = $this->getEntityManager();
+        $placeRepository = $this->getPlaceRepository();
+
+        $place1 = $this->createPersistedPlace();
+        $place2 = $this->createPersistedPlace();
+        $feed = $this->createFeed();
+        $place1->addFeed($feed);
+        $place2->addFeed($feed);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        $placeRepository->purge($place1);
+
+        self::assertNull($placeRepository->find($place1->getId()));
+        self::assertNotNull($placeRepository->find($place2->getId()));
+        self::assertNotNull($this->getFeedRepository()->find($feed->getId()));
     }
 
     public function testAllowedPlaces()

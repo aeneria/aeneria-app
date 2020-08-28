@@ -147,9 +147,9 @@ trait AppTestTrait
             ->setId($data['id'] ?? \rand())
             ->setName($data['name'] ?? 'test' . \rand())
             ->setFeedType($data['feedType'] ?? Feed::FEED_TYPE_ELECTRICITY)
-            ->setFeedDataProviderType($data['feedDataProviderType'] ?? Feed::FEED_DATA_PROVIDER_LINKY)
+            ->setFeedDataProviderType($data['feedDataProviderType'] ?? Feed::FEED_DATA_PROVIDER_FAKE)
             ->setParam($data['param'] ?? [])
-            ->setPlace($data['place'] ?? $this->createPlace())
+            ->setPlaces($data['places'] ?? [])
         ;
     }
 
@@ -157,6 +157,7 @@ trait AppTestTrait
     {
         $place = $data['place'] ?? $this->createPersistedPlace($placeData, $userData);
         $feed = $this->createFeed($data + ['place' => $place]);
+        $place->addFeed($feed);
         $this->getEntityManager()->persist($feed);
 
         return $feed;

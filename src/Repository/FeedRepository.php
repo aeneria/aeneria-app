@@ -71,7 +71,7 @@ class FeedRepository extends ServiceEntityRepository
         $queryBuilder = $this
             ->createQueryBuilder('f', 'f.id')
             ->select()
-            ->innerJoin('f.place', 'p')
+            ->innerJoin('f.places', 'p')
             ->innerJoin('p.user', 'u')
             ->where('u.active = 1')
         ;

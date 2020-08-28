@@ -11,23 +11,28 @@ final class FeedTest extends AppTestCase
 {
     public function testFeedInstance()
     {
-        $place = $this->createPlace();
         $feed = $this->createFeed([
             'id' => $feedId = \rand(),
             'name' => $name = 'test' . \rand(),
             'feedType' => Feed::FEED_TYPE_ELECTRICITY,
-            'feedDataProviderType' => Feed::FEED_DATA_PROVIDER_LINKY,
+            'feedDataProviderType' => Feed::FEED_DATA_PROVIDER_FAKE,
             'param' => ['toto' => 'toto'],
-            'place' => $place,
+            'places' => [$place= $this->createPlace()]
         ]);
 
         self::assertSame($feed->getId(), $feedId);
         self::assertSame($feed->getName(), $name);
         self::assertSame($feed->getFeedType(), Feed::FEED_TYPE_ELECTRICITY);
-        self::assertSame($feed->getFeedDataProviderType(), Feed::FEED_DATA_PROVIDER_LINKY);
+        self::assertSame($feed->getFeedDataProviderType(), Feed::FEED_DATA_PROVIDER_FAKE);
         self::assertSame($feed->getParam(), ['toto' => 'toto']);
-        self::assertSame($feed->getPlace(), $place);
         self::assertSame($feed->getFrequencies(), DataValue::getAllFrequencies());
+        self::assertTrue(\in_array($place, $feed->getPlaces()));
+
+        $feed->removePlace($place);
+        self::assertCount(0, $feed->getPlaces());
+
+        $feed->addPlace($place);
+        self::assertCount(1, $feed->getPlaces());
     }
 
     public function testAllowedDataProvidersFor()

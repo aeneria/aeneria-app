@@ -24,6 +24,6 @@ final class DashboardControllerTest extends AppWebTestCase
         $this->login('user-test');
 
         $this->client->request('GET', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

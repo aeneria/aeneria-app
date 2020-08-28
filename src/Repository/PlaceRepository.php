@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Feed;
 use App\Entity\Place;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -38,8 +39,15 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function purge(Place $place)
     {
-        foreach ($this->feedRepository->findByPlace($place) as $feed) {
-            $this->feedRepository->purge($feed);
+        foreach ($place->getFeeds() as $feed) {
+            \assert($feed instanceof Feed);
+
+            // Halt ! A feed can be attached to several places !
+            // We have to check that before we purge it !
+            $feedPlaces = $feed->getPlaces();
+            if (\count($feedPlaces) <= 1 && $feedPlaces[0] == $place) {
+                $this->feedRepository->purge($feed);
+            }
         }
 
         $this

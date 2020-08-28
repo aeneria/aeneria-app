@@ -494,10 +494,11 @@ class DataValueRepository extends ServiceEntityRepository
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
 
-        $queryBuilder->select('MIN(d.date), MAX(d.date)')
+        $queryBuilder
+            ->select('MIN(d.date), MAX(d.date)')
             ->innerJoin('d.feedData', 'fd')
             ->innerJoin('fd.feed', 'f')
-            ->where('f.place = :place')
+            ->innerJoin('f.places', 'p', 'WITH', 'p = :place')
             ->setParameter('place', $place)
             ->andWhere('d.frequency = :frequency')
             ->setParameter('frequency', 2)
