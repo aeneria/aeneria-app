@@ -146,7 +146,30 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
     php7.3 bin/console aeneria:user:add [username] [password]
     php7.3 bin/console aeneria:user:grant [username]
 
-5. Mettre en place le CRON
+5. Générer l'ensemble des flux Météo (facultatif)
+----------------------------------------------------
+
+Si vous le souhaitez, vous pouvez créer l'ensemble des flux météo pour l'utilisateur admin.
+L'intérêt est de commencer à stocker toutes les données météo dès l'installation de l'instance.
+Un utilisateur qui créée son compte dans le futur aura directement accès à l'ensemble de données météos
+depuis l'installation d'æneria.
+Par contre, en faisant ça, l'ensemble des données des 62 stations Météo sera historisé, ce qui augmente
+la taille de la base de données.
+
+Pour ça, lancer la commande suivante :
+
+.. code-block:: sh
+
+    php7.3 bin/console aeneria:feed:meteo:generate-all [username]
+
+.. note::
+
+    Les données Météo étant dans données pubiques, il n'y a pour elles pas de problème
+    de confidentialité. Pour simplifier les traitements, les données des flux météo ne
+    sont jamais supprimés. Si vous souhaitez quand même les supprimer, vous pouver le faire
+    en utilisant la command `aeneria:feed:clean-orphans`
+
+6. Mettre en place le CRON
 ----------------------------
 
 Mettez en place le CRON en exécutant la commande suivante :
@@ -157,7 +180,7 @@ Mettez en place le CRON en exécutant la commande suivante :
     # où [user] est l'utilisateur linux qui lancera le cron
 
 
-6. Configurer le serveur web
+7. Configurer le serveur web
 --------------------------------
 
 Enfin, configurez `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
