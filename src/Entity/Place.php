@@ -125,9 +125,16 @@ class Place
         return $this;
     }
 
+    /**
+     * @param Feed[] $feeds
+     */
     public function setFeeds(array $feeds): self
     {
         $this->feeds = $feeds;
+
+        foreach ($feeds as $feed) {
+            $feed->addPlace($this);
+        }
 
         return $this;
     }
