@@ -143,6 +143,11 @@ class FeedRepository extends ServiceEntityRepository
         return $isUpToDate;
     }
 
+    /**
+     * To avoid to create several feeds for the same station, this function check
+     * if a feed already exists for param and then return it if one was found or
+     * create one.
+     */
     public function getOrCreateMeteoFranceFeed($param): Feed
     {
         // Try to find corresponding feed

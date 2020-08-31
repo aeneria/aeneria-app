@@ -72,4 +72,38 @@ final class FeedRepositoryTest extends AppTestCase
 
         self::assertTrue($feeds[$feed->getId()] instanceof Feed);
     }
+
+    public function testGetOrCreateMeteoFranceFeed() {
+        $entityManager = $this->getEntityManager();
+        $feedRepository = $this->getFeedRepository();
+
+        $feed1 = $feedRepository->getOrCreateMeteoFranceFeed([
+            'STATION_ID' => $stationId = 'toto' . \rand(),
+        ]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        self::assertSame($stationId, $feed1->getName());
+
+        $feed2 = $feedRepository->getOrCreateMeteoFranceFeed([
+            'STATION_ID' => $stationId,
+        ]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        self::assertSame($feed1->getId(), $feed2->getId());
+
+        $feed3 = $feedRepository->getOrCreateMeteoFranceFeed([
+            'STATION_ID' => 'tata' . \rand(),
+        ]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        self::assertNotSame($feed1->getId(), $feed3->getId());
+
+
+    }
 }
