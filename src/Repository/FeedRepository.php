@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -173,5 +174,21 @@ class FeedRepository extends ServiceEntityRepository
         }
 
         return $meteoFranceFeed;
+    }
+
+    /**
+     * Get Feeds associate with no Places
+     *
+     * @return Feed[]
+     */
+    public function findOrphans(): Array
+    {
+        return $this->createQueryBuilder('f', 'f.id')
+            ->select('f')
+            ->leftJoin('f.places', 'p')
+            ->where('p.id IS NULL')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

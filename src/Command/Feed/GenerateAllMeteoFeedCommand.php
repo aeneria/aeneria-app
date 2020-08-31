@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Feed;
 
 use App\Entity\Place;
 use App\Repository\FeedRepository;

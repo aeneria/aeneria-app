@@ -157,7 +157,9 @@ trait AppTestTrait
     {
         $place = $data['place'] ?? $this->createPersistedPlace($placeData, $userData);
         $feed = $this->createFeed($data + ['place' => $place]);
-        $place->addFeed($feed);
+        if ($place->getId()) {
+            $place->addFeed($feed);
+        }
         $this->getEntityManager()->persist($feed);
 
         return $feed;
