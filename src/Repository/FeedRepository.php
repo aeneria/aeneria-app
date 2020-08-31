@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -71,7 +72,7 @@ class FeedRepository extends ServiceEntityRepository
         $queryBuilder = $this
             ->createQueryBuilder('f', 'f.id')
             ->select()
-            ->innerJoin('f.place', 'p')
+            ->innerJoin('f.places', 'p')
             ->innerJoin('p.user', 'u')
             ->where('u.active = 1')
         ;
@@ -141,5 +142,53 @@ class FeedRepository extends ServiceEntityRepository
         }
 
         return $isUpToDate;
+    }
+
+    /**
+     * To avoid to create several feeds for the same station, this function check
+     * if a feed already exists for param and then return it if one was found or
+     * create one.
+     */
+    public function getOrCreateMeteoFranceFeed($param): Feed
+    {
+        // Try to find corresponding feed
+        $meteoFranceFeed = $this->findOneBy([
+            'name' => $param['STATION_ID'],
+            'feedType' => Feed::FEED_TYPE_METEO,
+            'feedDataProviderType' => Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
+        ]);
+
+        if (!$meteoFranceFeed) {
+            // Or create it
+            $meteoFranceFeed = new Feed();
+            $meteoFranceFeed
+                ->setFeedType(Feed::FEED_TYPE_METEO)
+                ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_METEO_FRANCE)
+                ->setName($param['STATION_ID'])
+                ->setParam($param)
+            ;
+            $this->createDependentFeedData($meteoFranceFeed);
+
+            $this->getEntityManager()->persist($meteoFranceFeed);
+            $this->getEntityManager()->flush();
+        }
+
+        return $meteoFranceFeed;
+    }
+
+    /**
+     * Get Feeds associate with no Places
+     *
+     * @return Feed[]
+     */
+    public function findOrphans(): Array
+    {
+        return $this->createQueryBuilder('f', 'f.id')
+            ->select('f')
+            ->leftJoin('f.places', 'p')
+            ->where('p.id IS NULL')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

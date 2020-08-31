@@ -34,8 +34,6 @@ class MeteoFranceFeedType extends AbstractType
         $builder->addModelTransformer(new CallbackTransformer(
             function (?Feed $meteoFranceFeed) {
                 if ($meteoFranceFeed) {
-                    $data['feed'] = $meteoFranceFeed;
-
                     $param = $meteoFranceFeed->getParam();
                     $data['station'] = $param['STATION_ID'] ?? null;
 
@@ -43,23 +41,10 @@ class MeteoFranceFeedType extends AbstractType
                 }
             },
             function (array $data) use ($stations) {
-                $meteoFranceFeed = $data['feed'] ?? null;
-                if (!$meteoFranceFeed) {
-                    $meteoFranceFeed = new Feed();
-                }
-                $meteoFranceFeed
-                    ->setFeedType(Feed::FEED_TYPE_METEO)
-                    ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_METEO_FRANCE)
-                    ->setName('meteo')
-                ;
-
-                $param = [
+                return [
                     'STATION_ID' => $data['station'] ?? null,
                     'CITY' => \array_search($data['station'], $stations),
                 ];
-                $meteoFranceFeed->setParam($param);
-
-                return $meteoFranceFeed;
             }
         ));
     }

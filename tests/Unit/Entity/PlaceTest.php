@@ -46,6 +46,12 @@ final class PlaceTest extends AppTestCase
 
         self::assertCount(0, $place->getFeedDatas());
         self::assertNull($place->getFeedData(FeedData::FEED_DATA_CONSO_ELEC));
+
+        $place->removeFeed($feed2);
+        self::assertFalse(\in_array($feed2, $place->getFeeds()));
+
+        $place->addFeed($feed2);
+        self::assertTrue(\in_array($feed2, $place->getFeeds()));
     }
 
     public function testPlaceSetAllowedUsers()

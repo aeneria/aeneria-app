@@ -15,40 +15,26 @@ class Feed
     const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
     const FEED_DATA_PROVIDER_FAKE = 'FAKE';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $feedType;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $feedDataProviderType;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $param = [];
 
-    /**
-     * @var FeedData[]
-     */
+    /** @var FeedData[] */
     private $feedDatas = [];
 
-    /**
-     * @var Place
-     */
-    private $place;
+    /** @var Place[] */
+    private $places = [];
 
     public static function getAllFeedTypes(): array
     {
@@ -209,21 +195,48 @@ class Feed
         return self::getFeedDataProviderNameFor($this->feedDataProviderType);
     }
 
-    public function setPlace(Place $place): self
+    public function getFrequencies(): array
     {
-        $this->place = $place;
+        return self::getFrequenciesFor($this->getFeedType());
+    }
+
+    /**
+     * @return Place[]
+     */
+    public function getPlaces(): ?iterable
+    {
+        return $this->places;
+    }
+
+    public function addPlace(Place $place): self
+    {
+        // If the place we try to add is already there, we delete it
+        $this->removePlace($place);
+
+        $this->places[] = $place;
 
         return $this;
     }
 
-    public function getPlace(): Place
+    public function removePlace(Place $place): self
     {
-        return $this->place;
+        foreach ($this->places as $key => $currentPlace) {
+            if ($currentPlace->getId() && $currentPlace->getId() === $place->getId()) {
+                unset($this->places[$key]);
+            }
+        }
+
+        return $this;
     }
 
-    public function getFrequencies(): array
+    /**
+     * @param Place[] $places
+     */
+    public function setPlaces(Array $places): self
     {
-        return self::getFrequenciesFor($this->getFeedType());
+        $this->places = $places;
+
+        return $this;
     }
 
     /**

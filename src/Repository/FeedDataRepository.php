@@ -55,9 +55,10 @@ class FeedDataRepository extends ServiceEntityRepository
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('fd');
 
-        $queryBuilder->select()
+        $queryBuilder
+            ->select()
             ->innerJoin('fd.feed', 'f')
-            ->where('f.place = :place')
+            ->innerJoin('f.places', 'p', 'WITH', 'p = :place')
             ->setParameter('place', $place)
             ->andWhere('fd.dataType = :dataType')
             ->setParameter('dataType', $dataType)

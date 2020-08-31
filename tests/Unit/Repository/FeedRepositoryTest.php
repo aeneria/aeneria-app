@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Repository;
 
 use App\Entity\Feed;
+use App\Entity\Place;
 use App\Tests\AppTestCase;
 
 final class FeedRepositoryTest extends AppTestCase
@@ -70,6 +71,54 @@ final class FeedRepositoryTest extends AppTestCase
 
         $feeds = $feedRepository->findAllActive(Feed::FEED_DATA_PROVIDER_METEO_FRANCE);
 
-        self::assertTrue($feeds[$feed->getId()] instanceof Feed);
+        self::assertArrayHasKey($feed->getId(), $feeds);
+    }
+
+    public function testGetOrCreateMeteoFranceFeed() {
+        $entityManager = $this->getEntityManager();
+        $feedRepository = $this->getFeedRepository();
+
+        $feed1 = $feedRepository->getOrCreateMeteoFranceFeed([
+            'STATION_ID' => $stationId = 'toto' . \rand(),
+        ]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        self::assertSame($stationId, $feed1->getName());
+
+        $feed2 = $feedRepository->getOrCreateMeteoFranceFeed([
+            'STATION_ID' => $stationId,
+        ]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        self::assertSame($feed1->getId(), $feed2->getId());
+
+        $feed3 = $feedRepository->getOrCreateMeteoFranceFeed([
+            'STATION_ID' => 'tata' . \rand(),
+        ]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        self::assertNotSame($feed1->getId(), $feed3->getId());
+
+
+    }
+
+    public function testFindOrphan() {
+        $entityManager = $this->getEntityManager();
+        $feedRepository = $this->getFeedRepository();
+
+        $feed = $this->createPersistedFeed(['place' => new Place()]);
+
+        $entityManager->flush();
+        $entityManager->clear();
+
+        $orphans = $feedRepository->findOrphans();
+
+        self::assertArrayHasKey($feed->getId(), $orphans);
     }
 }
