@@ -58,12 +58,12 @@ La dernière version d'æneria se trouve sur son dépos Gitlab sur `la page des 
 1. Récupérer les sources
 -------------------------
 
-Téléchargez et décompressez `le dernière version au format tar.gz <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag>`_ :
+Téléchargez et décompressez `le dernière version au format tar.gz <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-app.tar.gz?job=release:app>`_ :
 
 .. code-block:: sh
 
-    wget https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag
-    tar -xvzf https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-test-11.tar.gz?job=release:on-tag [app_folder]
+    wget https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-app.tar.gz?job=relearelease:app
+    tar -xvzf aeneria-app.tar.gz [app_folder]
 
 2. Créer et renseigner la base de données
 ------------------------------------------
