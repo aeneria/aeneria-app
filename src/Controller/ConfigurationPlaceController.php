@@ -211,6 +211,8 @@ class ConfigurationPlaceController extends AbstractAppController
         $entityManager->persist($place);
         $entityManager->flush();
 
+        $this->addFlash('success', "Le partage de données a été correctement activé.");
+
         // Ensure all dependant FeedData are already existing
         $feedRepository->createDependentFeedData($feed);
         $entityManager->flush();
