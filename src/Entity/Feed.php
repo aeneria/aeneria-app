@@ -232,7 +232,7 @@ class Feed
     /**
      * @param Place[] $places
      */
-    public function setPlaces(Array $places): self
+    public function setPlaces(array $places): self
     {
         $this->places = $places;
 

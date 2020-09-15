@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Feed;
 use App\Entity\FeedData;
-use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -181,7 +180,7 @@ class FeedRepository extends ServiceEntityRepository
      *
      * @return Feed[]
      */
-    public function findOrphans(): Array
+    public function findOrphans(): array
     {
         return $this->createQueryBuilder('f', 'f.id')
             ->select('f')

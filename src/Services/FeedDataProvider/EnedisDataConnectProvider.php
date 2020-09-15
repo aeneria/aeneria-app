@@ -120,9 +120,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                 ->format('Y-m-d H:00')
             ;
             if (\array_key_exists($key, $data)) {
-                $data[$key] += $meteringValue->getValue()/1000;
+                $data[$key] += $meteringValue->getValue() / 1000;
             } else {
-                $data[$key] = $meteringValue->getValue()/1000;
+                $data[$key] = $meteringValue->getValue() / 1000;
             }
         }
 
@@ -151,9 +151,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         foreach ($meteringData->getValues() as $meteringValue) {
             \assert($meteringValue instanceof MeteringValue);
             if (\array_key_exists($key = $meteringValue->getDate()->format('Y-m-d'), $data)) {
-                $data[$key] += $meteringValue->getValue()/1000;
+                $data[$key] += $meteringValue->getValue() / 1000;
             } else {
-                $data[$key] = $meteringValue->getValue()/1000;
+                $data[$key] = $meteringValue->getValue() / 1000;
             }
         }
 

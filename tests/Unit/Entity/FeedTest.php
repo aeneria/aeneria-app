@@ -17,7 +17,7 @@ final class FeedTest extends AppTestCase
             'feedType' => Feed::FEED_TYPE_ELECTRICITY,
             'feedDataProviderType' => Feed::FEED_DATA_PROVIDER_FAKE,
             'param' => ['toto' => 'toto'],
-            'places' => [$place= $this->createPlace()]
+            'places' => [$place = $this->createPlace()],
         ]);
 
         self::assertSame($feed->getId(), $feedId);

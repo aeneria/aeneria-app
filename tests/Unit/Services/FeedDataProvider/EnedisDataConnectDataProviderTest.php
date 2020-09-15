@@ -13,8 +13,7 @@ use App\Tests\AppTestCase;
 
 class EnedisDataConnectDataProviderTest extends AppTestCase
 {
-
-    private function createEnedisDataConnectDataProvider() : EnedisDataConnectProvider
+    private function createEnedisDataConnectDataProvider(): EnedisDataConnectProvider
     {
         return new EnedisDataConnectProvider(
             $this->getEntityManager(),

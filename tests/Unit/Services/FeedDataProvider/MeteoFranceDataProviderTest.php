@@ -14,8 +14,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class MeteoFranceDataProviderTest extends AppTestCase
 {
-
-    private function createMeteoFranceDataProvider(HttpClientInterface $httpClient = null) : MeteoFranceDataProvider
+    private function createMeteoFranceDataProvider(HttpClientInterface $httpClient = null): MeteoFranceDataProvider
     {
         return new MeteoFranceDataProvider(
             $this->getParameter('kernel.project_dir'),
@@ -60,7 +59,7 @@ class MeteoFranceDataProviderTest extends AppTestCase
         $feed = $this->createMeteoFeed();
 
         $responses = [];
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 8; ++$i) {
             $responses[] = new MockResponse(<<<BODY
             numer_sta;t;pres;u;n;rr3
             07005;12;102130;55;51;2

@@ -184,7 +184,7 @@ class ConfigurationPlaceController extends AbstractAppController
             return $this->redirectToRoute('config');
         }
 
-        if(!($place = isset($object->place) ? $this->checkPlace($object->place) : null)) {
+        if (!($place = isset($object->place) ? $this->checkPlace($object->place) : null)) {
             // We are creating a new place
             $place = new Place();
             $place->setName((string) $address);
@@ -200,7 +200,6 @@ class ConfigurationPlaceController extends AbstractAppController
             $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
             $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
             $place->addFeed($feed);
-
         }
 
         $feed->setName((string) $address);

@@ -74,7 +74,8 @@ final class FeedRepositoryTest extends AppTestCase
         self::assertArrayHasKey($feed->getId(), $feeds);
     }
 
-    public function testGetOrCreateMeteoFranceFeed() {
+    public function testGetOrCreateMeteoFranceFeed()
+    {
         $entityManager = $this->getEntityManager();
         $feedRepository = $this->getFeedRepository();
 
@@ -104,11 +105,10 @@ final class FeedRepositoryTest extends AppTestCase
         $entityManager->clear();
 
         self::assertNotSame($feed1->getId(), $feed3->getId());
-
-
     }
 
-    public function testFindOrphan() {
+    public function testFindOrphan()
+    {
         $entityManager = $this->getEntityManager();
         $feedRepository = $this->getFeedRepository();
 
