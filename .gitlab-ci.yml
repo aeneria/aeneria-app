@@ -93,6 +93,10 @@ release:app:
     - tar -zcvf aeneria-app.tar.gz aeneria-app/
     - tar -cjvf aeneria-app.tar.bz2 aeneria-app/
     - zip -r aeneria-app.zip aeneria-app/
+    - mv aeneria-app.tar aeneria-app/.
+    - mv aeneria-app.tar.gz aeneria-app/.
+    - mv aeneria-app.tar.bz2 aeneria-app/.
+    - mv aeneria-app.zip aeneria-app/.
     - >
       curl \
         --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
