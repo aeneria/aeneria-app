@@ -53,17 +53,20 @@ Prérequis
 Installation
 =============
 
-La dernière version d'æneria se trouve sur son dépos Gitlab sur `la page des Releases <https://gitlab.com/aeneria/aeneria-app/-/releases>`_.
+Retrouvez les différentes versions d'æneria sur son dépos Gitlab sur `la page des Releases <https://gitlab.com/aeneria/aeneria-app/-/releases>`_.
+
+Les différentes versions accompagnées de leurs dépendances Composer et des assets compilés sont disponibles sur `le dépot d'æneria <http://statics.aeneria.com>`_
 
 1. Récupérer les sources
 -------------------------
 
-Téléchargez et décompressez `le dernière version au format tar.gz <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-app.tar.gz?job=release:app>`_ :
+Téléchargez et décompressez `le dernière version au format tar.gz <http://statics.aeneria.com/aeneria-app-latest.tar.gz>`_ :
 
 .. code-block:: sh
 
-    wget https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-app.tar.gz?job=relearelease:app
-    tar -xvzf aeneria-app.tar.gz [app_folder]
+    wget http://statics.aeneria.com/aeneria-app-latest.tar.gz
+    tar -xvzf aeneria-app-latest.tar.gz aeneria-app
+    cd aeneria-app
 
 2. Créer et renseigner la base de données
 ------------------------------------------
