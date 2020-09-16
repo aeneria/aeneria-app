@@ -103,10 +103,10 @@ release:app:
     - rsync -r aeneria-app-$CI_COMMIT_TAG.tar.bz2 $SSH_USER@$SSH_SERVER:releases/.
     - rsync -r aeneria-app-$CI_COMMIT_TAG.zip $SSH_USER@$SSH_SERVER:releases/.
     # On release un latest que si ce n'est pas une alpha ou beta
-    - [[ $CI_COMMIT_TAG =~ "^[0-9\.]*$" ]] || rsync -r aeneria-app-latest.tar $SSH_USER@$SSH_SERVER:releases/.
-    - [[ $CI_COMMIT_TAG =~ "^[0-9\.]*$" ]] || rsync -r aeneria-app-latest.tar.gz $SSH_USER@$SSH_SERVER:releases/.
-    - [[ $CI_COMMIT_TAG =~ "^[0-9\.]*$" ]] || rsync -r aeneria-app-latest.tar.bz2 $SSH_USER@$SSH_SERVER:releases/.
-    - [[ $CI_COMMIT_TAG =~ "^[0-9\.]*$" ]] || rsync -r aeneria-app-latest.zip $SSH_USER@$SSH_SERVER:releases/.
+    - '[[ $CI_COMMIT_TAG =~ ^[0-9\.]*$ ]] || rsync -r aeneria-app-latest.tar $SSH_USER@$SSH_SERVER:releases/.'
+    - '[[ $CI_COMMIT_TAG =~ ^[0-9\.]*$ ]] || rsync -r aeneria-app-latest.tar.gz $SSH_USER@$SSH_SERVER:releases/.'
+    - '[[ $CI_COMMIT_TAG =~ ^[0-9\.]*$ ]] || rsync -r aeneria-app-latest.tar.bz2 $SSH_USER@$SSH_SERVER:releases/.'
+    - '[[ $CI_COMMIT_TAG =~ ^[0-9\.]*$ ]] || rsync -r aeneria-app-latest.zip $SSH_USER@$SSH_SERVER:releases/.'
   release:
     tag_name: $CI_COMMIT_TAG
     name: 'Version $CI_COMMIT_TAG'
