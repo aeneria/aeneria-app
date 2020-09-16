@@ -86,7 +86,7 @@ release:app:
     - tags
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   before_script:
-    - apk add --update curl tar zip && rm -rf /var/cache/apk/*
+    - apk add --update curl tar zip rsync && rm -rf /var/cache/apk/*
     - 'command -v ssh-agent >/dev/null || ( apk add --update openssh-client )'
     - eval $(ssh-agent -s)
     - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
