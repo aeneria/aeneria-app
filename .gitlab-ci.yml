@@ -100,10 +100,10 @@ release:app:
     - tar -zcvf aeneria-app-$CI_COMMIT_TAG.tar.gz aeneria-app/
     - tar -cjvf aeneria-app-$CI_COMMIT_TAG.tar.bz2 aeneria-app/
     - zip -r aeneria-app-$CI_COMMIT_TAG.zip aeneria-app/
-    - rsync aeneria-app-$CI_COMMIT_TAG.tar $SSH_USER@$SSH_SERVER:www/.
-    - rsync aeneria-app-$CI_COMMIT_TAG.tar.gz $SSH_USER@$SSH_SERVER:www/.
-    - rsync aeneria-app-$CI_COMMIT_TAG.tar.bz2 $SSH_USER@$SSH_SERVER:www/.
-    - rsync aeneria-app-$CI_COMMIT_TAG.zip $SSH_USER@$SSH_SERVER:www/.
+    - scp aeneria-app-$CI_COMMIT_TAG.tar $SSH_USER@$SSH_SERVER:www/.
+    - scp aeneria-app-$CI_COMMIT_TAG.tar.gz $SSH_USER@$SSH_SERVER:www/.
+    - scp aeneria-app-$CI_COMMIT_TAG.tar.bz2 $SSH_USER@$SSH_SERVER:www/.
+    - scp aeneria-app-$CI_COMMIT_TAG.zip $SSH_USER@$SSH_SERVER:www/.
     # On release un latest que si ce n'est pas une alpha ou beta
     - '[[ $CI_COMMIT_TAG =~ ^[0-9\.]*$ ]] && rsync aeneria-app-latest.tar $SSH_USER@$SSH_SERVER:www/.'
     - '[[ $CI_COMMIT_TAG =~ ^[0-9\.]*$ ]] && rsync aeneria-app-latest.tar.gz $SSH_USER@$SSH_SERVER:www/.'
