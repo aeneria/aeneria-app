@@ -85,7 +85,6 @@ release:archive:
   stage: release
   only:
     - tags
-    - master
   image: docker:stable
   before_script:
     - apk add --update curl tar zip && rm -rf /var/cache/apk/*
