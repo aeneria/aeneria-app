@@ -19,6 +19,7 @@ variables:
 stages:
   - build
   - tests
+  - archive
   - release
 
 # On build la CSS et le JS
@@ -79,10 +80,10 @@ test:documentation-build:
 
 # Sur un tag sur master, on archive les sources et on
 # les envoie sur le serveur de statics d'æneria
-release:archive:
+archive:
   inherit:
     default: false
-  stage: release
+  stage: archive
   only:
     - tags
   image: docker:stable
@@ -108,7 +109,7 @@ release:archive:
 # Sur un tag sur master qui n'est pas une alpha ou beta
 # On créée une Release Gitlab & on met à jour les derniers
 # statics disponibles sur le serveur d'æneria
-release:app:
+release:
   inherit:
     default: false
   stage: release
@@ -116,7 +117,7 @@ release:app:
     refs:
       - tags
     variables:
-      - $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TAG =~ $CI_COMMIT_TAG =~ /^[0-9\.]*$/
+      - $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TAG =~ /^[0-9\.]*$/
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apk add --update openssh-client )'
