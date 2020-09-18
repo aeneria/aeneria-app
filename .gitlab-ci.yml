@@ -112,7 +112,7 @@ generate_description:
   rules:
     - if: $CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^[0-9\.]*$/
   script:
-    - DESCRIPTION=$(cat CHANGELOG.md)
+    - DESCRIPTION=$(cat CHANGELOG.md) > description.env
   artifacts:
     reports:
       dotenv: description.env
