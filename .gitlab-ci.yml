@@ -19,6 +19,7 @@ variables:
 stages:
   - build
   - tests
+  - publish
   - release
 
 # On build la CSS et le JS
@@ -77,54 +78,59 @@ test:documentation-build:
     - cd docs
     - sphinx-build -b html . _build
 
-# Sur un tag sur master, on crée une release contenant un lien vers les builds
-release:app:
+# Sur un tag sur master, on archive les sources et on
+# les envoie sur le serveur de statics d'æneria
+publish:
   inherit:
     default: false
-  stage: release
+  stage: publish
   only:
     - tags
   image: docker:stable
   before_script:
     - apk add --update curl tar zip && rm -rf /var/cache/apk/*
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh-client )'
+    - 'which ssh-agent || ( apk add --update openssh-client )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_SERVER >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
     - cd ..
-    - tar -cvf aeneria-app.tar aeneria-app/
-    - tar -zcvf aeneria-app.tar.gz aeneria-app/
-    - tar -cjvf aeneria-app.tar.bz2 aeneria-app/
-    - zip -r aeneria-app.zip aeneria-app/
-    - >
-      curl \
-        --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
-        --data "{ \
-          \"name\": \"v${CI_COMMIT_TAG}\", \
-          \"tag_name\": \"${CI_COMMIT_TAG}\", \
-          \"assets\": { \
-            \"links\": [\
-              { \
-                \"name\": \"aeneria-app.tar\", \
-                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-app.tar?job=${CI_JOB_NAME}\", \
-              }, \
-              { \
-                \"name\": \"aeneria-app.tar.gz\", \
-                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-app.tar.gz?job=${CI_JOB_NAME}\", \
-                \"filepath\": \"/\" \
-              }, \
-              { \
-                \"name\": \"aeneria-app.tar.bz2\", \
-                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-app.tar.bz2?job=${CI_JOB_NAME}\", \
-              }, \
-              { \
-                \"name\": \"aeneria-app.zip\", \
-                \"url\": \"https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}/-/jobs/artifacts/${CI_COMMIT_TAG}/raw/aeneria-app.zip?job=${CI_JOB_NAME}\", \
-              }\
-            ] \
-          } \
-        }" \
-        --request POST "https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/releases"
-  artifacts:
-    paths:
-      - aeneria-app.tar
-      - aeneria-app.tar.gz
-      - aeneria-app.tar.bz2
-      - aeneria-app.zip
+    - tar -cvf aeneria-app-$CI_COMMIT_TAG.tar aeneria-app/
+    - tar -zcvf aeneria-app-$CI_COMMIT_TAG.tar.gz aeneria-app/
+    - zip -r aeneria-app-$CI_COMMIT_TAG.zip aeneria-app/
+    - scp aeneria-app-$CI_COMMIT_TAG.tar $SSH_USER@$SSH_SERVER:www/.
+    - scp aeneria-app-$CI_COMMIT_TAG.tar.gz $SSH_USER@$SSH_SERVER:www/.
+    - scp aeneria-app-$CI_COMMIT_TAG.zip $SSH_USER@$SSH_SERVER:www/.
+
+# Sur un tag sur master qui n'est pas une alpha ou beta
+# On créée une Release Gitlab & on met à jour les derniers
+# statics disponibles sur le serveur d'æneria
+release:
+  inherit:
+    default: false
+  stage: release
+  only:
+    variables:
+      - $CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^[0-9\.]*$/
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh-client )'
+    - 'which ssh-agent || ( apk add --update openssh-client )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_SERVER >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    # On met à jour la version latest
+    - ssh $SSH_USER@$SSH_SERVER "cp www/aeneria-app-$CI_COMMIT_TAG.tar www/aeneria-app-latest.tar"
+    - ssh $SSH_USER@$SSH_SERVER "cp www/aeneria-app-${CI_COMMIT_TAG}.tar.gz www/aeneria-app-latest.tar.gz"
+    - ssh $SSH_USER@$SSH_SERVER "cp www/aeneria-app-${CI_COMMIT_TAG}.zip www/aeneria-app-latest.zip"
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    name: 'Version $CI_COMMIT_TAG'

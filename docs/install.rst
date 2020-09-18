@@ -36,34 +36,36 @@ Prérequis
 ==========
 
 * PHP 7.3 et supérieur
-* MySQL (5.5 et supérieur) / PostreSQL (9.6 et supérieur)
+* PostgreSQL (9.6 et supérieur)
 
 .. note::
 
-    SQLite devrait fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
+    MySQL et SQLite devraient fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
 
-    Il n'est pas prévu que æneria le supporte *officiellement*, si vous souhaitez vous y coller allez-y, faites une merge request et
-    je regarderai :)
+    Il n'est pas prévu que æneria Les supporte *officiellement*.
 
 .. warning::
 
-    Les migrations de æneria sont uniquement générées pour MySQL, si vous utilisez un autre type de serveur, gardez à l'esprit qu'il
+    Les migrations de æneria sont uniquement générées pour PostgreSQL, si vous utilisez un autre type de serveur, gardez à l'esprit qu'il
     faudra vérifier chaque migration avant de la lancer !
 
 Installation
 =============
 
-La dernière version d'æneria se trouve sur son dépos Gitlab sur `la page des Releases <https://gitlab.com/aeneria/aeneria-app/-/releases>`_.
+Retrouvez les différentes versions d'æneria sur son dépos Gitlab sur `la page des Releases <https://gitlab.com/aeneria/aeneria-app/-/releases>`_.
+
+Les différentes versions accompagnées de leurs dépendances Composer et des assets compilés sont disponibles sur `le dépot d'æneria <http://statics.aeneria.com>`_
 
 1. Récupérer les sources
 -------------------------
 
-Téléchargez et décompressez `le dernière version au format tar.gz <https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-app.tar.gz?job=release:app>`_ :
+Téléchargez et décompressez `le dernière version au format tar.gz <http://statics.aeneria.com/aeneria-app-latest.tar.gz>`_ :
 
 .. code-block:: sh
 
-    wget https://gitlab.com/aeneria/aeneria-app/-/jobs/artifacts/master/raw/aeneria-app.tar.gz?job=relearelease:app
-    tar -xvzf aeneria-app.tar.gz [app_folder]
+    wget http://statics.aeneria.com/aeneria-app-latest.tar.gz
+    tar -xvzf aeneria-app-latest.tar.gz aeneria-app
+    cd aeneria-app
 
 2. Créer et renseigner la base de données
 ------------------------------------------
@@ -85,8 +87,8 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
 
     ###> doctrine/doctrine-bundle ###
     # Format described at http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url
-    # For MysSQL database use: "pgsql://[database_user]:[database_password]@127.0.0.1:5432/[database_name]
-    # For PostgreSQL database use: "mysql://[database_user]:[database_password]@127.0.0.1:3306/[database_name]
+    # For PostgreSQL database use: "pgsql://[database_user]:[database_password]@127.0.0.1:5432/[database_name]
+    # For MysSQL database use: "mysql://[database_user]:[database_password]@127.0.0.1:3306/[database_name]
     # For an SQLite database, use: "sqlite:///%kernel.project_dir%/var/data.db"
     # Configure your db driver and server_version in config/packages/doctrine.yaml
     DATABASE_URL=[VOTRE CONFIG ICI]
@@ -95,7 +97,7 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
     ...
 
 
-Adaptez également le fichier ``config/packages/doctrine.yaml`` si votre serveur de base de données n'est pas MySQL :
+Adaptez également le fichier ``config/packages/doctrine.yaml`` si votre serveur de base de données n'est pas PostgreSQL :
 
 .. code-block:: yaml
 
@@ -109,17 +111,17 @@ Adaptez également le fichier ``config/packages/doctrine.yaml`` si votre serveur
             # Configure these for your database server
 
             # Mysql
-            driver: 'pdo_mysql'
-            server_version: '5.2'
-            charset: utf8mb4
-            default_table_options:
-                charset: utf8mb4
-                collate: utf8mb4_unicode_ci
+            # driver: 'pdo_mysql'
+            # server_version: '5.2'
+            # charset: utf8mb4
+            # default_table_options:
+            #     charset: utf8mb4
+            #     collate: utf8mb4_unicode_ci
 
             # PostgreSQL
-            # driver: 'pdo_pgsql'
-            # server_version: '9.6'
-            # charset: utf8
+            driver: 'pdo_pgsql'
+            server_version: '9.6'
+            charset: utf8
 
             #SQLLite
             # driver:   pdo_sqlite
