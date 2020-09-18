@@ -134,3 +134,4 @@ release:
   release:
     tag_name: '$CI_COMMIT_TAG'
     name: 'Version $CI_COMMIT_TAG'
+    description: 'Release autogénérée par la CI - Version $CI_COMMIT_TAG'
