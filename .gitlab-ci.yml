@@ -19,7 +19,7 @@ variables:
 stages:
   - build
   - tests
-  - archive
+  - publish
   - release
 
 # On build la CSS et le JS
