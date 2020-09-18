@@ -128,13 +128,10 @@ release:
     - chmod 644 ~/.ssh/known_hosts
   script:
     # On met à jour la version latest
-    - export CP_COMMAND="cp www/aeneria-app-$CI_COMMIT_TAG.tar www/aeneria-app-latest.tar"
-    - ssh $SSH_USER@$SSH_SERVER $CP_COMMAND
-    - export CP_COMMAND="cp www/aeneria-app-${CI_COMMIT_TAG}.tar.gz www/aeneria-app-latest.tar.gz"
-    - ssh $SSH_USER@$SSH_SERVER $CP_COMMAND
-    - export CP_COMMAND="cp www/aeneria-app-${CI_COMMIT_TAG}.zip www/aeneria-app-latest.zip"
+    - ssh $SSH_USER@$SSH_SERVER "cp www/aeneria-app-$CI_COMMIT_TAG.tar www/aeneria-app-latest.tar"
+    - ssh $SSH_USER@$SSH_SERVER "cp www/aeneria-app-${CI_COMMIT_TAG}.tar.gz www/aeneria-app-latest.tar.gz"
     - ssh $SSH_USER@$SSH_SERVER "cp www/aeneria-app-${CI_COMMIT_TAG}.zip www/aeneria-app-latest.zip"
   release:
     tag_name: $CI_COMMIT_TAG
     name: 'Version $CI_COMMIT_TAG'
-    description: CHANGELOG.md
+    description: ./CHANGELOG.md
