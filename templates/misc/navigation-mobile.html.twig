@@ -32,9 +32,11 @@
                 <img src="{{ asset('image/analyze-w.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
             </a>
 
+            {% if not aeneria_demo_mode() %}
             <a title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" class="config {% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
                 <img src="{{ asset('image/config.png') }}" alt="*" >
             </a>
+            {% endif %}
             <a title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}" class="documentation" >
                 <img src="{{ asset('image/about.png') }}" alt="*" >
             </a>
