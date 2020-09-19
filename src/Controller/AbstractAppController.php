@@ -19,11 +19,15 @@ abstract class AbstractAppController extends AbstractController
     /** @var bool */
     protected $placeCanBePublic;
 
-    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, PlaceRepository $placeRepository)
+    /** @var bool */
+    protected $isDemoMode;
+
+    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, bool $isDemoMode, PlaceRepository $placeRepository)
     {
         $this->placeRepository = $placeRepository;
         $this->userCanSharePlace = $userCanSharePlace;
         $this->placeCanBePublic = $placeCanBePublic;
+        $this->isDemoMode = $isDemoMode;
     }
 
     final protected function checkPlace(string $placeId): Place
@@ -32,7 +36,7 @@ abstract class AbstractAppController extends AbstractController
             throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
         }
 
-        if (!$this->getUser()->canEdit($place)) {
+        if (!$this->getUser()->canEdit($place) || $this->isDemoMode) {
             throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à modifier cette adresse.");
         }
 

@@ -34,7 +34,7 @@ class ConfigurationPlaceController extends AbstractAppController
         $user = $this->getUser();
         \assert($user instanceof User);
 
-        if (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces) {
+        if (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces && !$this->isDemoMode) {
             throw new AccessDeniedHttpException(\sprintf(
                 "Vous ne pouvez créer que %s adresse%s.",
                 $userMaxPlaces,

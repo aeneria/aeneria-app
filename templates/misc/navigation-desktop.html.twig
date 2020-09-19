@@ -7,9 +7,11 @@
         {{ selection | raw }}
     </div>
     <div class="ml-auto">
+        {% if not aeneria_demo_mode() %}
         <a class="navbar-item" title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" >
                 <img src="{{ asset('image/config.png') }}" height=25 alt="{{ 'Configuration' | trans }}" >
         </a>
+        {% endif %}
         <a class="navbar-item" title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}">
                 <img src="{{ asset('image/about.png') }}" height=25 alt="{{ 'Aide' | trans }}" >
         </a>

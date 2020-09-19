@@ -15,7 +15,7 @@ parameters:
     aeneria.user.can_export: "%env(AENERIA_USER_CAN_EXPORT)%"
     aeneria.user.can_import: "%env(AENERIA_USER_CAN_IMPORT)%"
     aeneria.place_can_be_public: "%env(AENERIA_PLACE_CAN_BE_PUBLIC)%"
-    aeneria.use_enedis_data_connect: "%env(AENERIA_USE_ENEDIS_DATA_CONNECT)%"
+    aeneria.demo_mode: "%env(AENERIA_DEMO_MODE)%"
     # Enedis Data Connect
     aeneria.enedis.client_id: "%env(ENEDIS_CLIENT_ID)%"
     aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"
@@ -35,6 +35,7 @@ services:
             $userCanFetch: "%aeneria.user.can_fetch%"
             $userCanExport: "%aeneria.user.can_export%"
             $userCanIMport: "%aeneria.user.can_import%"
+            $isDemoMode: "%aeneria.demo_mode%"
             $placeCanBePublic: "%aeneria.place_can_be_public%"
 
     App\:
