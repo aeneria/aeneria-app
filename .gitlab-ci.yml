@@ -9,13 +9,11 @@ default:
     - curl -sS https://getcomposer.org/installer | php
 
 services:
-  - postgres:11.7-alpine
+  - mysql:5.5
 
 variables:
-  POSTGRES_DB: db
-  POSTGRES_USER: root
-  POSTGRES_PASSWORD: password
-  POSTGRES_HOST_AUTH_METHOD: trust
+  MYSQL_DATABASE: db
+  MYSQL_ROOT_PASSWORD: password
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
