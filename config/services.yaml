@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
-    aeneria.version: '1.0.0'
+    aeneria.version: '1.0.1'
     aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
     aeneria.documentation: 'https://docs.aeneria.com/fr/'
     # aeneria features
