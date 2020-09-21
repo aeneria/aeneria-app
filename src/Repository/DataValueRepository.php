@@ -197,12 +197,9 @@ class DataValueRepository extends ServiceEntityRepository
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
 
-        $queryBuilder->select('MIN(d.value) AS value, d.date');
+        $queryBuilder->select('MIN(d.value) AS value');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder
-            ->addGroupBy('d.feedData')
-            ->addGroupBy('d.date')
-        ;
+        $queryBuilder->addGroupBy('d.feedData');
 
         return $queryBuilder
             ->getQuery()
@@ -223,12 +220,9 @@ class DataValueRepository extends ServiceEntityRepository
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('d');
 
-        $queryBuilder->select('MAX(d.value) AS value, d.date');
+        $queryBuilder->select('MAX(d.value) AS value');
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
-        $queryBuilder
-            ->addGroupBy('d.feedData')
-            ->addGroupBy('d.date')
-        ;
+        $queryBuilder->addGroupBy('d.feedData');
 
         return $queryBuilder
             ->getQuery()
