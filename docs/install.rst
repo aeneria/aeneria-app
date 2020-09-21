@@ -86,9 +86,9 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
     ...
 
     ###> doctrine/doctrine-bundle ###
-    # Format described at http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url
+    # Format    described at http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url
     # For PostgreSQL database use: "pgsql://[database_user]:[database_password]@127.0.0.1:5432/[database_name]
-    # For MysSQL database use: "mysql://[database_user]:[database_password]@127.0.0.1:3306/[database_name]
+    # For MySQL database use: "mysql://[database_user]:[database_password]@127.0.0.1:3306/[database_name]
     # For an SQLite database, use: "sqlite:///%kernel.project_dir%/var/data.db"
     # Configure your db driver and server_version in config/packages/doctrine.yaml
     DATABASE_URL=[VOTRE CONFIG ICI]
@@ -178,7 +178,7 @@ Mettez en place le CRON en exécutant la commande suivante :
 
 .. code-block:: sh
 
-    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:fetch-data false" > /etc/cron.d/aeneria
+    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:fetch-data" > /etc/cron.d/aeneria
     # où [user] est l'utilisateur linux qui lancera le cron
 
 
