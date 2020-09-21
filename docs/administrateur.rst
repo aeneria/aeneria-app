@@ -35,6 +35,8 @@ Plusieurs fonctionnalités sont paramètrables dans æneria :
 * La possiblité de rendre une adresse publique pour l'ensemble des utilisateurs
 * La possiblité pour des utilisateur de pouvoir recharger leurs données via l'interface
 * La possiblité pour des utilisateur de pouvoir exporter leurs données via l'interface
+* L'activation du mode démo (Désactiver les fonctions de configuration via l'UI)
+* Le message affiché sur l'écran de login
 
 Les paramètres courants sont visibles via l'interface d'administration mais ne sont pas modifiable via l'interface web.
 
@@ -69,6 +71,10 @@ Ci-dessous, un exemple de paramètrage de ce fichier :
     AENERIA_USER_CAN_EXPORT=1
     # Can a place be public
     AENERIA_PLACE_CAN_BE_PUBLIC=0
+    # Activate demo mode
+    AENERIA_DEMO_MODE=0
+    # Welcome message
+    AENERIA_WELCOME_MESSAGE='Bienvenu sur æneria'
 
 Gestion des utilisateurs
 ------------------------------

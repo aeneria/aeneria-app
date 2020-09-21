@@ -10,7 +10,7 @@
     <div class="row justify-content-center align-items-center">
         <div class='card config-form col-lg-6 col-md-8'>
             <div class="card-body">
-                <h1 class="h1">{{ 'Connectez-vous' | trans }}</h1>
+                {{ aeneria_welcome_message()|raw }}
 
                 <form method="post">
                     {% if error %}

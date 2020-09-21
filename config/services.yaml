@@ -16,6 +16,7 @@ parameters:
     aeneria.user.can_import: "%env(AENERIA_USER_CAN_IMPORT)%"
     aeneria.place_can_be_public: "%env(AENERIA_PLACE_CAN_BE_PUBLIC)%"
     aeneria.demo_mode: "%env(AENERIA_DEMO_MODE)%"
+    aeneria.welcome_message: "%env(AENERIA_WELCOME_MESSAGE)%"
     # Enedis Data Connect
     aeneria.enedis.client_id: "%env(ENEDIS_CLIENT_ID)%"
     aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"

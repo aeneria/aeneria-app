@@ -42,6 +42,14 @@
               <td>{{ 'Les utilisateurs peuvent importer leur données via l\'UI' | trans }}</td>
               <td>{{ aeneria_user_can_import() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
             </tr>
+            <tr scope="row">
+              <td>{{ 'Démo mode activé' | trans }}</td>
+              <td>{{ aeneria_demo_mode() ? ('Oui' | trans ) : ('Non' | trans ) }}</td>
+            </tr>
+            <tr scope="row">
+              <td>{{ 'Message d\'accueil' | trans }}</td>
+              <td>{{ aeneria_welcome_message() }}</td>
+            </tr>
           </tbody>
       </table>
       <p>{{ 'Ces paramètres peuvent être changés en surchargeant le fichier' | trans }} <i>.env</i> {{ aeneria_help_icon_link('administrateur.html', 'Voir la documentation')|raw }}</p>
