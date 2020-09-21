@@ -12,6 +12,7 @@ services:
   - postgres:11.7-alpine
 
 variables:
+  GIT_SUBMODULE_STRATEGY: recursive
   POSTGRES_DB: db
   POSTGRES_USER: db
   POSTGRES_PASSWORD: password
