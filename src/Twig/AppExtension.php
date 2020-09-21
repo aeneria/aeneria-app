@@ -49,6 +49,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
             new TwigFunction('aeneria_feed_get_address', [$this, 'getFeedAddress']),
             new TwigFunction('aeneria_demo_mode', [$this, 'isDemoMode']),
+            new TwigFunction('aeneria_welcome_message', [$this, 'getWelcomeMessage']),
         ];
     }
 
@@ -133,6 +134,11 @@ final class AppExtension extends AbstractExtension
     public function isDemoMode(): bool
     {
         return $this->parameters->get('aeneria.demo_mode');
+    }
+
+    public function getWelcomeMessage(): string
+    {
+        return $this->parameters->get('aeneria.welcome_message');
     }
 
     public function getFeedAddress(Feed $feed): ?Address
