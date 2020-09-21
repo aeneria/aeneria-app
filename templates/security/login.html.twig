@@ -7,47 +7,45 @@
 {% block body %}
 
 <div class="col">
-    <div class="row justify-content-center align-items-center">
-        <div class='card config-form col-lg-6 col-md-8'>
-            <div class="card-body">
-                {{ aeneria_welcome_message()|raw }}
+  <div class="row justify-content-center align-items-center">
+    <div class='card config-form col-lg-6 col-md-8'>
+      <div class="card-body">
+        {{ aeneria_welcome_message()|raw }}
 
-                {% if app.user %}
-                    <div class="mb-3">
-                        <p>{{ 'Vous êtes déjà connecté en tant que' | trans }} {{ app.user.username }}</p>
-                        <a href="{{ path('dashboard.home') }}" class="btn btn-primary">{{ 'Aller à la page d\'accueil' | trans }}</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">{{ 'Se déconnecter' | trans }}</a>
-                    </div>
-                {% else %}
-                    <form class="form" method="post">
-                        {% if error %}
-                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                        {% endif %}
+        {% if app.user %}
+          <div class="mb-3">
+            <p>{{ 'Vous êtes déjà connecté en tant que' | trans }} {{ app.user.username }}</p>
+            <a href="{{ path('dashboard.home') }}" class="btn btn-primary">{{ 'Aller à la page d\'accueil' | trans }}</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">{{ 'Se déconnecter' | trans }}</a>
+          </div>
+        {% else %}
+          <form class="form" method="post">
+            {% if error %}
+              <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-                        <div class="form-group">
-                            <label for="inputUsername" >{{ 'Identifiant' | trans }}</label>
-                            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'Identifiant' | trans }}" required autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword" >{{ 'Mot de passe' | trans }}</label>
-                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                        </div>
-
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" name="_remember_me"> {{ 'Rester connecté' | trans }}
-                            </label>
-                        </div>
-
-                        <button class="btn btn-lg btn-primary" type="submit">
-                            {{ 'Connexion' | trans }}
-                        </button>
-                    </form>
-                {% endif %}
+            <div class="form-group">
+              <label for="inputUsername" >{{ 'Identifiant' | trans }}</label>
+              <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'Identifiant' | trans }}" required autofocus>
             </div>
-        </div>
+            <div class="form-group">
+              <label for="inputPassword" >{{ 'Mot de passe' | trans }}</label>
+              <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox" name="_remember_me"> {{ 'Rester connecté' | trans }}
+              </label>
+            </div>
+
+            <button class="btn btn-lg btn-primary" type="submit">
+              {{ 'Connexion' | trans }}
+            </button>
+          </form>
+        {% endif %}
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}

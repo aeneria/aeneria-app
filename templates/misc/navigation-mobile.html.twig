@@ -1,54 +1,54 @@
 <nav class="navbar navbar-expand-lg sticky-top navbar-expand mobile" >
-    <div class="mr-auto">
-        <a data-toggle="collapse" data-target="#sideBar" type="button" aria-expanded="false" aria-controls="sideBar">
-            <i class="fas fa-bars nav-icon"></i>
-        </a>
-    </div>
+  <div class="mr-auto">
+    <a data-toggle="collapse" data-target="#sideBar" type="button" aria-expanded="false" aria-controls="sideBar">
+      <i class="fas fa-bars nav-icon"></i>
+    </a>
+  </div>
 
-    <div class="navbar-brand" title="æneria :{{ 'Analyser votre consommation d\'électricité' | trans }}">
-        <img src="{{ asset('image/aeneria.svg') }}" alt='logo' class='logo'>
-        <span>æneria</span>
-    </div>
+  <div class="navbar-brand" title="æneria :{{ 'Analyser votre consommation d\'électricité' | trans }}">
+    <img src="{{ asset('image/aeneria.svg') }}" alt='logo' class='logo'>
+    <span>æneria</span>
+  </div>
 
-    <div class="ml-auto">
-        <a data-toggle="collapse" data-target="#mobile-selection" type="button" aria-expanded="false" aria-controls="sideBar">
-            <i class="fas fa-filter nav-icon"></i>
-        </a>
-    </div>
+  <div class="ml-auto">
+    <a data-toggle="collapse" data-target="#mobile-selection" type="button" aria-expanded="false" aria-controls="sideBar">
+      <i class="fas fa-filter nav-icon"></i>
+    </a>
+  </div>
 </nav>
 <div class="collapse mobile" id="sideBar">
-    <nav class="nav sidebar">
-        <div class="nav flex-column">
-            <a href="{{ path('dashboard.home') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.home' %}active{% endif %}">
-                <img src="{{ asset('image/home-w.png') }}" alt="*"> {{ 'Accueil' | trans }}
-            </a>
-            <a href="{{ path('dashboard.electricity') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.electricity' %}active{% endif %}">
-                <img src="{{ asset('image/electricity-w.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
-            </a>
-            <a href="{{ path('dashboard.meteo') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.meteo' %}active{% endif %}">
-                <img src="{{ asset('image/meteo-w.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
-            </a>
-            <a href="{{ path('dashboard.energy_x_meteo') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.energy_x_meteo' %}active{% endif %}">
-                <img src="{{ asset('image/analyze-w.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
-            </a>
+  <nav class="nav sidebar">
+    <div class="nav flex-column">
+      <a href="{{ path('dashboard.home') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.home' %}active{% endif %}">
+        <img src="{{ asset('image/home-w.png') }}" alt="*"> {{ 'Accueil' | trans }}
+      </a>
+      <a href="{{ path('dashboard.electricity') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.electricity' %}active{% endif %}">
+        <img src="{{ asset('image/electricity-w.png') }}" alt="*" > {{ 'Consommation d\'électricité' | trans }}
+      </a>
+      <a href="{{ path('dashboard.meteo') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.meteo' %}active{% endif %}">
+        <img src="{{ asset('image/meteo-w.png') }}" alt="*" > {{ 'Analyse de la météo' | trans }}
+      </a>
+      <a href="{{ path('dashboard.energy_x_meteo') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.energy_x_meteo' %}active{% endif %}">
+        <img src="{{ asset('image/analyze-w.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
+      </a>
 
-            {% if not aeneria_demo_mode() %}
-            <a title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" class="config {% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
-                <img src="{{ asset('image/config.png') }}" alt="*" >
-            </a>
-            {% endif %}
-            <a title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}" class="documentation" >
-                <img src="{{ asset('image/about.png') }}" alt="*" >
-            </a>
-            <a title="{{ 'Déconnexion' | trans }}"  href="{{ path('security.logout') }}" class="logout">
-                <img src="{{ asset('image/shutdown.png') }}" alt="*" >
-            </a>
-        </div>
-    </nav>
+      {% if not aeneria_demo_mode() %}
+        <a title="{{ 'Configuration' | trans }}" href="{{ path('config') }}" class="config {% if app.request.attributes.get('_route') == 'configuration' %}active{% endif %}">
+          <img src="{{ asset('image/config.png') }}" alt="*" >
+        </a>
+      {% endif %}
+      <a title="{{ 'Aide' | trans }}" target="_blank" href="{{ aeneria_documentation('utilisateur.html') }}" class="documentation" >
+        <img src="{{ asset('image/about.png') }}" alt="*" >
+      </a>
+      <a title="{{ 'Déconnexion' | trans }}"  href="{{ path('security.logout') }}" class="logout">
+        <img src="{{ asset('image/shutdown.png') }}" alt="*" >
+      </a>
+    </div>
+  </nav>
 </div>
 
 <div class="collapse mobile selection" id="mobile-selection">
-    <div class="row">
-        {{ selection | raw }}
-    </div>
+  <div class="row">
+    {{ selection | raw }}
+  </div>
 </div>
