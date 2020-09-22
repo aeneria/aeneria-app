@@ -12,7 +12,7 @@ Pour lancer les tests PHPUNIT, il faut préalablement avoir créé un minimum de
   php7.3 bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
   # Cette commande est à lancer une fois par jour
 
-  # On s'assure qu'il a les drtois admin:
+  # On s'assure qu'il a les droits admin:
   php7.3 bin/console aeneria:user:grant admin
 
   # Il faut avoir un utilisateur 'user-test/password' avec des données pour les 7 derniers jours:
