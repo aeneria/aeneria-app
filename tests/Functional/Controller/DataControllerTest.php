@@ -65,48 +65,6 @@ final class DataControllerTest extends AppWebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testUserCanGetAverage()
-    {
-        $user = $this->login('user-test');
-        $places = $user->getPlaces();
-
-        $this->client->request('GET', \sprintf(
-            "/data/%s/avg/conso_elec/day/%s/%s",
-            $places[0]->getId(),
-            (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
-            (new \DateTimeImmutable('now'))->format("Y-m-d")
-        ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCanGetMax()
-    {
-        $user = $this->login('user-test');
-        $places = $user->getPlaces();
-
-        $this->client->request('GET', \sprintf(
-            "/data/%s/max/conso_elec/day/%s/%s",
-            $places[0]->getId(),
-            (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
-            (new \DateTimeImmutable('now'))->format("Y-m-d")
-        ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCanGetMin()
-    {
-        $user = $this->login('user-test');
-        $places = $user->getPlaces();
-
-        $this->client->request('GET', \sprintf(
-            "/data/%s/min/conso_elec/day/%s/%s",
-            $places[0]->getId(),
-            (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
-            (new \DateTimeImmutable('now'))->format("Y-m-d")
-        ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testUserCanGetNbInf()
     {
         $user = $this->login('user-test');

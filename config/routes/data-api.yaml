@@ -14,18 +14,6 @@ data.sum:
   path: /data/{placeId}/sum/{dataType}/{start}/{end}
   controller: App\Controller\DataController::getSumAction
 
-data.average:
-  path: /data/{placeId}/avg/{dataType}/{frequency}/{start}/{end}
-  controller: App\Controller\DataController::getAverageAction
-
-data.max:
-  path: /data/{placeId}/max/{dataType}/{frequency}/{start}/{end}
-  controller: App\Controller\DataController::getMaxAction
-
-data.min:
-  path: /data/{placeId}/min/{dataType}/{frequency}/{start}/{end}
-  controller: App\Controller\DataController::getMinAction
-
 data.number:
   path: /data/{placeId}/inf/{dataType}/{value}/{frequency}/{start}/{end}
   controller: App\Controller\DataController::getNumberInfAction
