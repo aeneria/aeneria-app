@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Feed;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\GenericFeedDataProvider;
@@ -61,7 +62,7 @@ class FetchDataCommand extends Command
             }
             $this->fetchFor($input, [$feed]);
         } else {
-            $feedDataProviderTypes = ['LINKY', 'METEO_FRANCE'];
+            $feedDataProviderTypes = [Feed::FEED_DATA_PROVIDER_METEO_FRANCE, Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT];
 
             foreach ($feedDataProviderTypes as $feedDataProviderType) {
                 // We fetch all Feeds data.
