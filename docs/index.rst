@@ -23,12 +23,10 @@ Installer æneria facilement avec YunoHost !
     :target: https://install-app.yunohost.org/?app=pilea
     :align: center
 
-
 .. toctree::
    :maxdepth: 2
    :caption: Contenu :
 
-   install
    utilisateur
    administrateur
    developpeur
