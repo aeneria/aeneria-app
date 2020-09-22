@@ -36,7 +36,7 @@ final class DataValueRepositoryTest extends AppTestCase
         $dataValueRepository->updateOrCreateValue(
             $feedData,
             new \DateTimeImmutable('2020-02-05 00:00'),
-            DataValue::FREQUENCY['HOUR'],
+            DataValue::FREQUENCY_HOUR,
             42.0
         );
 
@@ -45,7 +45,7 @@ final class DataValueRepositoryTest extends AppTestCase
 
         $dataValue = $dataValueRepository->findOneBy([
             'feedData' => $feedData,
-            'frequency' => DataValue::FREQUENCY['HOUR'],
+            'frequency' => DataValue::FREQUENCY_HOUR,
             'date' => new \DateTimeImmutable('2020-02-05 00:00'),
         ]);
 
@@ -54,13 +54,13 @@ final class DataValueRepositoryTest extends AppTestCase
         $dataValueRepository->updateOrCreateValue(
             $feedData,
             new \DateTimeImmutable('2020-02-05 00:00'),
-            DataValue::FREQUENCY['HOUR'],
+            DataValue::FREQUENCY_HOUR,
             72.0
         );
 
         $dataValueNew = $dataValueRepository->findOneBy([
             'feedData' => $feedData,
-            'frequency' => DataValue::FREQUENCY['HOUR'],
+            'frequency' => DataValue::FREQUENCY_HOUR,
             'date' => new \DateTimeImmutable('2020-02-05 00:00'),
         ]);
 
@@ -96,7 +96,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $dataValueRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date),
-                DataValue::FREQUENCY['HOUR'],
+                DataValue::FREQUENCY_HOUR,
                 $value
             );
         }
@@ -109,12 +109,12 @@ final class DataValueRepositoryTest extends AppTestCase
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
-            DataValue::FREQUENCY['DAY']
+            DataValue::FREQUENCY_DAY
         );
         $entityManager->flush();
         $dataValue = $dataValueRepository->findOneBy([
             'feedData' => $feedData,
-            'frequency' => DataValue::FREQUENCY['DAY'],
+            'frequency' => DataValue::FREQUENCY_DAY,
             'date' => new \DateTimeImmutable('2020-04-04 00:00'),
         ]);
         self::assertEquals(210.0, $dataValue->getValue());
@@ -145,7 +145,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $dataValueRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date),
-                DataValue::FREQUENCY['DAY'],
+                DataValue::FREQUENCY_DAY,
                 $value
             );
         }
@@ -158,12 +158,12 @@ final class DataValueRepositoryTest extends AppTestCase
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
-            DataValue::FREQUENCY['WEEK']
+            DataValue::FREQUENCY_WEEK
         );
         $entityManager->flush();
         $dataValue = $dataValueRepository->findOneBy([
             'feedData' => $feedData,
-            'frequency' => DataValue::FREQUENCY['WEEK'],
+            'frequency' => DataValue::FREQUENCY_WEEK,
             'date' => new \DateTimeImmutable('2020-03-30 00:00'),
         ]);
         self::assertEquals(84.0, $dataValue->getValue());
@@ -194,7 +194,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $dataValueRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date),
-                DataValue::FREQUENCY['DAY'],
+                DataValue::FREQUENCY_DAY,
                 $value
             );
         }
@@ -207,12 +207,12 @@ final class DataValueRepositoryTest extends AppTestCase
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
-            DataValue::FREQUENCY['MONTH']
+            DataValue::FREQUENCY_MONTH
         );
         $entityManager->flush();
         $dataValue = $dataValueRepository->findOneBy([
             'feedData' => $feedData,
-            'frequency' => DataValue::FREQUENCY['MONTH'],
+            'frequency' => DataValue::FREQUENCY_MONTH,
             'date' => new \DateTimeImmutable('2020-04-01 00:00'),
         ]);
         self::assertEquals(84.0, $dataValue->getValue());
@@ -243,7 +243,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $dataValueRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date),
-                DataValue::FREQUENCY['MONTH'],
+                DataValue::FREQUENCY_MONTH,
                 $value
             );
         }
@@ -256,12 +256,12 @@ final class DataValueRepositoryTest extends AppTestCase
         $dataValueRepository->updateOrCreateAgregateValue(
             new \DateTimeImmutable('2020-04-04 00:00'),
             $feed,
-            DataValue::FREQUENCY['YEAR']
+            DataValue::FREQUENCY_YEAR
         );
         $entityManager->flush();
         $dataValue = $dataValueRepository->findOneBy([
             'feedData' => $feedData,
-            'frequency' => DataValue::FREQUENCY['YEAR'],
+            'frequency' => DataValue::FREQUENCY_YEAR,
             'date' => new \DateTimeImmutable('2020-01-01 00:00'),
         ]);
         self::assertEquals(84.0, $dataValue->getValue());
@@ -326,7 +326,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $dataValueRepository->updateOrCreateValue(
                 $feedData,
                 new \DateTimeImmutable($date),
-                DataValue::FREQUENCY['DAY'],
+                DataValue::FREQUENCY_DAY,
                 $value
             );
         }
@@ -337,19 +337,19 @@ final class DataValueRepositoryTest extends AppTestCase
         $startDate = new \DateTimeImmutable($data['startDate']);
         $endDate = new \DateTimeImmutable($data['endDate']);
 
-        $avg = $dataValueRepository->getAverageValue($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY']);
+        $avg = $dataValueRepository->getAverageValue($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY);
         self::assertEquals($avg[0]['value'], $data['avg']);
 
-        $min = $dataValueRepository->getMinValue($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY']);
+        $min = $dataValueRepository->getMinValue($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY);
         self::assertEquals($min[0]['value'], $data['min']);
 
-        $max = $dataValueRepository->getMaxValue($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY']);
+        $max = $dataValueRepository->getMaxValue($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY);
         self::assertEquals($max[0]['value'], $data['max']);
 
-        $sum = $dataValueRepository->getSumValue($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY']);
+        $sum = $dataValueRepository->getSumValue($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY);
         self::assertEquals($sum[0]['value'], $data['sum']);
 
-        $xy = $dataValueRepository->getXY($startDate, $endDate, $feedData, $feedData, DataValue::FREQUENCY['DAY']);
+        $xy = $dataValueRepository->getXY($startDate, $endDate, $feedData, $feedData, DataValue::FREQUENCY_DAY);
         self::assertSame(\count($xy), 5);
         self::assertEquals($xy[0]['date'], $startDate);
         self::assertSame($xy[0]['xValue'], $data['values'][$data['startDate']]);
@@ -358,21 +358,21 @@ final class DataValueRepositoryTest extends AppTestCase
         self::assertSame($xy[4]['xValue'], $data['values'][$data['endDate']]);
         self::assertSame($xy[4]['yValue'], $data['values'][$data['endDate']]);
 
-        $nbInf = $dataValueRepository->getNumberInfValue($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY'], $data['nbInfValue']);
+        $nbInf = $dataValueRepository->getNumberInfValue($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY, $data['nbInfValue']);
         self::assertEquals($nbInf[0]['value'], $data['nbInfResult']);
 
-        $lastValue = $dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY['DAY']);
+        $lastValue = $dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY_DAY);
         $dates = \array_keys($data['values']);
         self::assertEquals(new \DateTimeImmutable($lastValue[0]['date']), new \DateTimeImmutable(\end($dates)));
 
-        $values = $dataValueRepository->getValue($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY']);
+        $values = $dataValueRepository->getValue($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY);
         self::assertSame(\count($values), 5);
         self::assertEquals($values[0]->getDate(), $startDate);
         self::assertSame($values[0]->getValue(), $data['values'][$data['startDate']]);
         self::assertEquals($values[4]->getDate(), $endDate);
         self::assertSame($values[4]->getValue(), $data['values'][$data['endDate']]);
 
-        $repartition = $dataValueRepository->getRepartitionValue($startDate, $endDate, $feedData, 'week', 'weekDay', DataValue::FREQUENCY['DAY'], DataController::YEAR_VERTICAL_REPARTITION);
+        $repartition = $dataValueRepository->getRepartitionValue($startDate, $endDate, $feedData, 'week', 'weekDay', DataValue::FREQUENCY_DAY, DataController::YEAR_VERTICAL_REPARTITION);
         self::assertEquals(\count($repartition), 5);
         self::assertEquals($repartition[0]['year'], $startDate->format('Y'));
         self::assertEquals($repartition[0]['axeX'], $startDate->format('W'));
@@ -383,7 +383,7 @@ final class DataValueRepositoryTest extends AppTestCase
         self::assertEquals($repartition[4]['axeY'], $endDate->format('w') - 1);
         self::assertEquals($repartition[4]['value'], $data['values'][$data['endDate']]);
 
-        $sum = $dataValueRepository->getSumValueGroupBy($startDate, $endDate, $feedData, DataValue::FREQUENCY['DAY'], 'weekDay');
+        $sum = $dataValueRepository->getSumValueGroupBy($startDate, $endDate, $feedData, DataValue::FREQUENCY_DAY, 'weekDay');
         self::assertSame(\count($values), 5);
         self::assertEquals($values[0]->getDate(), $startDate);
         self::assertSame($values[0]->getValue(), $data['values'][$data['startDate']]);
