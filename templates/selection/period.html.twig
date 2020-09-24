@@ -1,11 +1,16 @@
 {# Date selection #}
 <span class="fas fa-calendar-alt start-input" aria-hidden="true" style="font-size: 1.2em; color: white"></span>
 <div class="input-daterange">
-    <input type="text" class="form-control mr-sm-2 datepicker aeneria-start-date" name="start-date"><span class="fas fa-caret-right aeneria-inter-date" aria-hidden="true" style="font-size: 1.2em; color: black"></span><input type="text" class="form-control mr-sm-2 datepicker aeneria-end-date"  name="end-date">
+    <input id="selection-start-date" type="text" class="form-control mr-sm-2 datepicker aeneria-start-date" name="start-date">
+    <label class="sr-only" for="selection-start-date">{{ 'Date de début'|trans }}</label>
+    <span class="fas fa-caret-right aeneria-inter-date" aria-hidden="true" style="font-size: 1.2em; color: black"></span>
+    <input id="selection-end-date" type="text" class="form-control mr-sm-2 datepicker aeneria-end-date"  name="end-date">
+    <label class="sr-only" for="selection-end-date">{{ 'Date de fin'|trans }}</label>
 </div>
 <div class="btn-group aeneria-select-period">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="period-date">
         <span class="fas fa-ellipsis-h" aria-hidden="true"></span>
+        <span class="sr-only">{{ 'Sélectionner une période'|trans }}</span>
     </button>
     <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item" href="#" data="current-week">{{ 'Semaine en cours'|trans }}</a>
