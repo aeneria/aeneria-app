@@ -1,0 +1,7 @@
+{% extends 'error/error.html.twig' %}
+
+{% block title %}Non-authorisée{% endblock %}
+{% block error_icon %}fa-grimace{% endblock %}
+{% block error %}
+    <p>{{ 'Désolé, vous n\'êtes pas autorisé à visiter cette page !' | trans}}</p>
+{% endblock %}

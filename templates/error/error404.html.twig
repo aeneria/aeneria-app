@@ -1,0 +1,7 @@
+{% extends 'error/error.html.twig' %}
+
+{% block title %}Non trouvé{% endblock %}
+{% block error_icon %}fa-dizzy{% endblock %}
+{% block error %}
+    <p>{{ 'Désolé, la page que vous essayez de visiter n\'existe pas !' | trans}}</p>
+{% endblock %}

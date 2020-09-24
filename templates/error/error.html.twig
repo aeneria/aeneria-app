@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Erreur technique{% endblock %}
+
+{% block selection %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+
+  <div class="row justify-content-center align-items-center">
+    <div class='card welcome col-xl-4 col-lg-8 col-md-12'>
+      <div class="card-body text-center">
+        <h1 class="card-title">{{ 'Oups\'' | trans }}</h1>
+        <hr>
+        <br>
+        <i class="fas {% block error_icon %}fa-meh-rolling-eyes{% endblock %}"></i>
+        {% block error %}
+        <p>{{ 'Désolé, une erreur est survenue !' | trans }}</p>
+        <br>
+        <p>{{ 'Si cette erreur persiste, merci de nous contacter.' | trans }}</p>
+        {% endblock %}
+        <br>
+        <a class="btn btn-primary" href="/">{{ 'Aller à la page d\'accueil' | trans }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
