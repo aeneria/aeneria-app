@@ -22,6 +22,7 @@ parameters:
     aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"
     aeneria.enedis.redirect_uri: "%env(ENEDIS_REDIRECT_URI)%"
     aeneria.enedis.endpoint_auth: "%env(ENEDIS_ENDPOINT_AUTH)%"
+    aeneria.enedis.endpoint_token: "%env(ENEDIS_ENDPOINT_TOKEN)%"
     aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
 
 services:
@@ -61,6 +62,7 @@ services:
         arguments:
             $httpClient: "@http_client"
             $authEndpoint: "%aeneria.enedis.endpoint_auth%"
+            $tokenEndpoint: "%aeneria.enedis.endpoint_token%"
             $dataEndpoint: "%aeneria.enedis.endpoint_data%"
             $clientId: "%aeneria.enedis.client_id%"
             $clientSecret: "%aeneria.enedis.client_secret%"

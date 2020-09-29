@@ -94,6 +94,13 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
     DATABASE_URL=[VOTRE CONFIG ICI]
     ###< doctrine/doctrine-bundle ###
 
+    # Renseignez les clés d'API enedis data-connect
+    ENEDIS_CLIENT_ID=%%ENEDIS_CLIENT_ID%%
+    ENEDIS_CLIENT_SECRET=%%ENEDIS_CLIENT_SECRET%%
+    ENEDIS_REDIRECT_URI=%%ENEDIS_REDIRECT_URI%%
+    ENEDIS_ENDPOINT_AUTH=%%ENEDIS_ENDPOINT_AUTH%%
+    ENEDIS_ENDPOINT_TOKEN=%%ENEDIS_ENDPOINT_TOKEN%%
+    ENEDIS_ENDPOINT_DATA=%%ENEDIS_ENDPOINT_DATA%%
     ...
 
 
