@@ -13,14 +13,10 @@ class User implements UserInterface, Serializable
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_USER = 'ROLE_USER';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $active;
 
     /**
@@ -29,24 +25,16 @@ class User implements UserInterface, Serializable
      */
     private $username;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+    /** @var string The hashed password */
     private $password;
 
-    /**
-     * @var Place[]
-     */
+    /**  @var Place[] */
     private $places;
 
-    /**
-     * @var Place[]
-     */
+    /** @var Place[] */
     private $sharedPlaces;
 
     public function getId(): ?int

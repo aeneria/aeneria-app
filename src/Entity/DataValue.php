@@ -24,54 +24,34 @@ class DataValue
     const FREQUENCY_MONTH = 4;
     const FREQUENCY_YEAR = 5;
 
-    /**
-     * @var int
-     */
+    /**  @var int */
     private $id;
 
-    /**
-     * @var float
-     */
+    /** @var float */
     private $value;
 
-    /**
-     * @var \DateTimeInterface
-     */
+    /** @var \DateTimeInterface */
     private $date;
 
-    /**
-     * @var int
-     */
+    /**  @var int */
     private $hour;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $weekDay;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $week;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $month;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var FeedData
-     */
+    /** @var FeedData */
     private $feedData;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $frequency;
 
     public static function getAllFrequencies(): array

@@ -17,19 +17,13 @@ class FeedData
     const FEED_DATA_NEBULOSITY = 'NEBULOSITY';
     const FEED_DATA_RAIN = 'RAIN';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var Feed
-     */
+    /** @var Feed */
     private $feed;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $dataType;
 
     /**
