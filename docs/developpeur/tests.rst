@@ -9,18 +9,18 @@ Pour lancer les tests PHPUNIT, il faut préalablement avoir créé un minimum de
 .. code-block:: bash
 
   # Il faut avoir un utilisateur 'admin/password' avec des données à jour:
-  php7.3 bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin --user-password=password
+  php7.3 bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin@example.com --user-password=password
   # Cette commande est à lancer une fois par jour
 
   # On s'assure qu'il a les droits admin:
-  php7.3 bin/console aeneria:user:grant admin
+  php7.3 bin/console aeneria:user:grant admin@example.com
 
   # Il faut avoir un utilisateur 'user-test/password' avec des données pour les 7 derniers jours:
-  php7.3 bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test --user-password=password
+  php7.3 bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test@example.com --user-password=password
   # La commande précédente est à lancer une fois par jour
 
   # Enfin, on s'assure que user-test n'est pas admin
-  php7.3 bin/console aeneria:user:ungrant user-test
+  php7.3 bin/console aeneria:user:ungrant user-test@example.com
 
   # On peut maintenant lancer les tests l'esprit tranquille:
   php7.3  bin/phpunit

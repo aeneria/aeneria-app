@@ -152,8 +152,8 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
 
 .. code-block:: sh
 
-    php7.3 bin/console aeneria:user:add [username] [password]
-    php7.3 bin/console aeneria:user:grant [username]
+    php7.3 bin/console aeneria:user:add [admin_email] [password]
+    php7.3 bin/console aeneria:user:grant [admin_email]
 
 5. Générer l'ensemble des flux Météo (facultatif)
 ----------------------------------------------------

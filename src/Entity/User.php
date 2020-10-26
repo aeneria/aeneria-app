@@ -25,6 +25,7 @@ class User implements UserInterface, Serializable
 
     /**
      * @var string
+     * Good to know: username is an email
      */
     private $username;
 
@@ -73,9 +74,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
+     * @inheritdoc
      */
     public function getUsername(): string
     {
@@ -83,7 +82,15 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @see UserInterface
+     * @inheritdoc
+     */
+    public function getEmail(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getRoles(): array
     {
@@ -122,7 +129,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @see UserInterface
+     * @inheritdoc
      */
     public function getSalt()
     {
@@ -130,7 +137,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @see UserInterface
+     * @inheritdoc
      */
     public function eraseCredentials()
     {

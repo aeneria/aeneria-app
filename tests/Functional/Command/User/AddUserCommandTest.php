@@ -17,7 +17,7 @@ final class AddUserCommandTest extends AppTestCase
         $command = $application->find('aeneria:user:add');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'username' => $username = 'test' . \rand(),
+            'username' => $username = 'test' . \rand() . '@example.com',
             'password' => $password = 'test' . \rand(),
         ]);
         $this->assertEquals($commandTester->getStatusCode(), 0);

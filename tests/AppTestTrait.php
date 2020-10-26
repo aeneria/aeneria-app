@@ -96,7 +96,7 @@ trait AppTestTrait
     final protected function createUser(array $data = null): User
     {
         return (new User())
-            ->setUsername($data['username'] ?? 'test' . \rand())
+            ->setUsername($data['username'] ?? 'test' . \rand() . '@example.com')
             ->setPassword($data['password'] ?? 'password' . \rand())
             ->setActive($data['active'] ?? true)
             ->setRoles($data['roles'] ?? [User::ROLE_USER])

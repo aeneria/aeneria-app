@@ -10,7 +10,7 @@ class UpdateAccountTypeTest extends AppTypeTestCase
     public function testSubmitValidData()
     {
         $formData = [
-            'username' => 'testname',
+            'username' => 'testname@toto.fr',
             'old_password' => 'pouet',
             'new_password' => 'toto',
             'new_password2' => 'toto',

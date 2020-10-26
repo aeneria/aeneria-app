@@ -3,7 +3,7 @@
     <h1 class="card-title">{{ 'Mon compte'|trans }}</h1>
     <div class="content">
       <ul class="about-list">
-        <li><i class="fas fa-user-alt"></i> <strong>Login :</strong> {{ user.username }}</li>
+        <li><i class="fas fa-user-alt"></i> <strong>Email :</strong> {{ user.username }}</li>
         {% if user.places|length > 1 %}
           <li><i class="fas fa-home"></i> <strong>Mes adresses :</strong> {{ user.places|map(p => p.name)|join(', ') }}</li>
         {% endif %}

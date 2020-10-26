@@ -37,7 +37,7 @@ class ExistUserCommand extends Command
         $this
             ->setName('aeneria:user:exist')
             ->setDescription('Does an user exist ?')
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
+            ->addArgument('username', InputArgument::REQUIRED, 'Email')
         ;
     }
 

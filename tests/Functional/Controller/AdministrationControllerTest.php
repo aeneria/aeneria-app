@@ -20,7 +20,7 @@ final class AdministrationControllerTest extends AppWebTestCase
      */
     public function testAdminCanAccessAdminPages($url)
     {
-        $this->login('admin');
+        $this->login('admin@example.com');
 
         $this->client->request('GET', \sprintf("/admin/%s", $url));
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -31,7 +31,7 @@ final class AdministrationControllerTest extends AppWebTestCase
      */
     public function testUserCantAccessAdminPages($url)
     {
-        $this->login('user-test');
+        $this->login('user-test@example.com');
 
         $this->client->request('GET', \sprintf("/admin/%s", $url));
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
@@ -51,7 +51,7 @@ final class AdministrationControllerTest extends AppWebTestCase
      */
     public function testAdminCanAccessAdminUserPages($url)
     {
-        $user = $this->login('admin');
+        $user = $this->login('admin@example.com');
 
         $this->client->request('GET', \sprintf("/admin/users/%s/%s", $user->getId(), $url));
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -62,7 +62,7 @@ final class AdministrationControllerTest extends AppWebTestCase
      */
     public function testUserCantAccessAdminUserPages($url)
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
 
         $this->client->request('GET', \sprintf("/admin/users/%s/%s", $user->getId(), $url));
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());

@@ -10,7 +10,7 @@ final class SecurityControllerTest extends AppWebTestCase
     {
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Connexion')->form();
-        $form['username'] = 'user-test';
+        $form['username'] = 'user-test@example.com';
         $form['password'] = 'password';
 
         $crawler = $this->client->submit($form);

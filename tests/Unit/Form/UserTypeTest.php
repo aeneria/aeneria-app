@@ -34,12 +34,12 @@ class UserTypeTest extends AppTypeTestCase
     public function testSubmitValidData()
     {
         $formData = [
-            'username' => 'testname',
+            'username' => 'testname@toto.fr',
             'is_admin' => true,
             'is_active' => false,
         ];
         $object = $this->createUser([
-            'username' => 'testname',
+            'username' => 'testname@toto.fr',
             'roles' => [User::ROLE_ADMIN],
             'active' => false,
         ]);

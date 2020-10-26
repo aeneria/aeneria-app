@@ -41,7 +41,7 @@ class UngrantUserCommand extends Command
         $this
             ->setName('aeneria:user:ungrant')
             ->setDescription('Ungrant user admin role.')
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
+            ->addArgument('username', InputArgument::REQUIRED, 'Email')
         ;
     }
 

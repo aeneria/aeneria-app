@@ -15,7 +15,7 @@ final class ExistUserCommandTest extends AppTestCase
 
         $command = $application->find('aeneria:user:exist');
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['username' => 'user-test']);
+        $commandTester->execute(['username' => 'user-test@example.com']);
         $this->assertEquals($commandTester->getStatusCode(), 0);
         $this->assertEquals($commandTester->getDisplay(), 1);
 

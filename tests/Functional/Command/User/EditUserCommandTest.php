@@ -25,7 +25,7 @@ final class EditUserCommandTest extends AppTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'username' => $user->getUsername(),
-            '--username' => $newUsername = 'test' . \rand(),
+            '--username' => $newUsername = 'test' . \rand() . '@example.com',
             '--password' => $newPassword = 'test' . \rand(),
             '--active' => false,
         ]);

@@ -21,7 +21,7 @@ final class DashboardControllerTest extends AppWebTestCase
      */
     public function testUserCanAccessDashboards($url)
     {
-        $this->login('user-test');
+        $this->login('user-test@example.com');
 
         $this->client->request('GET', $url);
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());

@@ -8,7 +8,7 @@ final class DataControllerTest extends AppWebTestCase
 {
     public function testUserCanGetRepartition()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         foreach (['week', 'year_h', 'year_v'] as $repartitionType) {
@@ -25,7 +25,7 @@ final class DataControllerTest extends AppWebTestCase
 
     public function testUserCanGetEvolution()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -39,7 +39,7 @@ final class DataControllerTest extends AppWebTestCase
 
     public function testUserCanGetSumGroupBy()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -53,7 +53,7 @@ final class DataControllerTest extends AppWebTestCase
 
     public function testUserCanGetSum()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -67,7 +67,7 @@ final class DataControllerTest extends AppWebTestCase
 
     public function testUserCanGetNbInf()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -81,7 +81,7 @@ final class DataControllerTest extends AppWebTestCase
 
     public function testUserCanGetXY()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
