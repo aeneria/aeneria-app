@@ -10,14 +10,13 @@ use App\Entity\User;
 use App\Form\MeteoFranceFeedType;
 use App\Form\PlaceType;
 use App\Repository\FeedRepository;
-use App\Services\JwtService;
+use App\Services\PendingActionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ConfigurationPlaceController extends AbstractAppController
@@ -29,7 +28,7 @@ class ConfigurationPlaceController extends AbstractAppController
         Request $request,
         int $userMaxPlaces,
         DataConnectServiceInterface $dataConnectService,
-        JwtService $jwtService
+        PendingActionService $actionService
     ): Response {
         $user = $this->getUser();
         \assert($user instanceof User);
@@ -42,11 +41,13 @@ class ConfigurationPlaceController extends AbstractAppController
             ));
         }
 
+        $action = $actionService->createDataConnectCallbackAction($user);
+
         $enedisUrl = $dataConnectService
             ->getAuthorizeV1Service()
             ->getConsentPageUrl(
                 'P12M',
-                $jwtService->encode(['user' => $user->getId()])
+                $action->getToken()
             )
         ;
 
@@ -64,7 +65,7 @@ class ConfigurationPlaceController extends AbstractAppController
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
         DataConnectServiceInterface $dataConnectService,
-        JwtService $jwtService
+        PendingActionService $actionService
     ): Response {
         $user = $this->getUser();
         $place = $this->checkPlace($id);
@@ -121,11 +122,14 @@ class ConfigurationPlaceController extends AbstractAppController
         }
 
         $linkyFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
+
+        $action = $actionService->createDataConnectCallbackAction($user, $place);
+
         $enedisUrl = $dataConnectService
             ->getAuthorizeV1Service()
             ->getConsentPageUrl(
                 'P12M',
-                $jwtService->encode(['user' => $user->getId(), 'place' => $place->getId()])
+                $action->getToken()
             )
         ;
 
@@ -141,7 +145,7 @@ class ConfigurationPlaceController extends AbstractAppController
         DataConnectServiceInterface $dataConnectService,
         feedRepository $feedRepository,
         EntityManagerInterface $entityManager,
-        JwtService $jwtService,
+        PendingActionService $actionService,
         SerializerInterface $serializer
     ): Response {
         $user = $this->getUser();
@@ -154,16 +158,7 @@ class ConfigurationPlaceController extends AbstractAppController
             throw new BadRequestHttpException();
         }
 
-        try {
-            $object = $jwtService->decode($state);
-        } catch (\Throwable $e) {
-            throw new BadRequestHttpException('Erreur un décodant le jeton JWT', $e);
-        }
-
-        // Verifying we are the right user
-        if ($object->user !== $user->getId()) {
-            throw new AccessDeniedException();
-        }
+        $pendingAction = $actionService->findDataConnectCallbackAction($user, $state);
 
         try {
             $token = $dataConnectService
@@ -184,7 +179,9 @@ class ConfigurationPlaceController extends AbstractAppController
             return $this->redirectToRoute('config');
         }
 
-        if (!($place = isset($object->place) ? $this->checkPlace($object->place) : null)) {
+        if ($pendingAction->existParam('place')) {
+            $place = $this->checkPlace($pendingAction->getSingleParam('place'));
+        } else {
             // We are creating a new place
             $place = new Place();
             $place->setName((string) $address);
@@ -215,6 +212,8 @@ class ConfigurationPlaceController extends AbstractAppController
         // Ensure all dependant FeedData are already existing
         $feedRepository->createDependentFeedData($feed);
         $entityManager->flush();
+
+        $actionService->delete($pendingAction);
 
         return $this->redirectToRoute('config.place.edit', ['id' => $place->getId()]);
     }

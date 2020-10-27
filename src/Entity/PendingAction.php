@@ -7,6 +7,10 @@ namespace App\Entity;
  */
 class PendingAction
 {
+    const ACTION_DATA_CONNECT_CALLBACK = 'data_connect_callback';
+
+    const TOKEN_LENGTH = 10;
+
     /** @var int */
     private $id;
 
@@ -88,6 +92,16 @@ class PendingAction
     public function getParam(): array
     {
         return $this->param;
+    }
+
+    public function getSingleParam(string $name)
+    {
+        return $this->param[$name] ?? null;
+    }
+
+    public function existParam(string $name): bool
+    {
+        return \array_key_exists($name, $this->param);
     }
 
     public function setParam(array $param): self
