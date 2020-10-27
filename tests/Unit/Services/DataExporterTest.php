@@ -16,7 +16,7 @@ final class DataExporterTest extends AppTestCase
             $this->getDataValueRepository()
         );
 
-        $user = $this->getUserRepository()->findOneByUsername('user-test');
+        $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
 
         $filename = $dataExporter->exportPlace(
@@ -34,7 +34,7 @@ final class DataExporterTest extends AppTestCase
             $this->getDataValueRepository()
         );
 
-        $user = $this->getUserRepository()->findOneByUsername('user-test');
+        $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
 
         $filename = $dataExporter->exportPlace($user->getPlaces()[0]);

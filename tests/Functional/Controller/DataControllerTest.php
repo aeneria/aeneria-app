@@ -19,7 +19,7 @@ final class DataControllerTest extends AppWebTestCase
                 (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
                 (new \DateTimeImmutable('now'))->format("Y-m-d")
             ));
-            $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+            self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         }
     }
 
@@ -34,7 +34,7 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetSumGroupBy()
@@ -48,7 +48,7 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetSum()
@@ -62,7 +62,7 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetNbInf()
@@ -76,7 +76,7 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetXY()
@@ -90,6 +90,6 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

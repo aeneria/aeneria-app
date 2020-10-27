@@ -1,4 +1,6 @@
 {
+    "name": "aeneria/aeneria-app",
+    "description": "A little dashboard to analyse your electricity consumption data from Linky",
     "type": "project",
     "license": "proprietary",
     "require": {

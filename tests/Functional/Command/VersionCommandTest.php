@@ -17,7 +17,7 @@ final class VersionCommandTest extends AppTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertEquals($commandTester->getStatusCode(), 0);
-        $this->assertEquals($commandTester->getDisplay(), $this->getParameter('aeneria.version'));
+        self::assertEquals($commandTester->getStatusCode(), 0);
+        self::assertEquals($commandTester->getDisplay(), $this->getParameter('aeneria.version'));
     }
 }

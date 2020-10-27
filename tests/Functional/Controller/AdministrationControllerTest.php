@@ -23,7 +23,7 @@ final class AdministrationControllerTest extends AppWebTestCase
         $this->login('admin@example.com');
 
         $this->client->request('GET', \sprintf("/admin/%s", $url));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -34,7 +34,7 @@ final class AdministrationControllerTest extends AppWebTestCase
         $this->login('user-test@example.com');
 
         $this->client->request('GET', \sprintf("/admin/%s", $url));
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function userRelatedUrlsProvider()
@@ -54,7 +54,7 @@ final class AdministrationControllerTest extends AppWebTestCase
         $user = $this->login('admin@example.com');
 
         $this->client->request('GET', \sprintf("/admin/users/%s/%s", $user->getId(), $url));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -65,6 +65,6 @@ final class AdministrationControllerTest extends AppWebTestCase
         $user = $this->login('user-test@example.com');
 
         $this->client->request('GET', \sprintf("/admin/users/%s/%s", $user->getId(), $url));
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 }

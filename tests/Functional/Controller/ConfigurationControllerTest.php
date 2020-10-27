@@ -11,7 +11,7 @@ final class ConfigurationControllerTest extends AppWebTestCase
         $this->login('user-test@example.com');
 
         $this->client->request('GET', "/configuration");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminCanVisitConfigPages()
@@ -19,7 +19,7 @@ final class ConfigurationControllerTest extends AppWebTestCase
         $this->login('admin@example.com');
 
         $this->client->request('GET', "/configuration");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanVisitDeleteAccountPages()
@@ -27,7 +27,7 @@ final class ConfigurationControllerTest extends AppWebTestCase
         $this->login('user-test@example.com');
 
         $this->client->request('GET', "/configuration/user/delete");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanUpdateProfil()
@@ -35,7 +35,7 @@ final class ConfigurationControllerTest extends AppWebTestCase
         $this->login('user-test@example.com');
 
         $crawler = $this->client->request('GET', "/configuration/user/update");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $crawler->selectButton('Enregistrer')->form();
         $form['update_account'] = [
@@ -47,7 +47,7 @@ final class ConfigurationControllerTest extends AppWebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantUpdateProfilWithErrorOnPassword()
@@ -75,11 +75,11 @@ final class ConfigurationControllerTest extends AppWebTestCase
         $this->login('user-test@example.com');
 
         $crawler = $this->client->request('GET', "/configuration/user/update");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $crawler->selectButton('Enregistrer')->form();
         $form['update_account'] = [
-            'username' => 'user-test',
+            'username' => 'user-test@example.com',
             'old_password' => 'password',
             'new_password' => 'password',
             'new_password2' => 'password2',
@@ -87,6 +87,6 @@ final class ConfigurationControllerTest extends AppWebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

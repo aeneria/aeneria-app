@@ -20,10 +20,10 @@ final class AddUserCommandTest extends AppTestCase
             'username' => $username = 'test' . \rand() . '@example.com',
             'password' => $password = 'test' . \rand(),
         ]);
-        $this->assertEquals($commandTester->getStatusCode(), 0);
+        self::assertEquals($commandTester->getStatusCode(), 0);
 
         $userFromRepo = $this->getUserRepository()->findOneByUsername($username);
 
-        $this->assertTrue($passwordEncoder->isPasswordValid($userFromRepo, $password));
+        self::assertTrue($passwordEncoder->isPasswordValid($userFromRepo, $password));
     }
 }

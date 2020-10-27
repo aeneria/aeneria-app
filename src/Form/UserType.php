@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Constraints\Email;
 
 class UserType extends AbstractType
 {
@@ -28,7 +29,8 @@ class UserType extends AbstractType
 
         $builder
             ->add('username', EmailType::class, [
-                'label' => 'Adresse email',
+                'label' => 'Email',
+                'constraints' => [new Email()],
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',

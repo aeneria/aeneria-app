@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 
 class UpdateAccountType extends AbstractType
 {
@@ -19,7 +20,8 @@ class UpdateAccountType extends AbstractType
 
         $builder
             ->add('username', EmailType::class, [
-                'label' => 'Nom de l\'utilisateur',
+                'label' => 'Email',
+                'constraints' => [new Email()],
             ])
             ->add('old_password', PasswordType::class, [
                 'label' => 'Mot de passe actuel',

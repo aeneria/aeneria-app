@@ -21,10 +21,10 @@ final class ActivateUserCommandTest extends AppTestCase
         $command = $application->find('aeneria:user:activate');
         $commandTester = new CommandTester($command);
         $commandTester->execute(['username' => $user->getUsername()]);
-        $this->assertEquals($commandTester->getStatusCode(), 0);
+        self::assertEquals($commandTester->getStatusCode(), 0);
 
         $userFromRepo = $this->getUserRepository()->find($user->getId());
 
-        $this->assertTrue($userFromRepo->isActive());
+        self::assertTrue($userFromRepo->isActive());
     }
 }
