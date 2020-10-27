@@ -41,7 +41,7 @@ class GrantUserCommand extends Command
         $this
             ->setName('aeneria:user:grant')
             ->setDescription('Grant user admin role.')
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
+            ->addArgument('username', InputArgument::REQUIRED, 'Email')
         ;
     }
 

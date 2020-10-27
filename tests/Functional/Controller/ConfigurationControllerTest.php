@@ -50,7 +50,27 @@ final class ConfigurationControllerTest extends AppWebTestCase
         self::assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testUserCanUpdateWithErrorOnPasswordProfil()
+    public function testUserCantUpdateProfilWithErrorOnPassword()
+    {
+        $this->login('user-test@example.com');
+
+        $crawler = $this->client->request('GET', "/configuration/user/update");
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $form = $crawler->selectButton('Enregistrer')->form();
+        $form['update_account'] = [
+            'username' => 'user-test@example.com',
+            'old_password' => 'password',
+            'new_password' => 'password',
+            'new_password2' => 'password2',
+        ];
+
+        $crawler = $this->client->submit($form);
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testUserCantUpdateProfilWithErrorOnEmail()
     {
         $this->login('user-test@example.com');
 

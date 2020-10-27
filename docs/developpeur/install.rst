@@ -64,8 +64,8 @@ Pour monter un environement de dev :
 
 .. code-block:: sh
 
-    php7.3 bin/console aeneria:user:add [username] [password]
-    php7.3 bin/console aeneria:user:grant [username]
+    php7.3 bin/console aeneria:user:add [admin_email] [password]
+    php7.3 bin/console aeneria:user:grant [admin_email]
 
 
 * Générer des données de tests :

@@ -7,39 +7,25 @@ namespace App\Entity;
  */
 class Place
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $icon = 'home';
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $public = false;
 
-    /**
-     * @var User|null
-     */
+    /** @var User|null */
     private $user;
 
-    /**
-     * @var User[]|null
-     */
+    /** @var User[]|null */
     private $allowedUsers = [];
 
-    /**
-     * @var Feed[]|null
-     */
+    /** @var Feed[]|null */
     private $feeds = [];
 
     public function getId(): ?int

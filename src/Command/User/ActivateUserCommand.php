@@ -40,7 +40,7 @@ class ActivateUserCommand extends Command
         $this
             ->setName('aeneria:user:activate')
             ->setDescription('Activate an user.')
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
+            ->addArgument('username', InputArgument::REQUIRED, 'Email')
         ;
     }
 

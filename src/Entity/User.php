@@ -13,39 +13,28 @@ class User implements UserInterface, Serializable
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_USER = 'ROLE_USER';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $active;
 
     /**
      * @var string
+     * Good to know: username is an email
      */
     private $username;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+    /** @var string The hashed password */
     private $password;
 
-    /**
-     * @var Place[]
-     */
+    /**  @var Place[] */
     private $places;
 
-    /**
-     * @var Place[]
-     */
+    /** @var Place[] */
     private $sharedPlaces;
 
     public function getId(): ?int
@@ -73,9 +62,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
+     * @inheritdoc
      */
     public function getUsername(): string
     {
@@ -83,7 +70,15 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @see UserInterface
+     * @inheritdoc
+     */
+    public function getEmail(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getRoles(): array
     {
@@ -122,7 +117,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @see UserInterface
+     * @inheritdoc
      */
     public function getSalt()
     {
@@ -130,7 +125,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @see UserInterface
+     * @inheritdoc
      */
     public function eraseCredentials()
     {

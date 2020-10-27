@@ -40,7 +40,7 @@ class DeactivateUserCommand extends Command
         $this
             ->setName('aeneria:user:deactivate')
             ->setDescription('Deactivate an user.')
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
+            ->addArgument('username', InputArgument::REQUIRED, 'Email')
         ;
     }
 
