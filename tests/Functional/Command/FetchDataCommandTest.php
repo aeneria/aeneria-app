@@ -17,6 +17,6 @@ final class FetchDataCommandTest extends AppTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertEquals($commandTester->getStatusCode(), 0);
+        self::assertEquals($commandTester->getStatusCode(), 0);
     }
 }

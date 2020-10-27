@@ -8,7 +8,7 @@ final class DataControllerTest extends AppWebTestCase
 {
     public function testUserCanGetRepartition()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         foreach (['week', 'year_h', 'year_v'] as $repartitionType) {
@@ -19,13 +19,13 @@ final class DataControllerTest extends AppWebTestCase
                 (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
                 (new \DateTimeImmutable('now'))->format("Y-m-d")
             ));
-            $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+            self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         }
     }
 
     public function testUserCanGetEvolution()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -34,12 +34,12 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetSumGroupBy()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -48,12 +48,12 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetSum()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -62,12 +62,12 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetNbInf()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -76,12 +76,12 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCanGetXY()
     {
-        $user = $this->login('user-test');
+        $user = $this->login('user-test@example.com');
         $places = $user->getPlaces();
 
         $this->client->request('GET', \sprintf(
@@ -90,6 +90,6 @@ final class DataControllerTest extends AppWebTestCase
             (new \DateTimeImmutable('7 days ago'))->format("Y-m-d"),
             (new \DateTimeImmutable('now'))->format("Y-m-d")
         ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

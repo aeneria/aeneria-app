@@ -25,16 +25,16 @@ final class EditUserCommandTest extends AppTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'username' => $user->getUsername(),
-            '--username' => $newUsername = 'test' . \rand(),
+            '--username' => $newUsername = 'test' . \rand() . '@example.com',
             '--password' => $newPassword = 'test' . \rand(),
             '--active' => false,
         ]);
-        $this->assertEquals($commandTester->getStatusCode(), 0);
+        self::assertEquals($commandTester->getStatusCode(), 0);
 
         $userFromRepo = $this->getUserRepository()->find($user->getId());
 
-        $this->assertTrue(!$userFromRepo->isActive());
-        $this->assertEquals($userFromRepo->getUsername(), $newUsername);
-        $this->assertTrue($passwordEncoder->isPasswordValid($userFromRepo, $newPassword));
+        self::assertTrue(!$userFromRepo->isActive());
+        self::assertEquals($userFromRepo->getUsername(), $newUsername);
+        self::assertTrue($passwordEncoder->isPasswordValid($userFromRepo, $newPassword));
     }
 }

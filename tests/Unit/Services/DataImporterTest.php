@@ -15,7 +15,7 @@ final class DataImporterTest extends AppTestCase
         $dataValueRepository = $this->getDataValueRepository();
         $dataImporter = new DataImporter($dataValueRepository);
 
-        $user = $this->getUserRepository()->findOneByUsername('user-test');
+        $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
 
         $errors = $dataImporter->importPlace(
@@ -31,7 +31,7 @@ final class DataImporterTest extends AppTestCase
         $dataValueRepository = $this->getDataValueRepository();
         $dataImporter = new DataImporter($dataValueRepository);
 
-        $user = $this->getUserRepository()->findOneByUsername('user-test');
+        $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
 
         $errors = $dataImporter->importPlace(
