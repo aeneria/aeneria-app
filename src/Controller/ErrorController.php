@@ -32,7 +32,7 @@ final class ErrorController
                 $template = 'error/error404.html.twig';
                 break;
             default :
-                $httpStatusCode = 403;
+                $httpStatusCode = $code || 500;
                 $template = 'error/error.html.twig';
                 break;
         }

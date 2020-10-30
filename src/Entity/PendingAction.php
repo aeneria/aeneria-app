@@ -23,7 +23,7 @@ class PendingAction
     /** @var string */
     private $action;
 
-    /** @var \DateTimeImmutable */
+    /** @var \DateTimeInterface */
     private $expirationDate;
 
     /** @var array */
@@ -77,7 +77,7 @@ class PendingAction
         return $this;
     }
 
-    public function getExpirationDate(): \DateTimeImmutable
+    public function getExpirationDate(): \DateTimeInterface
     {
         return $this->expirationDate;
     }
