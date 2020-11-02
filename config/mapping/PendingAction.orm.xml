@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="App\Entity\PendingAction" table="pending_action" repository-class="App\Repository\PendingActionRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="token" column="token" type="string" length="25"/>
+        <many-to-one field="user" target-entity="App\Entity\User" inversed-by="places">
+            <join-column nullable="false"/>
+        </many-to-one>
+        <field name="action" column="action" type="string" length="255"/>
+        <field name="expirationDate" column="expiration_date" type="datetime"/>
+        <field name="param" column="param" type="json"/>
+    </entity>
+</doctrine-mapping>

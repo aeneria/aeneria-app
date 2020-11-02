@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36cc132c285aa7be9a43f7d62151e92e",
+    "content-hash": "4647d0e70b816a2cd4539e24de92a153",
     "packages": [
         {
             "name": "aeneria/enedis-data-connect",

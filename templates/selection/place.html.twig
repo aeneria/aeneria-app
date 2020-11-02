@@ -1,5 +1,5 @@
 {# Place selection #}
-{% if places|length > 1 %}
+{% if places and places|length > 1 %}
 <span class="fas fa-map-marker-alt start-input" aria-hidden="true" style="font-size: 1.1em; color: white"></span>
 <div class="btn-group aeneria-select-place">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="place"></button>

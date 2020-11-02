@@ -7,15 +7,16 @@ namespace App\Tests;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\PendingAction;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use App\Repository\PendingActionRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -40,44 +41,34 @@ trait AppTestTrait
         return $this->getContainer()->getParameter($parameter);
     }
 
-    /**
-     * @return UserRepository
-     */
-    final protected function getUserRepository(): EntityRepository
+    final protected function getUserRepository(): UserRepository
     {
         return $this->getEntityManager()->getRepository(User::class);
     }
 
-    /**
-     * @return PlaceRepository
-     */
-    final protected function getPlaceRepository(): EntityRepository
+    final protected function getPlaceRepository(): PlaceRepository
     {
         return $this->getEntityManager()->getRepository(Place::class);
     }
 
-    /**
-     * @return FeedRepository
-     */
-    final protected function getFeedRepository(): EntityRepository
+    final protected function getFeedRepository(): FeedRepository
     {
         return $this->getEntityManager()->getRepository(Feed::class);
     }
 
-    /**
-     * @return FeedDataRepository
-     */
-    final protected function getFeedDataRepository(): EntityRepository
+    final protected function getFeedDataRepository(): FeedDataRepository
     {
         return $this->getEntityManager()->getRepository(FeedData::class);
     }
 
-    /**
-     * @return UserRepository
-     */
     final protected function getDataValueRepository(): DataValueRepository
     {
         return $this->getEntityManager()->getRepository(DataValue::class);
+    }
+
+    final protected function getPendingActionRepository(): PendingActionRepository
+    {
+        return $this->getEntityManager()->getRepository(PendingAction::class);
     }
 
     final protected function getPassordEncoder(): UserPasswordEncoderInterface
@@ -196,7 +187,7 @@ trait AppTestTrait
             ->setFeedData($data['feedData'] ?? $this->createFeedData())
             ->setFrequency(DataValue::FREQUENCY_HOUR)
             ->setValue($data['value'] ?? 12)
-            ->setDate($data['date'] ?? $date = new \DateTimeImmutable())
+            ->setDate($data['date'] ?? new \DateTimeImmutable())
             ->updateDateRelatedData()
         ;
     }
@@ -208,5 +199,29 @@ trait AppTestTrait
         $this->getEntityManager()->persist($dataValue);
 
         return $dataValue;
+    }
+
+    /**
+     * Create PendingAction from array
+     */
+    final protected function createPendingAction(array $data = []): PendingAction
+    {
+        return (new PendingAction())
+            ->setId($data['id'] ?? \rand())
+            ->setToken($data['token'] ?? 'token' . \rand())
+            ->setUser($data['user'] ?? $this->createUser())
+            ->setAction($data['action'] ?? 'action')
+            ->setExpirationDate($data['expirationDate'] ?? new \DateTimeImmutable())
+            ->setParam($data['param'] ?? ['testParam' => 'testValue'])
+        ;
+    }
+
+    final protected function createPersistedPendingAction(array $data = [], array $userData = []): PendingAction
+    {
+        $user = $data['user'] ?? $this->createPersistedUser($userData);
+        $pendingAction = $this->createPendingAction($data + ['user' => $user]);
+        $this->getEntityManager()->persist($pendingAction);
+
+        return $pendingAction;
     }
 }

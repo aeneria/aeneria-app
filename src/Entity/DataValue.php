@@ -24,7 +24,7 @@ class DataValue
     const FREQUENCY_MONTH = 4;
     const FREQUENCY_YEAR = 5;
 
-    /**  @var int */
+    /** @var int */
     private $id;
 
     /** @var float */
@@ -33,7 +33,7 @@ class DataValue
     /** @var \DateTimeInterface */
     private $date;
 
-    /**  @var int */
+    /** @var int */
     private $hour;
 
     /** @var int */

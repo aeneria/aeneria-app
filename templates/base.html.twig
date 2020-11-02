@@ -43,10 +43,10 @@
 
     <script>
       var appRoute = "{{ path('dashboard.home')|escape('js') }}";
-      {% if (places) %}
+      {% if places is defined %}
         var places = {{ places|json_encode|raw }};
       {% endif %}
-      {% if (app.user) %}
+      {% if app.user %}
         var user = {{ app.user.id }};
       {% endif %}
     </script>

@@ -24,7 +24,7 @@
       </p>
 
       <div class="text-center">
-        <a href="{{ enedis_url }}" class="text-center"> <img src="{{ asset('image/enedis-consent.png') }}" alt='{{ 'Accédez à votre espace Enedis' | trans }}'></a>
+        <a href="{{ path('config.place.enedis_consent') }}" class="text-center"> <img src="{{ asset('image/enedis-consent.png') }}" alt='{{ 'Accédez à votre espace Enedis' | trans }}'></a>
       </div>
 
       <div class="alert alert-warning">
@@ -35,7 +35,7 @@
           {% endtrans %}
         </p>
         <div class="text-center">
-          <a href="{{ enedis_url }}" class="text-center btn btn-secondary">{{ 'Je crée mon compte personnel Enedis' | trans }}</a>
+          <a href="https://mon-compte-particulier.enedis.fr/" class="text-center btn btn-secondary">{{ 'Je crée mon compte personnel Enedis' | trans }}</a>
         </div>
       </div>
     </div>
