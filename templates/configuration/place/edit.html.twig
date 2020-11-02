@@ -24,7 +24,7 @@
           <p>{{ aeneria_feed_get_address(linky) ?: ('Inconnu' | trans) }}</p>
         </div>
         <div class="col-md-4 col-sm-12">
-          <a href="{{ enedis_url }}" class="btn btn-sm btn-outline-secondary">{{ 'Changer de compteur' | trans }}</a>
+          <a href="{{ path('config.place.enedis_consent', {id: place.id}) }}" class="btn btn-sm btn-outline-secondary">{{ 'Changer de compteur' | trans }}</a>
           <p><small>{{ '(via mon espace Enedis)' | trans }}</small></p>
         </div>
       </div>

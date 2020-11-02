@@ -6,9 +6,15 @@ config.place.edit:
   path: /configuration/place/{id}/edit
   controller: App\Controller\ConfigurationPlaceController::placeEditAction
 
-config.place.enedis_consent_callback:
+config.place.enedis_consent:
   path: /configuration/data-connect-consent
+  controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentAction
+
+config.place.enedis_consent_callback:
+  path: /configuration/data-connect-callback/{id}
   controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentCallbackAction
+  defaults:
+    id: null
 
 config.place.delete:
   path: /configuration/place/{id}/delete

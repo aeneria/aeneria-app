@@ -5,14 +5,17 @@ namespace App\Controller;
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
 use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\Feed;
+use App\Entity\PendingAction;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Form\MeteoFranceFeedType;
 use App\Form\PlaceType;
 use App\Repository\FeedRepository;
+use App\Services\JwtService;
 use App\Services\PendingActionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -24,12 +27,7 @@ class ConfigurationPlaceController extends AbstractAppController
     /**
      * New Place form
      */
-    public function placeNewAction(
-        Request $request,
-        int $userMaxPlaces,
-        DataConnectServiceInterface $dataConnectService,
-        PendingActionService $actionService
-    ): Response {
+    public function placeNewAction(int $userMaxPlaces): Response {
         $user = $this->getUser();
         \assert($user instanceof User);
 
@@ -41,19 +39,8 @@ class ConfigurationPlaceController extends AbstractAppController
             ));
         }
 
-        $action = $actionService->createDataConnectCallbackAction($user);
-
-        $enedisUrl = $dataConnectService
-            ->getAuthorizeV1Service()
-            ->getConsentPageUrl(
-                'P12M',
-                $action->getToken()
-            )
-        ;
-
         return $this->render('configuration/place/new.html.twig', [
             'from_callback' => false,
-            'enedis_url' => $enedisUrl,
         ]);
     }
 
@@ -63,11 +50,8 @@ class ConfigurationPlaceController extends AbstractAppController
         bool $userCanSharePlace,
         bool $placeCanBePublic,
         EntityManagerInterface $entityManager,
-        FeedRepository $feedRepository,
-        DataConnectServiceInterface $dataConnectService,
-        PendingActionService $actionService
+        FeedRepository $feedRepository
     ): Response {
-        $user = $this->getUser();
         $place = $this->checkPlace($id);
 
         $form = $this
@@ -123,26 +107,52 @@ class ConfigurationPlaceController extends AbstractAppController
 
         $linkyFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
 
+        return $this->render('configuration/place/edit.html.twig', [
+            'form' => $form->createView(),
+            'linky' => $linkyFeed,
+            'place' => $place,
+        ]);
+    }
+
+    public function placeEnedisConsentAction(
+        string $id = null,
+        int $userMaxPlaces,
+        DataConnectServiceInterface $dataConnectService,
+        PendingActionService $actionService,
+        JwtService $jwtService
+    ): RedirectResponse {
+        $user = $this->getUser();
+
+        $place = null;
+        if ($id) {
+            $place = $this->checkPlace($id);
+        } elseif (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces && !$this->isDemoMode) {
+            throw new AccessDeniedHttpException(\sprintf(
+                "Vous ne pouvez créer que %s adresse%s.",
+                $userMaxPlaces,
+                $userMaxPlaces > 1 ? 's' : ''
+            ));
+        }
+
         $action = $actionService->createDataConnectCallbackAction($user, $place);
+
+        $state = $jwtService->encode($action->getToken());
 
         $enedisUrl = $dataConnectService
             ->getAuthorizeV1Service()
             ->getConsentPageUrl(
                 'P12M',
-                $action->getToken()
+                $state
             )
         ;
 
-        return $this->render('configuration/place/edit.html.twig', [
-            'form' => $form->createView(),
-            'linky' => $linkyFeed,
-            'enedis_url' => $enedisUrl,
-        ]);
+        return $this->redirect($enedisUrl);
     }
 
     public function placeEnedisConsentCallbackAction(
         Request $request,
         DataConnectServiceInterface $dataConnectService,
+        JwtService $jwtService,
         feedRepository $feedRepository,
         EntityManagerInterface $entityManager,
         PendingActionService $actionService,
@@ -158,7 +168,8 @@ class ConfigurationPlaceController extends AbstractAppController
             throw new BadRequestHttpException();
         }
 
-        $pendingAction = $actionService->findDataConnectCallbackAction($user, $state);
+        $token = $jwtService->decode($state);
+        $pendingAction = $actionService->findDataConnectCallbackAction($user, $token);
 
         try {
             $token = $dataConnectService
