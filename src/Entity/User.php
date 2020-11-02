@@ -31,7 +31,7 @@ class User implements UserInterface, Serializable
     /** @var string The hashed password */
     private $password;
 
-    /**  @var Place[] */
+    /** @var Place[] */
     private $places;
 
     /** @var Place[] */
@@ -62,7 +62,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUsername(): string
     {
@@ -70,7 +70,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEmail(): string
     {
@@ -78,7 +78,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRoles(): array
     {
@@ -117,7 +117,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSalt()
     {
@@ -125,7 +125,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function eraseCredentials()
     {

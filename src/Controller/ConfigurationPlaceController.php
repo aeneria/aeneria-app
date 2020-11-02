@@ -5,7 +5,6 @@ namespace App\Controller;
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
 use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\Feed;
-use App\Entity\PendingAction;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Form\MeteoFranceFeedType;
@@ -27,7 +26,8 @@ class ConfigurationPlaceController extends AbstractAppController
     /**
      * New Place form
      */
-    public function placeNewAction(int $userMaxPlaces): Response {
+    public function placeNewAction(int $userMaxPlaces): Response
+    {
         $user = $this->getUser();
         \assert($user instanceof User);
 

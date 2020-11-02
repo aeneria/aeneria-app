@@ -70,8 +70,7 @@ class EditUserCommand extends Command
         }
 
         if ($username = $input->getOption('username')) {
-
-            if (0 !== \count($this->validator->validate($username,new Email()))) {
+            if (0 !== \count($this->validator->validate($username, new Email()))) {
                 $this->io->error(\sprintf('%s is not a valid email', $username));
 
                 return 1;

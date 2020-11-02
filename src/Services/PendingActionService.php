@@ -29,7 +29,7 @@ class PendingActionService
 
     public function createDataConnectCallbackAction(User $user, Place $place = null): PendingAction
     {
-        $token = \bin2hex(\openssl_random_pseudo_bytes(PendingAction::TOKEN_LENGTH/2));
+        $token = \bin2hex(\openssl_random_pseudo_bytes(PendingAction::TOKEN_LENGTH / 2));
 
         $action = (new PendingAction())
             ->setToken($token)
@@ -50,7 +50,7 @@ class PendingActionService
 
     public function findDataConnectCallbackAction(User $user, string $token): PendingAction
     {
-        if (!$action = $this->actionRepository->findOneByToken($token)){
+        if (!$action = $this->actionRepository->findOneByToken($token)) {
             throw new EntityNotFoundException('Impossible de trouver la demande correspondante');
         }
         \assert($action instanceof PendingAction);
