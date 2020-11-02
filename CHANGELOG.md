@@ -1,9 +1,15 @@
-# æneria version 1.0.2
+# æneria version 1.0.3
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accédez à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
+
+* Modification du processus d'ajout d'une nouvelle adresse
+
+## Anciennes versions
+
+### 1.0.2
 
 * Bugfix - infobulles non-visibles
 * Bugfix - formaulaire d'édition d'adresse avec le partage désactivé
@@ -12,8 +18,6 @@
 * Doc - Ajout d'une documentation pour la mise à jour applicative
 * Doc - Ajout d'une documentation pour la livraison d'une nouvelle version
 * CI - Les tests s'effectuent désormais avec PostgreSQL et non MySQL
-
-## Anciennes versions
 
 ### 1.0.1
 
