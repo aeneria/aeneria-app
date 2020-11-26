@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
-    pilea.version: '0.5.6'
+    pilea.version: '0.5.7'
     pilea.repo_git: 'https://gitlab.com/pilea/Pilea'
     pilea.documentation: 'https://pilea.readthedocs.io/fr/'
     pilea.user.max_places: "%env(PILEA_USER_MAX_PLACES)%"
