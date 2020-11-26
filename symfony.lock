@@ -293,9 +293,6 @@
             "ref": "0e548dd90adba18fabd4ef419b14d361fe4d6c74"
         }
     },
-    "symfony/polyfill-intl-grapheme": {
-        "version": "v1.20.0"
-    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.10.0"
     },
@@ -370,9 +367,6 @@
     },
     "symfony/stopwatch": {
         "version": "v4.2.1"
-    },
-    "symfony/string": {
-        "version": "v5.1.8"
     },
     "symfony/templating": {
         "version": "v4.2.10"
