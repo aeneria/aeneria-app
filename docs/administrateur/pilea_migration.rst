@@ -33,7 +33,8 @@ vers æneria.
 
 .. danger::
     Lisez bien la procédure avant de commencer.
-    **Ne pas** désinstaller Pilea avant la fin de la procédure.
+
+    **Ne pas** désinstallez Pilea avant la fin de la procédure.
 
 .. note::
     Il n'y a pas de moyen d'exporter l'ensemble des données de l'ensemble des utilisateurs d'un seul coup.
@@ -42,17 +43,19 @@ vers æneria.
 
 Voici donc la marche à suivre :
 
-* Installer æneria
+* Mettez à jour Pilea vers une version supérieure ou égale à 0.5.6
+  (le numéro de version est visible dans l'encart "à propos" sur la page de configuration)
+* Installez æneria
 * Pour chaque utilisateur
-    * Se connecter à Pilea
-    * Aller sur la page de configuration
-    * Pour chaque adresse, exporter l'ensemble des données en cliquant sur le bouton |btn_export|
-    * Se connecter à æneria
-    * Aller sur la page de configuration
-    * Créer chacune des adresses
-    * Pour chaque adresse, importer les données précédemment exportées en cliquant sur le bouton |btn_import|
-* Vérifier que chaque utilisateurs a bien importé ses données
-* Désinstaller Pilea
+    * Connectez-vous à Pilea
+    * Allez sur la page de configuration
+    * Pour chaque adresse, exportez l'ensemble des données en cliquant sur le bouton |btn_export|
+    * Connectez-vous à æneria
+    * Allez sur la page de configuration
+    * Créez chacune des adresses
+    * Pour chaque adresse, importez les données précédemment exportées en cliquant sur le bouton |btn_import|
+* Vérifiez que chaque utilisateurs a bien importé ses données
+* Désinstallez Pilea
 
 .. |btn_export| image:: ../img/btn_export.png
              :alt: Bouton d'export
