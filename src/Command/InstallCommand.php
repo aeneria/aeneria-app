@@ -200,6 +200,7 @@ class InstallCommand extends Command
     protected function setupMigration()
     {
         $this->io->section('Step 3 of 3: Setting up migration mechanism.');
+        $this->runCommand('doctrine:migrations:sync-metadata-storage', ['--no-interaction' => true]);
         $this->runCommand('doctrine:migrations:version', ['--add' => true, '--all' => true, '--no-interaction' => true]);
         $this->io->text('<info>Migration mechanism successfully setup.</info>');
 
