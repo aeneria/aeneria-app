@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DoctrineMigrations;
+namespace App\Migrations;
 
 use App\Entity\Feed;
 use Doctrine\DBAL\Schema\Schema;

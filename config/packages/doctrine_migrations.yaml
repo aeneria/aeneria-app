@@ -1,4 +1,4 @@
 doctrine_migrations:
     migrations_paths:
-        'DoctrineMigrations' : 'src/Migrations'
+        'App\Migrations' : 'src/Migrations'
     connection: default
