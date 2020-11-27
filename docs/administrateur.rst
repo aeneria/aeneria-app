@@ -8,3 +8,4 @@ Documentation administrateur
    administrateur/install
    administrateur/update
    administrateur/admin
+   administrateur/pilea_migration
