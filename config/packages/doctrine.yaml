@@ -11,7 +11,7 @@ doctrine:
 
         # Mysql
         driver: 'pdo_mysql'
-        server_version: '5.2'
+        #server_version: '5.2'
         charset: utf8mb4
         default_table_options:
             charset: utf8mb4
