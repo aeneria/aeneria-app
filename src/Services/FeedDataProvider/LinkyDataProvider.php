@@ -39,11 +39,19 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getFetchStrategy(): string
+    {
+        return parent::FETCH_STRATEGY_ONE_BY_ONE;
+    }
+
+    /**
      * Fetch ENEDIS data for $date and persist its in database.
      *
      * @param \DateTime $date
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
     {
         foreach ($feeds as $feed) {
             if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_LINKY !== $feed->getFeedDataProviderType()) {

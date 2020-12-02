@@ -7,7 +7,7 @@ use App\Form\UpdateAccountType;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
 use App\Services\DataImporter;
-use App\Services\FeedDataProvider\GenericFeedDataProvider;
+use App\Services\FeedDataProvider\FeedDataProviderFactory;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
 use App\Validator\Constraints\UpdatePassword;
@@ -41,7 +41,7 @@ class ConfigurationController extends AbstractAppController
     /**
      * Fetch Place data form view
      */
-    public function placeFetchAction(bool $userCanFetch, Request $request, GenericFeedDataProvider $feedDataProvider, FormFactoryInterface $formFactory, string $id)
+    public function placeFetchAction(bool $userCanFetch, Request $request, FeedDataProviderFactory $feedDataProviderFactory, FormFactoryInterface $formFactory, string $id)
     {
         if (!$userCanFetch) {
             throw new NotFoundHttpException();
@@ -113,7 +113,10 @@ class ConfigurationController extends AbstractAppController
                     $startDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['start_date_' . $feedId]);
                     $endDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['end_date_' . $feedId]);
 
-                    $feedDataProvider->fetchDataBetween($startDate, $endDate, [$feeds[$feedId]], $data['force_' . $feedId]);
+                    $feedDataProviderFactory
+                        ->fromFeed($feeds[$feedId])
+                        ->fetchDataBetween($startDate, $endDate, [$feeds[$feedId]], $data['force_' . $feedId])
+                    ;
 
                     $message = \sprintf(
                         'Les données %s ont été correctement rechargées entre le %s et le %s.',

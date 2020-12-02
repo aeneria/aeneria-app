@@ -115,9 +115,9 @@ class FeedRepository extends ServiceEntityRepository
             $lastUpToDate = \max($lastUpToDate, $feedDataLastUpToDate);
         }
 
-        // If we have no data, we start with yesterday
+        // If we have no data, we start 2 weeks ago
         if (empty($lastUpToDate)) {
-            $lastUpToDate = new \DateTime("2 days ago");
+            $lastUpToDate = new \DateTime("2 weeks ago");
         }
 
         return $lastUpToDate->add(new \DateInterval('P1D'));

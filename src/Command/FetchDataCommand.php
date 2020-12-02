@@ -5,7 +5,8 @@ namespace App\Command;
 use App\Entity\Feed;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
-use App\Services\FeedDataProvider\GenericFeedDataProvider;
+use App\Services\FeedDataProvider\FeedDataProviderFactory;
+use App\Services\FeedDataProvider\FeedDataProviderInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,13 +19,13 @@ class FetchDataCommand extends Command
 {
     private $placeRepository;
     private $feedRepository;
-    private $feedDataProvider;
+    private $feedDataProviderFactory;
 
-    public function __construct(PlaceRepository $placeRepository, FeedRepository $feedRepository, GenericFeedDataProvider $feedDataProvider)
+    public function __construct(PlaceRepository $placeRepository, FeedRepository $feedRepository, FeedDataProviderFactory $feedDataProviderFactory)
     {
         $this->placeRepository = $placeRepository;
         $this->feedRepository = $feedRepository;
-        $this->feedDataProvider = $feedDataProvider;
+        $this->feedDataProviderFactory = $feedDataProviderFactory;
 
         parent::__construct();
     }
@@ -54,20 +55,32 @@ class FetchDataCommand extends Command
             }
 
             foreach ($place->getFeeds() as $feed) {
-                $this->fetchFor($input, [$feed]);
+                $this->fetchFor(
+                    $input,
+                    [$feed],
+                    $this->feedDataProviderFactory->fromFeed($feed)
+                );
             }
         } elseif ($feedId = $input->getOption('feedid')) {
             if (!$feed = $this->feedRepository->find($feedId)) {
                 throw new \Exception("Can't find a feed for id : " . $feedId);
             }
-            $this->fetchFor($input, [$feed]);
+            $this->fetchFor(
+                $input,
+                [$feed],
+                $this->feedDataProviderFactory->fromFeed($feed)
+            );
         } else {
             $feedDataProviderTypes = [Feed::FEED_DATA_PROVIDER_METEO_FRANCE, Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT];
 
             foreach ($feedDataProviderTypes as $feedDataProviderType) {
                 // We fetch all Feeds data.
                 if ($feeds = $this->feedRepository->findAllActive($feedDataProviderType)) {
-                    $this->fetchFor($input, $feeds);
+                    $this->fetchFor(
+                        $input,
+                        $feeds,
+                        $this->feedDataProviderFactory->fromFeeds($feeds)
+                    );
                 }
             }
         }
@@ -75,20 +88,20 @@ class FetchDataCommand extends Command
         return 0;
     }
 
-    private function fetchFor(InputInterface $input, array $feeds)
+    private function fetchFor(InputInterface $input, array $feeds, FeedDataProviderInterface $feedDataProvider)
     {
         if ($date = $input->getOption('date')) {
             // If a date is given, we update only for this date.
 
             $date = new \DateTimeImmutable($date);
-            $this->feedDataProvider->fetchDataFor($date, $feeds, $input->getOption('force'));
+            $feedDataProvider->fetchDataFor($date, $feeds, $input->getOption('force'));
         } else {
             // Else we update from last data to yesterday.
             // Get yesterday datetime.
             $date = new \DateTime();
             $date->sub(new \DateInterval('P1D'));
             $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
-            $this->feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
+            $feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
         }
     }
 }
