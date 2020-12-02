@@ -4,7 +4,7 @@ default:
     - apt-get update -yqq
     - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev postgresql postgresql-client libpq-dev -yqq
     - docker-php-ext-install pgsql pdo_pgsql zip xml intl mbstring gd curl bcmath opcache ldap
-    - pecl install xdebug \
+    - pecl install xdebug-2.9.8 \
       && docker-php-ext-enable xdebug
     - curl -sS https://getcomposer.org/installer | php
 
