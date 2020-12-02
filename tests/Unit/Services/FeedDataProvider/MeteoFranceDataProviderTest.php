@@ -22,7 +22,8 @@ class MeteoFranceDataProviderTest extends AppTestCase
             $this->getFeedRepository(),
             $this->getFeedDataRepository(),
             $this->getDataValueRepository(),
-            $httpClient ?? HttpClient::create()
+            $httpClient ?? HttpClient::create(),
+            $this->getLogger()
         );
     }
 

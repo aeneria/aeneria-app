@@ -21,7 +21,8 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             $this->getFeedDataRepository(),
             $this->getDataValueRepository(),
             new MockDataConnectService(),
-            $this->getSerializer()
+            $this->getSerializer(),
+            $this->getLogger()
         );
     }
 

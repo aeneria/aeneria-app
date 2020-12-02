@@ -17,12 +17,15 @@ use App\Repository\PendingActionRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 trait AppTestTrait
 {
     private $_entityManager;
+    private $_logger;
 
     final protected static function getResourceDir(): string
     {
@@ -33,6 +36,13 @@ trait AppTestTrait
     {
         return $this->_entityManager ?? (
             $this->_entityManager = $this->getContainer()->get('doctrine')->getManager()
+        );
+    }
+
+    final protected function getLogger(): LoggerInterface
+    {
+        return $this->_logger ?? (
+            $this->_logger = new NullLogger()
         );
     }
 
