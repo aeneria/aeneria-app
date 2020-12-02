@@ -76,14 +76,14 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             }
             try {
                 if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
-                    $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+                    $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
 
                     $this->ensureAccessToken($feed);
                     $data['hours'] = $this->getHourlyData($date, $feed);
                     $data['days'] = $this->getDailyData($date, $feed);
                     $this->persistData($date, $feed, $data);
 
-                    $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+                    $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
             } catch (\Exception $e) {
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);

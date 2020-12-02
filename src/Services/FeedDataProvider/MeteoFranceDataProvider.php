@@ -186,7 +186,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
 
     private function refreshFeedData(\DateTimeImmutable $date, Feed $feed, array $synopData)
     {
-        $this->logger->debug("MeteoFrance - Start refreshing data", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+        $this->logger->debug("MeteoFrance - Start refreshing data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
 
         $stationId = $feed->getParam()['STATION_ID'];
 
@@ -228,9 +228,9 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
             $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
             $this->entityManager->flush();
 
-            $this->logger->info("MeteoFrance - Data refreshed", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+            $this->logger->info("MeteoFrance - Data refreshed", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
         } else {
-            $this->logger->info("MeteoFrance - No data to refresh", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+            $this->logger->info("MeteoFrance - No data to refresh", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
         }
     }
 

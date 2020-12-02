@@ -52,7 +52,6 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
         throw new \Exception("Your custom feedDataProvider should implement this method !");
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -76,7 +75,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
      */
     final public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): void
     {
-        if ($this->getFetchStrategy() === self::FETCH_STRATEGY_GROUPED) {
+        if (self::FETCH_STRATEGY_GROUPED === $this->getFetchStrategy()) {
             $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
             $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
@@ -84,8 +83,8 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
                 $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds);
                 $lastUpToDate->add(new \DateInterval('P1D'));
             }
-        } elseif ($this->getFetchStrategy() === self::FETCH_STRATEGY_ONE_BY_ONE) {
-            foreach($feeds as $feed) {
+        } elseif (self::FETCH_STRATEGY_ONE_BY_ONE === $this->getFetchStrategy()) {
+            foreach ($feeds as $feed) {
                 $lastUpToDate = $this->feedRepository->getLastUpToDate([$feed]);
                 $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
