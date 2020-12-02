@@ -14,7 +14,15 @@ use App\Entity\FeedData;
  */
 class FakeDataProvider extends AbstractFeedDataProvider
 {
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFetchStrategy(): string
+    {
+        return parent::FETCH_STRATEGY_ONE_BY_ONE;
+    }
+
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
     {
         foreach ($feeds as $feed) {
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {

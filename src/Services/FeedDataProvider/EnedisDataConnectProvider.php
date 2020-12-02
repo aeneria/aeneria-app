@@ -12,7 +12,9 @@ use App\Entity\FeedData;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use Doctrine\Migrations\Query\Exception\InvalidArguments;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -34,12 +36,21 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
         DataConnectServiceInterface $dataConnect,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        LoggerInterface $logger
     ) {
         $this->dataConnect = $dataConnect;
         $this->serializer = $serializer;
 
-        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository);
+        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFetchStrategy(): string
+    {
+        return parent::FETCH_STRATEGY_ONE_BY_ONE;
     }
 
     /**
@@ -57,18 +68,25 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
      *
      * @param \DateTime $date
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
     {
         foreach ($feeds as $feed) {
             if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
                 throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
             }
+            try {
+                if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
+                    $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
 
-            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
-                $this->ensureAccessToken($feed);
-                $data['hours'] = $this->getHourlyData($date, $feed);
-                $data['days'] = $this->getDailyData($date, $feed);
-                $this->persistData($date, $feed, $data);
+                    $this->ensureAccessToken($feed);
+                    $data['hours'] = $this->getHourlyData($date, $feed);
+                    $data['days'] = $this->getDailyData($date, $feed);
+                    $this->persistData($date, $feed, $data);
+
+                    $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+                }
+            } catch (\Exception $e) {
+                $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             }
         }
     }
@@ -78,7 +96,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
      */
     private function ensureAccessToken(Feed $feed): void
     {
-        $token = $this->getTokenFrom($feed);
+        if (!$token = $this->getTokenFrom($feed)) {
+            throw new InvalidArguments(\sprintf("Feed %s has no token !", $feed->getId()));
+        }
 
         if (!$token->isAccessTokenStillValid()) {
             $renewedToken = $this

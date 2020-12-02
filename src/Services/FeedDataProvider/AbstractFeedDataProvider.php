@@ -7,9 +7,13 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
-abstract class AbstractFeedDataProvider
+abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
 {
+    const FETCH_STRATEGY_GROUPED = 'grouped';
+    const FETCH_STRATEGY_ONE_BY_ONE = 'one_by_one';
+
     /** @var EntityManagerInterface */
     protected $entityManager;
 
@@ -22,30 +26,43 @@ abstract class AbstractFeedDataProvider
     /** @var DataValueRepository */
     protected $dataValueRepository;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
-        DataValueRepository $dataValueRepository
+        DataValueRepository $dataValueRepository,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->feedRepository = $feedRepository;
         $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;
+
+        $this->logger = $logger;
     }
 
     /**
-     * Fetch data for $date and for a array of feeds
-     *
-     * @param \Datetime $date
+     * Get fetch strategy: Does feeds data should be fetched by group or one by one ?
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
+    protected function getFetchStrategy(): string
+    {
+        throw new \Exception("Your custom feedDataProvider should implement this method !");
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
     {
         throw new \Exception("Your custom feedDataProvider should implement this method !");
     }
 
     /**
-     * Get array parameters that a feed which uses this provider should have.
+     * {@inheritdoc}
      */
     public static function getParametersName(Feed $feed): array
     {
@@ -55,22 +72,35 @@ abstract class AbstractFeedDataProvider
     }
 
     /**
-     * Fetch data from last data to $date.
+     * {@inheritdoc}
      */
     final public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): void
     {
-        $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
-        $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
+        if ($this->getFetchStrategy() === self::FETCH_STRATEGY_GROUPED) {
+            $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
+            $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
-        while ($lastUpToDate <= $date) {
-            $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds);
-            $lastUpToDate->add(new \DateInterval('P1D'));
+            while ($lastUpToDate <= $date) {
+                $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds);
+                $lastUpToDate->add(new \DateInterval('P1D'));
+            }
+        } elseif ($this->getFetchStrategy() === self::FETCH_STRATEGY_ONE_BY_ONE) {
+            foreach($feeds as $feed) {
+                $lastUpToDate = $this->feedRepository->getLastUpToDate([$feed]);
+                $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
+
+                while ($lastUpToDate <= $date) {
+                    $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), [$feed]);
+                    $lastUpToDate->add(new \DateInterval('P1D'));
+                }
+            }
+        } else {
+            throw new \Exception(\sprintf("Strategy '%s' is unkown", $this->getFetchStrategy()));
         }
     }
 
     /**
-     * Fetch data for $date,
-     * if $force is set to true, update data even if there are already ones.
+     * {@inheritdoc}
      */
     final public function fetchDataFor(\DateTimeImmutable $date, array $feeds, bool $force): void
     {
@@ -78,8 +108,7 @@ abstract class AbstractFeedDataProvider
     }
 
     /**
-     * Fetch data from startDate to $endDate,
-     * if $force is set to true, update data even if there are already ones.
+     * {@inheritdoc}
      */
     final public function fetchDataBetween(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feeds, bool $force): void
     {

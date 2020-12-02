@@ -8,6 +8,7 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -57,9 +58,10 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        HttpClientInterface $httpClient
+        HttpClientInterface $httpClient,
+        LoggerInterface $logger
     ) {
-        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository);
+        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
 
         $this->projectDir = $projectDir;
         $this->httpClient = $httpClient;
@@ -109,9 +111,19 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
     /**
      * {@inheritdoc}
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false)
+    protected function getFetchStrategy(): string
     {
-        $synopData = $this->fetchSynopData($date);
+        return parent::FETCH_STRATEGY_GROUPED;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
+    {
+        if (!$synopData = $this->fetchSynopData($date)) {
+            return;
+        }
 
         foreach ($feeds as $feed) {
             if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_METEO_FRANCE !== $feed->getFeedDataProviderType()) {
@@ -126,6 +138,8 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
 
     private function fetchSynopData(\DateTimeImmutable $date): array
     {
+        $this->logger->debug("MeteoFrance - Start fetching synop data", ['date' => $date->format('Y-m-d')]);
+
         $synopData = [];
 
         $clientOption = [
@@ -165,11 +179,15 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
             }
         }
 
+        $this->logger->info("MeteoFrance -  Synop data fetched", ['date' => $date->format('Y-m-d')]);
+
         return $synopData;
     }
 
     private function refreshFeedData(\DateTimeImmutable $date, Feed $feed, array $synopData)
     {
+        $this->logger->debug("MeteoFrance - Start refreshing data", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+
         $stationId = $feed->getParam()['STATION_ID'];
 
         // If we have data.
@@ -209,6 +227,10 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
             $this->entityManager->flush();
             $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
             $this->entityManager->flush();
+
+            $this->logger->info("MeteoFrance - Data refreshed", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
+        } else {
+            $this->logger->info("MeteoFrance - No data to refresh", ['feed' => $feed->getId(),'date' => $date->format('Y-m-d')]);
         }
     }
 
