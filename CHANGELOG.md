@@ -1,13 +1,18 @@
-# æneria version 1.0.3
+# æneria version 1.0.4
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-* Modification du processus d'ajout d'une nouvelle adresse
+* Ajout d'une doc sur le transfert de données depuis Pilea
+* Correction d'un bug sur la manière dont les différents flux de données étaient récupérés
 
 ## Anciennes versions
+
+### 1.0.3
+
+* Modification du processus d'ajout d'une nouvelle adresse
 
 ### 1.0.2
 
