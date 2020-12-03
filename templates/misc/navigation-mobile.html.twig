@@ -9,15 +9,13 @@
     <img src="{{ asset('image/aeneria.svg') }}" alt='logo' class='logo'>
     <span>æneria</span>
   </div>
-
   <div class="ml-auto">
-    <a data-toggle="collapse" data-target="#mobile-selection" type="button" aria-expanded="false" aria-controls="sideBar">
-      <i class="fas fa-filter nav-icon"></i>
-    </a>
+
   </div>
 </nav>
 
-<div id="menu-mobile" class="hide">
+
+<div id="menu-mobile" class="">
   <nav class="nav sidebar mobile">
     <div class="nav flex-column">
       <a href="{{ path('dashboard.home') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.home' %}active{% endif %}">
@@ -48,8 +46,17 @@
   </nav>
 </div>
 
-<div class="collapse mobile selection" id="mobile-selection">
-  <div class="row">
-    {{ selection | raw }}
+
+<div class="mobile">
+  <a id="selection-mobile-btn" class="btn btn-primary" type="button" aria-expanded="false" aria-controls="selection-mobile">
+    <i class="fas fa-filter nav-icon"></i>
+  </a>
+
+  <div id="selection-mobile">
+    <div class="selection">
+      <div class="row">
+        {{ selection | raw }}
+      </div>
+    </div>
   </div>
 </div>

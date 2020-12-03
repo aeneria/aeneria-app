@@ -37,7 +37,7 @@ nav {
 /* SELECTION */
 .selection-form {
   .row {
-    .col {
+    > div {
       display: flex;
 
       .btn {

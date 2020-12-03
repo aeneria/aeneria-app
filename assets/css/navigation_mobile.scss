@@ -1,5 +1,6 @@
 
 $sidebar-size: 300px;
+$selection-size: 280px;
 
 #menu-mobile {
   position:fixed;
@@ -48,17 +49,60 @@ $sidebar-size: 300px;
     }
   }
 
-  &.selection {
-    background-color: $selection-bg-color;
+  #selection-mobile-btn {
     position: fixed;
-    z-index: $zindex-sticky;
-    padding: 10px;
+    bottom: 30px;
+    right: 30px;
+    z-index: $zindex-sticky + 1;
+    color: $white;
+    background-color: $primary-color;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    padding-top: 8px;
     box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
-    width: 100%;
-    justify-content: center;
 
-    .col {
+    &.clicked {
+      background-color: transparent;
+      box-shadow: none;
+      color: $white;
+      opacity: 0.5;
+    }
+  }
+
+  #selection-mobile {
+    position: fixed;
+    bottom: 31px;
+    right: 30px;
+    width: $selection-size;
+    transform: scale(0);
+    transform-origin: 95% 95%;
+    z-index: $zindex-sticky;
+    background-color: $selection-bg-color;
+    box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
+    border-radius: 20px;
+
+    &.show {
+      animation: .2s popUp ease-in forwards; transition-delay: 0;
+    }
+    &.hide {
+      animation: .3s popDown ease-out forwards; transition-delay: 0;
+    }
+  }
+
+  .selection {
+    padding: 20px;
+    justify-content: center;
+    .row > div {
       padding: 5px 25px;
+      > :first-child {
+        margin-left: auto;
+      }
+      > :last-child {
+        margin-right: auto;
+      }
     }
 
     .selection-date {
@@ -99,12 +143,8 @@ $sidebar-size: 300px;
   }
 }
 
-/* menu slide animations */
+/* animations */
 @keyframes slideRight {
-  from {left:-$sidebar-size;}
-  to {left:0;}
-}
-@-webkit-keyframes slideRight {
   from {left:-$sidebar-size;}
   to {left:0;}
 }
@@ -112,7 +152,18 @@ $sidebar-size: 300px;
   from {left:0;}
   to {left:-$sidebar-size;}
 }
-@-webkit-keyframes slideLeft {
-  from {left:0;}
-  to {left:-$sidebar-size;}
+
+@keyframes popUp {
+  from {transform: scale(0);}
+  to {transform: scale(1);}
+}
+@keyframes popDown {
+  from {transform: scale(1);}
+  to {transform: scale(0);}
+}
+
+@include media-breakpoint-up(xl) {
+  .mobile {
+      display: none;
+  }
 }

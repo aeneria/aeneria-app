@@ -1,13 +1,12 @@
-var menuMobile = document.querySelector("#menu-mobile");
-var menuMobileBtn = document.querySelector("#menu-mobile-btn");
-
-
 // Check touch mode
 var clickedEvent = "click";
 window.addEventListener('touchstart', function detectTouch() {
   clickedEvent = "touchstart";
   window.removeEventListener('touchstart', detectTouch, false);
 }, false);
+
+var menuMobile = document.querySelector("#menu-mobile");
+var menuMobileBtn = document.querySelector("#menu-mobile-btn");
 
 menuMobileBtn.addEventListener(clickedEvent, function(evt) {
   this.classList.toggle("clicked");
@@ -62,3 +61,18 @@ if(screen.width <= 1024) {
     }
   }, false);
 }
+
+var selectionMobile = document.querySelector("#selection-mobile");
+var selectionMobileBtn = document.querySelector("#selection-mobile-btn");
+
+selectionMobileBtn.addEventListener(clickedEvent, function(evt) {
+  this.classList.toggle("clicked");
+  this.toggleAttribute("aria-expanded")
+
+  // Créé l'effet pour le menu slide (compatible partout)
+  if(selectionMobile.getAttribute("class") != "show") {
+    selectionMobile.setAttribute("class", "show");
+  } else {
+    selectionMobile.setAttribute("class", "hide");
+  }
+}, false);
