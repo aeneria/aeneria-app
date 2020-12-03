@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg sticky-top navbar-expand mobile" >
   <div class="mr-auto">
-    <a data-toggle="collapse" data-target="#sideBar" type="button" aria-expanded="false" aria-controls="sideBar">
+    <a id="menu-mobile-btn" type="button" aria-expanded="false" aria-controls="sideBar">
       <i class="fas fa-bars nav-icon"></i>
     </a>
   </div>
@@ -16,8 +16,9 @@
     </a>
   </div>
 </nav>
-<div class="collapse mobile" id="sideBar">
-  <nav class="nav sidebar">
+
+<div id="menu-mobile" class="hide">
+  <nav class="nav sidebar mobile">
     <div class="nav flex-column">
       <a href="{{ path('dashboard.home') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.home' %}active{% endif %}">
         <img src="{{ asset('image/home-w.png') }}" alt="*"> {{ 'Accueil' | trans }}

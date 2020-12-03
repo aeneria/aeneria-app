@@ -25,6 +25,7 @@ global.pileaCurrent = pileaCurrent;
 const pilea = require('./pilea_chart.js');
 global.pilea = pilea;
 
+require('./mobile_navigation.js');
 require('./homepage.js');
 require('./electricity_tab.js');
 require('./energy_x_meteo_tab.js');
