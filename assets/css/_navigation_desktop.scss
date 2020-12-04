@@ -111,27 +111,27 @@ nav {
 
 /* SIDEBAR */
 .sidebar {
-    padding: 5px;
-    width: 45px;
-    height: 100%;
-    position: fixed;
+  padding: 5px;
+  width: 45px;
+  height: 100%;
+  position: fixed;
 
-    > div > a {
-        margin: 4px;
-        padding: 2px;
-        min-height: auto;
-        line-height: 0.5;
-    }
+  > div > a {
+    margin: 4px;
+    padding: 2px;
+    min-height: auto;
+    line-height: 0.5;
+  }
 
-    > div > a > img {
-        max-width: 40px;
-        height: auto;
-    }
+  > div > a > img {
+    max-width: 40px;
+    height: auto;
+  }
 
-    .active,
-    .navbar .active {
-        background-color: $button-color;
-        border-radius: 25px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+  .active,
+  .navbar .active {
+    background-color: $button-color;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 }

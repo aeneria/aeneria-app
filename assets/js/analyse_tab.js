@@ -3,7 +3,7 @@
  *
  * Handles events on temperature vs conso dashboard.
  */
-if (document.getElementById('dju_x_conso_tab')) {
+if (document.getElementById('analyse_tab')) {
   // Refresh all graph on the page base on start and end dates.
   var refreshEnergyXMeteoGraph = function () {
 

@@ -1,0 +1,32 @@
+/* HOMEPAGE DASH ///////////////////////////////////////////////////////////////*/
+
+.index-logo {
+  height: 80px;
+  vertical-align: middle;
+}
+
+.dash-index-total {
+  font-size: 1.6em;
+  text-align: center;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin: 3px;
+  padding: 3px;
+
+  button {
+    border-radius: 20px 20px 20px 20px !important;
+  }
+}
+
+.dash-index {
+  font-size: 1.6em;
+}
+
+@include media-breakpoint-up(xl) {
+  .vert-sep {
+    border-right: #6d6d6d solid 1px;
+  }
+}

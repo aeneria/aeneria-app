@@ -46,6 +46,10 @@
     <a href="{{ path('dashboard.analyse') }}" title="{{ 'Analyse croisée Energie/Météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
       <img src="{{ asset('image/analyze-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Analyse croisée Energie/Météo' | trans }}" >
     </a>
+    {% set active = app.request.attributes.get('_route') == 'dashboard.comparaison' %}
+    <a href="{{ path('dashboard.comparaison') }}" title="{{ 'Comparaison' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
+      <img src="{{ asset('image/compare-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Comparaison' | trans }}" >
+    </a>
   </div>
 </nav>
 
@@ -63,6 +67,9 @@
       </a>
       <a href="{{ path('dashboard.analyse') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.analyse' %}active{% endif %}">
         <img src="{{ asset('image/analyze-w.png') }}" alt="*" > {{ 'Analyse Energie/Météo' | trans }}
+      </a>
+      <a href="{{ path('dashboard.comparaison') }}" class="{% if app.request.attributes.get('_route') == 'dashboard.comparaison' %}active{% endif %}">
+        <img src="{{ asset('image/compare-w.png') }}" alt="*" > {{ 'Comparaison' | trans }}
       </a>
 
       {% if not aeneria_demo_mode() %}

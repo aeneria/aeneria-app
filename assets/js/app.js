@@ -28,7 +28,7 @@ global.pilea = pilea;
 require('./mobile_navigation.js');
 require('./homepage.js');
 require('./electricity_tab.js');
-require('./energy_x_meteo_tab.js');
+require('./analyse_tab.js');
 require('./meteo_tab.js');
 require('./configuration.js');
 
