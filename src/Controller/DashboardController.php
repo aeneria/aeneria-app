@@ -33,13 +33,13 @@ class DashboardController extends AbstractController
         return $this->render('dashboards/electricity.html.twig');
     }
 
-    public function energyMeteoAction(Request $request)
+    public function analyseAction(Request $request)
     {
         if (!$this->canUserSeeAtLeastOnPlace()) {
             return $this->render('welcome.html.twig');
         }
 
-        return $this->render('dashboards/energy_x_meteo.html.twig');
+        return $this->render('dashboards/analyse.html.twig');
     }
 
     public function meteoAction(Request $request)
@@ -49,6 +49,15 @@ class DashboardController extends AbstractController
         }
 
         return $this->render('dashboards/meteo.html.twig');
+    }
+
+    public function comparaisonAction(Request $request)
+    {
+        if (!$this->canUserSeeAtLeastOnPlace()) {
+            return $this->render('welcome.html.twig');
+        }
+
+        return $this->render('dashboards/comparaison.html.twig');
     }
 
     private function canUserSeeAtLeastOnPlace(): bool

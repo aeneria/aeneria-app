@@ -2,14 +2,18 @@ dashboard.home:
   path: /
   controller: App\Controller\DashboardController::homepageAction
 
-dashboard.electricity:
-  path: /electricity
+dashboard.electricite:
+  path: /electricite
   controller: App\Controller\DashboardController::electricityAction
 
-dashboard.energy_x_meteo:
-  path: /energy_x_meteo
-  controller: App\Controller\DashboardController::energyMeteoAction
+dashboard.analyse:
+  path: /analyse
+  controller: App\Controller\DashboardController::analyseAction
 
 dashboard.meteo:
   path: /meteo
   controller: App\Controller\DashboardController::meteoAction
+
+dashboard.comparaison:
+  path: /comparaison
+  controller: App\Controller\DashboardController::comparaisonAction

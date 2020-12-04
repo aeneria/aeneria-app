@@ -1,6 +1,48 @@
 /* COMPARAISON DASH ///////////////////////////////////////////////////////////////*/
 
-.comparaison_tab {
-    background-color: white;
+.comparaison {
+  .selection-form {
+    .col-period {
 
+      .start-input {
+        font-family: Arvo;
+        padding: 0.3rem 1rem;
+        height: 40px;
+        width: 35px;
+      }
+    }
+
+    .col-period-1 {
+      .start-input, .btn-primary {
+        background-color: $period-one;
+      }
+      .input-daterange {
+          border-top: 1px solid $period-one;
+          border-bottom: 1px solid $period-one;
+      }
+    }
+
+    .col-period-2 {
+      .start-input, .btn-primary {
+        background-color: $period-two;
+      }
+      .input-daterange {
+          border-top: 1px solid $period-two;
+          border-bottom: 1px solid $period-two;
+      }
+    }
+
+    .aeneria-select-period-compare {
+      button {
+        border-radius: 20px;
+        height: 40px;
+        padding-top: .2rem;
+        margin-right: 10px;
+      }
+      #refresh-select-period {
+        width: 40px;
+        font-weight: 800;
+      }
+    }
+  }
 }
