@@ -8,10 +8,10 @@ $selection-size: 280px;
   z-index: $zindex-sticky + 1;
 
   &.show {
-    animation:.5s slideRight ease-in forwards; transition-delay:0;
+    animation:.3s slideRight ease-in forwards; transition-delay:0s;
   }
   &.hide {
-    animation:1s slideLeft ease-out forwards; transition-delay:0;
+    animation:0.5s slideLeft ease-out forwards; transition-delay:0s;
   }
 }
 
@@ -82,13 +82,12 @@ $selection-size: 280px;
     z-index: $zindex-sticky;
     background-color: $selection-bg-color;
     box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
-    border-radius: 20px;
 
     &.show {
-      animation: .2s popUp ease-in forwards; transition-delay: 0;
+      animation: .2s popUp ease-in forwards; transition-delay: 0s;
     }
     &.hide {
-      animation: .3s popDown ease-out forwards; transition-delay: 0;
+      animation: .2s popDown ease-out forwards; transition-delay: 0s;
     }
   }
 
@@ -154,12 +153,12 @@ $selection-size: 280px;
 }
 
 @keyframes popUp {
-  from {transform: scale(0);}
-  to {transform: scale(1);}
+  from {transform: scale(0);border-radius: 100px;}
+  to {transform: scale(1);border-radius: 10px;}
 }
 @keyframes popDown {
-  from {transform: scale(1);}
-  to {transform: scale(0);}
+  from {transform: scale(1);border-radius: 10px;}
+  to {transform: scale(0);border-radius: 100px;}
 }
 
 @include media-breakpoint-up(xl) {
