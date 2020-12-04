@@ -49,7 +49,7 @@ $selection-size: 280px;
     }
   }
 
-  #selection-mobile-btn {
+  #selection-mobile-open {
     position: fixed;
     bottom: 30px;
     right: 30px;
@@ -62,45 +62,61 @@ $selection-size: 280px;
     font-size: 1.3rem;
     border-radius: 30px;
     padding-top: 8px;
-    box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 
     &.clicked {
       background-color: transparent;
       box-shadow: none;
       color: $white;
       opacity: 0.5;
+      animation: 0.2s circleDown ease-in forwards; transition-delay: 0s;
     }
+    &:not(.clicked) {
+      animation: 0.2s circleUp ease-in forwards; transition-delay: 0s;
+    }
+  }
+
+  #selection-mobile-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    color: $white;
   }
 
   #selection-mobile {
     position: fixed;
-    bottom: 31px;
-    right: 30px;
-    width: $selection-size;
+    bottom: 50%;
+    right: 50%;
+    padding-top: 15px;
     transform: scale(0);
     transform-origin: 95% 95%;
     z-index: $zindex-sticky;
     background-color: $selection-bg-color;
-    box-shadow: 0 3px 0 rgba(10, 10, 10, .1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 
     &.show {
-      animation: .2s popUp ease-in forwards; transition-delay: 0s;
+      animation: 0.3s popUp ease-in forwards; transition-delay: 0s;
     }
     &.hide {
-      animation: .2s popDown ease-out forwards; transition-delay: 0s;
+      animation: 0.3s popDown ease-out forwards; transition-delay: 0s;
     }
   }
 
   .selection {
     padding: 20px;
     justify-content: center;
-    .row > div {
-      padding: 5px 25px;
-      > :first-child {
-        margin-left: auto;
-      }
-      > :last-child {
-        margin-right: auto;
+    .row {
+      > div {
+        padding: 5px 5px;
+        > :first-child {
+          margin-left: auto;
+        }
+        > :last-child {
+          margin-right: auto;
+        }
       }
     }
 
@@ -139,6 +155,29 @@ $selection-size: 280px;
         vertical-align: middle;
       }
     }
+
+    .aeneria-select-place {
+      button {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: inherit;
+        max-width: 59vw;
+        padding-right: 25px;
+
+        &:after {
+          position: absolute;
+          right: 12px;
+          top: 17px;
+        }
+      }
+      .dropdown-menu {
+        max-width: 75vw;
+
+        a {
+          white-space: normal;
+        }
+      }
+    }
   }
 }
 
@@ -153,16 +192,38 @@ $selection-size: 280px;
 }
 
 @keyframes popUp {
-  from {transform: scale(0);border-radius: 100px;}
-  to {transform: scale(1);border-radius: 10px;}
+  from {
+    transform: scale(0);border-radius: 100px;
+    bottom: 30px; right: 30px;
+    width: 45px; height: 45px;
+  }
+  to {
+    transform: scale(1);border-radius: 10px;
+    bottom: 60%;right: 50%;
+    transform: translate(50%, 40%);
+    min-width: $selection-size;
+    max-width: 75%;
+  }
 }
 @keyframes popDown {
-  from {transform: scale(1);border-radius: 10px;}
-  to {transform: scale(0);border-radius: 100px;}
+  from {
+    transform: scale(1);border-radius: 10px;
+    bottom: 50%;right: 50%;
+    transform: translate(50%, 50%);
+    max-width: 75%;
+  }
+  to {
+    transform: scale(0);border-radius: 100px;
+    bottom: 30px; right: 30px;
+    width: 45px; height: 45px;
+  }
 }
 
-@include media-breakpoint-up(xl) {
-  .mobile {
-      display: none;
-  }
+@keyframes circleUp {
+  from {transform: scale(0);}
+  to {transform: scale(1);}
+}
+@keyframes circleDown {
+  from {transform: scale(1);}
+  to {transform: scale(0);}
 }

@@ -135,9 +135,3 @@ nav {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 }
-
-@include media-breakpoint-down(lg) {
-    .desktop {
-        display: none;
-    }
-}

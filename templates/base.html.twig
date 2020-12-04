@@ -12,8 +12,7 @@
   </head>
   <body>
     {% if (app.user) %}
-      {% include "misc/navigation-desktop.html.twig" with {selection: block('selection')} %}
-      {% include "misc/navigation-mobile.html.twig" with {selection: block('selection')} %}
+      {% include "misc/navigation.html.twig" with {selection: block('selection')} %}
     {% else %}
       {% include "misc/navigation-light.html.twig" %}
     {% endif %}
