@@ -1,0 +1,73 @@
+/* FROM ///////////////////////////////////////////////////////////////*/
+
+.btn,
+.form-control,
+.input-daterange input:last-child,
+.datepicker table tr td,
+.datepicker table tr th {
+    border-radius: 20px;
+}
+
+.form-daterange {
+  height: 100%;
+  display: flex;
+  margin: 5px;
+
+  .start-input {
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem 0 0.7rem;
+    border-radius: 20px 0 0 20px;
+    // width: 35px;
+    margin-right: 0;
+    background-color: $button-color;
+    color: white;
+    font-family: Arvo;
+    font-size: 1.2rem;
+  }
+
+  .inter-date {
+    background: $white;
+    margin: 0;
+    width: 7px ;
+    vertical-align: middle;
+    font-size: 1.2rem;
+    color: black;
+  }
+
+  .datepicker, .input-daterange input:last-child {
+    width: 110px;
+    height: 34px;
+    border-radius: 0;
+    border: none;
+  }
+
+  .end-input {
+    width: 20px;
+    border-radius: 0 20px 20px 0;
+    background-color: $button-color;
+    margin-left: 0 ;
+  }
+}
+
+.datepicker-dropdown.datepicker-orient-left::after,
+.datepicker-dropdown.datepicker-orient-left::before {
+  left: 17px;
+}
+.datepicker table tr td.range-end {
+  border-radius: 0 20px 20px 0;
+}
+.datepicker table tr td.range-start {
+  border-radius: 20px 0 0 20px;
+}
+
+.dropdown-menu {
+  padding: 15px 0;
+  font-size: 0.8rem;
+  min-width: 5rem;
+  border-radius: 10px;
+  .dropdown-item {
+    padding: 5px 20px;
+    font-size: 15px;
+  }
+}

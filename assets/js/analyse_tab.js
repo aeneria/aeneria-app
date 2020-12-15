@@ -7,8 +7,6 @@ if (document.getElementById('analyse_tab')) {
   // Refresh all graph on the page base on start and end dates.
   var refreshEnergyXMeteoGraph = function () {
 
-    var colors = d3.schemeGnBu[9];
-
     var place = pileaCurrent.getPlace();
     var startArray = pileaCurrent.getStartDate().split('/');
     var startDate = startArray[2] + '-' + startArray[1] + '-' + startArray[0];
@@ -24,7 +22,7 @@ if (document.getElementById('analyse_tab')) {
       url: appRoute + 'data/' + place + '/xy/' + meteo + '/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayXY(data, 'conso-x-dju', '#6b4450', meteoUnit, 'kWh', 0, 1);
+        pilea.displayXY([data], 'conso-x-dju', ['#6b4450'], meteoUnit, 'kWh', 0, 1);
       },
       error: function(result) {
         pilea.displayError('conso-x-dju');

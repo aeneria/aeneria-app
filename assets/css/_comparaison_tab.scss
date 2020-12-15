@@ -2,18 +2,9 @@
 
 .comparaison {
   .selection-form {
-    .col-period {
 
-      .start-input {
-        font-family: Arvo;
-        padding: 0.3rem 1rem;
-        height: 40px;
-        width: 35px;
-      }
-    }
-
-    .col-period-1 {
-      .start-input, .btn-primary {
+    .period-1 {
+      .start-input, .end-input {
         background-color: $period-one;
       }
       .input-daterange {
@@ -22,8 +13,8 @@
       }
     }
 
-    .col-period-2 {
-      .start-input, .btn-primary {
+    .period-2 {
+      .start-input, .end-input {
         background-color: $period-two;
       }
       .input-daterange {
@@ -34,7 +25,6 @@
 
     .aeneria-select-period-compare {
       button {
-        border-radius: 20px;
         height: 40px;
         padding-top: .2rem;
         margin-right: 10px;

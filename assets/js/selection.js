@@ -31,6 +31,7 @@
 
       initPeriod(place);
       initFrequency(place);
+      initComparaison(place);
 
       // Add event on change.
       $('.aeneria-select-place a').click(function(e) {
@@ -48,6 +49,7 @@
 
         initPeriod(place);
         initFrequency(place);
+        initComparaison(place);
 
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
@@ -78,18 +80,10 @@
       if (startString == null || endString == null) {
         var now = new Date();
         startDate = new Date(new Date().setMonth(now.getMonth() - 6));
-        startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
-        startString += '/';
-        startString += startDate.getMonth() < 9 ? '0' + (startDate.getMonth() + 1) : (startDate.getMonth() + 1);
-        startString += '/';
-        startString += startDate.getFullYear();
-        setCurrentStartDate(startString);
 
-        endString = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
-        endString += '/';
-        endString += now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1);
-        endString += '/';
-        endString += now.getFullYear();
+        var startString = dateToString(startDate);
+        var endString = dateToString(now);
+        setCurrentStartDate(startString);
         setCurrentEndDate(endString);
       }
 
@@ -97,7 +91,7 @@
       $('.aeneria-start-date').val(startString);
       $('.aeneria-end-date').val(endString);
 
-      $('.selection-form .input-daterange').datepicker({
+      $('#period-daterange').datepicker({
         format: 'dd/mm/yyyy',
         endDate: maxDate,
         startDate: minDate,
@@ -182,17 +176,8 @@
           endDate = new Date(places[place].end);
         }
 
-        var startString = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate();
-        startString += '/';
-        startString += startDate.getMonth() < 9 ? '0' + (startDate.getMonth() + 1) : (startDate.getMonth() + 1);
-        startString += '/';
-        startString += startDate.getFullYear();
-
-        var endString = endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
-        endString += '/';
-        endString += endDate.getMonth() < 9 ? '0' + (endDate.getMonth() + 1) : (endDate.getMonth() + 1);
-        endString += '/';
-        endString += endDate.getFullYear();
+        var startString = dateToString(startDate);
+        var endString = dateToString(endDate);
 
         setCurrentStartDate(startString);
         setCurrentEndDate(endString);
@@ -200,8 +185,8 @@
         $('.aeneria-start-date').val(startString);
         $('.aeneria-end-date').val(endString);
 
-        $('.input-daterange').datepicker('destroy');
-        $('.input-daterange').datepicker({
+        $('#period-daterange').datepicker('destroy');
+        $('#period-daterange').datepicker({
           format: 'dd/mm/yyyy',
           endDate: maxDate,
           startDate: minDate,
@@ -246,6 +231,7 @@
     }
 
     // Deal with meteo ///////////////////////////////////////////////////
+
     function initMeteo() {
       //If we can't retrieve meteo from localStorage, we create it.
       var meteo = getCurrentMeteo();
@@ -274,11 +260,91 @@
       });
     }
 
+    // Deal with compare tab ///////////////////////////////////////////////////
+
+    function initComparaison(place) {
+      // Get min and max dates.
+      if (places[place].start) {
+        var minDate = places[place].start.substring(0,10).split('-') ;
+        minDate = minDate[2] + '/' + minDate[1] + '/' + minDate[0];
+        var periodStart = new Date(places[place].start);
+      }
+      if (places[place].end) {
+        var maxDate = places[place].end.substring(0,10).split('-') ;
+        maxDate = maxDate[2] + '/' + maxDate[1] + '/' + maxDate[0];
+        var periodEnd = new Date(places[place].end);
+      }
+
+      //If we can't retrieve data from localStorage, we create it.
+      var period1StartString = getCurrentPeriod1StartDate();
+      var period1EndString = getCurrentPeriod1EndDate();
+      var period2StartString = getCurrentPeriod2StartDate();
+      var period2EndString = getCurrentPeriod2EndDate();
+
+      if (period1StartString == null || period1EndString == null || period2StartString == null || period2EndString == null) {
+        var now = new Date();
+        var startDate = new Date(new Date().setDate(now.getDate() - 29));
+
+        var period1StartString = dateToString(startDate);
+        var period1EndString = dateToString(now);
+        setCurrentPeriod1StartDate(period1StartString);
+        setCurrentPeriod1EndDate(period1EndString);
+
+        var startDate = new Date(new Date().setDate(now.getDate() - 60));
+        var endDate = new Date(new Date().setDate(now.getDate() - 30));
+        var period2StartString = dateToString(startDate);
+        var period2EndString = dateToString(endDate);
+        setCurrentPeriod2StartDate(period2StartString);
+        setCurrentPeriod2EndDate(period2EndString);
+      }
+
+      $('.aeneria-p1-start-date').val(period1StartString);
+      $('.aeneria-p1-end-date').val(period1EndString);
+
+      $('#period-daterange-p1').datepicker('destroy');
+      $('#period-daterange-p1').datepicker({
+        format: 'dd/mm/yyyy',
+        endDate: maxDate,
+        startDate: minDate,
+        language: 'fr'
+      });
+
+      $('.aeneria-p2-start-date').val(period2StartString);
+      $('.aeneria-p2-end-date').val(period2EndString);
+
+      $('#period-daterange-p2').datepicker('destroy');
+      $('#period-daterange-p2').datepicker({
+        format: 'dd/mm/yyyy',
+        endDate: maxDate,
+        startDate: minDate,
+        language: 'fr'
+      });
+
+      // Add event on refresh button.
+      $('#refresh-select-period').click(function(e) {
+        var period1StartDate = $(".aeneria-p1-start-date");
+        var period1EndDate = $(".aeneria-p1-end-date");
+        var period2StartDate = $(".aeneria-p2-start-date");
+        var period2EndDate = $(".aeneria-p2-end-date");
+
+        // Store new value in localStorage.
+        setCurrentPeriod1StartDate(period1StartDate.val());
+        setCurrentPeriod1EndDate(period1EndDate.val());
+        setCurrentPeriod2StartDate(period2StartDate.val());
+        setCurrentPeriod2EndDate(period2EndDate.val());
+
+        // Tell the world we have new values.
+        document.dispatchEvent(new Event('selection'));
+
+        e.preventDefault();
+      });
+    }
+
+
     if (typeof user !== 'undefined') {
       initPlace();
       initMeteo();
     }
-
   })
 
   // HELPERS - Getters
@@ -305,6 +371,26 @@
     return localStorage.getItem(user + '.meteo');
   }
 
+  function getCurrentPeriod1StartDate() {
+    return localStorage.getItem(user + '.' + place + '.compare.period1.startDate');
+  }
+
+  function getCurrentPeriod1EndDate() {
+    return localStorage.getItem(user + '.' + place + '.compare.period1.endDate');
+  }
+
+  function getCurrentPeriod2StartDate() {
+    return localStorage.getItem(user + '.' + place + '.compare.period2.startDate');
+  }
+
+  function getCurrentPeriod2EndDate() {
+    return localStorage.getItem(user + '.' + place + '.compare.period2.endDate');
+  }
+
+  function getCurrentCompared() {
+    return localStorage.getItem(user + '.' + place + '.compare.compared');
+  }
+
   // HELPERS - Setters
   function setCurrentPlace(place) {
     return localStorage.setItem(user + '.place', place);
@@ -329,9 +415,44 @@
     return localStorage.setItem(user + '.meteo', meteo);
   }
 
+  function setCurrentPeriod1StartDate(period) {
+    return localStorage.setItem(user + '.' + place + '.compare.period1.startDate', period);
+  }
+
+  function setCurrentPeriod1EndDate(period) {
+    return localStorage.setItem(user + '.' + place + '.compare.period1.endDate', period);
+  }
+
+  function setCurrentPeriod2StartDate(period) {
+    return localStorage.setItem(user + '.' + place + '.compare.period2.startDate', period);
+  }
+
+  function setCurrentPeriod2EndDate(period) {
+    return localStorage.setItem(user + '.' + place + '.compare.period2.endDate', period);
+  }
+
+  function setCurrentCompared(compared) {
+    return localStorage.setItem(user + '.' + place + '.compare.compared', compared);
+  }
+
+  function dateToString(date) {
+    dateString = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    dateString += '/';
+    dateString += date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+    dateString += '/';
+    dateString += date.getFullYear();
+
+    return dateString;
+  }
+
   exports.getPlace = getCurrentPlace;
   exports.getStartDate = getCurrentStartDate;
   exports.getEndDate = getCurrentEndDate;
   exports.getFrequency = getCurrentFrequency;
   exports.getMeteo = getCurrentMeteo;
+  exports.getPeriod1StartDate = getCurrentPeriod1StartDate;
+  exports.getPeriod1EndDate = getCurrentPeriod1EndDate;
+  exports.getPeriod2StartDate = getCurrentPeriod2StartDate;
+  exports.getPeriod2EndDate = getCurrentPeriod2EndDate;
+  exports.getCompared = getCurrentCompared;
 })();

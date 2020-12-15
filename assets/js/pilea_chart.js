@@ -859,7 +859,7 @@
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    */
-  var displayXY = function (result, target, color, unitx, unity, precisionx, precisiony, height = 525, width = 800, margin_bottom = 40) {
+  var displayXY = function (results, target, colors, unitx, unity, precisionx, precisiony, height = 525, width = 800, margin_bottom = 40) {
     var margin_top = 20;
     var margin_left = 50;
     var margin_right = 20;
@@ -882,14 +882,21 @@
       .attr('width', margin_left + width + margin_right)
       .attr('height', margin_top + height + margin_bottom);
 
+    var xAxeDatas = [];
+    var yAxeDatas = [];
+    for (result of results) {
+      xAxeDatas.push(...result.axeX);
+      yAxeDatas.push(...result.axeY);
+    }
+
     var xScale = d3
       .scaleLinear()
       .range([0, width])
-      .domain([0, Math.max(...result.axeX) * 1.05]);
+      .domain([0, Math.max(...xAxeDatas) * 1.05]);
     yScale = d3
       .scaleLinear()
       .range([0, height])
-      .domain([Math.max(...result.axeY) * 1.05, 0]);
+      .domain([Math.max(...yAxeDatas) * 1.05, 0]);
 
     var chart = svg
     .append('g')
@@ -958,32 +965,35 @@
       .selectAll('line')
       .attr('stroke', AXE_COLOR);
 
-    chart
-      .selectAll('.point')
-      .data(result.axeX)
-      .enter()
-      .append('circle')
-      .attr('class', 'point')
-      .attr('fill', color)
-      .attr('cx', function (d, i) { return xScale(d); })
-      .attr('cy', function (d, i) { return yScale(result.axeY[i]); })
-      .attr('r', 0)
-      .attr('data-toggle', 'tooltip')
-      .attr('data-placement', 'right')
-      .attr('data-html', 'true')
-      .attr('title', function (d, i) {
-          return result.date[i] + '</br> ' + parseFloat(result.axeY[i]).toFixed(precisiony) + ' ' + unity + ' - ' + parseFloat(d).toFixed(precisionx) + ' ' + unitx;
-      })
-      .on("mouseover", function (d, i) { d3.select(this).attr('r', '8'); })
-      .on("mouseout", function (d, i) { d3.select(this).attr('r', '4'); });
+    for (const [index, result] of results.entries()) {
+      console.log(colors[index]);
+      chart
+        .selectAll('.point' + index)
+        .data(result.axeX)
+        .enter()
+        .append('circle')
+        .attr('class', 'point' + index)
+        .attr('fill', colors[index])
+        .attr('cx', function (d, i) { return xScale(d); })
+        .attr('cy', function (d, i) { return yScale(result.axeY[i]); })
+        .attr('r', 0)
+        .attr('data-toggle', 'tooltip')
+        .attr('data-placement', 'right')
+        .attr('data-html', 'true')
+        .attr('title', function (d, i) {
+            return result.date[i] + '</br> ' + parseFloat(result.axeY[i]).toFixed(precisiony) + ' ' + unity + ' - ' + parseFloat(d).toFixed(precisionx) + ' ' + unitx;
+        })
+        .on("mouseover", function (d, i) { d3.select(this).attr('r', '8'); })
+        .on("mouseout", function (d, i) { d3.select(this).attr('r', '4'); });
 
-    chart
-      .selectAll('.point')
-      .transition()
-      .duration(400)
-      .delay(function(d, i) { return i * 10; })
-      .ease(d3.easeCubic)
-      .attr('r', 4);
+        chart
+          .selectAll('.point' + index)
+          .transition()
+          .duration(400)
+          .delay(function(d, i) { return i * 10; })
+          .ease(d3.easeCubic)
+          .attr('r', 4);
+    }
 
     chart
       .append('text')
@@ -1020,7 +1030,7 @@
    *   precision1: float precision for value
    *   precision2: float precision for value
    */
-  var displayDoubleEvolution = function (result1, result2, target, color1, color2, unit1, unit2, precision1, precision2, height = 460, width = 200) {
+  var displayDoubleEvolution = function (result1, result2, target, color1, color2, unit1, unit2, precision1, precision2, sameTimeline = true, height = 460, width = 200) {
     var margin_top = 20;
     var margin_bottom = 25;
 
@@ -1160,7 +1170,11 @@
           .attr('data-placement', 'right')
           .attr('data-html', 'true')
           .attr('title', function (d, i) {
-            return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+            if (sameTimeline) {
+              return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+            } else {
+              return result1.label[i] +' - ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + '</br> ' + result2.label[i] + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+            }
           })
           .on("mouseover", function (d, i) { d3.select(this).attr('fill', '#FFFFFFAA'); })
           .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });

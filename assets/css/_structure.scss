@@ -35,38 +35,8 @@ hr {
   border: none;
 }
 
-.btn,
-.form-control,
-.input-daterange input:last-child,
-.datepicker table tr td,
-.datepicker table tr th,
-.dropdown-menu {
-    border-radius: 10px;
-}
-
 .btn {
   margin: 2px;
-}
-
-.datepicker-dropdown.datepicker-orient-left::after,
-.datepicker-dropdown.datepicker-orient-left::before {
-  left: 17px;
-}
-.datepicker table tr td.range-end {
-  border-radius: 0 20px 20px 0;
-}
-.datepicker table tr td.range-start {
-  border-radius: 20px 0 0 20px;
-}
-
-.dropdown-menu {
-  padding: 15px 0;
-  font-size: 0.8rem;
-  min-width: 5rem;
-  .dropdown-item {
-    padding: 5px 20px;
-    font-size: 15px;
-  }
 }
 
 /* CARD */
