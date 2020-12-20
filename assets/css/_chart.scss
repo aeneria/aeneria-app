@@ -1,0 +1,65 @@
+/* CHART ////////////////////////////////////////////////////////////////////*/
+
+.chart {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+
+  rect {
+    stroke: white;
+  }
+}
+
+.tooltip-inner {
+  box-shadow:  0 2px 4px rgba(0,0,0,0.1);
+  font-family: SourceSansPro;
+  font-size: 1.1em;
+  min-width: 100px;
+  max-width: 100%;
+  background-color: $sidebar-bg-color;
+}
+
+.bs-tooltip-right .arrow::before {
+  border-right-color: $sidebar-bg-color ;
+}
+
+.bs-tooltip-left .arrow::before {
+    border-left-color: $sidebar-bg-color ;
+}
+
+.bs-tooltip-bottom .arrow::before {
+  border-bottom-color: $sidebar-bg-color ;
+}
+
+.bs-tooltip-top .arrow::before {
+  border-top-color: $sidebar-bg-color ;
+}
+
+text {
+  font-family: $font-monospace;
+  font-size: 0.8em;
+}
+
+.global-repartition-legend {
+  margin-top: 5px;
+  margin-left: 60px;
+  align-self: center;
+}
+
+.global-repartition {
+  margin-left: 30px;
+}
+
+.help {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: black;
+  opacity: .3;
+  font-size: 1.4em;
+  &:hover {
+    color: black;
+    opacity: 0.6;
+    text-decoration: none;
+  }
+}

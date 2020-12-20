@@ -4,18 +4,12 @@
 
 {% block selection %}
 <form class="form-inline selection-form">
-  <div class="row align-items-center justify-content-space-around">
+  <div class="d-flex flex-wrap justify-content-center justify-content-xl-start">
     {% if places|length > 1 %}
-    <div class="col col-place">
       {% include "selection/place.html.twig" %}
-    </div>
     {% endif %}
-    <div class="col col-period">
-      {% include "selection/period.html.twig" %}
-    </div>
-    <div class="col col-frequency">
-      {% include "selection/frequency.html.twig" %}
-    </div>
+    {% include "selection/period.html.twig" %}
+    {% include "selection/frequency.html.twig" %}
   </div>
   </form>
 {% endblock %}

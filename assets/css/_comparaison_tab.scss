@@ -1,0 +1,40 @@
+/* COMPARAISON DASH ///////////////////////////////////////////////////////////////*/
+
+.comparaison {
+  .selection-form {
+
+    .period-1 {
+      .start-input, .end-input {
+        font-family: Arvo;
+        background-color: $period-one;
+      }
+      .input-daterange {
+          border-top: 1px solid $period-one;
+          border-bottom: 1px solid $period-one;
+      }
+    }
+
+    .period-2 {
+      .start-input, .end-input {
+        font-family: Arvo;
+        background-color: $period-two;
+      }
+      .input-daterange {
+          border-top: 1px solid $period-two;
+          border-bottom: 1px solid $period-two;
+      }
+    }
+
+    .aeneria-select-period-compare {
+      button {
+        height: 40px;
+        padding-top: .2rem;
+        margin-right: 10px;
+      }
+      #refresh-select-period {
+        width: 40px;
+        font-weight: 800;
+      }
+    }
+  }
+}

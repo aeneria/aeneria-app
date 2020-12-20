@@ -34,8 +34,7 @@ Installer æneria facilement avec YunoHost !
 Todo List
 **************************
 
- * Ajouter un onglet pour comparer des périodes et/ou des adresses
- * Implémenter l'API de Gazpar de GRDF
+ * Ajouter la consommation de gaz via l'API GRDF ADICT
 
 Support
 **************************

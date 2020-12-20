@@ -1,0 +1,129 @@
+{% extends "dashboards/dashboard.html.twig" %}
+
+{% block title %}{{ 'Analyse DJU vs consommation' | trans }}{% endblock %}
+
+{% block body %}
+  <div id="comparaison_tab" class="container-fluid comparaison">
+    {# Form #}
+    <div class="row">
+      <div class="col-12">
+        <div class="card selection-form">
+          <div class="card-body">
+            <form class="form-inline d-flex justify-content-between justify-content-lg-start">
+              <div class="form-daterange period-1">
+                <span class="start-input">𐫴</span>
+                <div id="period-daterange-p1" class="input-daterange">
+                    <input type="text" class="form-control datepicker aeneria-p1-start-date" name="start-date"><span class="fas fa-caret-right inter-date d-none d-sm-inline" aria-hidden="true"></span><input type="text" class="form-control datepicker aeneria-p1-end-date" name="end-date">
+                </div>
+                <span class="end-input"></span>
+              </div>
+
+              <div class="form-daterange period-2">
+                <span class="start-input">𐫵</span>
+                <div id="period-daterange-p2" class="input-daterange">
+                    <input type="text" class="form-control datepicker aeneria-p2-start-date" name="start-date"><span class="fas fa-caret-right inter-date d-none d-sm-inline" aria-hidden="true"></span><input type="text" class="form-control datepicker aeneria-p2-end-date" name="end-date">
+                </div>
+                <span class="end-input"></span>
+              </div>
+              <div class="aeneria-select-period-compare">
+                <button type="button" class="btn btn-primary" id="refresh-select-period">
+                  >
+                </button>
+              </div>
+              {# <div class="aeneria-select-period-compare">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="period-date">
+                  <span class="fas fa-calendar-alt" aria-hidden="true"></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" data="last-week">{{ 'Les derniers 30 jours et la même période l\'année dernière'|trans }}</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data="last-3-months">{{ 'Les 3 derniers mois et la même période l\'année dernière'|trans }}</a>
+                    <a class="dropdown-item" href="#" data="last-6-months">{{ 'Les 6 derniers mois et la même période l\'année dernière'|trans }}</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data="current-year">{{ 'Cette année et l\'année dernière'|trans }}</a>
+                </div>
+              </div>#}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Sur la période' | trans }}</h2>
+            {{ aeneria_help_graph('carte-de-chaleur-jours-semaines')|raw }}
+            <div class="content">
+              <div class="row">
+                <div id="conso-global-repartition-p1" class="col"></div>
+                <div id="conso-global-repartition-p2" class="col"></div>
+                <div id="conso-global-repartition-legend" class="col"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ "En moyenne sur la semaine" | trans }}</h2>
+            {{ aeneria_help_graph('graphique-d-analyse-croisee')|raw }}
+            <div class="row">
+              <div id="conso-week-repartition-p1" class="col"></div>
+              <div id="conso-week-repartition-p2" class="col"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{ 'Analyse temporelle' | trans }}</h2>
+            {{ aeneria_help_graph('graphique-papillon')|raw }}
+            <div class="content">
+              <div id="p1-vs-p2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8 col-lg-9">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-row">
+              <h2 class="card-title">{{ "Analyse croisée" | trans }}</h2>
+              <div class="ml-4 float-left">
+                {{ 'Comparer : ' | trans }}
+                <div class="btn-group aeneria-select-meteo">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="frequency">DJU</button>
+                  <div class="dropdown-menu dropdown-menu-left">
+                    <a class="dropdown-item" href="#" data="dju" unit="DJU">{{ 'DJU'|trans }}</a>
+                    <a class="dropdown-item" href="#" data="nebulosity" unit="%">{{ 'Nebulosité'|trans }}</a>
+                    <a class="dropdown-item" href="#" data="rain" unit="mm">{{ 'Précipitations'|trans }}</a>
+                    <a class="dropdown-item" href="#" data="humidity" unit="%">{{ 'Humidité'|trans }}</a>
+                  </div>
+                </div>
+            </div>
+
+            </div>
+
+            {{ aeneria_help_graph('graphique-d-analyse-croisee')|raw }}
+            <div id="conso-x-dju"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block js %}
+{% endblock %}

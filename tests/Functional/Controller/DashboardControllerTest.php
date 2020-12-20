@@ -10,9 +10,10 @@ final class DashboardControllerTest extends AppWebTestCase
     {
         return [
             ['/'],
-            ['/electricity'],
+            ['/electricite'],
             ['/meteo'],
-            ['/energy_x_meteo'],
+            ['/analyse'],
+            ['/comparaison'],
         ];
     }
 

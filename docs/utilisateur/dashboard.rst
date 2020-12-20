@@ -47,3 +47,13 @@ les données du mois précédent.
 .. image:: ../img/dash_analyse.png
     :alt: Aperçu de l'analyse croisée
     :align: center
+
+|icon_comparaison| Comparaison de périodes
+=============================================
+
+.. |icon_comparaison| image:: ../img/icon_comparaison.png
+             :alt: icone balance
+
+.. image:: ../img/dash_comparaison.png
+    :alt: Aperçu de la comparaison
+    :align: center
