@@ -36,79 +36,22 @@ nav {
 
 /* SELECTION */
 .selection-form {
-  .row {
-    > div {
-      display: flex;
 
-      .btn {
-        margin: 0px;
-      }
+  .btn {
+    margin: 0px;
+  }
 
-      .start-input {
-        border-radius: 20px 0 0 20px;
-        background-color: $button-color;
-        height: 36px;
-        margin-right: 0;
-        width: 40px;
-        padding: .6rem .9rem;
-      }
+  .aeneria-select-period {
+    button {
+      background-color: $white;
+      border-radius: 0;
+      color: black;
+      font-size: 0.9em;
+      padding: 0.375rem;
+    }
 
-      .input-daterange {
-        width: auto;
-        display: flex;
-      }
-
-      .datepicker {
-        margin: 0 !important;
-      }
-
-      .aeneria-start-date,
-      .aeneria-p1-start-date,
-      .aeneria-p2-start-date,
-      .aeneria-end-date,
-      .aeneria-p1-end-date,
-      .aeneria-p2-end-date {
-        border-radius: 0;
-        border: none;
-        width: 130px;
-        height: 36px;
-      }
-
-      .aeneria-inter-date {
-        background: $white;
-        margin: 0;
-        width: 7px ;
-        vertical-align: middle;
-        padding-top: 9px;
-      }
-
-      .aeneria-select-period button {
-        background-color: $white;
-        border-radius: 0;
-        color: black;
-        font-size: 0.9em;
-      }
-
-      .aeneria-select-period .dropdown-toggle::after {
-        display: none !important;
-      }
-
-      .aeneria-refresh {
-        border-radius: 20px 20px 20px 20px;
-        margin: 0 5px 0 5px;
-        vertical-align: middle;
-      }
-
-      .aeneria-select-date {
-        border-radius: 0 20px 20px 0;
-        margin-left: 0 ;
-      }
-
-      .aeneria-select-place button,
-      .aeneria-select-frequency button {
-        border-radius: 0 20px 20px 0;
-        margin-left: 0;
-      }
+    .dropdown-toggle::after {
+      display: none !important;
     }
   }
 }

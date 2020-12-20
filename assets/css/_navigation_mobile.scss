@@ -110,75 +110,10 @@ $selection-size: 280px;
   .selection {
     padding: 25px;
     justify-content: center;
-    .row {
-      > div {
-        padding: 5px 5px;
-        > :first-child {
-          margin-left: auto;
-        }
-        > :last-child {
-          margin-right: auto;
-        }
-      }
-    }
+    max-width: 400px;
 
-    .selection-date {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .col-period {
-      .start-input {
-        height: 72px;
-        vertical-align: middle;
-        &:before {
-          position: relative;
-          top: 13px;
-        }
-      }
-
-      .input-daterange {
-        width: 130px;
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .aeneria-inter-date {
-        display: none;
-      }
-
-      .aeneria-select-period button {
-        height: 72px;
-        vertical-align: middle;
-      }
-
-      .aeneria-refresh {
-        height: 72px;
-        vertical-align: middle;
-      }
-    }
-
-    .aeneria-select-place {
-      button {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        width: inherit;
-        max-width: 59vw;
-        padding-right: 25px;
-
-        &:after {
-          position: absolute;
-          right: 12px;
-          top: 17px;
-        }
-      }
-      .dropdown-menu {
-        max-width: 75vw;
-
-        a {
-          white-space: normal;
-        }
-      }
+    .form-daterange {
+      max-width: max-content;
     }
   }
 }
