@@ -13,6 +13,7 @@ final class DashboardControllerTest extends AppWebTestCase
             ['/electricite'],
             ['/meteo'],
             ['/analyse'],
+            ['/comparaison'],
         ];
     }
 
