@@ -1162,32 +1162,7 @@
           .y(function (d, i) { return xScale(d) + xScale.bandwidth()/2; })
         );
 
-        chart
-          .selectAll('.bar')
-          .data(result1.axeX)
-          .enter()
-          .append('rect')
-          .attr('class', 'bar')
-          .attr('fill', 'transparent')
-          .attr('stroke-width', 0)
-          .attr('y', function (d, i) { return xScale(d) })
-          .attr('height', xScale.bandwidth())
-          .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
-          .attr('width', function (d, i) { return yScale1(result1.axeY[i]) + yScale2(result2.axeY[i]); })
-          .attr('data-toggle', 'tooltip')
-          .attr('data-placement', 'right')
-          .attr('data-html', 'true')
-          .attr('title', function (d, i) {
-            if (sameTimeline) {
-              return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
-            } else {
-              return result1.label[i] +' - ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + '</br> ' + result2.label[i] + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
-            }
-          })
-          .on("mouseover", function (d, i) { d3.select(this).attr('fill', '#FFFFFFAA'); })
-          .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });
-    }
-    else {
+    } else {
       chart
           .selectAll('.bar1')
           .data(result1.axeX)
@@ -1210,13 +1185,7 @@
           .attr('y', function (d, i) { return xScale(d) })
           .attr('height', xScale.bandwidth())
           .attr('x', width/2)
-          .attr('width', 0)
-          .attr('data-toggle', 'tooltip')
-          .attr('data-placement', 'right')
-          .attr('data-html', 'true')
-          .attr('title', function (d, i) {
-            return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
-          })
+          .attr('width', 0);
 
       chart
           .selectAll('.bar1')
@@ -1235,6 +1204,31 @@
           .ease(d3.easeCubic)
           .attr('width', function (d, i) { return yScale2(result2.axeY[i]); });
     }
+
+    chart
+      .selectAll('.bar')
+      .data(result1.axeX)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('fill', 'transparent')
+      .attr('stroke-width', 0)
+      .attr('y', function (d, i) { return xScale(d) })
+      .attr('height', xScale.bandwidth())
+      .attr('x', function (d, i) { return width/2 - yScale1(result1.axeY[i]); })
+      .attr('width', function (d, i) { return yScale1(result1.axeY[i]) + yScale2(result2.axeY[i]); })
+      .attr('data-toggle', 'tooltip')
+      .attr('data-placement', 'right')
+      .attr('data-html', 'true')
+      .attr('title', function (d, i) {
+        if (sameTimeline) {
+          return result1.label[i] + '</br> ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+        } else {
+          return result1.label[i] +' - ' + parseFloat(result1.axeY[i]).toFixed(precision1) + ' ' + unit1 + '</br> ' + result2.label[i] + ' - ' + parseFloat(result2.axeY[i]).toFixed(precision2) + ' ' + unit2;
+        }
+      })
+      .on("mouseover", function (d, i) { d3.select(this).attr('fill', '#FFFFFFAA'); })
+      .on("mouseout", function (d, i) { d3.select(this).attr('fill', 'transparent'); });
 
     $('[data-toggle=\'tooltip\']').tooltip();
 
