@@ -22,8 +22,8 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/repartition/temperature/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'temp-repartition', TEMP_COLOR, '°C', 1, -5, 25);
-        pilea.displayLegend(data, 'temp-repartition-legend', TEMP_COLOR, '°C', 1, -5, 25);
+        pilea.displayGlobalRepartitionV(data, 'temp-repartition', 'temperature', 9, '°C', 1, -5, 25);
+        pilea.displayLegend(data, 'temp-repartition-legend', 'temperature', 9, '°C', 1, -5, 25);
       },
       error: function(result) {
         pilea.displayError('temp-repartition');
@@ -37,7 +37,7 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/evolution/dju/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
-        pilea.displayGlobalEvolution(data, 'temperature-evolution', DJU_COLOR[6], 'DJU', 0, 200);
+        pilea.displayGlobalEvolution(data, 'temperature-evolution', 'dju', 'DJU', 0, 200);
       },
       error: function(result) {
         pilea.displayError('temperature-evolution');
@@ -61,8 +61,8 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/repartition/nebulosity/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'neb-repartition', NEBULOSITY_COLOR, '%', 1, 0, 100);
-        pilea.displayLegend(data, 'neb-repartition-legend', NEBULOSITY_COLOR, '%', 1, 0, 100);
+        pilea.displayGlobalRepartitionV(data, 'neb-repartition', 'nebulosity', 9, '%', 1, 0, 100);
+        pilea.displayLegend(data, 'neb-repartition-legend', 'nebulosity', 9, '%', 1, 0, 100);
       },
       error: function(result) {
         pilea.displayError('neb-repartition');
@@ -76,7 +76,7 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/evolution/nebulosity/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
-        pilea.displayGlobalEvolution(data, 'nebulosity-evolution', NEBULOSITY_COLOR[6], '%', 1, 200);
+        pilea.displayGlobalEvolution(data, 'nebulosity-evolution', 'nebulosity', '%', 1, 200);
       },
       error: function(result) {
         pilea.displayError('nebulosity-evolution');
@@ -100,8 +100,8 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/repartition/rain/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'rain-repartition', RAIN_COLOR, 'mm', 1, 0);
-        pilea.displayLegend(data, 'rain-repartition-legend', RAIN_COLOR, 'mm', 1, 0);
+        pilea.displayGlobalRepartitionV(data, 'rain-repartition', 'rain', 9, 'mm', 1, 0);
+        pilea.displayLegend(data, 'rain-repartition-legend', 'rain', 9, 'mm', 1, 0);
       },
       error: function(result) {
         pilea.displayError('rain-repartition');
@@ -115,7 +115,7 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/evolution/rain/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
-        pilea.displayGlobalEvolution(data, 'rain-evolution', RAIN_COLOR[6], 'mm', 1, 200);
+        pilea.displayGlobalEvolution(data, 'rain-evolution', 'rain', 'mm', 1, 200);
       },
       error: function(result) {
         pilea.displayError('rain-evolution');
@@ -139,8 +139,8 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/repartition/humidity/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'humidity-repartition', HUMIDITY_COLOR, '%', 1, 0, 100);
-        pilea.displayLegend(data, 'humidity-repartition-legend', HUMIDITY_COLOR, '%', 1, 0, 100);
+        pilea.displayGlobalRepartitionV(data, 'humidity-repartition', 'humidity', 9, '%', 1, 0, 100);
+        pilea.displayLegend(data, 'humidity-repartition-legend', 'humidity', 9, '%', 1, 0, 100);
       },
       error: function(result) {
         pilea.displayError('humidity-repartition');
@@ -154,7 +154,7 @@ if (document.getElementById('meteo_tab')) {
       url: appRoute + 'data/' + place + '/evolution/humidity/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
-        pilea.displayGlobalEvolution(data, 'humidity-evolution', HUMIDITY_COLOR[6], '%', 1, 200);
+        pilea.displayGlobalEvolution(data, 'humidity-evolution', 'humidity', '%', 1, 200);
       },
       error: function(result) {
         pilea.displayError('humidity-evolution');

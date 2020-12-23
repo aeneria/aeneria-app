@@ -17,3 +17,76 @@ $theme-colors: (
 
 $period-one: #90A4AE;
 $period-two: #37474F;
+
+// Chart colors
+$grid-color: #dddddd;
+$axe-color: #6d6d6d;
+
+$chart-colors: (
+  'conso_elec': (
+    #ECEFF1,
+    #CFD8DC,
+    #B0BEC5,
+    #90A4AE,
+    #78909C,
+    #607D8B,
+    #546E7A,
+    #455A64,
+    #37474F
+  ),
+  'nebulosity': (
+    #20CFFE,
+    #48C4EB,
+    #5BBAD9,
+    #67AFC7,
+    #6EA5B7,
+    #729BA7,
+    #749198,
+    #758889,
+    #747E7C
+  ),
+  'dju': (
+    #B3E5FC,
+    #81D4FA,
+    #64B5F6,
+    #4FC3F7,
+    #29B6F6,
+    #03A9F4,
+    #039BE5,
+    #0288D1,
+    #0277BD
+  ),
+  'humidity': (
+    #BBDEFB,
+    #90CAF9,
+    #64B5F6,
+    #42A5F5,
+    #2196F3,
+    #1E88E5,
+    #1976D2,
+    #1565C0,
+    #0D47A1
+  ),
+  'rain': (
+    #f7fcf0,
+    #e0f3db,
+    #ccebc5,
+    #a8ddb5,
+    #7bccc4,
+    #4eb3d3,
+    #2b8cbe,
+    #0868ac,
+    #084081
+  ),
+  'temperature': (
+    #4575b4,
+    #74add1,
+    #abd9e9,
+    #e0f3f8,
+    #ffffbf,
+    #fee090,
+    #fdae61,
+    #f46d43,
+    #d73027,
+  )
+);

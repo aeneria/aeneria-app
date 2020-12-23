@@ -8,6 +8,39 @@
   rect {
     stroke: white;
   }
+
+  @each $name, $chart-color in $chart-colors {
+    &.#{$name}, .#{$name} {
+
+      // Heatmap
+      @for $i from 0 through length($chart-color)-1 {
+        $color: nth($chart-color, $i+1);
+        rect[data-range='#{$i}'] {
+          fill: $color;
+        }
+      }
+
+      // Evolution
+      rect.bar:not([fill='transparent']),
+      path.area,
+      &.area1,
+      &.area2,
+      &.bar1,
+      &.bar2 {
+        fill: nth($chart-color, 6);
+      }
+
+      // XY
+      circle.point0,
+      &.point0 {
+        fill: nth($chart-color, 3);
+      }
+      circle.point1,
+      &.point1 {
+        fill: nth($chart-color, 9);
+      }
+    }
+  }
 }
 
 .tooltip-inner {

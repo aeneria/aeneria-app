@@ -1,4 +1,7 @@
 (function() {
+  const DAY_SIZE = 15;
+  const GRID_COLOR = '#dddddd';
+  const AXE_COLOR = '#6d6d6d';
 
   /**
    * Display a hour/weekDay heatmap repartition graphic horizontally.
@@ -9,13 +12,14 @@
    *     - data.values: values to display
    *     - data.dates: corresponding dates
    *   target: id of the targetted DIV element
-   *   colors: a tab with 2 elements for the color scale
+   *   color_class: a string, class that will determine color palette
+   *   color_range: a int, range size for colors
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    *   min: min value for scale
    *   max: max value for scale
    */
-  var displayWeekRepartitionH = function (result, target, colors, unit, precision, min, max) {
+  var displayWeekRepartitionH = function (result, target, color_class, color_range, unit, precision, min, max) {
     var rows = 7; // Number of hours in a day
     var cols = 24; // Number of days in a week
     var margin_top = 50;
@@ -38,23 +42,23 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', total_width)
       .attr('height', total_height);
 
     var chart = svg
       .append('g')
-      .attr('class', 'chart')
+      .attr('class', 'chart ')
       .attr('width', total_width)
       .attr('height', total_height);
 
-    var color = d3
+    var range = d3
       .scaleQuantile()
       .domain([
           (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
           (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
         ])
-      .range(colors);
+      .range([...Array(color_range).keys()]);
 
     // Define the div for the tooltip
     var div = element
@@ -89,7 +93,7 @@
       .append('text')
       .text(function (d) { return d;})
       .style('text-anchor', 'left')
-      .style('fill', AXE_COLOR)
+      .style('data-range', range)
       .attr('transform', function (d, i) {
         return 'translate(0,' + (i * DAY_SIZE + margin_top + 12) + ')'
       })
@@ -114,7 +118,7 @@
           return 'none';
         }
       })
-      .attr('fill', color)
+      .attr('data-range', range)
       .attr('data-toggle', 'tooltip')
       .attr('data-placement', 'left')
       .attr('data-html', 'true')
@@ -149,13 +153,14 @@
    *     - data.values: values to display
    *     - data.dates: corresponding dates
    *   target: id of the targetted DIV element
-   *   colors: a tab with 2 elements for the color scale
+   *   color_class: a string, class that will determine color palette
+   *   color_range: a int, range size for colors
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    *   min: min value for scale
    *   max: max value for scale
    */
-  var displayWeekRepartitionV = function (result, target, colors, unit, precision, min, max) {
+  var displayWeekRepartitionV = function (result, target, color_class, color_range, unit, precision, min, max) {
     var rows = 24; // Number of days in a week
     var cols = 7; // Number of hours in a day
     var margin_top = 50;
@@ -178,7 +183,7 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', total_width)
       .attr('height', total_height);
 
@@ -188,13 +193,13 @@
       .attr('width', total_width)
       .attr('height', total_height);
 
-    var color = d3
+    var range = d3
       .scaleQuantile()
       .domain([
           (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
           (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
         ])
-      .range(colors);
+      .range([...Array(color_range).keys()]);
 
     // Define the div for the tooltip
     var div = element
@@ -254,7 +259,7 @@
           return 'none';
         }
       })
-      .attr('fill', color)
+      .attr('data-range', range)
       .attr('data-toggle', 'tooltip')
       .attr('data-placement', 'left')
       .attr('data-html', 'true')
@@ -289,13 +294,14 @@
    *     - data.values: values to display
    *     - data.dates: corresponding dates
    *   target: id of the targetted DIV element
-   *   colors: a tab with 2 elements for the color scale
+   *   color_class: a string, class that will determine color palette
+   *   color_range: a int, range size for colors
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    *   min: min value for scale
    *   max: max value for scale
    */
-  var displayGlobalRepartitionH = function (result, target, colors, unit, precision, min, max) {
+  var displayGlobalRepartitionH = function (result, target, color_class, color_range, unit, precision, min, max) {
     var rows = result.axe.y.length; // Number of days in a week
     var cols = result.axe.x.length; // Number of weeks we want to display
     var margin_top = 30;
@@ -317,7 +323,7 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', total_width)
       .attr('height', total_height);
 
@@ -327,13 +333,13 @@
       .attr('width', total_width)
       .attr('height', total_height);
 
-    var color = d3
+    var range = d3
       .scaleQuantile()
       .domain([
           (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
           (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
         ])
-      .range(colors);
+      .range([...Array(color_range).keys()]);
 
     // Define the div for the tooltip
     var div = element
@@ -388,7 +394,7 @@
       })
       .attr('width', DAY_SIZE)
       .attr('height', DAY_SIZE)
-      .attr('fill', color)
+      .attr('data-range', range)
       .attr('display', function (d, i) {
         if (d === "") {
           return 'none';
@@ -413,13 +419,14 @@
    *     - data.values: values to display
    *     - data.dates: corresponding dates
    *   target: id of the targetted DIV element
-   *   colors: a tab with 2 elements for the color scale
+   *   color_class: a string, class that will determine color palette
+   *   color_range: a int, range size for colors
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    *   min: min value for scale
    *   max: max value for scale
    */
-  var displayGlobalRepartitionV = function (result, target, colors, unit, precision, min, max) {
+  var displayGlobalRepartitionV = function (result, target, color_class, color_range, unit, precision, min, max) {
     var rows = result.axe.y.length; // Number of days in a week
     var cols = result.axe.x.length; // Number of weeks we want to display
     var margin_top = 50;
@@ -441,7 +448,7 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', total_width)
       .attr('height', total_height);
 
@@ -451,13 +458,13 @@
       .attr('width', total_width)
       .attr('height', total_height);
 
-    var color = d3
+    var range = d3
       .scaleQuantile()
       .domain([
           (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
           (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
         ])
-      .range(colors);
+      .range([...Array(color_range).keys()]);
 
     // Define the div for the tooltip
     var div = element
@@ -517,7 +524,7 @@
           return 'none';
         }
       })
-      .attr('fill', color)
+      .attr('data-range', range)
       .attr('data-toggle', 'tooltip')
       .attr('data-placement', 'left')
       .attr('data-html', 'true')
@@ -551,14 +558,14 @@
    *     - axeX: values to display
    *     - axeY: axeY labels
    *   target: id of the targetted DIV element
-   *   color:  hexadecimal color for bar
+   *   color_class: a string, class that will determine color palette
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    *   height: height of graph area
    *   width: width of graph area
    *   margin_bottom: place for axe x ticks
    */
-  var displayGlobalEvolution = function (result, target, color, unit, precision, height = 350, width = 800, margin_bottom = 90) {
+  var displayGlobalEvolution = function (result, target, color_class, unit, precision, height = 350, width = 800, margin_bottom = 90) {
     var margin_top = 20;
     var margin_left = 20;
     var margin_right = 20;
@@ -580,7 +587,7 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', margin_left + width + margin_right)
       .attr('height', margin_top + height + margin_bottom);
 
@@ -617,7 +624,6 @@
     if (type == 2) {
       chart.append('path')
         .datum(result.axeX)
-        .attr('fill', color)
         .attr('class', 'area')
         .attr('d', d3.area()
             .curve(d3.curveMonotoneX)
@@ -645,7 +651,7 @@
       .enter()
       .append('rect')
       .attr('class', 'bar')
-      .attr('fill', (type == 1) ? color : 'transparent' )
+      .attr('fill', (type == 1) ? '' : 'transparent' )
       .attr('stroke-width', 0)
       .attr('x', function (d, i) { return xScale(d) })
       .attr('y', height)
@@ -704,14 +710,15 @@
    *     - data.values: values to display
    *     - data.dates: corresponding dates
    *   target: id of the targetted DIV element
-   *   colors: a tab with 2 elements for the color scale
+   *   color_class: a string, class that will determine color palette
+   *   color_range: a int, range size for colors
    *   unit: a string, the unit of the displayed data
    *   precision: float precision for value
    *   min: min value for scale
    *   max: max value for scale
    */
-  var displayLegend = function (result, target, colors, unit, precision, min, max) {
-    var total_height = colors.length * DAY_SIZE + 20;
+  var displayLegend = function (result, target, color_class, color_range, unit, precision, min, max) {
+    var total_height = color_range * DAY_SIZE + 20;
     var total_width = 100;
     var margin_left = 33;
 
@@ -728,7 +735,7 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', total_width)
       .attr('height', total_height);
 
@@ -738,13 +745,13 @@
       .attr('width', total_width)
       .attr('height', total_height);
 
-    var color = d3
+    var range = d3
       .scaleQuantile()
       .domain([
           (typeof min !== 'undefined') ? min : Math.min(...result.data.values),
           (typeof max !== 'undefined') ? max : Math.max(...result.data.values)
         ])
-      .range(colors);
+      .range([...Array(color_range).keys()]);
 
     // Define the div for the tooltip
     var div = element
@@ -754,7 +761,7 @@
 
     chart
       .selectAll('rect')
-      .data(colors)
+      .data(range.range())
       .enter()
       .append('rect')
       .attr('x', margin_left)
@@ -763,7 +770,7 @@
       })
       .attr('width', DAY_SIZE)
       .attr('height', DAY_SIZE)
-      .attr('fill', function (d, i) {return colors[colors.length - 1 - i];})
+      .attr('data-range', function (d, i) {return color_range - 1 - i;})
       .attr('display', function (d, i) {
         if (d === "") {
           return 'none';
@@ -774,19 +781,19 @@
       .attr('data-html', 'true')
       .attr('title', function (d, i) {
           var inf, sup;
-          var lastIndex = colors.length - 1;
+          var lastIndex = color_range - 1;
           switch (i) {
             case 0:
               sup = (typeof max !== 'undefined') ? max : Math.max(...result.data.values);
-              inf = color.quantiles()[lastIndex - 1];
+              inf = range.quantiles()[lastIndex - 1];
               break;
             case lastIndex:
-              sup = color.quantiles()[0];
+              sup = range.quantiles()[0];
               inf = (typeof min !== 'undefined') ? min : Math.min(...result.data.values);
               break;
             default:
-              sup = color.quantiles()[colors.length - 1 - i];
-              inf = color.quantiles()[colors.length - 2 - i];
+              sup = range.quantiles()[color_range - 1 - i];
+              inf = range.quantiles()[color_range - 2 - i];
               break;
           }
           return 'de ' + parseFloat(inf).toFixed(precision) + unit + ' à ' + parseFloat(sup).toFixed(precision) + unit;
@@ -811,17 +818,17 @@
     if (valuesArray.length>0) {
       avgValue = avgValue / valuesArray.length;
     }
-    var avgIndex = color.range().length - 1 - color.range().indexOf(color(avgValue));
+    var avgIndex = color_range - 1 - range.range().indexOf(range(avgValue));
 
     // Calculate & display in value.
     var minValue = Math.min(...valuesArray);
     var minDate = datesArray[valuesArray.indexOf(minValue)];
-    var minIndex = color.range().length - 1 - color.range().indexOf(color(minValue));
+    var minIndex = color_range - 1 - range.range().indexOf(range(minValue));
 
     // Calucltate & display max value.
     var maxValue  = Math.max(...valuesArray);
     var maxDate = datesArray[valuesArray.indexOf(maxValue)];
-    var maxIndex = color.range().length - 1 - color.range().indexOf(color(maxValue));
+    var maxIndex = color_range - 1 - range.range().indexOf(range(maxValue));
 
     // Check overlapping.
     avgIndex =  (avgIndex === maxIndex) ? avgIndex + 1 : avgIndex;
@@ -848,18 +855,23 @@
   }
 
   /**
-   * Display a weekDay/week heatmap repartition.
+   * Display a x/y repartition.
    *
-   *   result: an object containing :
+   *   results: an objects containing :
    *     - xValue: values for x axe
    *     - yValue: values for y axe
    *     - dates: corresponding dates
    *   target: id of the targetted DIV element
-   *   colors: a tab with 2 elements for the color scale
-   *   unit: a string, the unit of the displayed data
-   *   precision: float precision for value
+   *   color_class: a string, class that will determine color palette
+   *   unitx: a string, the unit of axe X
+   *   unity: a string, the unit of axe Y
+   *   precisionx: float precision for value for axex y
+   *   precisiony: float precision for value for axe X
+   *   height:  in pixels
+   *   width: in pixels
+   *   margin_bottom: in pixels
    */
-  var displayXY = function (results, target, colors, unitx, unity, precisionx, precisiony, height = 525, width = 800, margin_bottom = 40) {
+  var displayXY = function (results, target, color_class, unitx, unity, precisionx, precisiony, height = 525, width = 800, margin_bottom = 40) {
     var margin_top = 20;
     var margin_left = 50;
     var margin_right = 20;
@@ -878,7 +890,7 @@
 
     var svg = element
       .append('svg')
-      .attr('class', 'chart')
+      .attr('class', 'chart ' + color_class)
       .attr('width', margin_left + width + margin_right)
       .attr('height', margin_top + height + margin_bottom);
 
@@ -966,14 +978,12 @@
       .attr('stroke', AXE_COLOR);
 
     for (const [index, result] of results.entries()) {
-      console.log(colors[index]);
       chart
         .selectAll('.point' + index)
         .data(result.axeX)
         .enter()
         .append('circle')
         .attr('class', 'point' + index)
-        .attr('fill', colors[index])
         .attr('cx', function (d, i) { return xScale(d); })
         .attr('cy', function (d, i) { return yScale(result.axeY[i]); })
         .attr('r', 0)
@@ -1023,14 +1033,14 @@
    *     - axeX: values to display
    *     - axeY: axeY labels
    *   target: id of the targetted DIV element
-   *   color1:  hexadecimal color for bar
-   *   color2:  hexadecimal color for bar
+   *   color_class1: a string, class that will determine color for bars
+   *   color_class2: a string, class that will determine color for bars
    *   unit1: a string, the unit of the displayed data
    *   unit2: a string, the unit of the displayed data
    *   precision1: float precision for value
    *   precision2: float precision for value
    */
-  var displayDoubleEvolution = function (result1, result2, target, color1, color2, unit1, unit2, precision1, precision2, sameTimeline = true, height = 460, width = 200) {
+  var displayDoubleEvolution = function (result1, result2, target, color_class1, color_class2, unit1, unit2, precision1, precision2, sameTimeline = true, height = 460, width = 200) {
     var margin_top = 20;
     var margin_bottom = 25;
 
@@ -1110,8 +1120,7 @@
     if (type == 2) {
       chart.append('path')
         .datum(result1.axeX)
-        .attr('fill', color1)
-        .attr('class', 'area1')
+        .attr('class', 'area1 ' + color_class1)
         .attr('d', d3.area()
           .curve(d3.curveMonotoneY)
           .x0(width/2)
@@ -1133,8 +1142,7 @@
 
       chart.append('path')
         .datum(result1.axeX)
-        .attr('fill', color2)
-        .attr('class', 'area2')
+        .attr('class', 'area2 ' + color_class2)
         .attr('d', d3.area()
           .curve(d3.curveMonotoneY)
           .x0(width/2)
@@ -1185,8 +1193,7 @@
           .data(result1.axeX)
           .enter()
           .append('rect')
-          .attr('class', 'bar1')
-          .attr('fill', color1)
+          .attr('class', 'bar1 ' + color_class1)
           .attr('stroke-width', 0)
           .attr('y', function (d, i) { return xScale(d) })
           .attr('height', xScale.bandwidth())
@@ -1198,8 +1205,7 @@
           .data(result1.axeX)
           .enter()
           .append('rect')
-          .attr('class', 'bar2')
-          .attr('fill', color2)
+          .attr('class', 'bar2 ' + color_class2)
           .attr('stroke-width', 0)
           .attr('y', function (d, i) { return xScale(d) })
           .attr('height', xScale.bandwidth())

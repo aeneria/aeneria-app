@@ -28,9 +28,9 @@ if (document.getElementById('comparaison_tab')) {
       success: function(result) {
         var data = JSON.parse(result);
         if ($(window).width() > 480 ) {
-          pilea.displayWeekRepartitionH(data, 'conso-week-repartition-p1', ELEC_COLOR, 'kWh', 1, 0);
+          pilea.displayWeekRepartitionH(data, 'conso-week-repartition-p1', 'conso_elec', 9, 'kWh', 1, 0);
         } else {
-          pilea.displayWeekRepartitionV(data, 'conso-week-repartition-p1', ELEC_COLOR, 'kWh', 1, 0);
+          pilea.displayWeekRepartitionV(data, 'conso-week-repartition-p1', 'conso_elec', 9, 'kWh', 1, 0);
         }
         // Hidding existing tooltips.
         document.querySelectorAll('.tooltip').forEach(function (tooltip) {
@@ -47,9 +47,9 @@ if (document.getElementById('comparaison_tab')) {
       success: function(result) {
         var data = JSON.parse(result);
         if ($(window).width() > 480 ) {
-          pilea.displayWeekRepartitionH(data, 'conso-week-repartition-p2', ELEC_COLOR, 'kWh', 1, 0);
+          pilea.displayWeekRepartitionH(data, 'conso-week-repartition-p2', 'conso_elec', 9, 'kWh', 1, 0);
         } else {
-          pilea.displayWeekRepartitionV(data, 'conso-week-repartition-p2', ELEC_COLOR, 'kWh', 1, 0);
+          pilea.displayWeekRepartitionV(data, 'conso-week-repartition-p2', 'conso_elec', 9, 'kWh', 1, 0);
         }
         // Hidding existing tooltips.
         document.querySelectorAll('.tooltip').forEach(function (tooltip) {
@@ -68,8 +68,8 @@ if (document.getElementById('comparaison_tab')) {
       url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + period1StartDate + '/' + period1EndDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'conso-global-repartition-p1', ELEC_COLOR, 'kWh', 1, 0);
-        pilea.displayLegend(data, 'conso-global-repartition-legend', ELEC_COLOR, 'kWh', 1);
+        pilea.displayGlobalRepartitionV(data, 'conso-global-repartition-p1', 'conso_elec', 9, 'kWh', 1, 0);
+        pilea.displayLegend(data, 'conso-global-repartition-legend', 'conso_elec', 9, 'kWh', 1);
       },
       error: function(result) {
         pilea.displayError('conso-global-repartition-p1');
@@ -82,8 +82,8 @@ if (document.getElementById('comparaison_tab')) {
       url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + period2StartDate + '/' + period2EndDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'conso-global-repartition-p2', ELEC_COLOR, 'kWh', 1, 0);
-        pilea.displayLegend(data, 'conso-global-repartition-legend', ELEC_COLOR, '' + meteo + '', 1);
+        pilea.displayGlobalRepartitionV(data, 'conso-global-repartition-p2', 'conso_elec', 9, 'kWh', 1, 0);
+        pilea.displayLegend(data, 'conso-global-repartition-legend', 'conso_elec', 9, '' + meteo + '', 1);
       },
       error: function(result) {
         pilea.displayError('conso-globa l-repartition-p2');
@@ -101,7 +101,7 @@ if (document.getElementById('comparaison_tab')) {
           success: function(result2) {
             var data1 = JSON.parse(result1);
             var data2 = JSON.parse(result2);
-            pilea.displayXY([data1, data2], 'conso-x-dju', [ELEC_COLOR[3], ELEC_COLOR[7]], 'kWh', meteoUnit, 0, 1);
+            pilea.displayXY([data1, data2], 'conso-x-dju', 'conso_elec', 'kWh', meteoUnit, 0, 1);
           }
         });
       },
@@ -120,7 +120,7 @@ if (document.getElementById('comparaison_tab')) {
           success: function(result2) {
             var data1 = JSON.parse(result1);
             var data2 = JSON.parse(result2);
-            pilea.displayDoubleEvolution(data1, data2, 'p1-vs-p2', ELEC_COLOR[3], ELEC_COLOR[7], 'kWh', 'kWh', 1, 0.1, false);
+            pilea.displayDoubleEvolution(data1, data2, 'p1-vs-p2', 'conso_elec point0', 'conso_elec point1', 'kWh', 'kWh', 1, 0.1, false);
           }
         });
       },

@@ -14,9 +14,6 @@ require('bootstrap-multiselect');
 const d3 = require('d3');
 global.d3 = d3;
 
-// Some global variables.
-require('./variables.js');
-
 // Handle Date & Granularity selections
 const pileaCurrent = require('./selection.js');
 global.pileaCurrent = pileaCurrent;

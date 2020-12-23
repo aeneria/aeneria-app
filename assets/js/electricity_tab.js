@@ -33,9 +33,9 @@ if (document.getElementById('electricity_tab')) {
       success: function(result) {
         var data = JSON.parse(result);
         if ($(window).width() > 480 ) {
-          pilea.displayWeekRepartitionH(data, 'conso-week-repartition', ELEC_COLOR, 'kWh', 1, 0);
+          pilea.displayWeekRepartitionH(data, 'conso-week-repartition', 'conso_elec', 9, 'kWh', 1, 0);
         } else {
-          pilea.displayWeekRepartitionV(data, 'conso-week-repartition', ELEC_COLOR, 'kWh', 1, 0);
+          pilea.displayWeekRepartitionV(data, 'conso-week-repartition', 'conso_elec', 9, 'kWh', 1, 0);
         }
         // Hidding existing tooltips.
         document.querySelectorAll('.tooltip').forEach(function (tooltip) {
@@ -54,8 +54,8 @@ if (document.getElementById('electricity_tab')) {
       url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'conso-global-repartition', ELEC_COLOR, 'kWh', 1, 0);
-        pilea.displayLegend(data, 'conso-global-repartition-legend', ELEC_COLOR, 'kWh', 1);
+        pilea.displayGlobalRepartitionV(data, 'conso-global-repartition', 'conso_elec', 9, 'kWh', 1, 0);
+        pilea.displayLegend(data, 'conso-global-repartition-legend', 'conso_elec', 9, 'kWh', 1);
       },
       error: function(result) {
         pilea.displayError('conso-global-repartition');
@@ -69,7 +69,7 @@ if (document.getElementById('electricity_tab')) {
       url: appRoute + 'data/' + place + '/evolution/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
-        pilea.displayGlobalEvolution(data, 'conso-global-evolution', ELEC_COLOR[6], 'kWh', 1);
+        pilea.displayGlobalEvolution(data, 'conso-global-evolution', 'conso_elec', 'kWh', 1);
       },
       error: function(result) {
         pilea.displayError('conso-global-evolution');
@@ -82,7 +82,7 @@ if (document.getElementById('electricity_tab')) {
       url: appRoute + 'data/' + place + '/sum-group/conso_elec/day/weekDay/' + startDate + '/' + endDate + '',
       success: function( result ) {
         var data = JSON.parse(result);
-        pilea.displayGlobalEvolution(data, 'conso-week-frequency', ELEC_COLOR[6], 'kWh', 1, 95, 180, 50);
+        pilea.displayGlobalEvolution(data, 'conso-week-frequency', 'conso_elec', 'kWh', 1, 95, 180, 50);
       },
       error: function(result) {
         pilea.displayError('conso-week-frequency');

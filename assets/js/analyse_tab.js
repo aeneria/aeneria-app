@@ -22,7 +22,7 @@ if (document.getElementById('analyse_tab')) {
       url: appRoute + 'data/' + place + '/xy/' + meteo + '/conso_elec/' + frequency + '/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayXY([data], 'conso-x-dju', ['#6b4450'], meteoUnit, 'kWh', 0, 1);
+        pilea.displayXY([data], 'conso-x-dju', 'conso_elec', meteoUnit, 'kWh', 0, 1);
       },
       error: function(result) {
         pilea.displayError('conso-x-dju');
@@ -39,7 +39,7 @@ if (document.getElementById('analyse_tab')) {
           success: function(result2) {
             var data1 = JSON.parse(result1);
             var data2 = JSON.parse(result2);
-            pilea.displayDoubleEvolution(data1, data2, 'conso-vs-dju', ELEC_COLOR[6], DJU_COLOR[1], 'kWh', meteoUnit, 1, 0.1);
+            pilea.displayDoubleEvolution(data1, data2, 'conso-vs-dju', 'conso_elec', meteo, 'kWh', meteoUnit, 1, 0.1);
           }
         });
       },

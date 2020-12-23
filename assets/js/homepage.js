@@ -50,8 +50,8 @@ if (document.getElementById('homepage')) {
       url: appRoute + 'data/' + place + '/repartition/conso_elec/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
-        pilea.displayLegend(data, 'conso-repartition-legend-' + targetMonth, ELEC_COLOR, 'kWh', 1, 0);
+        pilea.displayGlobalRepartitionV(data, 'conso-repartition-' + targetMonth, 'conso_elec', 9, 'kWh', 1, 0);
+        pilea.displayLegend(data, 'conso-repartition-legend-' + targetMonth, 'conso_elec', 9, 'kWh', 1, 0);
       },
       error: function(result) {
         pilea.displayError('conso-repartition-' + targetMonth);
@@ -81,8 +81,8 @@ if (document.getElementById('homepage')) {
       url: appRoute + 'data/' + place + '/repartition/temperature/year_v/' + startDate + '/' + endDate + '',
       success: function(result) {
         var data = JSON.parse(result);
-        pilea.displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
-        pilea.displayLegend(data, 'temp-repartition-legend-' + targetMonth, TEMP_COLOR, '°C', 1, -5, 25);
+        pilea.displayGlobalRepartitionV(data, 'temp-repartition-' + targetMonth, 'temperature', 9, '°C', 1, -5, 25);
+        pilea.displayLegend(data, 'temp-repartition-legend-' + targetMonth, 'temperature', 9, '°C', 1, -5, 25);
       },
       error: function(result) {
         pilea.displayError('temp-repartition-' + targetMonth);
