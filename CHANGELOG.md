@@ -1,14 +1,20 @@
-# æneria version 1.0.4
+# æneria version 1.1.1
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-* Ajout d'une doc sur le transfert de données depuis Pilea
-* Correction d'un bug sur la manière dont les différents flux de données étaient récupérés
+* Ajout d'un onglet pour comparer sa consommation entre 2 périodes
+* Mise à jour du style de la navigation et du formulauire de sélection
+* Refacto de la gestion des couleurs dans les graphiques
 
 ## Anciennes versions
+
+### 1.0.4
+
+* Ajout d'une doc sur le transfert de données depuis Pilea
+* Correction d'un bug sur la manière dont les différents flux de données étaient récupérés
 
 ### 1.0.3
 
