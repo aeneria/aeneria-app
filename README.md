@@ -1,6 +1,6 @@
-# æneria - A little dashboard to analyse your energy consumption data
+# [æneria](aeneria.com) - A little dashboard to analyse your energy consumption data
 
-The idea of æneria is to display energy consumption and weather data on a little dashboard that allow the user to:
+The idea of [æneria](aeneria.com) is to display energy consumption and weather data on a little dashboard that allow the user to:
 
 * Better understand energy consumption,
 * Analyse energy consumption throw weather data

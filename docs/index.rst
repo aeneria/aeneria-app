@@ -4,7 +4,7 @@
 .. image:: img/favicon.png
    :align: center
 
-`æneria <https://gitlab.com/aeneria/aeneria-app/>`_ est un petit tableau de bord permettant d'analyser sa
+`æneria <https://aeneria.com>`_ est un petit tableau de bord permettant d'analyser sa
 consommation d''énergie à partir des données d'un Linky.
 
 L'idée derrière æneria est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
