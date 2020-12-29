@@ -21,15 +21,14 @@ Son but est de faciliter l'administration d'un serveur : `en savoir plus <https:
 avec et c'est le cas de æneria.
 
 .. image:: https://install-app.yunohost.org/install-with-yunohost.png
-    :target: https://install-app.yunohost.org/?app=pilea
+    :target: https://install-app.yunohost.org/?app=aeneria
     :align: center
-
 
 Installation à la main
 ***********************
 
 æneria est une application basée sur le framework Symfony. Elle s'installe sur un serveur web disposant
-d'un PHP récent et d'un serveur de base de données MySQL.
+d'un PHP récent et d'un serveur de base de données PostgreSQL.
 
 Prérequis
 ==========
