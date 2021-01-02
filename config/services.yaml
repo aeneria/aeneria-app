@@ -8,7 +8,6 @@ parameters:
     aeneria.version: '1.0.4'
     aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
     aeneria.documentation: 'https://docs.aeneria.com/fr/'
-    aeneria.base_path: '%env(AENERIA_BASE_PATH)%'
     # aeneria features
     aeneria.user.max_places: "%env(AENERIA_USER_MAX_PLACES)%"
     aeneria.user.can_share_place: "%env(AENERIA_USER_CAN_SHARE_PLACE)%"
