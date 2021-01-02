@@ -9,9 +9,9 @@ Graphique d'évolution temporelle
 
 Le graphique d'évolution temporelle est un graphique assez classique.
 
-Il affiche, pour la période sélectionnée, un point de donnée en fonction de la granulosité choisie.
+Il affiche, pour la période sélectionnée, des points de donnée en fonction de la granulosité choisie.
 
-Il présente chaque point de donnée de donnée sous forme de rectangle, il se transofrme en courbe si le nombre
+Il présente chaque point de donnée sous forme de rectangle, il se transofrme en courbe si le nombre
 de données à afficher est trop élevé.
 
 Aperçus
@@ -30,7 +30,7 @@ Comment lire le graphique
 
 Ce graphique permet par exemple de relever des consommations anormales :
 
-J'observe ma consommation d'électricité, pour un jour donnée je vois un pic sur le graphique, est-ce normal ? Que s'est-il passé ce jour ?
+J'observe ma consommation d'électricité, pour un jour donné je vois un pic sur le graphique, est-ce normal ? Que s'est-il passé ce jour ?
 
   * Etait-ce un retour de vacances ? Dans ce cas le pic est peut-être normal (reprise de chauffage par exemple)
   * Ou bien ai-je oublié d'éteindre un appareil gourmand avant d'aller me coucher ce jour-là ?
@@ -54,7 +54,7 @@ Aperçus
 Comment lire le graphique
 --------------------------
 
-Ce graphique permet de mettre en valuer des schémas de consommation. Les tâches observées doivent reflêter vos habitudes de consommation.
+Ce graphique permet de mettre en valeur des schémas de consommation. Les tâches observées doivent reflêter vos habitudes de consommation.
 
 * Une tâche foncée apparait les jours de semaine entre 7h30 et 9h, est-ce normal ?
 * Je ne vois aucun schéma se dégager, est-ce normal que ma consommation soit la même quelque soit l'heure et le jour de la semaine ?
@@ -63,7 +63,7 @@ Ce graphique permet de mettre en valuer des schémas de consommation. Les tâche
 Carte de chaleur Jours/Semaines
 ================================
 
-Sur ce graphique, chaque case représente un jour, chaque ligne une semain et chaque colonne un jour de la semaine. Plus la case est foncée est plus
+Sur ce graphique, chaque case représente un jour, chaque ligne une semaine et chaque colonne un jour de la semaine. Plus la case est foncée est plus
 la grandeur observée est grande.
 
 Aperçus
@@ -77,7 +77,7 @@ Comment lire le graphique
 --------------------------
 
 Comme la carte de chaleur Jours/Heures, ce graphique permet de mettre en évidence des schémas de consomation. Par exemple : En hiver,
-j'observe que les 2 dernières colonnes sont plus foncée, c'est peut-être normal si l'on chauffe toute la journée le weekend
+j'observe que les 2 dernières colonnes sont plus foncées, c'est peut-être normal si l'on chauffe toute la journée le weekend
 contrairement aux jours de semaine.
 
 Ensuite, comme le graphique d'évolution, il permet de repérer des pics de consommation : pourquoi cette case est-elle foncée au milieu de l'été ?
@@ -104,14 +104,14 @@ Comment lire le graphique
 --------------------------
 
 Si on prend le cas où l'on observe la consommation d'électricité et les :term:`DJU` et si l'on considère que le chauffage est électrique.
-Si l'on sélectionne une péridoe d'hiver, les points affichés devraient se regrouper le long d'une ligne.
+Si on sélectionne une péridoe d'hiver, les points affichés devraient se regrouper le long d'une ligne.
 
 L'analyse de la pente de cette droite permet de caractériser l'isolation et le système de chauffage de votre habitation.
 Par exemple, si la droite semble horizontale, cela veut peut-être dire que votre chauffage est toujours au maximum et donc qu'il est sous
 dimensionné.
 
 Si les points semblent complètement désorganisés, c'est qu'il n'y a aucune corrélation entre la température extérieure et votre consommation
-d'électrivité.
+d'électricité.
 
 Graphique papillon
 ============================

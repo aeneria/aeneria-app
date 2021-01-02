@@ -1,7 +1,7 @@
 Les différents tableaux de bords
 #######################################
 
-Cette page décrit les différents tableaux de bord disponible sur æneria.
+Cette page décrit les différents tableaux de bord disponibles sur æneria.
 
 |icon_accueil| L'accueil
 ===========================

@@ -8,7 +8,7 @@ on configure un compteur Linky et une station d'observation météo.
 Une *adresse* peut ensuite être rendue publique pour quelle soit visible par tous les
 utilisateurs de æneria, ou bien, elle peut être partagée à une liste d'utilisateur.
 
-Pour gérer vos adresses, aller sur la page de configuration en cliquant sur le bouton |icon_configuration|
+Pour gérer vos adresses, allez sur la page de configuration en cliquant sur le bouton |icon_configuration|
 dans la barre du haut.
 
 .. |icon_configuration| image:: ../img/config.png
@@ -24,7 +24,7 @@ Ci-dessous, le formulaire d'ajout d'une adresse :
 Ajouter une adresse
 ====================
 
-Cliquer sur le bouton ``Ajouter une adresse`` sous la liste des adresses existantes :
+Cliquez sur le bouton ``Ajouter une adresse`` sous la liste des adresses existantes :
 
 .. image:: ../img/adresse_form.png
     :align: center
@@ -36,7 +36,7 @@ Cliquer sur le bouton ``Ajouter une adresse`` sous la liste des adresses existan
 
 Editer une adresse
 ===================
-Pour éditer une adresse, sur la liste , cliquer sur le bouton |btn_edit| de l'adresse souhaitée.
+Pour éditer une adresse, sur la liste , cliquez sur le bouton |btn_edit| de l'adresse souhaitée.
 
 .. |btn_edit| image:: ../img/btn_edit.png
              :alt: Bouton d'édition
@@ -51,7 +51,7 @@ Il est alors possible de modifier :
 Rafraichir les données d'une adresse
 ====================================
 Il peut parfois être nécessaire de rafraichir les données d'une adresse manuellement : c'est
-à dire forcer la mise des données depuis les serveurs d'Enedis et de Météo France.
+à dire forcer la mise à jour des données depuis les serveurs d'Enedis et de Météo France.
 
 Cliquez sur le bouton |btn_refresh| de l'adresse souhaitée.
 
