@@ -8,7 +8,7 @@
     {% block stylesheets %} {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('image/favicon.png') }}" />
-    <link rel="stylesheet" href="{{path('dashboard.home')}}build/app.css">
+    {{ encore_entry_link_tags('app') }}
   </head>
   <body>
     {% if (app.user) %}
@@ -50,8 +50,7 @@
       {% endif %}
     </script>
 
-    <script src="{{path('dashboard.home')}}build/runtime.js"></script>
-    <script src="{{path('dashboard.home')}}build/app.js"></script>
+    {{ encore_entry_script_tags('app') }}
     {% block javascripts %}{% endblock %}
   </body>
 </html>

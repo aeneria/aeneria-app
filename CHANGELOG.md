@@ -1,4 +1,4 @@
-# æneria version 1.1.1
+# æneria version 1.1.0
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
