@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ConfigurationPlaceController extends AbstractAppController
@@ -115,6 +116,8 @@ class ConfigurationPlaceController extends AbstractAppController
     }
 
     public function placeEnedisConsentAction(
+        Request $request,
+        RouterInterface $router,
         string $id = null,
         int $userMaxPlaces,
         DataConnectServiceInterface $dataConnectService,
@@ -145,6 +148,12 @@ class ConfigurationPlaceController extends AbstractAppController
                 $state
             )
         ;
+
+        // Adding callback url for aeneria proxy
+        $enedisUrl .= '&callback=';
+        $enedisUrl .= \urlencode($request->getUriForPath(
+            $router->generate('config.place.enedis_consent_callback')
+        ));
 
         return $this->redirect($enedisUrl);
     }
