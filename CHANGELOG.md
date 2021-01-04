@@ -7,7 +7,13 @@
 
 * Ajout d'un onglet pour comparer sa consommation entre 2 périodes
 * Mise à jour du style de la navigation et du formulauire de sélection
+
+### Autres moises à jour techniques
+
 * Refacto de la gestion des couleurs dans les graphiques
+* Modification de l'utilisation de Webpack Encore
+* Formulaire d'ajout d'une adresse : on envoie maintenant explicitement une url de callback
+  (au cas où le navigateur nettoierait le referer voir #4 & #5)
 
 ## Anciennes versions
 
