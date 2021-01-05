@@ -8,7 +8,10 @@
     {% block stylesheets %} {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('image/favicon.png') }}" />
-    {{ encore_entry_link_tags('app') }}
+    {% for file in encore_entry_css_files('app') %}
+      <link href="{{ relative_path(asset(file)) }}" rel="stylesheet" />
+    {% endfor %}
+    {# {{ encore_entry_link_tags('app') }} #}
   </head>
   <body>
     {% if (app.user) %}
@@ -50,7 +53,10 @@
       {% endif %}
     </script>
 
-    {{ encore_entry_script_tags('app') }}
+    {% for file in encore_entry_js_files('app') %}
+      <script src="{{ relative_path(asset(file)) }}"></script>
+    {% endfor %}
+
     {% block javascripts %}{% endblock %}
   </body>
 </html>

@@ -5,6 +5,9 @@ Encore
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build/')
+    .configureLoaderRule('fonts', loaderRule => {
+        loaderRule.options.publicPath = './';
+    })
     // only needed for CDN's or sub-directory deploy
     .setManifestKeyPrefix('build/')
     .addEntry('app', './assets/js/app.js')
