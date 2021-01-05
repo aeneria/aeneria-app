@@ -116,7 +116,6 @@ class ConfigurationPlaceController extends AbstractAppController
     }
 
     public function placeEnedisConsentAction(
-        Request $request,
         RouterInterface $router,
         string $id = null,
         int $userMaxPlaces,
@@ -151,9 +150,9 @@ class ConfigurationPlaceController extends AbstractAppController
 
         // Adding callback url for aeneria proxy
         $enedisUrl .= '&callback=';
-        $enedisUrl .= \urlencode($request->getUriForPath(
-            $router->generate('config.place.enedis_consent_callback')
-        ));
+        $enedisUrl .= \urlencode(
+            $router->generate('config.place.enedis_consent_callback', [], RouterInterface::ABSOLUTE_URL)
+        );
 
         return $this->redirect($enedisUrl);
     }
