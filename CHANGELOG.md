@@ -1,21 +1,26 @@
-# æneria version 1.1.0
+# æneria version 1.1.1
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
+* Fix - bug sur le chargement des assets
+* Fix - formulaire d'ajout d'une adresse
+
+## Anciennes versions
+
+### 1.1.0
+
 * Ajout d'un onglet pour comparer sa consommation entre 2 périodes
 * Mise à jour du style de la navigation et du formulauire de sélection
 
-### Autres moises à jour techniques
+### Autres mises à jour techniques
 
 * Refacto de la gestion des couleurs dans les graphiques
 * Modification de l'utilisation de Webpack Encore
 * Formulaire d'ajout d'une adresse : on envoie maintenant explicitement une url de callback
   (au cas où le navigateur nettoierait le referer voir #4 & #5)
-
-## Anciennes versions
 
 ### 1.0.4
 
