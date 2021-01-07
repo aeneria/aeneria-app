@@ -7,14 +7,14 @@ config.place.edit:
   controller: App\Controller\ConfigurationPlaceController::placeEditAction
 
 config.place.enedis_consent:
-  path: /configuration/data-connect-consent
+  path: /configuration/data-connect-consent/{id}
   controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentAction
-
-config.place.enedis_consent_callback:
-  path: /configuration/data-connect-callback/{id}
-  controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentCallbackAction
   defaults:
     id: null
+
+config.place.enedis_consent_callback:
+  path: /configuration/data-connect-callback
+  controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentCallbackAction
 
 config.place.delete:
   path: /configuration/place/{id}/delete
