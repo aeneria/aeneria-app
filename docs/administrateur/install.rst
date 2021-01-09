@@ -93,13 +93,6 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
     DATABASE_URL=[VOTRE CONFIG ICI]
     ###< doctrine/doctrine-bundle ###
 
-    # Renseignez les clés d'API enedis data-connect
-    ENEDIS_CLIENT_ID=%%ENEDIS_CLIENT_ID%%
-    ENEDIS_CLIENT_SECRET=%%ENEDIS_CLIENT_SECRET%%
-    ENEDIS_REDIRECT_URI=%%ENEDIS_REDIRECT_URI%%
-    ENEDIS_ENDPOINT_AUTH=%%ENEDIS_ENDPOINT_AUTH%%
-    ENEDIS_ENDPOINT_TOKEN=%%ENEDIS_ENDPOINT_TOKEN%%
-    ENEDIS_ENDPOINT_DATA=%%ENEDIS_ENDPOINT_DATA%%
     ...
 
 
@@ -144,7 +137,73 @@ Lancez le commande d'installation d'aeneria :
 
     php7.3 bin/console aeneria:install
 
-4. Créer un administrateur
+4. Configurer Enedis Data-connect
+------------------------------------
+
+æneria utilise Enedis Data-connect API pour obtenir les données de consommation
+d'électricité. Mais pour utiliser cette API il est nécessaire d'avoir un compte.
+Seulement, pour ouvrir un compte chez Enedis data-connect, il faut être une entreprise
+ou une association.
+
+Pour permettre à tout le monde d'utiliser æneria, un proxy a été développé pour qu'une
+instance d'æneria puisse bénéficier du compte d'aeneria.com.
+
+Au lieu d'utiliser le comportement classique pour se connecter à Enedis :
+
+`votre instance æneria <=> Enedis`
+
+Vous pouvez configurez votre instance comme ça :
+
+`votre instance æneria <=> proxy.aeneria.com <=> Enedis`
+
+Il y a donc 2 sortes de mode :
+
+Soit vous créez un compte Enedis et vous renseignez vos informations de connection
+de cette manière dans le fichier `.env` :
+
+.. code-block:: bash
+
+    # fichier .env
+
+    ...
+
+    ENEDIS_CLIENT_ID=yourEnedisClientID
+    ENEDIS_CLIENT_SECRET=yourEnedisClientSecret
+    ENEDIS_REDIRECT_URI=yourEnedisRedirectUri
+    ENEDIS_ENDPOINT_AUTH=https://mon-compte-particulier.enedis.fr
+    ENEDIS_ENDPOINT_TOKEN=https://gw.prd.api.enedis.fr
+    ENEDIS_ENDPOINT_DATA=https://gw.prd.api.enedis.fr
+
+    ...
+
+Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
+
+
+.. code-block:: bash
+
+    # fichier .env
+
+    ...
+
+    ENEDIS_CLIENT_ID=whatYouWantItWouldNotBeUsed
+    ENEDIS_CLIENT_SECRET=whatYouWantItWouldNotBeUsed
+    ENEDIS_REDIRECT_URI=whatYouWantItWouldNotBeUsed
+    ENEDIS_ENDPOINT_AUTH=https://proxy.aeneria.com/enedis-data-connect
+    ENEDIS_ENDPOINT_TOKEN=https://proxy.aeneria.com/enedis-data-connect
+    ENEDIS_ENDPOINT_DATA=https://gw.prd.api.enedis.fr
+
+    ...
+
+.. warning::
+
+    proxy.aeneria.com est un serveur communautaire fourni à titre gracieux.
+
+    Merci de l'utiliser raisonnablement et dans un cadre privé non-commercial.
+
+    Nous nous réservons le droit de bannir de ce serveur les instances qui en feront
+    un usage trop intensif, et ce **sans explications et sans avertissement**.
+
+5. Créer un administrateur
 ----------------------------------------
 
 Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
@@ -154,8 +213,13 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
     php7.3 bin/console aeneria:user:add [admin_email] [password]
     php7.3 bin/console aeneria:user:grant [admin_email]
 
-5. Générer l'ensemble des flux Météo (facultatif)
-----------------------------------------------------
+6. Générer l'ensemble des flux Météo (facultatif - usage avancée)
+-------------------------------------------------------------------
+
+.. danger::
+
+    Cette fonctionnalité correspond à un usage avancée.
+    Testez d'abord æneria sans l'utiliser.
 
 Si vous le souhaitez, vous pouvez créer l'ensemble des flux météo pour l'utilisateur admin.
 L'intérêt est de commencer à stocker toutes les données météo dès l'installation de l'instance.
@@ -177,7 +241,13 @@ Pour ça, lancer la commande suivante :
     sont jamais supprimés. Si vous souhaitez quand même les supprimer, vous pouver le faire
     en utilisant la command `aeneria:feed:clean-orphans`
 
-6. Mettre en place le CRON
+.. warning::
+
+    L'adresse générée par cette commande n'est pas destinée à ensuite être utilisée via
+    l'interface d'æneria. Elle a pour unique but de définir une première fois l'ensemble
+    des stations météo.
+
+7. Mettre en place le CRON
 ----------------------------
 
 Mettez en place le CRON en exécutant la commande suivante :
@@ -188,7 +258,7 @@ Mettez en place le CRON en exécutant la commande suivante :
     # où [user] est l'utilisateur linux qui lancera le cron
 
 
-7. Configurer le serveur web
+8. Configurer le serveur web
 --------------------------------
 
 Enfin, configurez `NGINX <https://symfony.com/doc/current/setup/web_server_configuration.html#web-server-nginx>`_ ou
