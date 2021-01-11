@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -220,11 +221,11 @@ class AdministrationController extends AbstractController
     /**
      * Log view
      */
-    public function displayLogAction(ContainerInterface $container)
+    public function displayLogAction(KernelInterface $kernel)
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $logDir = $container->get('kernel')->getLogDir();
+        $logDir = $kernel->getLogDir();
 
         $latestCTime = 0;
         $latestLogfile = '';
