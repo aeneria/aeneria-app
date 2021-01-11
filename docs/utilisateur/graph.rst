@@ -42,7 +42,7 @@ Chaque case de la carte de chaleur Jours/Heures affiche la moyenne, sur la péri
 
 Par exemple, la case en haut à gauche représente la consommation moyenne le lundi entre minuit et 1h sur la période sélectionnée.
 
-Plus une case en foncée et plus la consommation est élévée.
+Plus une case est foncée et plus la consommation est élévée.
 
 Aperçus
 --------

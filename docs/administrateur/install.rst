@@ -77,7 +77,6 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
 
     cp .env.dist .env
 
-
 .. code-block:: bash
 
     # fichier .env
@@ -140,25 +139,25 @@ Lancez le commande d'installation d'aeneria :
 4. Configurer Enedis Data-connect
 ------------------------------------
 
-æneria utilise Enedis Data-connect API pour obtenir les données de consommation
+æneria utilise l'API Enedis Data Connect pour obtenir les données de consommation
 d'électricité. Mais pour utiliser cette API il est nécessaire d'avoir un compte.
-Seulement, pour ouvrir un compte chez Enedis data-connect, il faut être une entreprise
-ou une association.
+Seulement, pour ouvrir un compte sur la Data Hub d'Enedis, il faut être une entreprise,
+une association ou une collectivité locale.
 
 Pour permettre à tout le monde d'utiliser æneria, un proxy a été développé pour qu'une
 instance d'æneria puisse bénéficier du compte d'aeneria.com.
 
 Au lieu d'utiliser le comportement classique pour se connecter à Enedis :
 
-`votre instance æneria <=> Enedis`
+``votre instance æneria <=[via vos propres idientifiants de connexion enedis]=> Enedis Data Connect``
 
 Vous pouvez configurez votre instance comme ça :
 
-`votre instance æneria <=> proxy.aeneria.com <=> Enedis`
+``votre instance æneria <=> proxy.aeneria.com <=[via les idientifiants de connexion d'aeneria.com]=> Enedis Data Connect``
 
 Il y a donc 2 sortes de mode :
 
-Soit vous créez un compte Enedis et vous renseignez vos informations de connection
+Soit vous créez un compte Enedis et vous renseignez vos informations de connexion
 de cette manière dans le fichier `.env` :
 
 .. code-block:: bash
@@ -167,17 +166,21 @@ de cette manière dans le fichier `.env` :
 
     ...
 
-    ENEDIS_CLIENT_ID=yourEnedisClientID
-    ENEDIS_CLIENT_SECRET=yourEnedisClientSecret
-    ENEDIS_REDIRECT_URI=yourEnedisRedirectUri
+    ENEDIS_CLIENT_ID=[votreClientIdEnedis]
+    ENEDIS_CLIENT_SECRET=[votreClientSecretEnedis]
+    ENEDIS_REDIRECT_URI=[votreRedirectUriEnedis]
     ENEDIS_ENDPOINT_AUTH=https://mon-compte-particulier.enedis.fr
     ENEDIS_ENDPOINT_TOKEN=https://gw.prd.api.enedis.fr
     ENEDIS_ENDPOINT_DATA=https://gw.prd.api.enedis.fr
 
     ...
 
-Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
+.. note::
 
+    Pour obtenir vos propres identifiants de connexion, rendez-vous sur
+    `le Data Hub d'Enedis <https://datahub-enedis.fr/data-connect/>`_
+
+Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
 
 .. code-block:: bash
 
@@ -198,7 +201,7 @@ Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
 
     proxy.aeneria.com est un serveur communautaire fourni à titre gracieux.
 
-    Merci de l'utiliser raisonnablement et dans un cadre privé non-commercial.
+    **Merci de l'utiliser raisonnablement et dans un cadre privé non-commercial.**
 
     Nous nous réservons le droit de bannir de ce serveur les instances qui en feront
     un usage trop intensif, et ce **sans explications et sans avertissement**.
@@ -236,10 +239,9 @@ Pour ça, lancer la commande suivante :
 
 .. note::
 
-    Les données Météo étant dans données pubiques, il n'y a pour elles pas de problème
-    de confidentialité. Pour simplifier les traitements, les données des flux météo ne
-    sont jamais supprimés. Si vous souhaitez quand même les supprimer, vous pouver le faire
-    en utilisant la command `aeneria:feed:clean-orphans`
+    Les données Météo étant des données publiques, il n’y a pour elles pas de problème de confidentialité.
+    Pour simplifier les traitements, les données des flux météo ne sont jamais supprimées. Si vous souhaitez
+    quand même les supprimer, vous pouver le faire en utilisant la commande ``aeneria:feed:clean-orphans``.
 
 .. warning::
 

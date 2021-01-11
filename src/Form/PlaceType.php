@@ -36,7 +36,7 @@ class PlaceType extends AbstractType
         if ($options['place_can_be_public']) {
             $builder->add('public', CheckboxType::class, [
                 'label' => 'Public',
-                'help' => 'Les données d\'une adress public sont visibles par tous les utilisateurs d\'æneria.',
+                'help' => 'Les données d\'une adresse public sont visibles par tous les utilisateurs d\'æneria.',
                 'required' => false,
             ]);
         }
