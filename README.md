@@ -1,4 +1,6 @@
-# [æneria](aeneria.com) - A little dashboard to analyse your energy consumption data
+<h1>æneria - A little dashboard to analyse your energy consumption data</h1>
+
+![logo](https://aeneria.com/user/pages/02.a-propos/_about/aeneria.png){: .text-center}
 
 The idea of [æneria](aeneria.com) is to display energy consumption and weather data on a little dashboard that allow the user to:
 
@@ -28,3 +30,7 @@ Install æneria easilly with [YunoHost](https://yunohost.org/) !
 [![](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=aeneria)
 
 [See æneria YunoHost package on github](https://github.com/YunoHost-Apps/aeneria_ynh)
+
+## License
+
+æneria is licensed under [AGPL 3](LICENSE).
