@@ -1,15 +1,21 @@
-# æneria version 1.1.1
+# æneria version 1.1.2
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-* Fix - bug sur le chargement des assets
-* Fix - formulaire d'ajout d'une adresse
+* Fix - Bug sur la modification d'une adresse
+* Documentation - Mise à jour de la documentation d'installation
+* Mise à jour vers Symfony 5.2
 
 ## Anciennes versions
 
+### 1.1.1
+
+* Fix - bug sur le chargement des assets
+* Fix - formulaire d'ajout d'une adresse
+*
 ### 1.1.0
 
 * Ajout d'un onglet pour comparer sa consommation entre 2 périodes
