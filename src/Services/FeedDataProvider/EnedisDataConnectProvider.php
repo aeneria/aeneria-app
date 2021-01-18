@@ -9,6 +9,7 @@ use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
@@ -64,12 +65,12 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     }
 
     /**
-     * Fetch ENEDIS data for $date and persist its in database.
-     *
-     * @param \DateTime $date
+     * {@inheritdoc}
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
+        $errors = [];
+
         foreach ($feeds as $feed) {
             if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
                 throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
@@ -87,8 +88,11 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                 }
             } catch (\Exception $e) {
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+                $errors[] = new FetchingError($feed, $date, $e);
             }
         }
+
+        return $errors;
     }
 
     /**

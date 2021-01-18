@@ -4,6 +4,7 @@ namespace App\Services\FeedDataProvider;
 
 use App\Entity\DataValue;
 use App\Entity\Feed;
+use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
@@ -119,10 +120,12 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
     /**
      * {@inheritdoc}
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
-        if (!$synopData = $this->fetchSynopData($date)) {
-            return;
+        try {
+            $synopData = $this->fetchSynopData($date);
+        } catch (\Exception $e) {
+            return [new FetchingError($feed, $date, $e)];
         }
 
         foreach ($feeds as $feed) {
@@ -134,6 +137,8 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
                 $this->refreshFeedData($date, $feed, $synopData);
             }
         }
+
+        return [];
     }
 
     private function fetchSynopData(\DateTimeImmutable $date): array
@@ -176,10 +181,13 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
                         $synopData[\intval($row[self::SYNOP_DATA_NAME['STATION_ID']])][$hour] = $row;
                     }
                 }
+            } else {
+                $this->logger->error("MeteoFrance - Synop data not found", ['date' => $date->format('Y-m-d')]);
+                throw new \Exception(\sprintf('SYNOP data not found'));
             }
         }
 
-        $this->logger->info("MeteoFrance -  Synop data fetched", ['date' => $date->format('Y-m-d')]);
+        $this->logger->info("MeteoFrance - Synop data fetched", ['date' => $date->format('Y-m-d')]);
 
         return $synopData;
     }

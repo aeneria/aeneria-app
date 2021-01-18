@@ -5,6 +5,7 @@ namespace App\Services\FeedDataProvider;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Model\FetchingError;
 
 /**
  * Fake data provider
@@ -22,7 +23,7 @@ class FakeDataProvider extends AbstractFeedDataProvider
         return parent::FETCH_STRATEGY_ONE_BY_ONE;
     }
 
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
         foreach ($feeds as $feed) {
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
@@ -36,6 +37,8 @@ class FakeDataProvider extends AbstractFeedDataProvider
                 }
             }
         }
+
+        return [];
     }
 
     /**

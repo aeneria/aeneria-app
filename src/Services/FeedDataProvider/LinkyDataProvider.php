@@ -51,7 +51,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
      *
      * @param \DateTime $date
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
         foreach ($feeds as $feed) {
             if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_LINKY !== $feed->getFeedDataProviderType()) {
@@ -67,6 +67,8 @@ class LinkyDataProvider extends AbstractFeedDataProvider
                 }
             }
         }
+
+        return [];
     }
 
     /**

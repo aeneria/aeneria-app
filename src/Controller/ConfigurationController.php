@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UpdateAccountType;
+use App\Model\FetchingError;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
 use App\Services\DataImporter;
@@ -113,19 +114,40 @@ class ConfigurationController extends AbstractAppController
                     $startDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['start_date_' . $feedId]);
                     $endDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['end_date_' . $feedId]);
 
-                    $feedDataProviderFactory
+                    $errors = $feedDataProviderFactory
                         ->fromFeed($feeds[$feedId])
                         ->fetchDataBetween($startDate, $endDate, [$feeds[$feedId]], $data['force_' . $feedId])
                     ;
 
-                    $message = \sprintf(
-                        'Les données %s ont été correctement rechargées entre le %s et le %s.',
-                        \ucfirst($feeds[$feedId]->getName()),
-                        $data['start_date_' . $feedId],
-                        $data['end_date_' . $feedId]
-                    );
+                    if ($errors) {
+                        $message = \sprintf(
+                            "Toutes les données %s n'ont pas été correctement rechargées pour les dates du %s au %s.",
+                            \ucfirst($feeds[$feedId]->getName()),
+                            $data['start_date_' . $feedId],
+                            $data['end_date_' . $feedId]
+                        );
+                        $this->addFlash('warning', $message);
 
-                    $this->addFlash('success', $message);
+                        foreach ($errors as $error) {
+                            \assert($error instanceof FetchingError);
+
+                            $message = \sprintf(
+                                "Il y a eu une erreur pour %s pour la date du %s : '%s'",
+                                \ucfirst($error->getFeed()->getName()),
+                                $error->getDate()->format('d/m/Y'),
+                                $error->getException()->getMessage()
+                            );
+                            $this->addFlash('error', $message);
+                        }
+                    } else {
+                        $message = \sprintf(
+                            'Les données %s ont été correctement rechargées entre le %s et le %s.',
+                            \ucfirst($feeds[$feedId]->getName()),
+                            $data['start_date_' . $feedId],
+                            $data['end_date_' . $feedId]
+                        );
+                        $this->addFlash('success', $message);
+                    }
                 }
             }
         }

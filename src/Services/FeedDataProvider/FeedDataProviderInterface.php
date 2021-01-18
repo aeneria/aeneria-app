@@ -3,15 +3,16 @@
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\Feed;
+use App\Model\FetchingError;
 
 interface FeedDataProviderInterface
 {
     /**
      * Fetch data for $date and for a array of feeds
      *
-     * @param \Datetime $date
+     * @return FetchingError[]
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void;
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array;
 
     /**
      * Get array parameters that a feed which uses this provider should have.
@@ -20,18 +21,24 @@ interface FeedDataProviderInterface
 
     /**
      * Fetch data from last data to $date.
+     *
+     * @return FetchingError[]
      */
-    public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): void;
+    public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): array;
 
     /**
      * Fetch data for $date,
      * if $force is set to true, update data even if there are already ones.
+     *
+     * @return FetchingError[]
      */
-    public function fetchDataFor(\DateTimeImmutable $date, array $feeds, bool $force): void;
+    public function fetchDataFor(\DateTimeImmutable $date, array $feeds, bool $force): array;
 
     /**
      * Fetch data from startDate to $endDate,
      * if $force is set to true, update data even if there are already ones.
+     *
+     * @return FetchingError[]
      */
-    public function fetchDataBetween(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feeds, bool $force): void;
+    public function fetchDataBetween(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feeds, bool $force): array;
 }

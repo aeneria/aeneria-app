@@ -55,7 +55,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): void
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
         throw new \Exception("Your custom feedDataProvider should implement this method !");
     }
@@ -73,14 +73,19 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    final public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): void
+    final public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): array
     {
+        $errors = [];
+
         if (self::FETCH_STRATEGY_GROUPED === $this->getFetchStrategy()) {
             $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
             $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
             while ($lastUpToDate <= $date) {
-                $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds);
+                $errors = \array_merge(
+                    $errors,
+                    $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds)
+                );
                 $lastUpToDate->add(new \DateInterval('P1D'));
             }
         } elseif (self::FETCH_STRATEGY_ONE_BY_ONE === $this->getFetchStrategy()) {
@@ -89,32 +94,44 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
                 $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
 
                 while ($lastUpToDate <= $date) {
-                    $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), [$feed]);
+                    $errors = \array_merge(
+                        $errors,
+                        $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), [$feed])
+                    );
                     $lastUpToDate->add(new \DateInterval('P1D'));
                 }
             }
         } else {
             throw new \Exception(\sprintf("Strategy '%s' is unkown", $this->getFetchStrategy()));
         }
+
+        return $errors;
     }
 
     /**
      * {@inheritdoc}
      */
-    final public function fetchDataFor(\DateTimeImmutable $date, array $feeds, bool $force): void
+    final public function fetchDataFor(\DateTimeImmutable $date, array $feeds, bool $force): array
     {
-        $this->fetchData($date, $feeds, $force);
+        return $this->fetchData($date, $feeds, $force);
     }
 
     /**
      * {@inheritdoc}
      */
-    final public function fetchDataBetween(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feeds, bool $force): void
+    final public function fetchDataBetween(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feeds, bool $force): array
     {
+        $errors = [];
+
         $date = \DateTime::createFromImmutable($startDate);
         while ($date <= $endDate) {
-            $this->fetchDataFor(\DateTimeImmutable::createFromMutable($date), $feeds, $force);
+            $errors = \array_merge(
+                $errors,
+                $this->fetchDataFor(\DateTimeImmutable::createFromMutable($date), $feeds, $force)
+            );
             $date->add(new \DateInterval('P1D'));
         }
+
+        return $errors;
     }
 }
