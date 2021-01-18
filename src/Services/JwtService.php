@@ -30,9 +30,14 @@ class JwtService
         );
     }
 
+    public function keyExists(): bool
+    {
+        return \file_exists($this->privateKey) && \file_exists($this->publicKey);
+    }
+
     public function generateRsaKey(): void
     {
-        // Ensure private direrctory exists
+        // Ensure private directory exists
         if (!\is_dir($this->privateDir)) {
             \mkdir($this->privateDir);
         }
