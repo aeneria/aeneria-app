@@ -30,6 +30,7 @@ Rendez-vous dans le répertoire parent du répertoire d'installation d'æneria, 
     mv ../aeneria-app-backup/.env .
     mv ../aeneria-app-backup/config/packages/doctrine.yaml config/packages/doctrine.yaml
     rsync -av ../aeneria-app-backup/var/ var/
+    rsync -av ../aeneria-app-backup/private/ private/
 
     # Lancer les éventuelles migrations :
     php7.3 bin/console doctrine:migrations:migrate

@@ -8,6 +8,7 @@ parameters:
     aeneria.version: '1.1.2'
     aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
     aeneria.documentation: 'https://docs.aeneria.com/fr/'
+
     # aeneria features
     aeneria.user.max_places: "%env(AENERIA_USER_MAX_PLACES)%"
     aeneria.user.can_share_place: "%env(AENERIA_USER_CAN_SHARE_PLACE)%"
@@ -17,13 +18,18 @@ parameters:
     aeneria.place_can_be_public: "%env(AENERIA_PLACE_CAN_BE_PUBLIC)%"
     aeneria.demo_mode: "%env(AENERIA_DEMO_MODE)%"
     aeneria.welcome_message: "%env(AENERIA_WELCOME_MESSAGE)%"
+
     # Enedis Data Connect
+    env(ENEDIS_CLIENT_ID): ""
+    env(ENEDIS_CLIENT_SECRET): ""
+    env(ENEDIS_REDIRECT_URI): ""
     aeneria.enedis.client_id: "%env(ENEDIS_CLIENT_ID)%"
     aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"
     aeneria.enedis.redirect_uri: "%env(ENEDIS_REDIRECT_URI)%"
     aeneria.enedis.endpoint_auth: "%env(ENEDIS_ENDPOINT_AUTH)%"
     aeneria.enedis.endpoint_token: "%env(ENEDIS_ENDPOINT_TOKEN)%"
     aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
+
     # Matomo
     env(MATOMO_URL): ""
     env(MATOMO_SITE_ID): ""

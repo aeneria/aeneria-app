@@ -188,9 +188,6 @@ Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
 
     ...
 
-    ENEDIS_CLIENT_ID=whatYouWantItWouldNotBeUsed
-    ENEDIS_CLIENT_SECRET=whatYouWantItWouldNotBeUsed
-    ENEDIS_REDIRECT_URI=whatYouWantItWouldNotBeUsed
     ENEDIS_ENDPOINT_AUTH=https://proxy.aeneria.com/enedis-data-connect
     ENEDIS_ENDPOINT_TOKEN=https://proxy.aeneria.com/enedis-data-connect
     ENEDIS_ENDPOINT_DATA=https://gw.prd.api.enedis.fr
