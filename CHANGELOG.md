@@ -1,16 +1,23 @@
-# æneria version 1.1.2
+# æneria version 1.1.3
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-* Fix - Bug sur la modification d'une adresse
-* Documentation - Mise à jour de la documentation d'installation
-* Mise à jour vers Symfony 5.2
+* Ajout de la possibilité de faire du suivi avec Matomo
+* CLI - Mise à jour de la commande de rafraichissement des données pour pouvoir rafraichir entre 2 dates
+* Configuration - Ajout du PDL dans la description des compteurs linky
+* CLI - Ajout d'une commande pour regénérer la clef RSA
 
 ## Anciennes versions
 
+### 1.1.2
+
+* Fix - Bug sur la modification d'une adresse
+* Documentation - Mise à jour de la documentation d'installation
+* Mise à jour vers Symfony 5.2
+*
 ### 1.1.1
 
 * Fix - bug sur le chargement des assets
