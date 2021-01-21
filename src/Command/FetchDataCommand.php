@@ -37,6 +37,8 @@ class FetchDataCommand extends Command
             ->setDescription('Get newly data from all feeds')
             ->setHelp('This command allows you to fetch newly data for all active feeds')
             ->addOption('date', 'd', InputOption::VALUE_OPTIONAL, 'A date (Y-m-d), if you want to refresh data for a specific date.')
+            ->addOption('startDate', null, InputOption::VALUE_OPTIONAL, 'A date (Y-m-d), if you want to refresh data for a date range.')
+            ->addOption('endDate', null, InputOption::VALUE_OPTIONAL, 'A date (Y-m-d), if you want to refresh data for a date range.')
             ->addOption('force', 'f', InputOption::VALUE_NONE, "Use this option if you want to refresh data even if it already exists (that's relevant only if you precise a date with the --date option)")
             ->addOption('placeid', null, InputOption::VALUE_OPTIONAL, 'A Place ID, if you want to refresh data for a specific place.')
             ->addOption('feedid', null, InputOption::VALUE_OPTIONAL, 'A Feed ID, if you want to refresh data for a specific feed.')
@@ -45,6 +47,16 @@ class FetchDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('date') && ($input->getOption('startDate') || $input->getOption('endDate'))) {
+            throw new \Exception("You can't specify a date AND a range of dates, you have to choose !");
+        }
+
+        if (
+            ($input->getOption('startDate') || $input->getOption('endDate')) &&
+            !($input->getOption('startDate') && $input->getOption('endDate'))) {
+            throw new \Exception("If you specify a start date you have to specify an end date ! (or contrary)");
+        }
+
         if ($input->getOption('placeid') && $input->getOption('feedid')) {
             throw new \Exception("You can't specify a Place id AND a Feed id, you have to choose !");
         }
@@ -91,16 +103,21 @@ class FetchDataCommand extends Command
     private function fetchFor(InputInterface $input, array $feeds, FeedDataProviderInterface $feedDataProvider)
     {
         if ($date = $input->getOption('date')) {
-            // If a date is given, we update only for this date.
-
             $date = new \DateTimeImmutable($date);
+
             $feedDataProvider->fetchDataFor($date, $feeds, $input->getOption('force'));
+        } elseif (($startDate = $input->getOption('startDate')) && ($endDate = $input->getOption('endDate'))) {
+            $startDate = new \DateTimeImmutable($startDate);
+            $endDate = new \DateTimeImmutable($endDate);
+
+            $feedDataProvider->fetchDataBetween($startDate, $endDate, $feeds, $input->getOption('force'));
         } else {
             // Else we update from last data to yesterday.
             // Get yesterday datetime.
             $date = new \DateTime();
             $date->sub(new \DateInterval('P1D'));
             $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
+
             $feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
         }
     }
