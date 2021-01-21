@@ -7,6 +7,7 @@ use App\Repository\PlaceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractAppController extends AbstractController
 {
@@ -54,5 +55,14 @@ abstract class AbstractAppController extends AbstractController
         }
 
         return $place;
+    }
+
+    final protected function checkUser(): ?UserInterface
+    {
+        if (!($user = $this->getUser()) || $this->isDemoMode) {
+            throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à modifier le compte utilisateur.");
+        }
+
+        return $user;
     }
 }

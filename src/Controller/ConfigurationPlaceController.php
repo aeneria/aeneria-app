@@ -32,12 +32,8 @@ class ConfigurationPlaceController extends AbstractAppController
         $user = $this->getUser();
         \assert($user instanceof User);
 
-        if (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces && !$this->isDemoMode) {
-            throw new AccessDeniedHttpException(\sprintf(
-                "Vous ne pouvez créer que %s adresse%s.",
-                $userMaxPlaces,
-                $userMaxPlaces > 1 ? 's' : ''
-            ));
+        if ((-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces) || $this->isDemoMode) {
+            throw new AccessDeniedHttpException("Vous ne pouvez plus créer d'adresse.");
         }
 
         return $this->render('configuration/place/new.html.twig', [

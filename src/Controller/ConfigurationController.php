@@ -296,8 +296,10 @@ class ConfigurationController extends AbstractAppController
      */
     public function userUpdateAction(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $user = $this->checkUser();
+
         /** @var \Symfony\Component\Form\FormBuilder $configForm */
-        $userForm = $this->createForm(UpdateAccountType::class, $this->getUser(), [
+        $userForm = $this->createForm(UpdateAccountType::class, $user, [
             'data_class' => null,
             'constraints' => [
                 new UniqueUsername(),
@@ -339,7 +341,7 @@ class ConfigurationController extends AbstractAppController
      */
     public function userDeleteAction(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $user = $this->getUser();
+        $user = $this->checkUser();
 
         $form = $this
             ->createFormBuilder([], [
