@@ -47,7 +47,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_user_can_import', [$this, 'canUserImportData']),
             new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
             new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
-            new TwigFunction('aeneria_feed_get_address', [$this, 'getFeedAddress']),
+            new TwigFunction('aeneria_linky_get_description', [$this, 'getLinkyDescription']),
             new TwigFunction('aeneria_demo_mode', [$this, 'isDemoMode']),
             new TwigFunction('aeneria_welcome_message', [$this, 'getWelcomeMessage']),
             new TwigFunction('aeneria_matomo', [$this, 'getMatomo']),
@@ -142,10 +142,12 @@ final class AppExtension extends AbstractExtension
         return $this->parameters->get('aeneria.welcome_message');
     }
 
-    public function getFeedAddress(Feed $feed): ?Address
+    public function getLinkyDescription(Feed $feed): ?Address
     {
         if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
-            return $this->enedisDataConnectProvider->getAddressFrom($feed);
+            $address = $this->enedisDataConnectProvider->getAddressFrom($feed);
+
+            return $address . ' (PDL : ' . $address->getUsagePointId() . ')';
         }
 
         return null;
