@@ -11,7 +11,8 @@
     {% for file in encore_entry_css_files('app') %}
       <link href="{{ relative_path(asset(file)) }}" rel="stylesheet" />
     {% endfor %}
-    {# {{ encore_entry_link_tags('app') }} #}
+
+    {{ aeneria_matomo()|raw }}
   </head>
   <body>
     {% if (app.user) %}

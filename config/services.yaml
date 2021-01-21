@@ -24,6 +24,11 @@ parameters:
     aeneria.enedis.endpoint_auth: "%env(ENEDIS_ENDPOINT_AUTH)%"
     aeneria.enedis.endpoint_token: "%env(ENEDIS_ENDPOINT_TOKEN)%"
     aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
+    # Matomo
+    env(MATOMO_URL): ""
+    env(MATOMO_SITE_ID): ""
+    aeneria.matomo.url: "%env(MATOMO_URL)%"
+    aeneria.matomo.site_id: "%env(MATOMO_SITE_ID)%"
 
 services:
     # default configuration for services in *this* file

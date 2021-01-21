@@ -50,6 +50,7 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_feed_get_address', [$this, 'getFeedAddress']),
             new TwigFunction('aeneria_demo_mode', [$this, 'isDemoMode']),
             new TwigFunction('aeneria_welcome_message', [$this, 'getWelcomeMessage']),
+            new TwigFunction('aeneria_matomo', [$this, 'getMatomo']),
         ];
     }
 
@@ -145,6 +146,34 @@ final class AppExtension extends AbstractExtension
     {
         if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
             return $this->enedisDataConnectProvider->getAddressFrom($feed);
+        }
+
+        return null;
+    }
+
+    public function getMatomo(): ?string
+    {
+        if (
+            ($matomoUrl = $this->parameters->get('aeneria.matomo.url')) &&
+            ($matomoSiteId = $this->parameters->get('aeneria.matomo.site_id'))
+        ) {
+            return <<<EOL
+            <!-- Matomo -->
+            <script type="text/javascript">
+            var _paq = window._paq = window._paq || [];
+            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u="//$matomoUrl/";
+                _paq.push(['setTrackerUrl', u+'matomo.php']);
+                _paq.push(['setSiteId', '$matomoSiteId']);
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            })();
+            </script>
+            <!-- End Matomo Code -->
+            EOL;
         }
 
         return null;
