@@ -142,7 +142,7 @@ final class AppExtension extends AbstractExtension
         return $this->parameters->get('aeneria.welcome_message');
     }
 
-    public function getLinkyDescription(Feed $feed): ?Address
+    public function getLinkyDescription(Feed $feed): ?string
     {
         if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
             $address = $this->enedisDataConnectProvider->getAddressFrom($feed);
