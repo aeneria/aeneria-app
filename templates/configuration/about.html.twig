@@ -36,19 +36,18 @@
         </li>
       </ul>
       <hr>
-      <h2><i class="fas fa-bullhorn"></i> - {{ 'Envie d\'aider æneria ?' | trans }}</h2>
+      <h2><i class="fas fa-bullhorn"></i> - {{ 'Envie de remercier le développeur d\'æneria ?' | trans }}</h2>
       <div class="row justify-content-center">
         <div class="col">
-          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-            <input type="hidden" name="cmd" value="_s-xclick" />
-            <input type="hidden" name="hosted_button_id" value="EXHAXM6FUG8C6" />
             <p>
-              <i class="fas fa-beer"></i> {{ 'Payez-nous une petite bière' | trans }}
-              <button class="btn btn-primary ml-1" name="submit" title="{{ 'Via le site de PayPal' | trans }}">
-                <i class="fab fa-paypal"></i> {{ 'Faire un don' | trans }}
-              </button>
+              {{ 'Faites un don :' | trans }}
+              <a class="btn btn-info ml-1" href="https://paypal.me/aeneria" title="{{ 'Via le site de PayPal' | trans }}">
+                {{ 'via PayPal' | trans }} <i class="fab fa-paypal"></i>
+              </a>
+              <a class="btn btn-warning ml-1" href="https://www.buymeacoffee.com/aeneria" title="{{ 'Via le site de PayPal' | trans }}">
+                {{ 'via BuyMeACoffee' | trans }} <i class="fas fa-coffee"></i>
+              </a>
             </p>
-          </form>
         </div>
       </div>
       <hr>
