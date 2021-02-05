@@ -18,4 +18,19 @@ class PendingActionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PendingAction::class);
     }
+
+    /**
+     * @return PendingAction[]
+     */
+    public function findExpiredActions(): iterable
+    {
+        return $this
+            ->createQueryBuilder('a', 'a.id')
+            ->select()
+            ->where('a.expirationDate <= :date')
+            ->setParameter('date', new \DateTimeImmutable())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

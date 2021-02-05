@@ -7,8 +7,8 @@ use App\Form\UpdateAccountType;
 use App\Model\FetchingError;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
-use App\Services\DataImporter;
 use App\Services\FeedDataProvider\FeedDataProviderFactory;
+use App\Services\PendingActionService;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
 use App\Validator\Constraints\UpdatePassword;
@@ -234,7 +234,7 @@ class ConfigurationController extends AbstractAppController
     /**
      * Export Place data form view
      */
-    public function placeImportAction(bool $userCanExport, Request $request, DataImporter $dataImporter, string $id)
+    public function placeImportAction(bool $userCanExport, Request $request, PendingActionService $pendingActionService, string $projectDir, string $id)
     {
         if (!$userCanExport) {
             throw new NotFoundHttpException();
@@ -272,15 +272,19 @@ class ConfigurationController extends AbstractAppController
             if ($form->isValid()) {
                 $file = $form->getData()['file'];
                 \assert($file instanceof File);
+                $file->move(
+                    $directory = \sprintf('%s/private/dataImport/', $projectDir),
+                    $filename = uniqid()
+                );
+                $pendingActionService->createDataImportAction(
+                    $this->getUser(),
+                    $place,
+                    \sprintf('%s/%s', $directory, $filename)
+                );
 
-                if ($errors = $dataImporter->importPlace($place, $file->getPathname())) {
-                    $this->addFlash('warning', 'Les données ont été importées, mais des erreurs sont survenus :');
-                    foreach ($errors as $error) {
-                        $this->addFlash('warning', $error);
-                    }
-                } else {
-                    $this->addFlash('success', 'Les données ont été correctement importés');
-                }
+                $this->addFlash('success', 'Les données seront importés en arrière-plan dans quelques minutes.');
+
+                return $this->redirectToRoute('config');
             }
         }
 

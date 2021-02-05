@@ -7,8 +7,6 @@ namespace App\Entity;
  */
 class PendingAction
 {
-    const ACTION_DATA_CONNECT_CALLBACK = 'data_connect_callback';
-
     const TOKEN_LENGTH = 10;
 
     /** @var int */
