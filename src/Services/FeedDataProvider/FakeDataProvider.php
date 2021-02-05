@@ -5,7 +5,6 @@ namespace App\Services\FeedDataProvider;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
-use App\Model\FetchingError;
 
 /**
  * Fake data provider

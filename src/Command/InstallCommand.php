@@ -17,9 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class InstallCommand extends Command
 {
-    /**  @var InputInterface */
+    /** @var InputInterface */
     protected $defaultInput;
-    /**  @var SymfonyStyle */
+    /** @var SymfonyStyle */
     protected $io;
 
     /** @var EntityManagerInterface */

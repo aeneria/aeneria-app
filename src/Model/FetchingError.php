@@ -22,7 +22,6 @@ class FetchingError
         $this->exception = $exception;
     }
 
-
     /** @var Feed */
     public function getFeed(): Feed
     {

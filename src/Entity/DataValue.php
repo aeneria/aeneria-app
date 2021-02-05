@@ -280,7 +280,7 @@ class DataValue
     /**
      * Set feedData
      */
-    public function setFeedData(\App\Entity\FeedData $feedData): self
+    public function setFeedData(FeedData $feedData): self
     {
         $this->feedData = $feedData;
 
