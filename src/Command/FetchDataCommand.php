@@ -17,12 +17,18 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FetchDataCommand extends Command
 {
+    /** @var PlaceRepository */
     private $placeRepository;
+    /** @var FeedRepository */
     private $feedRepository;
+    /** @var FeedDataProviderFactory */
     private $feedDataProviderFactory;
 
-    public function __construct(PlaceRepository $placeRepository, FeedRepository $feedRepository, FeedDataProviderFactory $feedDataProviderFactory)
-    {
+    public function __construct(
+        PlaceRepository $placeRepository,
+        FeedRepository $feedRepository,
+        FeedDataProviderFactory $feedDataProviderFactory
+    ) {
         $this->placeRepository = $placeRepository;
         $this->feedRepository = $feedRepository;
         $this->feedDataProviderFactory = $feedDataProviderFactory;

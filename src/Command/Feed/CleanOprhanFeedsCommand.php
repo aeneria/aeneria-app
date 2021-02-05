@@ -14,6 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class CleanOprhanFeedsCommand extends Command
 {
+    /** @var FeedRepository */
     private $feedRepository;
 
     public function __construct(FeedRepository $feedRepository)

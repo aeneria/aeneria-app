@@ -21,19 +21,29 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class GenerateFakeDataCommand extends Command
 {
+    /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var UserRepository */
     private $userRepository;
+    /** @var PlaceRepository */
     private $placeRepository;
+    /** @var FeedRepository */
     private $feedRepository;
 
+    /** @var FakeDataProvider */
     private $fakeDataProvider;
 
+    /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository,
-            PlaceRepository $placeRepository, FeedRepository $feedRepository,
-            FakeDataProvider $fakeDataProvider, UserPasswordEncoderInterface $passwordEncoder
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        PlaceRepository $placeRepository,
+        FeedRepository $feedRepository,
+        FakeDataProvider $fakeDataProvider,
+        UserPasswordEncoderInterface $passwordEncoder
     ) {
         $this->entityManager = $entityManager;
 

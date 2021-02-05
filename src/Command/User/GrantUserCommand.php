@@ -16,17 +16,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class GrantUserCommand extends Command
 {
-    /**
-     * @var InputInterface
-     */
+    /** @var InputInterface */
     protected $defaultInput;
 
-    /**
-     * @var SymfonyStyle
-     */
+    /** @var SymfonyStyle */
     protected $io;
 
+    /** @var EntityManagerInterface */
     private $entityManager;
+    /** @var UserRepository */
     private $userRepository;
 
     public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)

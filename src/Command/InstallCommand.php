@@ -12,26 +12,18 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/***
+/**
  * Inspired by Wallabag install command.
  */
 class InstallCommand extends Command
 {
-    /**
-     * @var InputInterface
-     */
+    /**  @var InputInterface */
     protected $defaultInput;
-
-    /**
-     * @var SymfonyStyle
-     */
+    /**  @var SymfonyStyle */
     protected $io;
 
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
-
     /** @var JwtService */
     private $jwtService;
 

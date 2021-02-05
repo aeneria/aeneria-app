@@ -18,8 +18,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class GenerateAllMeteoFeedCommand extends Command
 {
+    /** @var FeedRepository */
     private $feedRepository;
+    /** @var MeteoFranceDataProvider */
     private $meteoFranceDataProvider;
+    /** @var EntityManagerInterface */
     private $entityManager;
 
     public function __construct(
