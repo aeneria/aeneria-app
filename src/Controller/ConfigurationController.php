@@ -42,7 +42,7 @@ class ConfigurationController extends AbstractAppController
     /**
      * Fetch Place data form view
      */
-    public function placeFetchAction(bool $userCanFetch, Request $request, FeedDataProviderFactory $feedDataProviderFactory, FormFactoryInterface $formFactory, string $id)
+    public function placeFetchAction(bool $userCanFetch, Request $request, PendingActionService $pendingActionService, FormFactoryInterface $formFactory, string $id)
     {
         if (!$userCanFetch) {
             throw new NotFoundHttpException();
@@ -114,40 +114,22 @@ class ConfigurationController extends AbstractAppController
                     $startDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['start_date_' . $feedId]);
                     $endDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data['end_date_' . $feedId]);
 
-                    $errors = $feedDataProviderFactory
-                        ->fromFeed($feeds[$feedId])
-                        ->fetchDataBetween($startDate, $endDate, [$feeds[$feedId]], $data['force_' . $feedId])
-                    ;
+                    $pendingActionService->createDataFetchAction(
+                        $this->getUser(),
+                        $feeds[$feedId],
+                        $startDate,
+                        $endDate,
+                        $data['force_' . $feedId]
+                    );
 
-                    if ($errors) {
-                        $message = \sprintf(
-                            "Toutes les données %s n'ont pas été correctement rechargées pour les dates du %s au %s.",
-                            \ucfirst($feeds[$feedId]->getName()),
-                            $data['start_date_' . $feedId],
-                            $data['end_date_' . $feedId]
-                        );
-                        $this->addFlash('warning', $message);
+                    $this->addFlash('success', \sprintf(
+                        'Le rechargement des données %s pour la période du %s au %s débutera en arrière-plan dans quelques minutes.',
+                        \ucfirst($feeds[$feedId]->getName()),
+                        $data['start_date_' . $feedId],
+                        $data['end_date_' . $feedId]
+                    ));
 
-                        foreach ($errors as $error) {
-                            \assert($error instanceof FetchingError);
-
-                            $message = \sprintf(
-                                "Il y a eu une erreur pour %s pour la date du %s : '%s'",
-                                \ucfirst($error->getFeed()->getName()),
-                                $error->getDate()->format('d/m/Y'),
-                                $error->getException()->getMessage()
-                            );
-                            $this->addFlash('error', $message);
-                        }
-                    } else {
-                        $message = \sprintf(
-                            'Les données %s ont été correctement rechargées entre le %s et le %s.',
-                            \ucfirst($feeds[$feedId]->getName()),
-                            $data['start_date_' . $feedId],
-                            $data['end_date_' . $feedId]
-                        );
-                        $this->addFlash('success', $message);
-                    }
+                    return $this->redirectToRoute('config');
                 }
             }
         }

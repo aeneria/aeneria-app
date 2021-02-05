@@ -131,7 +131,9 @@ class PendingActionService
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'filename'");
         }
         try {
-            $this->dataImporter->importPlace($place, $filename);
+            $errors = $this->dataImporter->importPlace($place, $filename);
+
+            // @todo deals woith error with futur Notifications process
         } catch (\Exception $e) {
             echo $e->getMessage();
         } finally {
@@ -148,8 +150,8 @@ class PendingActionService
             new \DateTimeImmutable('now'),
             [
                 'feed' => $feed->getId(),
-                'start' => $start,
-                'end' => $end,
+                'start' => $start->format('Y-M-d'),
+                'end' => $end->format('Y-M-d'),
                 'force' => $force,
             ]
         );
@@ -158,38 +160,61 @@ class PendingActionService
     public function processDataFetchAction(PendingAction $action): void
     {
         if (self::ACTION_FETCH_DATA !== $action->getAction()) {
+            $this->delete($action);
             throw new \InvalidArgumentException("L'action n'est pas du type " . self::ACTION_FETCH_DATA);
         }
         if (!$feedId = $action->getSingleParam('feed')) {
+            $this->delete($action);
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'feed'");
         }
         if (!$feed = $this->feedRepository->find($feedId)) {
+            $this->delete($action);
             throw new \InvalidArgumentException("Impossible de trouver le feed avec l'id " . $feedId);
         }
 
-        if (!$start = $action->getSingleParam('start')) {
-            throw new \InvalidArgumentException("L'action n'a pas de paramètre 'start'");
-        }
-        if (!$start instanceof \DateTimeImmutable) {
-            throw new \InvalidArgumentException("Le paramètre 'start' n'est pas un DateTimeImmutable");
+        if (!$start = \DateTimeImmutable::createFromFormat('Y-M-d', $action->getSingleParam('start'))) {
+            $this->delete($action);
+            throw new \InvalidArgumentException("L'action n'a pas de paramètre 'start' ou celui-ci est mal formé.");
         }
 
-        if (!$end = $action->getSingleParam('end')) {
-            throw new \InvalidArgumentException("L'action n'a pas de paramètre 'end'");
-        }
-        if (!$end instanceof \DateTimeImmutable) {
-            throw new \InvalidArgumentException("Le paramètre 'end' n'est pas un DateTimeImmutable");
+        if (!$end = \DateTimeImmutable::createFromFormat('Y-M-d', $action->getSingleParam('end'))) {
+            $this->delete($action);
+            throw new \InvalidArgumentException("L'action n'a pas de paramètre 'end' ou celui-ci est mal formé.");
         }
 
         if (!$force = $action->getSingleParam('force')) {
+            $this->delete($action);
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'force'");
         }
 
-        $this
+        $errors = $this
             ->feedDataProviderFactory
             ->fromFeed($feed)
             ->fetchDataBetween($start, $end, [$feed], $force)
         ;
+
+        // @todo deal with errors with futur Notification process
+        // if ($errors) {
+        //     $message = \sprintf(
+        //         "Toutes les données %s n'ont pas été correctement rechargées pour les dates du %s au %s.",
+        //         \ucfirst($feeds[$feedId]->getName()),
+        //         $data['start_date_' . $feedId],
+        //         $data['end_date_' . $feedId]
+        //     );
+        //     $this->addFlash('warning', $message);
+
+        //     foreach ($errors as $error) {
+        //         \assert($error instanceof FetchingError);
+
+        //         $message = \sprintf(
+        //             "Il y a eu une erreur pour %s pour la date du %s : '%s'",
+        //             \ucfirst($error->getFeed()->getName()),
+        //             $error->getDate()->format('d/m/Y'),
+        //             $error->getException()->getMessage()
+        //         );
+        //         $this->addFlash('error', $message);
+        //     }
+        // }
 
         $this->delete($action);
     }
