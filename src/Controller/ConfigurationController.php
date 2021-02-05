@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UpdateAccountType;
-use App\Model\FetchingError;
 use App\Repository\UserRepository;
 use App\Services\DataExporter;
-use App\Services\FeedDataProvider\FeedDataProviderFactory;
 use App\Services\PendingActionService;
 use App\Validator\Constraints\AtLeastOneAdmin;
 use App\Validator\Constraints\UniqueUsername;
@@ -256,7 +254,7 @@ class ConfigurationController extends AbstractAppController
                 \assert($file instanceof File);
                 $file->move(
                     $directory = \sprintf('%s/private/dataImport/', $projectDir),
-                    $filename = uniqid()
+                    $filename = \uniqid()
                 );
                 $pendingActionService->createDataImportAction(
                     $this->getUser(),

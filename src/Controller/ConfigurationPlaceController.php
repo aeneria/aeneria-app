@@ -172,8 +172,8 @@ class ConfigurationPlaceController extends AbstractAppController
             throw new BadRequestHttpException();
         }
 
-        $token = $jwtService->decode($state);
-        $pendingAction = $actionService->findDataConnectCallbackAction($user, $token);
+        $token = (string) $jwtService->decode($state);
+        $pendingAction = $actionService->findActionByToken($user, $token);
 
         try {
             $token = $dataConnectService

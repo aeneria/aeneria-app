@@ -238,12 +238,11 @@ class PendingActionService
             //         $this->addFlash('error', $message);
             //     }
             // }
-        } catch ( \Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error("Pending Action - Error while processing action", ['user' => $action->getUser()->getId(), 'action' => $action->getId(), 'message' => $e->getMessage()]);
 
             // @todo deals with error with futur Notifications process
-        }
-        finally {
+        } finally {
             $this->logger->info("Pending Action - Fetch data action processed, delete it", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
         }
