@@ -13,7 +13,10 @@ final class DataImporterTest extends AppTestCase
     public function testDataImporterWithCleanExport()
     {
         $dataValueRepository = $this->getDataValueRepository();
-        $dataImporter = new DataImporter($dataValueRepository);
+        $dataImporter = new DataImporter(
+            $dataValueRepository,
+            $this->getLogger()
+        );
 
         $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
@@ -29,7 +32,10 @@ final class DataImporterTest extends AppTestCase
     public function testDataImporterWithBrokenExport()
     {
         $dataValueRepository = $this->getDataValueRepository();
-        $dataImporter = new DataImporter($dataValueRepository);
+        $dataImporter = new DataImporter(
+            $dataValueRepository,
+            $this->getLogger()
+        );
 
         $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);

@@ -5,7 +5,7 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="token" column="token" type="string" length="25"/>
-        <many-to-one field="user" target-entity="App\Entity\User" inversed-by="places">
+        <many-to-one field="user" target-entity="App\Entity\User">
             <join-column nullable="false"/>
         </many-to-one>
         <field name="action" column="action" type="string" length="255"/>
