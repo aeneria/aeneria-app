@@ -5,17 +5,28 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Entity\PendingAction;
+use App\Services\DataImporter;
+use App\Services\FeedDataProvider\FeedDataProviderFactory;
 use App\Services\PendingActionService;
 use App\Tests\AppTestCase;
 
 final class PendingActionServiceTest extends AppTestCase
 {
+    private function createPendingActionService(): PendingActionService
+    {
+        return new PendingActionService(
+            $this->getEntityManager(),
+            $this->getPendingActionRepository(),
+            $this->getPlaceRepository(),
+            $this->getFeedRepository(),
+            $this->createMock(DataImporter::class),
+            $this->createMock(FeedDataProviderFactory::class),
+            $this->getLogger()
+        );
+    }
     public function testCreateDataConnectCallbackAction()
     {
-        $actionService = new PendingActionService(
-            $this->getEntityManager(),
-            $this->getPendingActionRepository()
-        );
+        $actionService = $this->createPendingActionService();
 
         $user = $this->createPersistedUser();
         $place = $this->createPersistedPlace(['user' => $user]);
@@ -25,7 +36,7 @@ final class PendingActionServiceTest extends AppTestCase
         self::assertSame($action->getUser(), $user);
         self::assertTrue($action->existParam('place'));
         self::assertSame($action->getSingleParam('place'), $place->getId());
-        self::assertSame($action->getAction(), PendingAction::ACTION_DATA_CONNECT_CALLBACK);
+        self::assertSame($action->getAction(), PendingActionService::ACTION_DATA_CONNECT_CALLBACK);
         self::assertEquals(PendingAction::TOKEN_LENGTH, \strlen($action->getToken()));
         self::assertLessThan(new \DateTimeImmutable('now + 1 day'), $action->getExpirationDate());
 
@@ -34,29 +45,23 @@ final class PendingActionServiceTest extends AppTestCase
         self::assertNotEquals($action->getToken(), $action2->getToken());
     }
 
-    public function testFindDataConnectCallbackAction()
+    public function testFindActionByToken()
     {
-        $actionService = new PendingActionService(
-            $this->getEntityManager(),
-            $this->getPendingActionRepository()
-        );
+        $actionService = $this->createPendingActionService();
 
         $user = $this->createPersistedUser();
         $place = $this->createPersistedPlace(['user' => $user]);
 
         $action = $actionService->createDataConnectCallbackAction($user, $place);
 
-        $actionFromRepo = $actionService->findDataConnectCallbackAction($user, $action->getToken());
+        $actionFromRepo = $actionService->findActionByToken($user, $action->getToken());
 
         self::assertSame($action, $actionFromRepo);
     }
 
-    public function testFindDataConnectCallbackActionDeniedWrongUser()
+    public function testFindActionByTokenDeniedWrongUser()
     {
-        $actionService = new PendingActionService(
-            $this->getEntityManager(),
-            $this->getPendingActionRepository()
-        );
+        $actionService = $this->createPendingActionService();
 
         $user = $this->createPersistedUser();
         $user2 = $this->createPersistedUser();
@@ -65,19 +70,16 @@ final class PendingActionServiceTest extends AppTestCase
         $action = $actionService->createDataConnectCallbackAction($user, $place);
 
         $this->expectExceptionMessage("Le token ne correspond pas à l'utilisateur courant");
-        $actionService->findDataConnectCallbackAction($user2, $action->getToken());
+        $actionService->findActionByToken($user2, $action->getToken());
     }
 
-    public function testFindDataConnectCallbackActionUnknownToken()
+    public function testFindActionByTokenUnknownToken()
     {
-        $actionService = new PendingActionService(
-            $this->getEntityManager(),
-            $this->getPendingActionRepository()
-        );
+        $actionService = $this->createPendingActionService();
 
         $user = $this->createPersistedUser();
 
         $this->expectExceptionMessage("Impossible de trouver la demande correspondante");
-        $actionService->findDataConnectCallbackAction($user, 'totoot');
+        $actionService->findActionByToken($user, 'totoot');
     }
 }
