@@ -86,11 +86,6 @@ trait AppTestTrait
         return $this->getContainer()->get('security.password_encoder');
     }
 
-    final protected function getSerializer(): SerializerInterface
-    {
-        return $this->getContainer()->get('serializer');
-    }
-
     /**
      * Create User from array
      */

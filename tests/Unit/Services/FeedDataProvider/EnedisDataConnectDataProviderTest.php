@@ -10,10 +10,11 @@ use Aeneria\EnedisDataConnectApi\Service\MockDataConnectService;
 use App\Entity\Feed;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Tests\AppTestCase;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class EnedisDataConnectDataProviderTest extends AppTestCase
 {
-    private function createEnedisDataConnectDataProvider(): EnedisDataConnectProvider
+    private function createEnedisDataConnectDataProvider(?SerializerInterface $serializer): EnedisDataConnectProvider
     {
         return new EnedisDataConnectProvider(
             $this->getEntityManager(),
@@ -21,14 +22,13 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             $this->getFeedDataRepository(),
             $this->getDataValueRepository(),
             new MockDataConnectService(),
-            $this->getSerializer(),
+            $serializer ?? $this->createMock(SerializerInterface::class),
             $this->getLogger()
         );
     }
 
-    private function createEnedisDataConnectFeed(Token $token = null, Address $address = null): Feed
+    private function createEnedisDataConnectFeed(SerializerInterface $serializer, Token $token = null, Address $address = null): Feed
     {
-        $serializer = $this->getSerializer();
         $feedRepository = $this->getFeedRepository();
         $entityManager = $this->getEntityManager();
         $feed = $this->createPersistedFeed([
@@ -61,9 +61,22 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             ->setUsagePointsId('usage_point')
         ;
 
-        $feed = $this->createEnedisDataConnectFeed($token);
+        $serializer = $this->createMock(SerializerInterface::class);
+        \assert($serializer instanceof SerializerInterface);
+        $serializer
+            ->expects($this->exactly(1))
+            ->method('serialize')
+            ->willReturn('token')
+        ;
+        $serializer
+            ->expects($this->exactly(1))
+            ->method('deserialize')
+            ->willReturn($token)
+        ;
 
-        $dataProvider = $this->createEnedisDataConnectDataProvider();
+        $feed = $this->createEnedisDataConnectFeed($serializer, $token);
+
+        $dataProvider = $this->createEnedisDataConnectDataProvider($serializer);
 
         $tokenFromFeed = $dataProvider->getTokenFrom($feed);
 
@@ -88,9 +101,22 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             ->setAltitude(-5.2)
         ;
 
-        $feed = $this->createEnedisDataConnectFeed(null, $address);
+        $serializer = $this->createMock(SerializerInterface::class);
+        \assert($serializer instanceof SerializerInterface);
+        $serializer
+            ->expects($this->any())
+            ->method('serialize')
+            ->willReturn('adress')
+        ;
+        $serializer
+            ->expects($this->any())
+            ->method('deserialize')
+            ->willReturn($address)
+        ;
 
-        $dataProvider = $this->createEnedisDataConnectDataProvider();
+        $feed = $this->createEnedisDataConnectFeed($serializer, null, $address);
+
+        $dataProvider = $this->createEnedisDataConnectDataProvider($serializer);
 
         $adressFromFeed = $dataProvider->getAddressFrom($feed);
 
@@ -110,9 +136,22 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             ->setUsagePointsId('usage_point')
         ;
 
-        $feed = $this->createEnedisDataConnectFeed($token);
+        $serializer = $this->createMock(SerializerInterface::class);
+        \assert($serializer instanceof SerializerInterface);
+        $serializer
+            ->expects($this->any())
+            ->method('serialize')
+            ->willReturn('token')
+        ;
+        $serializer
+            ->expects($this->any())
+            ->method('deserialize')
+            ->willReturn($token)
+        ;
 
-        $dataProvider = $this->createEnedisDataConnectDataProvider();
+        $feed = $this->createEnedisDataConnectFeed($serializer, $token);
+
+        $dataProvider = $this->createEnedisDataConnectDataProvider($serializer);
 
         self::assertFalse($this->getFeedRepository()->isUpToDate($feed, $date = new \DateTimeImmutable('today midnight'), Feed::getFrequenciesFor(Feed::FEED_TYPE_ELECTRICITY)));
 
@@ -134,9 +173,22 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             ->setUsagePointsId('usage_point')
         ;
 
-        $feed = $this->createEnedisDataConnectFeed($token);
+        $serializer = $this->createMock(SerializerInterface::class);
+        \assert($serializer instanceof SerializerInterface);
+        $serializer
+            ->expects($this->any())
+            ->method('serialize')
+            ->willReturn('token')
+        ;
+        $serializer
+            ->expects($this->any())
+            ->method('deserialize')
+            ->willReturn($token)
+        ;
 
-        $dataProvider = $this->createEnedisDataConnectDataProvider();
+        $feed = $this->createEnedisDataConnectFeed($serializer, $token);
+
+        $dataProvider = $this->createEnedisDataConnectDataProvider($serializer);
 
         self::assertFalse($this->getFeedRepository()->isUpToDate($feed, $date = new \DateTimeImmutable('today midnight'), Feed::getFrequenciesFor(Feed::FEED_TYPE_ELECTRICITY)));
 
