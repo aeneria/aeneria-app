@@ -42,7 +42,7 @@ final class NotificationServiceTest extends AppTestCase
 
         self::assertSame($notification->getUser(), $user);
         self::assertSame($notification->getPlace(), $place);
-        self::assertSame($notification->getLevel(), Notification::LEVEL_INFO);
+        self::assertSame($notification->getLevel(), Notification::LEVEL_SUCCESS);
         self::assertSame($notification->getType(), Notification::TYPE_DATA_IMPORT);
         self::assertContains('réalisé avec succès', $notification->getMessage());
     }
@@ -112,7 +112,7 @@ final class NotificationServiceTest extends AppTestCase
 
         self::assertSame($notification->getUser(), $user);
         self::assertSame($notification->getPlace(), $place);
-        self::assertSame($notification->getLevel(), Notification::LEVEL_INFO);
+        self::assertSame($notification->getLevel(), Notification::LEVEL_SUCCESS);
         self::assertSame($notification->getType(), Notification::TYPE_DATA_FETCH);
         self::assertContains('réalisé avec succès', $notification->getMessage());
     }
@@ -155,45 +155,39 @@ final class NotificationServiceTest extends AppTestCase
         self::assertContains('blalba', $notification->getMessage());
     }
 
-    public function testGetNotificationFor()
+    public function testGetAndDeleteNotificationFor()
     {
         $user = $this->createUser();
+
+        $notifications = [
+            new Notification(),
+            new Notification(),
+            new Notification(),
+        ];
 
         $repository = $this->createMock(NotificationRepository::class);
         $repository
             ->expects($this->exactly(1))
             ->method('findNotificationForUser')
+            ->willReturn($notifications)
         ;
 
-        $notificationService = new NotificationService(
-            $this->createMock(EntityManagerInterface::class),
-            $repository,
-            $this->getLogger()
-        );
-
-        $notificationService->getNotificationFor($user);
-    }
-
-    public function testDeleteNotification()
-    {
-        $notification = new Notification();
-
-        $entityManage = $this->createMock(EntityManagerInterface::class);
-        $entityManage
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
             ->expects($this->exactly(1))
             ->method('flush')
         ;
-        $entityManage
-            ->expects($this->exactly(1))
+        $entityManager
+            ->expects($this->exactly(3))
             ->method('remove')
         ;
 
         $notificationService = new NotificationService(
-            $entityManage,
-            $this->createMock(NotificationRepository::class),
+            $entityManager,
+            $repository,
             $this->getLogger()
         );
 
-        $notification = $notificationService->deleteNotification($notification);
+        $notificationService->getAndDeleteNotificationFor($user);
     }
 }

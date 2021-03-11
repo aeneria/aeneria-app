@@ -7,7 +7,8 @@ namespace App\Entity;
  */
 class Notification
 {
-    const LEVEL_ERROR = 'error';
+    const LEVEL_ERROR = 'danger';
+    const LEVEL_SUCCESS = 'success';
     const LEVEL_INFO = 'information';
 
     const TYPE_DATA_IMPORT = 'data_import';

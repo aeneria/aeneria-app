@@ -33,6 +33,13 @@
                 {% endfor %}
             </div>
           {% endfor %}
+          {% if notifications is defined %}
+            {% for notification in notifications %}
+              <div class="alert alert-{{ notification.level }}">
+                  <p class="mb-0">{{ notification.message|raw }}</p>
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
       </div>
       {% endblock %}

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DashboardController extends AbstractController
 {
+    /** @var PlaceRepository */
     private $placeRepository;
 
     public function __construct(PlaceRepository $placeRepository)

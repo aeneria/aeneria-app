@@ -41,7 +41,7 @@ class NotificationService
             return $this->createNotification(
                 $user,
                 $place,
-                Notification::LEVEL_INFO,
+                Notification::LEVEL_SUCCESS,
                 Notification::TYPE_DATA_IMPORT,
                 "L'import du fichier de données a été réalisé avec succès !"
             );
@@ -69,7 +69,7 @@ class NotificationService
             return $this->createNotification(
                 $user,
                 $place,
-                Notification::LEVEL_INFO,
+                Notification::LEVEL_SUCCESS,
                 Notification::TYPE_DATA_FETCH,
                 "L'import du fichier de données a été réalisé avec succès !"
             );
@@ -130,17 +130,26 @@ class NotificationService
         return $notification;
     }
 
+
     /**
      * @return Notification[]
      */
-    public function getNotificationFor(User $user): ?iterable
+    public function getAndDeleteNotificationFor(User $user): ?iterable
     {
-        return $this->notificationRepository->findNotificationForUser($user);
+        $notifications = $this->notificationRepository->findNotificationForUser($user);
+
+        if(\count($notifications)) {
+            $this->deleteNotification($notifications);
+        }
+
+        return $notifications;
     }
 
-    public function deleteNotification(Notification $notification): void
+    private function deleteNotification(array $notifications): void
     {
-        $this->entityManager->remove($notification);
+        foreach ($notifications as $notification) {
+            $this->entityManager->remove($notification);
+        }
         $this->entityManager->flush();
     }
 }
