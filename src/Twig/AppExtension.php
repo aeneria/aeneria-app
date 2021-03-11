@@ -2,7 +2,6 @@
 
 namespace App\Twig;
 
-use Aeneria\EnedisDataConnectApi\Model\Address;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;

@@ -34,7 +34,7 @@ class DataImporter
      *
      * @return string filename should be an ODS file
      */
-    final public function importPlace(Place $place, string $filename): array
+    public function importPlace(Place $place, string $filename): array
     {
         $this->logger->debug("Import Data - Start processing Import", ['place' => $place->getId(), 'filename' => $filename]);
         $errors = [];

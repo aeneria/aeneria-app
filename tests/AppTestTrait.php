@@ -7,12 +7,14 @@ namespace App\Tests;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Notification;
 use App\Entity\PendingAction;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use App\Repository\NotificationRepository;
 use App\Repository\PendingActionRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\UserRepository;
@@ -20,7 +22,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 trait AppTestTrait
 {
@@ -79,6 +80,11 @@ trait AppTestTrait
     final protected function getPendingActionRepository(): PendingActionRepository
     {
         return $this->getEntityManager()->getRepository(PendingAction::class);
+    }
+
+    final protected function getNotificationRepository(): NotificationRepository
+    {
+        return $this->getEntityManager()->getRepository(Notification::class);
     }
 
     final protected function getPassordEncoder(): UserPasswordEncoderInterface
@@ -204,6 +210,32 @@ trait AppTestTrait
         $this->getEntityManager()->persist($dataValue);
 
         return $dataValue;
+    }
+
+    /**
+     * Create Notification from array
+     */
+    final protected function createNotification(array $data = []): Notification
+    {
+        return (new Notification())
+            ->setId($data['id'] ?? \rand())
+            ->setUser($data['user'] ?? $this->createUser())
+            ->setPlace($data['place'] ?? $this->createPlace())
+            ->setLevel($data['level'] ?? Notification::LEVEL_ERROR)
+            ->setType($data['type'] ?? 'test')
+            ->setDate($data['date'] ?? new \DateTimeImmutable())
+            ->setMessage($data['message'] ?? 'Message test')
+        ;
+    }
+
+    final protected function createPersistedNotification(array $data = [], array $userData = [], array $placeData = []): Notification
+    {
+        $user = $data['user'] ?? $this->createPersistedUser($userData);
+        $place = $data['place'] ?? $this->createPersistedPlace($placeData);
+        $notification = $this->createNotification($data + ['user' => $user, 'place' => $place]);
+        $this->getEntityManager()->persist($notification);
+
+        return $notification;
     }
 
     /**

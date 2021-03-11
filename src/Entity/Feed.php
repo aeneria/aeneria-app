@@ -208,6 +208,13 @@ class Feed
         return $this->places;
     }
 
+    public function getFirstPlace(): ?Place
+    {
+        if (0 < \count($this->places)) {
+            return $this->places[0];
+        }
+    }
+
     public function addPlace(Place $place): self
     {
         // If the place we try to add is already there, we delete it

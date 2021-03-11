@@ -38,6 +38,8 @@ class PendingActionService
     private $dataImporter;
     /** @var FeedDataProviderFactory */
     private $feedDataProviderFactory;
+    /** @var NotificationService */
+    private $notificationService;
 
     /** @var LoggerInterface */
     private $logger;
@@ -49,6 +51,7 @@ class PendingActionService
         FeedRepository $feedRepository,
         DataImporter $dataImporter,
         FeedDataProviderFactory $feedDataProviderFactory,
+        NotificationService $notificationService,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
@@ -59,6 +62,7 @@ class PendingActionService
 
         $this->dataImporter = $dataImporter;
         $this->feedDataProviderFactory = $feedDataProviderFactory;
+        $this->notificationService = $notificationService;
 
         $this->logger = $logger;
     }
@@ -74,7 +78,7 @@ class PendingActionService
         }
     }
 
-    public function processExpiredPendingAction(PendingAction $action): void
+    private function processExpiredPendingAction(PendingAction $action): void
     {
         switch ($action->getAction()) {
             case self::ACTION_DATA_CONNECT_CALLBACK:
@@ -115,7 +119,7 @@ class PendingActionService
         );
     }
 
-    public function processDataImportAction(PendingAction $action): void
+    private function processDataImportAction(PendingAction $action): void
     {
         $this->logger->debug("Pending Action - Start processing Import Data Action", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
 
@@ -143,13 +147,17 @@ class PendingActionService
         try {
             $errors = $this->dataImporter->importPlace($place, $filename);
 
-            // @todo deals with error with futur Notifications process
+            $this->notificationService->handleImportNotification($action->getUser(), $place, $errors);
         } catch (\Exception $e) {
             $this->logger->error("Pending Action - Error while processing action", ['user' => $action->getUser()->getId(), 'action' => $action->getId(), 'message' => $e->getMessage()]);
 
-            // @todo deals with error with futur Notifications process
+            $this->notificationService->handleImportNotification($action->getUser(), $place, [$e->getMessage()]);
         } finally {
-            \unlink($filename);
+            try {
+                \unlink($filename);
+            } catch (\Exception $e) {
+            }
+
             $this->logger->info("Pending Action - Import data action processed, delete it", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
         }
@@ -163,14 +171,14 @@ class PendingActionService
             new \DateTimeImmutable('now'),
             [
                 'feed' => $feed->getId(),
-                'start' => $start->format('Y-M-d'),
-                'end' => $end->format('Y-M-d'),
+                'start' => $start->format('Y-m-d'),
+                'end' => $end->format('Y-m-d'),
                 'force' => $force,
             ]
         );
     }
 
-    public function processDataFetchAction(PendingAction $action): void
+    private function processDataFetchAction(PendingAction $action): void
     {
         $this->logger->debug("Pending Action - Start processing Fetch Data Action", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
 
@@ -190,13 +198,13 @@ class PendingActionService
             throw new \InvalidArgumentException("Impossible de trouver le feed avec l'id " . $feedId);
         }
 
-        if (!$start = \DateTimeImmutable::createFromFormat('Y-M-d', $action->getSingleParam('start'))) {
+        if (!$start = \DateTimeImmutable::createFromFormat('Y-m-d', $action->getSingleParam('start'))) {
             $this->logger->error("Pending Action - Missing parameter 'start', delete action", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'start' ou celui-ci est mal formé.");
         }
 
-        if (!$end = \DateTimeImmutable::createFromFormat('Y-M-d', $action->getSingleParam('end'))) {
+        if (!$end = \DateTimeImmutable::createFromFormat('Y-m-d', $action->getSingleParam('end'))) {
             $this->logger->error("Pending Action - Missing parameter 'end', delete action", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'end' ou celui-ci est mal formé.");
@@ -215,33 +223,11 @@ class PendingActionService
                 ->fetchDataBetween($start, $end, [$feed], $force)
             ;
 
-            // @todo deal with errors with futur Notification process
-
-            // if ($errors) {
-            //     $message = \sprintf(
-            //         "Toutes les données %s n'ont pas été correctement rechargées pour les dates du %s au %s.",
-            //         \ucfirst($feeds[$feedId]->getName()),
-            //         $data['start_date_' . $feedId],
-            //         $data['end_date_' . $feedId]
-            //     );
-            //     $this->addFlash('warning', $message);
-
-            //     foreach ($errors as $error) {
-            //         \assert($error instanceof FetchingError);
-
-            //         $message = \sprintf(
-            //             "Il y a eu une erreur pour %s pour la date du %s : '%s'",
-            //             \ucfirst($error->getFeed()->getName()),
-            //             $error->getDate()->format('d/m/Y'),
-            //             $error->getException()->getMessage()
-            //         );
-            //         $this->addFlash('error', $message);
-            //     }
-            // }
+            $this->notificationService->handleFetchDataNotification($action->getUser(), $feed, $errors);
         } catch (\Exception $e) {
             $this->logger->error("Pending Action - Error while processing action", ['user' => $action->getUser()->getId(), 'action' => $action->getId(), 'message' => $e->getMessage()]);
 
-            // @todo deals with error with futur Notifications process
+            $this->notificationService->handleFetchDataNotification($action->getUser(), $feed, [$e->getMessage()]);
         } finally {
             $this->logger->info("Pending Action - Fetch data action processed, delete it", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
@@ -268,7 +254,7 @@ class PendingActionService
 
     public function findActionByToken(User $user, string $token): PendingAction
     {
-        if (!$action = $this->actionRepository->findOneByToken($token)) {
+        if (!$action = $this->actionRepository->findOneBy(['token' => $token])) {
             throw new EntityNotFoundException('Impossible de trouver la demande correspondante');
         }
         \assert($action instanceof PendingAction);

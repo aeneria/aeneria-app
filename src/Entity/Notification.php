@@ -7,6 +7,12 @@ namespace App\Entity;
  */
 class Notification
 {
+    const LEVEL_ERROR = 'error';
+    const LEVEL_INFO = 'information';
+
+    const TYPE_DATA_IMPORT = 'data_import';
+    const TYPE_DATA_FETCH = 'data_fetch';
+
     /** @var int */
     private $id;
 
@@ -102,7 +108,7 @@ class Notification
 
     public function getMessage(): string
     {
-        return $this->param;
+        return $this->message;
     }
 
     public function setMessage(string $message): self

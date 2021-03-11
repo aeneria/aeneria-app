@@ -3,10 +3,12 @@
 namespace App\Command;
 
 use App\Entity\Feed;
+use App\Model\FetchingError;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\FeedDataProviderFactory;
 use App\Services\FeedDataProvider\FeedDataProviderInterface;
+use App\Services\NotificationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,15 +25,19 @@ class FetchDataCommand extends Command
     private $feedRepository;
     /** @var FeedDataProviderFactory */
     private $feedDataProviderFactory;
+    /** @var NotificationService */
+    private $notificationService;
 
     public function __construct(
         PlaceRepository $placeRepository,
         FeedRepository $feedRepository,
-        FeedDataProviderFactory $feedDataProviderFactory
+        FeedDataProviderFactory $feedDataProviderFactory,
+        NotificationService $notificationService
     ) {
         $this->placeRepository = $placeRepository;
         $this->feedRepository = $feedRepository;
         $this->feedDataProviderFactory = $feedDataProviderFactory;
+        $this->notificationService = $notificationService;
 
         parent::__construct();
     }
@@ -111,12 +117,12 @@ class FetchDataCommand extends Command
         if ($date = $input->getOption('date')) {
             $date = new \DateTimeImmutable($date);
 
-            $feedDataProvider->fetchDataFor($date, $feeds, $input->getOption('force'));
+            $errors = $feedDataProvider->fetchDataFor($date, $feeds, $input->getOption('force'));
         } elseif (($startDate = $input->getOption('startDate')) && ($endDate = $input->getOption('endDate'))) {
             $startDate = new \DateTimeImmutable($startDate);
             $endDate = new \DateTimeImmutable($endDate);
 
-            $feedDataProvider->fetchDataBetween($startDate, $endDate, $feeds, $input->getOption('force'));
+            $errors = $feedDataProvider->fetchDataBetween($startDate, $endDate, $feeds, $input->getOption('force'));
         } else {
             // Else we update from last data to yesterday.
             // Get yesterday datetime.
@@ -124,7 +130,23 @@ class FetchDataCommand extends Command
             $date->sub(new \DateInterval('P1D'));
             $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
 
-            $feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
+            $errors = $feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
+        }
+
+        if ($errors) {
+            foreach ($errors as $error) {
+                \assert($error instanceof FetchingError);
+
+                $feed = $error->getFeed();
+
+                if ($place = $feed->getFirstPlace()) {
+                    $this->notificationService->handleFetchDataNotification(
+                        $place->getUser(),
+                        $feed,
+                        [$error]
+                    );
+                }
+            }
         }
     }
 }

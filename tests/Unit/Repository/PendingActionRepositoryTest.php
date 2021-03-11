@@ -19,4 +19,21 @@ final class PendingActionRepositoryTest extends AppTestCase
 
         self::assertSame($action->getId(), $actionFromRepo->getId());
     }
+
+    public function testFindExpiredActions()
+    {
+        $entityManager = $this->getEntityManager();
+        $pendingActionRepository = $this->getPendingActionRepository();
+
+        $action = $this->createPersistedPendingAction(['expirationDate' => new \DateTimeImmutable('yesterday')]);
+        $entityManager->flush();
+        $entityManager->clear();
+
+        $keys = [];
+        foreach ($pendingActionRepository->findExpiredActions() as $pendingAction) {
+            $keys[] = $pendingAction->getId();
+        }
+
+        self::assertContains($action->getId(), $keys);
+    }
 }
