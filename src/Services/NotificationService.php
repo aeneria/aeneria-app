@@ -83,26 +83,28 @@ class NotificationService
 
             // Pour le fetching de data, on ne créée pas une notification à chaque fois,
             // Sinon l'utilisateur va être inondé de notification
-            if (!$existing) {
-                $message = \sprintf(
-                    "Toutes les données %s n'ont pas été correctement chargées :<br><ul>",
-                    \ucfirst($feed->getName())
-                );
-
-                foreach ($errors as $error) {
-                    \assert($error instanceof FetchingError);
-
-                    $message .= \sprintf(
-                        "<li>Il y a eu une erreur pour %s pour la date du %s : '%s'</li>",
-                        \ucfirst($error->getFeed()->getName()),
-                        $error->getDate()->format('d/m/Y'),
-                        $error->getException()->getMessage()
-                    );
-                }
-                $message .= '</ul>';
-
-                return $this->createNotification($user, $place, Notification::LEVEL_ERROR, Notification::TYPE_DATA_FETCH, $message);
+            if ($existing) {
+                return null;
             }
+
+            $message = \sprintf(
+                "Toutes les données %s n'ont pas été correctement chargées :<br><ul>",
+                \ucfirst($feed->getName())
+            );
+
+            foreach ($errors as $error) {
+                \assert($error instanceof FetchingError);
+
+                $message .= \sprintf(
+                    "<li>Il y a eu une erreur pour %s pour la date du %s : '%s'</li>",
+                    \ucfirst($error->getFeed()->getName()),
+                    $error->getDate()->format('d/m/Y'),
+                    $error->getException()->getMessage()
+                );
+            }
+            $message .= '</ul>';
+
+            return $this->createNotification($user, $place, Notification::LEVEL_ERROR, Notification::TYPE_DATA_FETCH, $message);
         }
     }
 

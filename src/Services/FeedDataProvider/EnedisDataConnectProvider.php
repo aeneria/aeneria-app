@@ -2,6 +2,7 @@
 
 namespace App\Services\FeedDataProvider;
 
+use Aeneria\EnedisDataConnectApi\Exception\DataConnectConsentException;
 use Aeneria\EnedisDataConnectApi\Model\Address;
 use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
 use Aeneria\EnedisDataConnectApi\Model\Token;
@@ -86,6 +87,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
                     $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
+            } catch (DataConnectConsentException $e) {
+                $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+                $errors[] = new FetchingError($feed, $date, $e);
             } catch (\Exception $e) {
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
                 $errors[] = new FetchingError($feed, $date, $e);
