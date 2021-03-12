@@ -161,14 +161,12 @@ class ConfigurationController extends AbstractAppController
             ->add('start_date', Form\TextType::class, [
                 'label' => false,
                 'attr' => ['class' => 'simple-datepicker'],
-                'constraints' => [new Assert\NotBlank()],
-                'required' => true,
+                'required' => false,
             ])
             ->add('end_date', Form\TextType::class, [
                 'label' => false,
                 'attr' => ['class' => 'simple-datepicker'],
-                'constraints' => [new Assert\NotBlank()],
-                'required' => true,
+                'required' => false,
             ])
             ->add('submit', Form\SubmitType::class, [
                 'attr' => [
