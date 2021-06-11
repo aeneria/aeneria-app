@@ -38,6 +38,10 @@
     <a href="{{ path('dashboard.electricite') }}" title="{{ 'Consommation d\'électricité' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
       <img src="{{ asset('image/electricity-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Consommation d\'électricité' | trans }}" >
     </a>
+    {% set active = app.request.attributes.get('_route') == 'dashboard.gaz' %}
+    <a href="{{ path('dashboard.gaz') }}" title="{{ 'Consommation de gaz' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
+      <img src="{{ asset('image/gaz-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Consommation de gaz' | trans }}" >
+    </a>
     {% set active = app.request.attributes.get('_route') == 'dashboard.meteo' %}
     <a href="{{ path('dashboard.meteo') }}" title="{{ 'Analyse de la météo' | trans }}" data-toggle="tooltip" data-placement="left" class="{{ active ? 'active' : ''}}">
       <img src="{{ asset('image/meteo-' ~ (active ? 'w' : 'g') ~ '.png') }}" alt="{{ 'Analyse de la météo' | trans }}" >

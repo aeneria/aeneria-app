@@ -2,6 +2,9 @@
     "aeneria/enedis-data-connect": {
         "version": "1.0.1"
     },
+    "aeneria/grdf-adict": {
+        "version": "dev-master"
+    },
     "box/spout": {
         "version": "v3.1.0"
     },

@@ -6,6 +6,10 @@ dashboard.electricite:
   path: /electricite
   controller: App\Controller\DashboardController::electricityAction
 
+dashboard.gaz:
+  path: /gaz
+  controller: App\Controller\DashboardController::gazAction
+
 dashboard.analyse:
   path: /analyse
   controller: App\Controller\DashboardController::analyseAction

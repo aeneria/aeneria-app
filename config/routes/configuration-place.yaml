@@ -16,7 +16,16 @@ config.place.enedis_consent_callback:
   path: /configuration/data-connect-callback
   controller: App\Controller\ConfigurationPlaceController::placeEnedisConsentCallbackAction
 
+config.place.grdf_consent:
+  path: /configuration/grdf-adict-consent/{id}
+  controller: App\Controller\ConfigurationPlaceController::placeGrdfConsentAction
+  defaults:
+    id: null
+
+config.place.grdf_consent_callback:
+  path: /configuration/grdf-adict-callback
+  controller: App\Controller\ConfigurationPlaceController::placeGrdfConsentCallbackAction
+
 config.place.delete:
   path: /configuration/place/{id}/delete
   controller: App\Controller\ConfigurationPlaceController::placeDeleteAction
-

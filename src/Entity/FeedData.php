@@ -8,6 +8,7 @@ namespace App\Entity;
 class FeedData
 {
     const FEED_DATA_CONSO_ELEC = 'CONSO_ELEC';
+    const FEED_DATA_CONSO_GAZ = 'CONSO_GAZ';
     const FEED_DATA_TEMPERATURE = 'TEMPERATURE';
     const FEED_DATA_TEMPERATURE_MIN = 'TEMPERATURE_MIN';
     const FEED_DATA_TEMPERATURE_MAX = 'TEMPERATURE_MAX';
@@ -34,6 +35,8 @@ class FeedData
         switch ($feedDataType) {
             case self::FEED_DATA_CONSO_ELEC:
                 return 'KWh';
+            case self::FEED_DATA_CONSO_GAZ:
+                return 'm3';
             case self::FEED_DATA_TEMPERATURE:
             case self::FEED_DATA_TEMPERATURE_MIN:
             case self::FEED_DATA_TEMPERATURE_MAX:
@@ -59,6 +62,7 @@ class FeedData
     {
         return [
             self::FEED_DATA_CONSO_ELEC => "Consommation d'électricité",
+            self::FEED_DATA_CONSO_GAZ => "Consommation de gaz",
             self::FEED_DATA_TEMPERATURE => "Température",
             self::FEED_DATA_TEMPERATURE_MIN => "Température minimale",
             self::FEED_DATA_TEMPERATURE_MAX => "Température maximale",

@@ -6,36 +6,82 @@
 
 {% block body %}
 <div class="container-fluid row justify-content-center align-items-center users">
-  <div class='card config-form col-xl-6 col-lg-8 col-md-12'>
+  <div class='card config-form col-xl-8 col-lg-10 col-md-12'>
     <div class="card-body">
-
-      <h2><i class="fas fa-cube"></i>{{ 'Paramétrage du compte Enedis' | trans }}</h2>
+      <h2><i class="fas fa-cube"></i>{{ 'Créer une nouvelle adresse' | trans }}</h2>
+      <p>
+        {{ 'Quel type de compteur souhaitez-vous associer à votre compte æneria ?' | trans }}
+      </p>
       <p>
         {% trans %}
-          En France, <a href="https://www.enedis.fr/profil">Enedis</a> gère le réseau d’électricité jusqu’au compteur d’électricité. Pour permettre à æneria
-          d'alimenter ses tableaux de bord avec votre consommation, autorisez Enedis à nous transmettre les données de votre compteur Linky.
+          En France, <a href="https://www.enedis.fr/profil">Enedis</a> gère le réseau d’électricité jusqu’au compteur d’électricité et
+          <a href="https://www.grdf.fr">GRDF</a> gère le réseau de gaz jusqu’au compteur de gaz.
         {% endtrans %}
       </p>
 
       <p>
         {% trans %}
-        En cliquant sur ce bouton, vous allez accéder à votre compte personnel Enedis où vous pourrez donner votre accord pour qu’Enedis nous transmette vos données.
+          Pour permettre à æneria d'alimenter ses tableaux de bord avec vos consommations d'énergie, vous devez autoriser Enedis et/ou GRDF à nous
+          transmettre les données de votre(vos) compteur(s) communicant(s).
         {% endtrans %}
       </p>
+      <hr>
+      <div class="row align-items-center">
+        <div class="col-5">
+          <h4><i class="fas fa-plug"></i>Associer un compteur Linky d'Enedis</h4>
 
-      <div class="text-center">
-        <a href="{{ path('config.place.enedis_consent') }}" class="text-center"> <img src="{{ asset('image/enedis-consent.png') }}" alt='{{ 'Accédez à votre espace Enedis' | trans }}'></a>
-      </div>
+          <div class="text-center mt-5 mb-5">
+            <img class="img-fluid" src="{{ asset('image/logo-enedis.png') }}" alt="">
+          </div>
 
-      <div class="alert alert-warning">
-        <p>
-          {% trans %}
-          Pour donner votre autorisation, vous devez créer un compte personnel Enedis. Il vous permet également de suivre et gérer vos données de consommation
-          d’électricité. Munissez-vous de votre facture d’électricité pour créer votre espace.
-          {% endtrans %}
-        </p>
-        <div class="text-center">
-          <a href="https://mon-compte-particulier.enedis.fr/" class="text-center btn btn-secondary">{{ 'Je crée mon compte personnel Enedis' | trans }}</a>
+          <p>
+            {% trans %}
+            En cliquant sur ce bouton, vous allez accéder à votre compte personnel Enedis où vous pourrez donner votre accord pour qu’Enedis nous transmette vos données.
+            {% endtrans %}
+          </p>
+
+          <div class="text-center">
+            <a href="{{ path('config.place.enedis_consent') }}" class="btn btn-primary"><i class="fas fa-arrow-right"></i>{{'Associer votre compteur Linky' | trans }}</a>
+          </div>
+
+          <hr>
+          <p>
+            {% trans %}
+            Pour donner votre autorisation, vous devez créer un compte personnel Enedis. Il vous permet également de suivre et gérer vos données de consommation
+            d’électricité. Munissez-vous de votre facture d’électricité pour créer votre espace.
+            {% endtrans %}
+          </p>
+          <div class="text-center">
+            <a href="https://mon-compte-particulier.enedis.fr/" class="text-center btn btn-outline-primary">{{ 'Je crée mon compte personnel Enedis' | trans }}</a>
+          </div>
+        </div>
+        <div class="col-2 text-center ">
+          <p class="align-middle">OU</p>
+        </div>
+        <div class="col-5">
+          <h4><i class="fas fa-burn"></i> Associer un compteur Gazpar de GRDF</h4>
+
+          <div class="text-center mt-5 mb-5">
+            <img class="img-fluid" src="{{ asset('image/logo-grdf.png') }}" alt="">
+          </div>
+
+          <p>
+            {% trans %}
+            En cliquant sur ce bouton, vous allez accéder au service <i>Client Connect de GRDF</i> qui vous permettera de donner votre accord pour que GRDF nous transmette vos données.
+            {% endtrans %}
+          </p>
+
+          <div class="alert alert-warning mb-4">
+            <p>
+              {% trans %}
+              Si vous avez déjà un compte GRDF, assurez-vous d'être <u><strong>déconnecté</strong></u> de celui-ci avant de commencer.
+              {% endtrans %}
+            </p>
+          </div>
+
+          <div class="text-center">
+            <a href="{{ path('config.place.grdf_consent') }}" class="btn btn-primary"><i class="fas fa-arrow-right"></i>{{'Associer votre compteur Gazpar' | trans }}</a>
+          </div>
         </div>
       </div>
     </div>

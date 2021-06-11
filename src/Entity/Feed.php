@@ -8,9 +8,11 @@ namespace App\Entity;
 class Feed
 {
     const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
+    const FEED_TYPE_GAZ = 'GAZ';
     const FEED_TYPE_METEO = 'METEO';
 
     const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT = 'ENEDIS_DATA_CONNECT';
+    const FEED_DATA_PROVIDER_GRDF_ADICT = 'GRDF_ADICT';
     const FEED_DATA_PROVIDER_LINKY = 'LINKY';
     const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
     const FEED_DATA_PROVIDER_FAKE = 'FAKE';
@@ -43,6 +45,12 @@ class Feed
                 'NAME' => 'Électricité',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT],
+                'FREQUENCIES' => DataValue::getAllFrequencies(),
+            ],
+            self::FEED_TYPE_GAZ => [
+                'NAME' => 'Gaz',
+                'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_GAZ],
+                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_GRDF_ADICT],
                 'FREQUENCIES' => DataValue::getAllFrequencies(),
             ],
             self::FEED_TYPE_METEO => [
@@ -89,8 +97,10 @@ class Feed
     {
         switch ($feedDataProviderType) {
             case self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
-                case self::FEED_DATA_PROVIDER_LINKY:
+            case self::FEED_DATA_PROVIDER_LINKY:
                 return 'Compteur Linky';
+            case self::FEED_DATA_PROVIDER_GRDF_ADICT:
+                return 'Compteur Gazpar';
             case self::FEED_DATA_PROVIDER_METEO_FRANCE:
                 return 'Météo France';
             case self::FEED_DATA_PROVIDER_FAKE:

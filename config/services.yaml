@@ -30,6 +30,17 @@ parameters:
     aeneria.enedis.endpoint_token: "%env(ENEDIS_ENDPOINT_TOKEN)%"
     aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
 
+    # Grdf Adict
+    env(GRDF_CLIENT_ID): ""
+    env(GRDF_CLIENT_SECRET): ""
+    env(GRDF_REDIRECT_URI): ""
+    aeneria.grdf.client_id: "%env(GRDF_CLIENT_ID)%"
+    aeneria.grdf.client_secret: "%env(GRDF_CLIENT_SECRET)%"
+    aeneria.grdf.redirect_uri: "%env(GRDF_REDIRECT_URI)%"
+    aeneria.grdf.endpoint_auth: "%env(GRDF_ENDPOINT_AUTH)%"
+    aeneria.grdf.endpoint_token: "%env(GRDF_ENDPOINT_TOKEN)%"
+    aeneria.grdf.endpoint_data: "%env(GRDF_ENDPOINT_DATA)%"
+
     # Matomo
     env(MATOMO_URL): ""
     env(MATOMO_SITE_ID): ""
@@ -69,7 +80,6 @@ services:
         tags: ['twig.extension', 'container.hot_path']
 
     Aeneria\EnedisDataConnectApi\Service\DataConnectService:
-        class: Aeneria\EnedisDataConnectApi\Service\DataConnectService
         arguments:
             $httpClient: "@http_client"
             $authEndpoint: "%aeneria.enedis.endpoint_auth%"
@@ -78,6 +88,19 @@ services:
             $clientId: "%aeneria.enedis.client_id%"
             $clientSecret: "%aeneria.enedis.client_secret%"
             $redirectUri: "%aeneria.enedis.redirect_uri%"
+
+    Aeneria\GrdfAdictApi\Service\GrdfAdictService:
+        arguments:
+            $httpClient: "@http_client"
+            $authEndpoint: "%aeneria.grdf.endpoint_auth%"
+            $tokenEndpoint: "%aeneria.grdf.endpoint_token%"
+            $dataEndpoint: "%aeneria.grdf.endpoint_data%"
+            $clientId: "%aeneria.grdf.client_id%"
+            $clientSecret: "%aeneria.grdf.client_secret%"
+            $redirectUri: "%aeneria.grdf.redirect_uri%"
+
+    Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface:
+        alias: Aeneria\GrdfAdictApi\Service\GrdfAdictService
 
     Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface:
         alias: Aeneria\EnedisDataConnectApi\Service\DataConnectService
