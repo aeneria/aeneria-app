@@ -108,6 +108,42 @@ class NotificationService
         }
     }
 
+    public function handleTooManyFetchErrorsNotification(Feed $feed): ?Notification
+    {
+        if (!$place = $feed->getFirstPlace()) {
+            $this->logger->error(\sprintf("Le feed %s n'est relié à aucune place !", $feed->getId()));
+
+            return null;
+        }
+
+        $user = $place->getUser();
+
+        $existing = $this->notificationRepository->findBy([
+            'user' => $user,
+            'level' => Notification::LEVEL_ERROR,
+            'type' => Notification::TYPE_TOO_MANY_FETCH_ERROR,
+            'place' => $place,
+        ]);
+
+        // Pour les erreurs de fetching, on ne créée pas une notification à chaque fois,
+        // Sinon l'utilisateur va être inondé de notification
+        if ($existing) {
+            return null;
+        }
+
+        $message = \sprintf(
+            <<<TXT
+            <p>Il semble qu'il y ait eu des erreurs au moment de récupérer les données pour votre compteur %s.</p>
+            <p>Il est possible que le consentement soit arrivé à échéance. Essayez de le renouveller via la
+            page de configuration.</p>
+            <p>Si le problème persiste, merci de contacter le support.</p>
+            TXT,
+            Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT == $feed->getFeedDataProviderType() ? 'Linky' : 'Gazpar'
+        );
+
+        return $this->createNotification($user, $place, Notification::LEVEL_ERROR, Notification::TYPE_TOO_MANY_FETCH_ERROR, $message);
+    }
+
     private function createNotification(
         User $user,
         Place $place = null,

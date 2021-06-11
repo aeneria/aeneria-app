@@ -13,6 +13,7 @@ class Notification
 
     const TYPE_DATA_IMPORT = 'data_import';
     const TYPE_DATA_FETCH = 'data_fetch';
+    const TYPE_TOO_MANY_FETCH_ERROR = 'too_many_fetch_error';
 
     /** @var int */
     private $id;

@@ -14,6 +14,7 @@ use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use App\Services\NotificationService;
 use Doctrine\Migrations\Query\Exception\InvalidArguments;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -32,6 +33,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     /** @var SerializerInterface */
     private $serializer;
 
+    /** @var NotificationService */
+    private $notificationService;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
@@ -39,10 +43,12 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         DataValueRepository $dataValueRepository,
         DataConnectServiceInterface $dataConnect,
         SerializerInterface $serializer,
+        NotificationService $notificationService,
         LoggerInterface $logger
     ) {
         $this->dataConnect = $dataConnect;
         $this->serializer = $serializer;
+        $this->notificationService = $notificationService;
 
         parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
     }
@@ -77,6 +83,15 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                 throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
             }
             try {
+                // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
+                // while fetching data, we stop asking for data for it.
+                // We also display a notification to warn user about this situation.
+                if ($this->hasToManyFetchError($feed)) {
+                    $this->notificationService->handleTooManyFetchErrorsNotification($feed);
+
+                    continue;
+                }
+
                 if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
                     $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
 
@@ -84,13 +99,16 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                     $data['hours'] = $this->getHourlyData($date, $feed);
                     $data['days'] = $this->getDailyData($date, $feed);
                     $this->persistData($date, $feed, $data);
+                    $this->resetFetchError($feed);
 
                     $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
             } catch (DataConnectConsentException $e) {
+                $this->addFetchError($feed);
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
                 $errors[] = new FetchingError($feed, $date, $e);
             } catch (\Exception $e) {
+                $this->addFetchError($feed);
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
                 $errors[] = new FetchingError($feed, $date, $e);
             }
@@ -244,6 +262,51 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         // Persist year data.
         $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Est-ce que le feed courant a déjà eu trop de problème lors des dernières
+     * récupérations de données
+     */
+    public function hasToManyFetchError(Feed $feed): bool
+    {
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
+        }
+
+        if (\array_key_exists('FETCH_ERROR', $feed->getParam()) && $nbErrors = $feed->getParam()['FETCH_ERROR']) {
+            return $nbErrors >= 10;
+        }
+
+        return false;
+    }
+
+    public function resetFetchError(Feed $feed): void
+    {
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
+        }
+
+        $feed->setSingleParam('FETCH_ERROR', 0);
+
+        $this->entityManager->persist($feed);
+        $this->entityManager->flush();
+    }
+
+    public function addFetchError(Feed $feed): void
+    {
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
+        }
+
+        if (\array_key_exists('FETCH_ERROR', $feed->getParam()) && $nbErrors = $feed->getParam()['FETCH_ERROR']) {
+            $feed->setSingleParam('FETCH_ERROR', $nbErrors + 1);
+        } else {
+            $feed->setSingleParam('FETCH_ERROR', 1);
+        }
+
+        $this->entityManager->persist($feed);
         $this->entityManager->flush();
     }
 

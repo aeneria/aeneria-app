@@ -155,6 +155,39 @@ final class NotificationServiceTest extends AppTestCase
         self::assertContains('blalba', $notification->getMessage());
     }
 
+    public function testHandleTooManyFetchErrorsNotification()
+    {
+        $user = $this->createUser();
+        $place = $this->createPlace(['user' => $user]);
+        $feed = $this->createFeed(['places' => [$place]]);
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->expects($this->exactly(1))
+            ->method('persist')
+        ;
+        $entityManager
+            ->expects($this->exactly(1))
+            ->method('flush')
+        ;
+
+        $notificationService = new NotificationService(
+            $entityManager,
+            $this->createMock(NotificationRepository::class),
+            $this->getLogger()
+        );
+
+        $error = new FetchingError($feed, new \DateTimeImmutable(), new \Exception('blalba'));
+
+        $notification = $notificationService->handleTooManyFetchErrorsNotification($feed);
+
+        self::assertSame($notification->getUser(), $user);
+        self::assertSame($notification->getPlace(), $place);
+        self::assertSame($notification->getLevel(), Notification::LEVEL_ERROR);
+        self::assertSame($notification->getType(), Notification::TYPE_TOO_MANY_FETCH_ERROR);
+        self::assertContains('eu des erreurs au moment', $notification->getMessage());
+    }
+
     public function testGetAndDeleteNotificationFor()
     {
         $user = $this->createUser();
