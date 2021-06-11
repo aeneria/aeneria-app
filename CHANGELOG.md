@@ -1,28 +1,36 @@
-# æneria version 1.1.3
+# æneria version 1.1.4
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
+* Ajout d'un système de notification pour avertir lors des problèmes de récupérations de données
+* Ajout d'un système pour prévenir le flooding vers l'API d'Enedis en cas de rupture de consentement
+* Ajout d'un système d'action différée permettant
+  * de programmer la récupération des données passées sur une plus grande période de temps
+  * l'import de fichier de données de taille plus important
+* Meteo : mise à jour de l'échelle de couleur pour l'humidité
+
+## Anciennes versions
+### 1.1.3
+
 * Ajout de la possibilité de faire du suivi avec Matomo
 * CLI - Mise à jour de la commande de rafraichissement des données pour pouvoir rafraichir entre 2 dates
 * Configuration - Ajout du PDL dans la description des compteurs linky
 * CLI - Ajout d'une commande pour regénérer la clef RSA
-
-## Anciennes versions
 
 ### 1.1.2
 
 * Fix - Bug sur la modification d'une adresse
 * Documentation - Mise à jour de la documentation d'installation
 * Mise à jour vers Symfony 5.2
-*
+
 ### 1.1.1
 
 * Fix - bug sur le chargement des assets
 * Fix - formulaire d'ajout d'une adresse
-*
+
 ### 1.1.0
 
 * Ajout d'un onglet pour comparer sa consommation entre 2 périodes
