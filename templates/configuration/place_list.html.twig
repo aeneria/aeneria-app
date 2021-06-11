@@ -10,7 +10,9 @@
               {% if feed.feedDataProviderType == "LINKY" %}
                 <i class="fas fa-tachometer-alt"></i> {{ 'Compte Enedis' | trans }} : {{ feed.param['LOGIN'] }}</h>
               {% elseif feed.feedDataProviderType == "ENEDIS_DATA_CONNECT" %}
-                <i class="fas fa-cube"></i> {{ 'Linky' | trans}} : {{ aeneria_linky_get_description(feed) }}
+                <i class="fas fa-plug"></i> {{ 'Linky' | trans}} : {{ aeneria_linky_description(feed) }}
+              {% elseif feed.feedDataProviderType == "GRDF_ADICT" %}
+                <i class="fas fa-burn"></i> {{ 'Gazpar' | trans}} : {{ aeneria_gazpar_description(feed) }}
               {% elseif feed.feedDataProviderType == "METEO_FRANCE" %}
                 <i class="fas fa-cloud-sun"></i> {{ 'Météo' | trans}} : {{ feed.param['CITY'] }}
               {% elseif feed.feedDataProviderType == "FAKE" %}

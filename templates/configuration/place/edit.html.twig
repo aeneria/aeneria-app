@@ -3,7 +3,7 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'Ajouter une adresse' | trans }}{% endblock %}
+{% block title %}{{ 'Paramétrer votre adresse' | trans }}{% endblock %}
 
 {% block selection %}{% endblock %}
 
@@ -18,14 +18,26 @@
       {{ placeForm(form.place) }}
       <hr>
 
-      <h2><i class="fas fa-cube"></i> {{ 'Compteur Linky' | trans }}</h2>
+      <h2><i class="fas fa-plug"></i> {{ 'Compteur Linky' | trans }}</h2>
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p>{{ aeneria_linky_get_description(linky) ?: ('Inconnu' | trans) }}</p>
+          <p>{{ aeneria_linky_description(linky) ?: ('<i>Aucun compteur Linky associé</i>' | trans | raw) }}</p>
         </div>
         <div class="col-md-4 col-sm-12">
-          <a href="{{ path('config.place.enedis_consent', {id: place.id}) }}" class="btn btn-sm btn-outline-secondary">{{ 'Changer de compteur' | trans }}</a>
+          <a href="{{ path('config.place.enedis_consent', {id: place.id}) }}" class="btn btn-sm btn-outline-secondary">{{ linky ? ('Changer de compteur' | trans) : ('Associer un compteur Linky' | trans) }}</a>
           <p><small>{{ '(via mon espace Enedis)' | trans }}</small></p>
+        </div>
+      </div>
+      <hr>
+
+      <h2><i class="fas fa-burn"></i> {{ 'Compteur Gazpar' | trans }}</h2>
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <p>{{ aeneria_gazpar_description(gazpar) ?: ('<i>Aucun compteur Gazpar associé</i>' | trans | raw) }}</p>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <a href="{{ path('config.place.grdf_consent', {id: place.id}) }}" class="btn btn-sm btn-outline-secondary">{{ gazpar ? ('Changer de compteur' | trans) : ('Associer un compteur Gazpar' | trans) }}</a>
+          <p><small>{{ '(Vous devez être <u><strong>déconnecté</strong></u> de votre espace GRDF)' | trans | raw }}</small></p>
         </div>
       </div>
       <hr>

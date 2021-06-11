@@ -13,6 +13,6 @@
             <join-column nullable="true"/>
         </many-to-one>
         <field name="date" column="date" type="datetime"/>
-        <field name="message" column="message" type="text"/>
+        <field name="message" column="message" type="text" length="65535"/>
     </entity>
 </doctrine-mapping>

@@ -1,0 +1,189 @@
+<?php
+
+namespace App\Services\FeedDataProvider;
+
+use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
+use Aeneria\GrdfAdictApi\Model\Token;
+use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
+use App\Entity\DataValue;
+use App\Entity\Feed;
+use App\Entity\FeedData;
+use App\Model\FetchingError;
+use App\Repository\DataValueRepository;
+use App\Repository\FeedDataRepository;
+use App\Repository\FeedRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Grdf Adict Provider
+ */
+class GrdfAdictProvider extends AbstractFeedDataProvider
+{
+    /** @var GrdfAdictServiceInterface */
+    private $grdfAdict;
+
+    /** @var Token */
+    private $accessToken = null;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        FeedRepository $feedRepository,
+        FeedDataRepository $feedDataRepository,
+        DataValueRepository $dataValueRepository,
+        GrdfAdictServiceInterface $grdfAdict,
+        LoggerInterface $logger
+    ) {
+        $this->grdfAdict = $grdfAdict;
+
+        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFetchStrategy(): string
+    {
+        return parent::FETCH_STRATEGY_ONE_BY_ONE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getParametersName(Feed $feed): array
+    {
+        return [
+            'PCE' => 'PCE du compteur Gazpar',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
+    {
+        $errors = [];
+
+        foreach ($feeds as $feed) {
+            if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
+                throw new \InvalidArgumentException("Should be an array of GrdfAdict Feeds overhere !");
+            }
+            try {
+                if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
+                    $this->logger->debug("GrdfAdict - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+
+                    $data = $this->getData($date, $feed);
+                    $this->persistData($date, $feed, $data);
+
+                    $this->logger->info("GrdfAdict - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+                }
+            } catch (GrdfAdictException $e) {
+                $this->logger->error("GrdfAdict - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+                $errors[] = new FetchingError($feed, $date, $e);
+            } catch (\Exception $e) {
+                $this->logger->error("GrdfAdict - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+                $errors[] = new FetchingError($feed, $date, $e);
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Get a valid Access Token
+     */
+    private function getAccessToken(): string
+    {
+        if (!$this->accessToken || !$this->accessToken->isAccessTokenStillValid()) {
+            $this->accessToken = $this
+                ->grdfAdict
+                ->getAuthentificationService()
+                ->requestAuthorizationToken()
+            ;
+        }
+
+        return $this->accessToken->getAccessToken();
+    }
+
+    private function getData(\DateTimeImmutable $date, Feed $feed): array
+    {
+        $endDate = $date->add(new \DateInterval('P1D'));
+        $startDate = clone $date;
+
+        $meteringData = $this
+            ->grdfAdict
+            ->getConsommationService()
+            ->requestConsoInformative(
+                $this->getAccessToken(),
+                $this->getPce($feed),
+                $startDate,
+                $endDate
+            )
+        ;
+
+        // Data can be with PT30M PT10M and PT60M, we reconstitute a PT60M interval dataset
+        $key = $meteringData
+            ->getDate()
+            ->format('Y-m-d')
+        ;
+        $data[$key] = $meteringData->getValue();
+
+        return $data;
+    }
+
+    /**
+     * Persist data in database.
+     */
+    private function persistData(\DateTimeImmutable $date, Feed $feed, array $data)
+    {
+        // Get feedData.
+        $feedData = $this->feedDataRepository->findOneBy([
+            'feed' => $feed->getId(),
+            'dataType' => FeedData::FEED_DATA_CONSO_GAZ,
+        ]);
+
+        if (!$feedData) {
+            throw new \Doctrine\ORM\EntityNotFoundException(\sprintf(
+                "Could not find feedData of type %s for feed %s.",
+                FeedData::FEED_DATA_CONSO_GAZ,
+                $feed->getId()
+            ));
+        }
+
+        // Persist day data.
+        foreach ($data as $currentDate => $value) {
+            if ($value && -1 !== (int) $value) {
+                $this->dataValueRepository->updateOrCreateValue(
+                    $feedData,
+                    \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),
+                    DataValue::FREQUENCY_DAY,
+                    $value
+                );
+            }
+        }
+
+        // Flush all persisted DataValue.
+        $this->entityManager->flush();
+
+        // Persist week data.
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
+        $this->entityManager->flush();
+
+        // Persist month data.
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
+        $this->entityManager->flush();
+
+        // Persist year data.
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
+        $this->entityManager->flush();
+    }
+
+    public function getPce(Feed $feed): ?string
+    {
+        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a grdfAdict feed.");
+        }
+
+        return $feed->getParam()['PCE'] ?? null;
+    }
+}
