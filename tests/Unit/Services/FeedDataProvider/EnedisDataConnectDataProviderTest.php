@@ -9,6 +9,7 @@ use Aeneria\EnedisDataConnectApi\Model\Token;
 use Aeneria\EnedisDataConnectApi\Service\MockDataConnectService;
 use App\Entity\Feed;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
+use App\Services\NotificationService;
 use App\Tests\AppTestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -23,6 +24,7 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             $this->getDataValueRepository(),
             new MockDataConnectService(),
             $serializer ?? $this->createMock(SerializerInterface::class),
+            $this->createMock(NotificationService::class),
             $this->getLogger()
         );
     }
