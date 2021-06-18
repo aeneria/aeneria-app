@@ -1,9 +1,14 @@
-# æneria version 1.1.4
+# æneria version 1.1.5
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
+
+* Fix bug in Notificatin feature
+
+## Anciennes versions
+### 1.1.4
 
 * Ajout d'un système de notification pour avertir lors des problèmes de récupérations de données
 * Ajout d'un système pour prévenir le flooding vers l'API d'Enedis en cas de rupture de consentement
@@ -11,8 +16,7 @@
   * de programmer la récupération des données passées sur une plus grande période de temps
   * l'import de fichier de données de taille plus important
 * Meteo : mise à jour de l'échelle de couleur pour l'humidité
-
-## Anciennes versions
+*
 ### 1.1.3
 
 * Ajout de la possibilité de faire du suivi avec Matomo
