@@ -217,6 +217,7 @@ class ConfigurationPlaceController extends AbstractAppController
         $feed->setName((string) $address);
         $feed->setSingleParam('TOKEN', $serializer->serialize($token, 'json'));
         $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
+        $feed->setSingleParam('FETCH_ERROR', 0);
 
         $entityManager->persist($feed);
         $entityManager->persist($place);
