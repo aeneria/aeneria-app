@@ -1,13 +1,17 @@
-# æneria version 1.1.5
+# æneria version 1.1.6
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-* Fix bug in Notificatin feature
+* Fix the way the app log error while fetching data form Enedis.
 
 ## Anciennes versions
+### 1.1.5
+
+* Fix bug in Notificatin feature
+
 ### 1.1.4
 
 * Ajout d'un système de notification pour avertir lors des problèmes de récupérations de données
