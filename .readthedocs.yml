@@ -27,3 +27,6 @@ sphinx:
 python:
    install:
    - requirements: docs/requirements.txt
+
+submodules:
+  include: all
