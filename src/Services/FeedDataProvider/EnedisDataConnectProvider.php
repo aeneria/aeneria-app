@@ -28,6 +28,9 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
+    const ERROR_FETCH = 'FETCH_ERROR';
+    const ERROR_CONSENT = 'CONSENT_ERROR';
+
     /** @var DataConnectServiceInterface */
     private $dataConnect;
 
@@ -105,11 +108,11 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                     $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
             } catch (DataConnectConsentException $e) {
-                $this->addFetchError($feed);
+                $this->logError($feed, self::ERROR_CONSENT);
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
                 $errors[] = new FetchingError($feed, $date, $e);
             } catch (DataConnectException $e) {
-                $this->addFetchError($feed);
+                $this->logError($feed, self::ERROR_FETCH);
                 $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
                 $errors[] = new FetchingError($feed, $date, $e);
             }
@@ -275,12 +278,10 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
             throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
         }
+        $nbConsentErrors = $feed->getSingleParam(self::ERROR_CONSENT, 0);
+        $nbFetchErrors = $feed->getSingleParam(self::ERROR_FETCH, 0);
 
-        if (\array_key_exists('FETCH_ERROR', $feed->getParam()) && $nbErrors = $feed->getParam()['FETCH_ERROR']) {
-            return $nbErrors >= 10;
-        }
-
-        return false;
+        return ($nbConsentErrors > 10) && ($nbFetchErrors > 100);
     }
 
     public function resetFetchError(Feed $feed): void
@@ -289,23 +290,27 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
         }
 
-        $feed->setSingleParam('FETCH_ERROR', 0);
+        $feed->setSingleParam(self::ERROR_CONSENT, 0);
+        $feed->setSingleParam(self::ERROR_FETCH, 0);
 
         $this->entityManager->persist($feed);
         $this->entityManager->flush();
     }
 
-    public function addFetchError(Feed $feed): void
+    public function logError(Feed $feed, string $type): void
     {
+        if (!\in_array($type, [self::ERROR_CONSENT, self::ERROR_FETCH])) {
+            throw new \InvalidArgumentException("Given error type is unknown.");
+        }
+
         if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
             throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
         }
 
-        if (\array_key_exists('FETCH_ERROR', $feed->getParam()) && $nbErrors = $feed->getParam()['FETCH_ERROR']) {
-            $feed->setSingleParam('FETCH_ERROR', $nbErrors + 1);
-        } else {
-            $feed->setSingleParam('FETCH_ERROR', 1);
-        }
+        $feed->setSingleParam(
+            $type,
+            $feed->getSingleParam($type, 0) + 1
+        );
 
         $this->entityManager->persist($feed);
         $this->entityManager->flush();

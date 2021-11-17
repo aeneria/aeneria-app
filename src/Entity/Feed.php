@@ -156,14 +156,14 @@ class Feed
         return $this;
     }
 
-    /**
-     * Get param
-     *
-     * @return array
-     */
     public function getParam(): array
     {
         return $this->param ?? [];
+    }
+
+    public function getSingleParam(string $name, $default = null)
+    {
+        return $this->param[$name] ?? $default;
     }
 
     public function setFeedType(string $feedType): self
