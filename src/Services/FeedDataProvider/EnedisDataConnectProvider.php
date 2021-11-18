@@ -86,39 +86,70 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
                 throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
             }
-            try {
-                // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
-                // while fetching data, we stop asking for data for it.
-                // We also display a notification to warn user about this situation.
-                if ($this->hasToManyFetchError($feed)) {
-                    $this->notificationService->handleTooManyFetchErrorsNotification($feed);
 
-                    continue;
-                }
+            // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
+            // while fetching data, we stop asking for data for it.
+            // We also display a notification to warn user about this situation.
+            if ($this->hasToManyFetchError($feed)) {
+                $this->notificationService->handleTooManyFetchErrorsNotification($feed);
 
-                if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
-                    $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+                continue;
+            }
 
-                    $this->ensureAccessToken($feed);
-                    $data['hours'] = $this->getHourlyData($date, $feed);
-                    $data['days'] = $this->getDailyData($date, $feed);
+            if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
+                $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+
+                if ($data = $this->fetchDataForFeed($date, $feed)) {
                     $this->persistData($date, $feed, $data);
                     $this->resetFetchError($feed);
-
                     $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
-            } catch (DataConnectConsentException $e) {
-                $this->logError($feed, self::ERROR_CONSENT);
-                $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
-                $errors[] = new FetchingError($feed, $date, $e);
-            } catch (DataConnectException $e) {
-                $this->logError($feed, self::ERROR_FETCH);
-                $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
-                $errors[] = new FetchingError($feed, $date, $e);
             }
         }
 
         return $errors;
+    }
+
+    private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed): array
+    {
+        $data = [];
+
+        try {
+            $this->ensureAccessToken($feed);
+        } catch (DataConnectException $e) {
+            $this->logError(
+                $feed,
+                $e instanceof DataConnectConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
+            );
+            $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+            $errors[] = new FetchingError($feed, $date, $e);
+
+            return $data;
+        }
+
+        try {
+            $data['days'] = $this->getDailyData($date, $feed);
+        } catch (DataConnectException $e) {
+            $this->logError(
+                $feed,
+                $e instanceof DataConnectConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
+            );
+            $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+            $errors[] = new FetchingError($feed, $date, $e);
+        }
+
+        try {
+            $data['hours'] = $this->getHourlyData($date, $feed);
+        } catch (DataConnectException $e) {
+            $this->logError(
+                $feed,
+                $e instanceof DataConnectConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
+            );
+            $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+            $errors[] = new FetchingError($feed, $date, $e);
+        }
+
+        return $data;
     }
 
     /**
