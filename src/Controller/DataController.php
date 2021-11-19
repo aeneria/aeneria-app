@@ -34,7 +34,7 @@ class DataController extends AbstractAppController
      * Get json to build an heatmap graph between two date.
      *
      * @param string $dataType
-     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $repartitionType
      *     Type of repartition we want (week, year_h, year_v)
      */
@@ -43,7 +43,7 @@ class DataController extends AbstractAppController
         $place = $this->canSeePlace($placeId);
 
         $repartitionType = \strtoupper($repartitionType);
-        $dataType = \strtoupper($dataType);
+        $dataType = \explode(',', \strtoupper($dataType));
         $start = new \DateTimeImmutable($start);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
@@ -70,7 +70,7 @@ class DataController extends AbstractAppController
      * Get json to build an evolution graph between two date.
      *
      * @param string $dataType
-     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $frequency
      *     Frequency we want (day, week, month)
      * @param string $start
@@ -80,15 +80,15 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $frequency = \strtoupper($frequency);
-        $dataType = \strtoupper($dataType);
-        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $frequency = DataValue::getFrequencyFromMachineName(\strtoupper($frequency));
+        $dataType = \explode(',', \strtoupper($dataType));
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), $frequency);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
-        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
+        $feedData = $this->feedDataRepository->findByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $result = $this->dataValueRepository->getValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency]);
+        $result = $this->dataValueRepository->getValue($start, $end, $feedData, $frequency);
 
         $axe = $this->buildEvolutionAxes($frequency, $start, $end);
         $data = $this->buildEvolutionDataObject($result, $frequency, $axe);
@@ -102,7 +102,7 @@ class DataController extends AbstractAppController
      * Get json to build an sum of value graph group by a dataValue column between two date.
      *
      * @param string $dataType
-     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $frequency
      *     Frequency we want (day, week, month)
      * @param string $groupBy
@@ -112,16 +112,16 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $frequency = \strtoupper($frequency);
-        $dataType = \strtoupper($dataType);
-        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $frequency = DataValue::getFrequencyFromMachineName(\strtoupper($frequency));
+        $dataType = \explode(',', \strtoupper($dataType));
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), $frequency);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
-        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
+        $feedData = $this->feedDataRepository->findByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $result = $this->dataValueRepository->getSumValueGroupBy($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $groupBy);
+        $result = $this->dataValueRepository->getSumValueGroupBy($start, $end, $feedData, $frequency, $groupBy);
 
         $axe = (object) [
             'x' => [
@@ -154,7 +154,7 @@ class DataController extends AbstractAppController
      * Get sum between two date.
      *
      * @param string $dataType
-     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $frequency
      *     Frequency we want (day, week, month)
      */
@@ -162,15 +162,15 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = \strtoupper($dataType);
+        $dataType = \explode(',', \strtoupper($dataType));
         $start = new \DateTimeImmutable($start);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
-        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
+        $feedDatas = $this->feedDataRepository->findByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this->dataValueRepository->getSumValue($start, $end, $feedData, DataValue::FREQUENCY['DAY']);
+        $data = $this->dataValueRepository->getSumValue($start, $end, $feedDatas, DataValue::FREQUENCY_DAY);
 
         $jsonData = \json_encode($data);
 
@@ -181,7 +181,7 @@ class DataController extends AbstractAppController
      * Get number of value inferior of <value> by <frequency> between two date.
      *
      * @param string $dataType
-     *     Type of data we want (conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $frequency
      *     Frequency we want (day, week, month)
      */
@@ -189,16 +189,16 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataType = \strtoupper($dataType);
-        $frequency = \strtoupper($frequency);
-        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $dataType = \explode(',', \strtoupper($dataType));
+        $frequency = DataValue::getFrequencyFromMachineName(\strtoupper($frequency));
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), $frequency);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
-        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
+        $feedData = $this->feedDataRepository->findByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
-        $data = $this->dataValueRepository->getNumberInfValue($start, $end, $feedData, DataValue::FREQUENCY[$frequency], $value);
+        $data = $this->dataValueRepository->getNumberInfValue($start, $end, $feedData, $frequency, $value);
 
         $jsonData = \json_encode($data);
 
@@ -209,9 +209,9 @@ class DataController extends AbstractAppController
      * Get XY by <frequency> between two date.
      *
      * @param string $dataTypeX
-     *     Type of data we want on x axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want on x axis (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $dataTypeY
-     *     Type of data we want on y axis(conso_elec, temperature, dju, pressure, nebulosity, humidity)
+     *     Type of data we want on y axe (conso_elec, conso_gaz, temperature, dju, pressure, nebulosity, humidity), could be coma-separated values
      * @param string $frequency
      *     Frequency we want for the evolution (day, week, month)
      */
@@ -219,18 +219,18 @@ class DataController extends AbstractAppController
     {
         $place = $this->canSeePlace($placeId);
 
-        $dataTypeX = \strtoupper($dataTypeX);
-        $dataTypeY = \strtoupper($dataTypeY);
-        $frequency = \strtoupper($frequency);
-        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), DataValue::FREQUENCY[$frequency]);
+        $dataTypeX = \explode(',', \strtoupper($dataTypeX));
+        $dataTypeY = \explode(',', \strtoupper($dataTypeY));
+        $frequency = DataValue::getFrequencyFromMachineName(\strtoupper($frequency));
+        $start = DataValue::adaptToFrequency(new \DateTimeImmutable($start), $frequency);
         $end = new \DateTimeImmutable($end . ' 23:59:59');
 
         // Find feedData with the good dataType.
-        $feedDataX = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataTypeX);
-        $feedDataY = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataTypeY);
+        $feedDataX = $this->feedDataRepository->findByPlaceAndDataType($place, $dataTypeX);
+        $feedDataY = $this->feedDataRepository->findByPlaceAndDataType($place, $dataTypeY);
 
         // Get data between $start & $end for requested frequency.
-        $results = $this->dataValueRepository->getXY($start, $end, $feedDataX, $feedDataY, DataValue::FREQUENCY[$frequency]);
+        $results = $this->dataValueRepository->getXY($start, $end, $feedDataX, $feedDataY, $frequency);
 
         $data = (object) [
             'axeX' => [],
@@ -240,16 +240,16 @@ class DataController extends AbstractAppController
 
         $dateFormat = '';
         switch ($frequency) {
-            case 'DAY':
+            case DataValue::FREQUENCY_DAY:
                 $dateFormat = 'l d/m/Y';
                 break;
-            case 'WEEK':
+            case DataValue::FREQUENCY_WEEK:
                 $dateFormat = 'd/m/Y';
                 break;
-            case 'MONTH':
+            case DataValue::FREQUENCY_MONTH:
                 $dateFormat = 'M Y';
                 break;
-            case 'YEAR':
+            case DataValue::FREQUENCY_YEAR:
                 $dateFormat = 'Y';
         }
 
@@ -281,7 +281,7 @@ class DataController extends AbstractAppController
             case self::WEEK_REPARTITION:
                 $axeX = 'weekDay';
                 $axeY = 'hour';
-                $frequency = DataValue::FREQUENCY['HOUR'];
+                $frequency = DataValue::FREQUENCY_HOUR;
 
                 // Build axes.
                 $axe->x = [
@@ -305,7 +305,7 @@ class DataController extends AbstractAppController
                 $axe->year = [];
                 $axeX = 'week';
                 $axeY = 'weekDay';
-                $frequency = DataValue::FREQUENCY['DAY'];
+                $frequency = DataValue::FREQUENCY_DAY;
 
                 // Build axes.
                 $axe->y = [
@@ -333,7 +333,7 @@ class DataController extends AbstractAppController
                 $axe->year = [];
                 $axeX = 'week';
                 $axeY = 'weekDay';
-                $frequency = DataValue::FREQUENCY['DAY'];
+                $frequency = DataValue::FREQUENCY_DAY;
 
                 // Build axes.
                 $axe->x = [
@@ -365,11 +365,13 @@ class DataController extends AbstractAppController
 
     /**
      * Get data for a repartition graph from database
+     *
+     * @param string[] $dataType
      */
-    private function getRepartitionData(Place $place, \DateTimeImmutable $start, \DateTimeImmutable $end, string $dataType, string $axeX, string $axeY, string $frequency, string $repartitionType): array
+    private function getRepartitionData(Place $place, \DateTimeImmutable $start, \DateTimeImmutable $end, array $dataType, string $axeX, string $axeY, string $frequency, string $repartitionType): array
     {
         // Find feedData with the good dataType.
-        $feedData = $this->feedDataRepository->findOneByPlaceAndDataType($place, $dataType);
+        $feedData = $this->feedDataRepository->findByPlaceAndDataType($place, $dataType);
 
         // Get data between $start & $end for requested frequency.
         return $this->dataValueRepository->getRepartitionValue($start, $end, $feedData, $axeX, $axeY, $frequency, $repartitionType);
@@ -476,25 +478,29 @@ class DataController extends AbstractAppController
         ];
 
         switch ($frequency) {
-            case 'HOUR':
+            case DataValue::FREQUENCY_HOUR:
                $axeFormat = 'd/m/Y H:i';
                break;
-            case 'DAY':
+            case DataValue::FREQUENCY_DAY:
                 $axeFormat = 'd/m/Y';
                 break;
-            case 'WEEK':
+            case DataValue::FREQUENCY_WEEK:
                 $axeFormat = 'd/m/Y';
                 break;
-            case 'MONTH':
+            case DataValue::FREQUENCY_MONTH:
                 $axeFormat = 'M Y';
                 break;
-            case 'YEAR':
+            case DataValue::FREQUENCY_YEAR:
                 $axeFormat = 'Y';
         }
 
         foreach ($results as $result) {
             $index = \array_search($result->getDate()->format($axeFormat), $axe->x);
-            $data->axeY[$index] = $result->getValue();
+            if (\array_key_exists($index, $data->axeY)) {
+                $data->axeY[$index] += $result->getValue();
+            } else {
+                $data->axeY[$index] = $result->getValue();
+            }
         }
 
         foreach (\array_keys($axe->x) as $key) {
@@ -542,27 +548,27 @@ class DataController extends AbstractAppController
         $step = '';
 
         switch ($frequency) {
-            case 'HOUR':
+            case DataValue::FREQUENCY_HOUR:
                 $axeFormat = 'd/m/Y H:i';
                 $labelFormat = 'l d/m/Y H:i';
                 $step = 'P1H';
                 break;
-            case 'DAY':
+            case DataValue::FREQUENCY_DAY:
                 $axeFormat = 'd/m/Y';
                 $labelFormat = 'l d/m/Y';
                 $step = 'P1D';
                 break;
-            case 'WEEK':
+            case DataValue::FREQUENCY_WEEK:
                 $axeFormat = 'd/m/Y';
                 $labelFormat = 'd/m/Y';
                 $step = 'P1W';
                 break;
-            case 'MONTH':
+            case DataValue::FREQUENCY_MONTH:
                 $axeFormat = 'M Y';
                 $labelFormat = 'M Y';
                 $step = 'P1M';
                 break;
-            case 'YEAR':
+            case DataValue::FREQUENCY_YEAR:
                 $axeFormat = 'Y';
                 $labelFormat = 'Y';
                 $step = 'P1Y';
