@@ -84,6 +84,8 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
                 $this->logger->error("GrdfAdict - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
                 $errors[] = new FetchingError($feed, $date, $e);
             }
+            // On évite de dépasser les quotas de GRDF, on attends 1 seconde entre chaque requête
+            \sleep(1);
         }
 
         return $errors;
@@ -121,7 +123,6 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
             )
         ;
 
-        // Data can be with PT30M PT10M and PT60M, we reconstitute a PT60M interval dataset
         $key = $meteringData
             ->getDate()
             ->format('Y-m-d')
