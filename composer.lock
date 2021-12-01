@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/aeneria/grdf-adict.git",
-                "reference": "46d5d6a3a6c14a7dfe075199d6863b3069263f66"
+                "reference": "fb1e352386802ef3a5dc5b07782c22b02fb0a14a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=46d5d6a3a6c14a7dfe075199d6863b3069263f66",
-                "reference": "46d5d6a3a6c14a7dfe075199d6863b3069263f66",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=fb1e352386802ef3a5dc5b07782c22b02fb0a14a",
+                "reference": "fb1e352386802ef3a5dc5b07782c22b02fb0a14a",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Aeneria\\GrdfAddictApi\\": "src/"
+                    "Aeneria\\GrdfAdictApi\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -95,7 +95,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/23365713/issues"
             },
-            "time": "2021-04-07T12:32:12+00:00"
+            "time": "2021-06-04T17:47:56+00:00"
         },
         {
             "name": "box/spout",
@@ -8808,5 +8808,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
