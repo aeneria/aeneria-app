@@ -242,6 +242,9 @@ class DataValueRepository extends ServiceEntityRepository
      */
     public function getXY(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedDataX, $feedDataY, int $frequency)
     {
+        $feedDataX = \is_array($feedDataX) ? $feedDataX : [$feedDataX];
+        $feedDataY = \is_array($feedDataY) ? $feedDataY : [$feedDataY];
+
         // Create the query builder
         $queryBuilder = $this->createQueryBuilder('dx');
 
