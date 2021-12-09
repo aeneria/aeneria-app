@@ -14,6 +14,9 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     const FETCH_STRATEGY_GROUPED = 'grouped';
     const FETCH_STRATEGY_ONE_BY_ONE = 'one_by_one';
 
+    const ERROR_FETCH = 'FETCH_ERROR';
+    const ERROR_CONSENT = 'CONSENT_ERROR';
+
     /** @var EntityManagerInterface */
     protected $entityManager;
 
