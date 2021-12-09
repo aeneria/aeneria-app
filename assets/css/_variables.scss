@@ -15,24 +15,32 @@ $theme-colors: (
   "danger": crimson
 );
 
-$period-one: #90A4AE;
-$period-two: #37474F;
-
 // Chart colors
 $grid-color: #dddddd;
 $axe-color: #6d6d6d;
 
 $chart-colors: (
   'conso_elec': (
-    #ECEFF1,
-    #CFD8DC,
-    #B0BEC5,
-    #90A4AE,
-    #78909C,
-    #607D8B,
-    #546E7A,
-    #455A64,
-    #37474F
+    #feff9d
+    #ffee79
+    #fbde5e
+    #f5ce48
+    #edbf38
+    #e4b02c
+    #dba225
+    #d09422
+    #c68622
+  ),
+  'conso_gaz': (
+    #f7fbff,
+    #deebf7,
+    #c6dbef,
+    #9ecae1,
+    #6baed6,
+    #4292c6,
+    #2171b5,
+    #08519c,
+    #08306b
   ),
   'nebulosity': (
     #20CFFE,
@@ -90,3 +98,6 @@ $chart-colors: (
     #d73027,
   )
 );
+
+$period-one: #f5ce48;
+$period-two: #dba225;

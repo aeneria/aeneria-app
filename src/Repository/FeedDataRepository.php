@@ -71,6 +71,34 @@ class FeedDataRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string|string[] $dataTypes
+     *
+     * @return FeedData[]
+     */
+    public function findByPlaceAndDataType(Place $place, $dataTypes): ?Array
+    {
+        $dataTypes = \is_array($dataTypes) ? $dataTypes : $dataTypes;
+
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('fd');
+
+        $queryBuilder
+            ->select()
+            ->innerJoin('fd.feed', 'f')
+            ->innerJoin('f.places', 'p', 'WITH', 'p = :place')
+            ->setParameter('place', $place)
+            ->andWhere($queryBuilder->expr()->in('fd.dataType', $dataTypes))
+            // ->andWhere('fd.dataType in (:dataType)')
+            // ->setParameter('dataType', \implode(',', \array_map(function($type) {return "'".$type."'";},$dataTypes)))
+        ;
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * Get Date of last up to date data.
      * @param EntityManager $entityManager
      * @param $frequencies array of int from DataValue frequencies

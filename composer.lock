@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1f327293d356478917c74cac48900ca",
+    "content-hash": "4400a195b05c437f75a8a7cb9c68a39b",
     "packages": [
         {
             "name": "aeneria/enedis-data-connect",
@@ -50,6 +50,52 @@
                 "issues": "https://gitlab.com/api/v4/projects/18244019/issues"
             },
             "time": "2020-09-29T12:45:43+00:00"
+        },
+        {
+            "name": "aeneria/grdf-adict",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/aeneria/grdf-adict.git",
+                "reference": "0b0b67fc7408c0ea0cb8e3d8abb2bd363f69acb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=0b0b67fc7408c0ea0cb8e3d8abb2bd363f69acb8",
+                "reference": "0b0b67fc7408c0ea0cb8e3d8abb2bd363f69acb8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "symfony/http-client": "5.*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpunit/phpunit": "^8.5",
+                "symfony/serializer-pack": "^1.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aeneria\\GrdfAdictApi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simon Mellerin",
+                    "email": "bonjour@aeneria.com"
+                }
+            ],
+            "description": "A small library to use a part of GRDF ADICT API with PHP : https://site.grdf.fr/web/grdf-adict/",
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/23365713/issues"
+            },
+            "time": "2021-12-06T13:49:26+00:00"
         },
         {
             "name": "box/spout",
@@ -8751,7 +8797,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "aeneria/grdf-adict": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -8760,5 +8808,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

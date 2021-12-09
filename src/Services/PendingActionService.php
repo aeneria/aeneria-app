@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class PendingActionService
 {
     const ACTION_DATA_CONNECT_CALLBACK = 'data_connect_callback';
+    const ACTION_GRDF_ADICT_CALLBACK = 'grdf_adict_callback';
     const ACTION_IMPORT_DATA = 'import_data';
     const ACTION_FETCH_DATA = 'fetch_data';
 
@@ -100,6 +101,18 @@ class PendingActionService
 
         return $this->createAction(
             self::ACTION_DATA_CONNECT_CALLBACK,
+            $user,
+            new \DateTimeImmutable('now + 1 day'),
+            $param
+        );
+    }
+
+    public function createGrdfAdictCallbackAction(User $user, Place $place = null): PendingAction
+    {
+        $param = $place ? ['place' => $place->getId()] : [];
+
+        return $this->createAction(
+            self::ACTION_GRDF_ADICT_CALLBACK,
             $user,
             new \DateTimeImmutable('now + 1 day'),
             $param

@@ -34,6 +34,15 @@ class DashboardController extends AbstractController
         return $this->render('dashboards/electricity.html.twig');
     }
 
+    public function gazAction(Request $request)
+    {
+        if (!$this->canUserSeeAtLeastOnPlace()) {
+            return $this->render('welcome.html.twig');
+        }
+
+        return $this->render('dashboards/gaz.html.twig');
+    }
+
     public function analyseAction(Request $request)
     {
         if (!$this->canUserSeeAtLeastOnPlace()) {

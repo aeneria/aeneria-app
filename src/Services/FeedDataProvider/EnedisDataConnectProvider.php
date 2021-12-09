@@ -28,8 +28,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
-    const ERROR_FETCH = 'FETCH_ERROR';
-    const ERROR_CONSENT = 'CONSENT_ERROR';
+    use FetchErrorTrait;
 
     /** @var DataConnectServiceInterface */
     private $dataConnect;
@@ -99,9 +98,10 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
                 $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
 
-                if ($data = $this->fetchDataForFeed($date, $feed)) {
+                if ($data = $this->fetchDataForFeed($date, $feed, $errors)) {
                     $this->persistData($date, $feed, $data);
                     $this->resetFetchError($feed);
+
                     $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
             }
@@ -110,7 +110,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         return $errors;
     }
 
-    private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed): array
+    private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
         $data = [];
 
@@ -297,53 +297,6 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         // Persist year data.
         $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Est-ce que le feed courant a déjà eu trop de problème lors des dernières
-     * récupérations de données
-     */
-    public function hasToManyFetchError(Feed $feed): bool
-    {
-        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
-        }
-        $nbConsentErrors = $feed->getSingleParam(self::ERROR_CONSENT, 0);
-        $nbFetchErrors = $feed->getSingleParam(self::ERROR_FETCH, 0);
-
-        return ($nbConsentErrors > 10) && ($nbFetchErrors > 100);
-    }
-
-    public function resetFetchError(Feed $feed): void
-    {
-        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
-        }
-
-        $feed->setSingleParam(self::ERROR_CONSENT, 0);
-        $feed->setSingleParam(self::ERROR_FETCH, 0);
-
-        $this->entityManager->persist($feed);
-        $this->entityManager->flush();
-    }
-
-    public function logError(Feed $feed, string $type): void
-    {
-        if (!\in_array($type, [self::ERROR_CONSENT, self::ERROR_FETCH])) {
-            throw new \InvalidArgumentException("Given error type is unknown.");
-        }
-
-        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
-        }
-
-        $feed->setSingleParam(
-            $type,
-            $feed->getSingleParam($type, 0) + 1
-        );
-
-        $this->entityManager->persist($feed);
         $this->entityManager->flush();
     }
 

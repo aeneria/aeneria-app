@@ -8,6 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "aeneria/enedis-data-connect": "^1.2",
+        "aeneria/grdf-adict": "dev-master",
         "box/spout": "^3.1",
         "firebase/php-jwt": "^5.2",
         "sensio/framework-extra-bundle": "^5.2",

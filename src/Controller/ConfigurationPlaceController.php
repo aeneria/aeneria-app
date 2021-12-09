@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
 use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
+use Aeneria\GrdfAdictApi\Exception\GrdfAdictConsentException;
+use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
 use App\Entity\Feed;
 use App\Entity\Place;
 use App\Entity\User;
@@ -103,10 +105,12 @@ class ConfigurationPlaceController extends AbstractAppController
         }
 
         $linkyFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
+        $gazparFeed = $place->getFeed(Feed::FEED_TYPE_GAZ);
 
         return $this->render('configuration/place/edit.html.twig', [
             'form' => $form->createView(),
             'linky' => $linkyFeed,
+            'gazpar' => $gazparFeed,
             'place' => $place,
         ]);
     }
@@ -218,6 +222,138 @@ class ConfigurationPlaceController extends AbstractAppController
         $feed->setSingleParam('TOKEN', $serializer->serialize($token, 'json'));
         $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
         $feed->setSingleParam('FETCH_ERROR', 0);
+
+        $entityManager->persist($feed);
+        $entityManager->persist($place);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le partage de données a été correctement activé.");
+
+        // Ensure all dependant FeedData are already existing
+        $feedRepository->createDependentFeedData($feed);
+        $entityManager->flush();
+
+        $actionService->delete($pendingAction);
+
+        return $this->redirectToRoute('config.place.edit', ['id' => $place->getId()]);
+    }
+
+    public function placeGrdfConsentAction(
+        RouterInterface $router,
+        string $id = null,
+        int $userMaxPlaces,
+        GrdfAdictServiceInterface $grdfAdictService,
+        PendingActionService $actionService,
+        JwtService $jwtService
+    ): RedirectResponse {
+        $user = $this->getUser();
+
+        $place = null;
+        if ($id) {
+            $place = $this->checkPlace($id);
+        } elseif (-1 != $userMaxPlaces && \count($user->getPlaces()) >= $userMaxPlaces && !$this->isDemoMode) {
+            throw new AccessDeniedHttpException(\sprintf(
+                "Vous ne pouvez créer que %s adresse%s.",
+                $userMaxPlaces,
+                $userMaxPlaces > 1 ? 's' : ''
+            ));
+        }
+
+        $action = $actionService->createGrdfAdictCallbackAction($user, $place);
+
+        $state = $jwtService->encode($action->getToken());
+
+        $grdfUrl = $grdfAdictService
+            ->getAuthentificationService()
+            ->getConsentPageUrl(
+                $state,
+                'aeneria'
+            )
+        ;
+
+        // Adding callback url for aeneria proxy
+        $grdfUrl .= '&callback=';
+        $grdfUrl .= \urlencode(
+            $router->generate('config.place.grdf_consent_callback', [], RouterInterface::ABSOLUTE_URL)
+        );
+
+        return $this->redirect($grdfUrl);
+    }
+
+    public function placeGrdfConsentCallbackAction(
+        Request $request,
+        GrdfAdictServiceInterface $grdfAdictService,
+        JwtService $jwtService,
+        feedRepository $feedRepository,
+        EntityManagerInterface $entityManager,
+        PendingActionService $actionService,
+        SerializerInterface $serializer
+    ): Response {
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        if (!$code = $request->get('code')) {
+            throw new BadRequestHttpException();
+        }
+        if (!$state = $request->get("state")) {
+            throw new BadRequestHttpException();
+        }
+
+        $token = (string) $jwtService->decode($state);
+        $pendingAction = $actionService->findActionByToken($user, $token);
+
+        try {
+            $consentement = $grdfAdictService
+                ->getAuthentificationService()
+                ->requestConsentementDetail($code)
+            ;
+
+            $authorisationToken = $grdfAdictService
+                ->getAuthentificationService()
+                ->requestAuthorizationToken()
+            ;
+
+            $info = null;
+            try {
+                $info = $grdfAdictService
+                    ->getContratService()
+                    ->requestContratInfo(
+                        $authorisationToken->getAccessToken(),
+                        $consentement->getPce()
+                    )
+                ;
+            } catch (GrdfAdictConsentException $e) {}
+        } catch (DataConnectException $e) {
+            $this->addFlash('danger', "Une erreur est survenue, réessayez plus tard.");
+
+            return $this->redirectToRoute('config');
+        }
+
+        if ($pendingAction->existParam('place')) {
+            $place = $this->checkPlace($pendingAction->getSingleParam('place'));
+        } else {
+            // We are creating a new place
+            $place = new Place();
+            $place->setName((string) $info ? (string) $info : '');
+            $place->setUser($user);
+
+            $entityManager->persist($place);
+            $entityManager->flush();
+        }
+        \assert($place instanceof Place);
+
+        if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
+            $feed = new Feed();
+            $feed->setFeedType(Feed::FEED_TYPE_GAZ);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT);
+            $place->addFeed($feed);
+        }
+
+        $feed->setName($info ? (string) $info : '');
+        $feed->setSingleParam('PCE', $consentement->getPce());
+        if ($info) {
+            $feed->setSingleParam('INFO', $serializer->serialize($info, 'json'));
+        }
 
         $entityManager->persist($feed);
         $entityManager->persist($place);

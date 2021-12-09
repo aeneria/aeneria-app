@@ -5,6 +5,7 @@ namespace App\Twig;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
+use App\Services\FeedDataProvider\GrdfAdictProvider;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -17,15 +18,20 @@ final class AppExtension extends AbstractExtension
     /** @var EnedisDataConnectProvider */
     private $enedisDataConnectProvider;
 
+    /** @var GrdfAdictProvider */
+    private $grdfAdictProvider;
+
     /**
      * Default constructor
      */
     public function __construct(
         ContainerBagInterface $parameters,
-        EnedisDataConnectProvider $enedisDataConnectProvider
+        EnedisDataConnectProvider $enedisDataConnectProvider,
+        GrdfAdictProvider $grdfAdictProvider
     ) {
         $this->parameters = $parameters;
         $this->enedisDataConnectProvider = $enedisDataConnectProvider;
+        $this->grdfAdictProvider = $grdfAdictProvider;
     }
 
     /**
@@ -46,7 +52,8 @@ final class AppExtension extends AbstractExtension
             new TwigFunction('aeneria_user_can_import', [$this, 'canUserImportData']),
             new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
             new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
-            new TwigFunction('aeneria_linky_get_description', [$this, 'getLinkyDescription']),
+            new TwigFunction('aeneria_linky_description', [$this, 'getLinkyDescription']),
+            new TwigFunction('aeneria_gazpar_description', [$this, 'getGazparDescription']),
             new TwigFunction('aeneria_demo_mode', [$this, 'isDemoMode']),
             new TwigFunction('aeneria_welcome_message', [$this, 'getWelcomeMessage']),
             new TwigFunction('aeneria_matomo', [$this, 'getMatomo']),
@@ -141,12 +148,23 @@ final class AppExtension extends AbstractExtension
         return $this->parameters->get('aeneria.welcome_message');
     }
 
-    public function getLinkyDescription(Feed $feed): ?string
+    public function getLinkyDescription(?Feed $feed): ?string
     {
-        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
+        if ($feed && Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
             $address = $this->enedisDataConnectProvider->getAddressFrom($feed);
 
-            return $address . ' (PDL : ' . $address->getUsagePointId() . ')';
+            return 'PDL - ' . $address->getUsagePointId();
+        }
+
+        return null;
+    }
+
+    public function getGazparDescription(?Feed $feed): ?string
+    {
+        if ($feed && Feed::FEED_DATA_PROVIDER_GRDF_ADICT === $feed->getFeedDataProviderType()) {
+            $pce = $this->grdfAdictProvider->getPce($feed);
+
+            return 'PCE - ' . $pce;
         }
 
         return null;

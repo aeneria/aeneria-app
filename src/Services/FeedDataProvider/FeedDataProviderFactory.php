@@ -15,6 +15,9 @@ class FeedDataProviderFactory
     /** @var MeteoFranceDataProvider */
     private $meteoFranceDataProvider;
 
+    /** @var GrdfAdictProvider */
+    private $grdfAdictProvider;
+
     /** @var FakeDataProvider */
     private $fakeDataProvider;
 
@@ -22,11 +25,13 @@ class FeedDataProviderFactory
         EnedisDataConnectProvider $enedisDataConnectProvider,
         LinkyDataProvider $linkyDataProvider,
         MeteoFranceDataProvider $meteoFranceDataProvider,
+        GrdfAdictProvider $grdfAdictProvider,
         FakeDataProvider $fakeDataProvider
     ) {
         $this->enedisDataConnectProvider = $enedisDataConnectProvider;
         $this->linkyDataProvider = $linkyDataProvider;
         $this->meteoFranceDataProvider = $meteoFranceDataProvider;
+        $this->grdfAdictProvider = $grdfAdictProvider;
         $this->fakeDataProvider = $fakeDataProvider;
     }
 
@@ -63,6 +68,8 @@ class FeedDataProviderFactory
                 return $this->linkyDataProvider;
             case Feed::FEED_DATA_PROVIDER_METEO_FRANCE:
                 return $this->meteoFranceDataProvider;
+            case Feed::FEED_DATA_PROVIDER_GRDF_ADICT:
+                return $this->grdfAdictProvider;
             case Feed::FEED_DATA_PROVIDER_FAKE:
                 return $this->fakeDataProvider;
             default:
