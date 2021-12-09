@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/aeneria/grdf-adict.git",
-                "reference": "9e87004c9092e9d6ecbda9e9173c3df9bdcfc2ab"
+                "reference": "0b0b67fc7408c0ea0cb8e3d8abb2bd363f69acb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=9e87004c9092e9d6ecbda9e9173c3df9bdcfc2ab",
-                "reference": "9e87004c9092e9d6ecbda9e9173c3df9bdcfc2ab",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=0b0b67fc7408c0ea0cb8e3d8abb2bd363f69acb8",
+                "reference": "0b0b67fc7408c0ea0cb8e3d8abb2bd363f69acb8",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/23365713/issues"
             },
-            "time": "2021-12-01T14:30:19+00:00"
+            "time": "2021-12-06T13:49:26+00:00"
         },
         {
             "name": "box/spout",
