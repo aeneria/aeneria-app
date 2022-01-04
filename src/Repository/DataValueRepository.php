@@ -71,6 +71,7 @@ class DataValueRepository extends ServiceEntityRepository
                     case FeedData::FEED_DATA_DJU:
                     case FeedData::FEED_DATA_RAIN:
                     case FeedData::FEED_DATA_CONSO_ELEC:
+                    case FeedData::FEED_DATA_CONSO_GAZ:
                         $agregateData = $this
                             ->getSumValue(
                                 $firstDay,
