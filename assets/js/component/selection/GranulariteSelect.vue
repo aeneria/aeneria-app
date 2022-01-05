@@ -8,6 +8,3 @@
 </template>
 
 <script lang="ts" src="./GranulariteSelect.ts" />
-
-<style lang="scss">
-</style>

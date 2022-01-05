@@ -9,6 +9,3 @@
 </template>
 
 <script lang="ts" src="./PlaceSelect.ts" />
-
-<style lang="scss">
-</style>

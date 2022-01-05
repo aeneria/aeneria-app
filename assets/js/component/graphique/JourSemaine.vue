@@ -7,7 +7,3 @@
 </template>
 
 <script lang="ts" src="./JourSemaine.ts" />
-
-<style lang="scss">
-
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!(loading||error)" class="graph graph-semaine p-ai-center p-jc-center">
+  <div v-show="!(loading||error)" class="graph graph-semaine-v p-ai-center p-jc-center">
     <div :id="id" >
     </div>
     <Legende
@@ -21,7 +21,7 @@
 <script lang="ts" src="./SemaineVertical.ts" />
 
 <style lang="scss">
-  .graph-semaine {
+  .graph-semaine-v {
     display: flex;
 
     rect {

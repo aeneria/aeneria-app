@@ -3,6 +3,3 @@
 </template>
 
 <script lang="ts" src="./Legende.ts" />
-
-<style lang="scss">
-</style>

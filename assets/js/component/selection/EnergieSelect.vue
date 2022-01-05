@@ -9,6 +9,3 @@
 </template>
 
 <script lang="ts" src="./EnergieSelect.ts" />
-
-<style lang="scss">
-</style>
