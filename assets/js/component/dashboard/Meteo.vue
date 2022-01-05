@@ -45,6 +45,3 @@
 </template>
 
 <script lang="ts" src="./Meteo.ts"></script>
-
-<style lang="scss">
-</style>

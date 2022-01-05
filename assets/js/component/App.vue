@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="p-grid">
-      <div id="side-menu" class="p-col-fixed p-d-flex p-flex-column">
+      <div id="side-menu" class="p-col-fixed p-d-flex p-flex-column p-pt-2">
         <SidebarLink
           to="/app/"
           imageBase="/image/home"

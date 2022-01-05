@@ -7,7 +7,3 @@
 </template>
 
 <script lang="ts" src="./Evolution.ts" />
-
-<style lang="scss">
-
-</style>

@@ -55,4 +55,3 @@ export function getGranularite(type: GranulariteType): Granularite
 {
   return granulariteList.find((element: Granularite) => element.type === type) ?? granulariteList[0]
 }
-
