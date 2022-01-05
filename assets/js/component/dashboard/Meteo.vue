@@ -1,0 +1,50 @@
+<template>
+  <SelectionForm type="classique"/>
+  <div class="p-grid dash-energie">
+    <div
+      v-for="item in meteoList"
+      :key="item.type.id"
+      class="p-col-12 p-sm-6 p-md-6 p-lg-3"
+    >
+      <Card :class="'card-' + item.type.id + '-calendrier'">
+        <template #title>
+          {{ item.type.label }}
+        </template>
+        <template #content>
+          <Calendrier
+            :id="'calendrier-' + item.type.id"
+            :periode="periode"
+            :feedDataId="item.feedDataId"
+            :feedDataType="item.type"
+            :min="0"
+          />
+        </template>
+      </Card>
+    </div>
+    <div
+      v-for="item in meteoList"
+      :key="item.type.id"
+      class="p-col-12 p-lg-6"
+    >
+      <Card :class="'card-' + item.type.id + '-evolution'">
+        <template #title>
+          {{ item.type.label }}
+        </template>
+        <template #content>
+          <Evolution
+            :id="'evolution-' + item.type.id"
+            :periode="periode"
+            :granularite="granularite"
+            :feedDataId="item.feedDataId"
+            :feedDataType="item.type"
+          />
+        </template>
+      </Card>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" src="./Meteo.ts"></script>
+
+<style lang="scss">
+</style>

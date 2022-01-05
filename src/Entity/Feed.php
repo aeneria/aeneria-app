@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 /**
  * Feed
  */
-class Feed
+class Feed implements \JsonSerializable
 {
     const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
     const FEED_TYPE_GAZ = 'GAZ';
@@ -51,7 +53,12 @@ class Feed
                 'NAME' => 'Gaz',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_GAZ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_GRDF_ADICT],
-                'FREQUENCIES' => DataValue::getAllFrequencies(),
+                'FREQUENCIES' => [
+                    DataValue::FREQUENCY_DAY,
+                    DataValue::FREQUENCY_WEEK,
+                    DataValue::FREQUENCY_MONTH,
+                    'YEAR' => DataValue::FREQUENCY_YEAR,
+                ],
             ],
             self::FEED_TYPE_METEO => [
                 'NAME' => 'Météo',
@@ -70,6 +77,7 @@ class Feed
                     DataValue::FREQUENCY_DAY,
                     DataValue::FREQUENCY_WEEK,
                     DataValue::FREQUENCY_MONTH,
+                    'YEAR' => DataValue::FREQUENCY_YEAR,
                 ],
             ],
         ];
@@ -211,7 +219,7 @@ class Feed
     }
 
     /**
-     * @return Place[]
+     * @return iterable<PLace>
      */
     public function getPlaces(): ?iterable
     {
@@ -257,7 +265,7 @@ class Feed
     }
 
     /**
-     * @return FeedData[]
+     * @return \Iterable<FeedData>
      */
     public function getFeedDatas(): ?iterable
     {
@@ -282,5 +290,25 @@ class Feed
         }
 
         return null;
+    }
+
+    public function jsonSerialize()
+    {
+        $feedDataList = \iterator_to_array($this->getFeedDatas());
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'type' => $this->feedType,
+            'dataProvider' => $this->feedDataProviderType,
+            'param' => $this->param,
+            'frequencies' => $this->getFrequencies(),
+            'feedDataList' => \array_map(
+                function (FeedData $feedData) {
+                    return $feedData->jsonSerialize();
+                },
+                $feedDataList
+            ),
+        ];
     }
 }

@@ -52,7 +52,7 @@
     </main>
 
     <script>
-      var appRoute = "{{ path('dashboard.home')|escape('js') }}";
+      var appRoute = "{{ path('app.home')|escape('js') }}";
       {% if places is defined %}
         var places = {{ places|json_encode|raw }};
       {% endif %}

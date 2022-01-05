@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>æneria</title>
+
+    {% block stylesheets %} {% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('image/favicon.png') }}" />
+    {% for file in encore_entry_css_files('app') %}
+      <link href="{{ relative_path(asset(file)) }}" rel="stylesheet" />
+    {% endfor %}
+
+    {{ aeneria_matomo()|raw }}
+  </head>
+  <body>
+    <div id="app" data-app-route="{{ path('app.home')|escape('js') }}"></div>
+
+    {% for file in encore_entry_js_files('app') %}
+      <script src="{{ relative_path(asset(file)) }}"></script>
+    {% endfor %}
+
+    {% block javascripts %}{% endblock %}
+  </body>
+</html>

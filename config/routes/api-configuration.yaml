@@ -1,0 +1,3 @@
+api.configuration.places:
+  path: api/config/places
+  controller: App\Controller\ApiConfigController::getPlacesAction

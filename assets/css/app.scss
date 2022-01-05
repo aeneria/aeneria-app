@@ -1,59 +1,62 @@
 
 @import "fonts.scss";
-@import "variables.scss";
+@import "variables";
 
-// @import "~bootstrap/scss/bootstrap";
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-// Bootstrap 4
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/root";
-@import "~bootstrap/scss/reboot";
-@import "~bootstrap/scss/type";
-@import "~bootstrap/scss/images";
-//@import "~bootstrap/scss/code";
-@import "~bootstrap/scss/grid";
-@import "~bootstrap/scss/tables";
-@import "~bootstrap/scss/forms";
-@import "~bootstrap/scss/buttons";
-@import "~bootstrap/scss/transitions";
-@import "~bootstrap/scss/dropdown";
-@import "~bootstrap/scss/button-group";
-@import "~bootstrap/scss/input-group";
-//@import "~bootstrap/scss/custom-forms";
-@import "~bootstrap/scss/nav";
-@import "~bootstrap/scss/navbar";
-@import "~bootstrap/scss/card";
-// @import "~bootstrap/scss/breadcrumb";
-//@import "~bootstrap/scss/pagination";
-//@import "~bootstrap/scss/badge";
-@import "~bootstrap/scss/jumbotron";
-@import "~bootstrap/scss/alert";
-//@import "~bootstrap/scss/progress";
-//@import "~bootstrap/scss/media";
-//@import "~bootstrap/scss/list-group";
-//@import "~bootstrap/scss/close";
-//@import "~bootstrap/scss/toasts";
-//@import "~bootstrap/scss/modal";
-@import "~bootstrap/scss/tooltip";
-@import "~bootstrap/scss/popover";
-// @import "~bootstrap/scss/carousel";
-//@import "~bootstrap/scss/spinners";
-@import "~bootstrap/scss/utilities";
-// @import "~bootstrap/scss/print";
+:root {
+  --primary-color: #{$secondary-color};
+  @keyframes p-progress-spinner-color {
+    100%,
+    0% {
+        stroke: #eaebec;
+    }
+    40% {
+        stroke: #eaebec;
+    }
+    66% {
+        stroke: #eaebec;
+    }
+    80%,
+    90% {
+        stroke: #eaebec;
+    }
+  }
+}
 
-@import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.css";
-@import "~bootstrap-multiselect/dist/css/bootstrap-multiselect.css";
-@import "~@fortawesome/fontawesome-free/css/all.css";
+// @import 'primevue/resources/themes/lara-light-indigo/theme.css';
+@import 'primevue/resources/themes/mdc-light-deeppurple/theme.css';
+@import 'primevue/resources/primevue.css';
+@import 'primeflex/primeflex.css';
+@import 'primeicons/primeicons.css';
+@import 'tippy.js/dist/tippy.css';
 
-@import "structure.scss";
-@import "navigation_desktop.scss";
-@import "navigation_mobile.scss";
-@import "chart.scss";
-@import "homepage.scss";
-@import "electricity_tab.scss";
-@import "meteo_tab.scss";
-@import "analyse_tab.scss";
-@import "comparaison_tab.scss";
-@import "forms.scss";
-@import "misc.scss";
+// @import "~@fortawesome/fontawesome-free/css/all.css";
+
+// @import "structure.scss";
+// @import "navigation_desktop.scss";
+// @import "navigation_mobile.scss";
+// @import "homepage.scss";
+// @import "electricity_tab.scss";
+// @import "meteo_tab.scss";
+// @import "analyse_tab.scss";
+// @import "comparaison_tab.scss";
+// @import "forms.scss";
+// @import "misc.scss";
+body {
+  background-color: $body-bg-color;
+}
+
+.p-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+
+  .p-card-title {
+    font-family: $font-title;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.graph text, .tippy-content{
+  font-family: $font-monospace;
+  font-size: 0.8rem;
+}
