@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 /**
  * Place
  */
-class Place
+class Place implements \JsonSerializable
 {
     /** @var int */
     private $id;
@@ -125,6 +127,9 @@ class Place
         return $this;
     }
 
+    /**
+     * @return \Iterable<Feed>
+     */
     public function getFeeds(): iterable
     {
         return $this->feeds;
@@ -150,6 +155,9 @@ class Place
         return null;
     }
 
+    /**
+     * @return FeedData[]
+     */
     public function getFeedDatas(): array
     {
         $feedDatas = [];
@@ -183,6 +191,9 @@ class Place
         return null;
     }
 
+    /**
+     * @return \Iterable<User>
+     */
     public function getAllowedUsers(): ?iterable
     {
         return $this->allowedUsers;
@@ -193,5 +204,22 @@ class Place
         $this->allowedUsers = $allowedUsers;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        $feedList = \iterator_to_array($this->getFeeds());
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'icon' => 'home',
+            'feedList' => \array_map(
+                function (Feed $feed) {
+                    return $feed->jsonSerialize();
+                },
+                $feedList
+            ),
+        ];
     }
 }

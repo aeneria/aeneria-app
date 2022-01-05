@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 /**
  * FeedData
  */
-class FeedData
+class FeedData implements \JsonSerializable
 {
     const FEED_DATA_CONSO_ELEC = 'CONSO_ELEC';
     const FEED_DATA_CONSO_GAZ = 'CONSO_GAZ';
@@ -146,5 +148,14 @@ class FeedData
     public function getFeed(): Feed
     {
         return $this->feed;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'label' => $this->getDisplayDataType(),
+            'type' => $this->dataType
+        ];
     }
 }

@@ -262,7 +262,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         // Persist hours data.
         foreach ($data['hours'] as $currentDate => $value) {
-            if ($value && -1 !== (int) $value) {
+            if (isset($value) && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d H:i', $currentDate),
@@ -274,7 +274,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         // Persist day data.
         foreach ($data['days'] as $currentDate => $value) {
-            if ($value && -1 !== (int) $value) {
+            if (isset($value) && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),

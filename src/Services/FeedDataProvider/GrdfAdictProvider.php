@@ -184,7 +184,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
         // Persist day data.
         foreach ($data as $currentDate => $value) {
-            if ($value && -1 !== (int) $value) {
+            if (isset($value) && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),

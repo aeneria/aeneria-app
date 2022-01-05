@@ -1,0 +1,9 @@
+app.home:
+  path: /app
+  controller: App\Controller\AppController::appAction
+
+app.home.trailing:
+  path: /app/{path}
+  controller: App\Controller\AppController::appAction
+  requirements:
+      token: .+

@@ -365,10 +365,8 @@ class DataValueRepository extends ServiceEntityRepository
      * Get repartition
      *
      * @param FeedData|FeedData[] $feedData
-     * @param string $repartitionType
-     *  must be in DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION
      */
-    public function getRepartitionValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedData, string $axeX, string $axeY, int $frequency, string $repartitionType)
+    public function getRepartitionValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedData, string $axeX, string $axeY, int $frequency)
     {
         $feedData = \is_array($feedData) ? $feedData : [$feedData];
 
@@ -380,11 +378,28 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder->addGroupBy('d.' . $axeX);
         $queryBuilder->addGroupBy('d.' . $axeY);
 
-        // If this is a year repartition, we also group by year.
-        if (\in_array($repartitionType, [DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION])) {
-            $queryBuilder->addSelect('d.year AS year');
-            $queryBuilder->addGroupBy('d.year');
-        }
+        return $queryBuilder
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Get sum of value group by frequency (day, weekDay, week, month, year)
+     *
+     * @param FeedData|FeedData[] $feedData
+     */
+    public function getAvgValueGroupBy(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedData, int $frequency, string $groupBy)
+    {
+        $feedData = \is_array($feedData) ? $feedData : [$feedData];
+
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $queryBuilder->select(
+            'AVG(d.value) AS value, d.' . $groupBy . ' AS groupBy');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->addGroupBy('d.' . $groupBy);
 
         return $queryBuilder
             ->getQuery()
