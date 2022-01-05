@@ -1,6 +1,10 @@
-var Encore = require('@symfony/webpack-encore');
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const path = require('path');
+import('@vue/runtime-core')
+// import('@vue/runtime-compiler')
+
+var Encore = require('@symfony/webpack-encore')
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
+const path = require('path')
+const webpack = require('webpack')
 
 // @see https://symfony.com/doc/current/frontend.html
 Encore
@@ -11,7 +15,7 @@ Encore
     // })
     // only needed for CDN's or sub-directory deploy
     // .setManifestKeyPrefix('build/')
-    .addEntry('app', './assets/js/app.js')
+    .addEntry('app', './assets/js/main.ts')
 
     .enableSingleRuntimeChunk()
 
@@ -24,6 +28,10 @@ Encore
     .enableTypeScriptLoader()
 
     .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
+    .addPlugin(new webpack.DefinePlugin({
+        __VUE_PROD_DEVTOOLS__: !Encore.isProduction(),
+        __VUE_OPTIONS_API__: !Encore.isProduction()
+    }))
 
     .configureBabel(function(babelConfig) {
         babelConfig.presets = [[
@@ -38,7 +46,7 @@ Encore
                 "useBuiltIns": "usage",
                 "corejs": "3.6.5"
             }
-        ]];
+        ]]
     }, {
         // node_modules is not processed through Babel by default
         // but you can whitelist specific modules to process
@@ -52,13 +60,12 @@ Encore
     .addAliases({
         '@': path.resolve(__dirname, './assets/js'),
     })
-;
 
-const config = Encore.getWebpackConfig();
+const config = Encore.getWebpackConfig()
 
 // Required for TypeScript to correctly resolve local namespaces.
 // This plugins reads compilerOptions.paths directive from tsconfig.json
 // file and will make Webpack resolve those correctly.
-config.resolve.plugins = [new TsconfigPathsPlugin()];
+config.resolve.plugins = [new TsconfigPathsPlugin()]
 
-module.exports = config;
+module.exports = config
