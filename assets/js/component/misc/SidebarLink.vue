@@ -1,10 +1,9 @@
 
 <template>
-  <router-link :to="to" class="side-bar-link">
+  <router-link :to="to" :title="titre" class="side-bar-link">
     <template v-slot="slotProps">
       <img
         :src="imageBase + '-' + (slotProps.isActive ? 'w' : 'g') + '.png'"
-        :title="titre"
       >
     </template>
   </router-link>

@@ -1,18 +1,34 @@
 <template>
   <div id="body" class="">
     <div class="p-grid">
-      <div id="top-bar" class="p-col p-d-flex">
-          <div class="logo">
-            <img src="/image/aeneria.svg" alt="">
-            <span>æneria</span>
-          </div>
-          <div class="p-ml-auto p-mr-auto">
-            <PlaceSelect />
-          </div>
+      <div id="top-bar" class="p-col p-d-flex p-ai-center">
+        <div class="logo p-d-flex p-ai-center">
+          <img src="/image/aeneria.svg" alt="">
+          <span class="p-ml-2">æneria</span>
+        </div>
+        <div class="p-ml-auto p-mr-auto">
+          <PlaceSelect />
+        </div>
+        <div>
+          <Button
+            type="button"
+            icon="pi pi-ellipsis-v"
+            @click="toggleMenuMonCompte"
+            aria-haspopup="true"
+            aria-controls="overlay_menu_mon_compte"
+            class="p-button-secondary p-button-rounded p-button-icon-only"
+          />
+          <Menu
+            id="overlay_menu_mon_compte"
+            ref="menuMonCompte"
+            :model="menuMonCompteItems"
+            :popup="true"
+          />
+        </div>
       </div>
     </div>
     <div class="p-grid">
-      <div id="side-menu" class="p-col-fixed p-d-flex p-flex-column p-pt-2">
+      <div id="side-menu" class="p-col-fixed p-d-flex p-flex-column p-pt-3">
         <SidebarLink
           to="/app/"
           imageBase="/image/home"
@@ -38,9 +54,6 @@
           imageBase="/image/compare"
           titre="Comparaison de 2 période"
         />
-        <router-link to="/app/admin">Admin</router-link>
-        <router-link to="/app/parametre">Parametre</router-link>
-        <a href="/logout">Déconnexion</a>
       </div>
       <div id="main-content" class="p-col">
         <router-view v-if="selectedPlace"></router-view>
@@ -61,8 +74,6 @@
         span {
           font-family: $font-logo;
           color: #fff;
-          margin-left: 5px;
-          vertical-align: middle;
           font-size: 1.7em;
         }
         img {

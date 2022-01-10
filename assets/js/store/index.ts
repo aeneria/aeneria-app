@@ -5,7 +5,7 @@ import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
 import { INIT_PLACE_LIST, UPDATE_SELECTED_PLACE } from './actions'
-import { SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_PERIODE, SET_SELECTED_PLACE } from './mutations'
+import { SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE } from './mutations'
 
 const lastMonth = new Date('2020-02-09');
 lastMonth.setMonth(lastMonth.getMonth() -1)
@@ -17,6 +17,7 @@ export const store = createStore({
     selectedPlace: null as null|Place,
     selectedPeriode: [lastMonth, now],
     selectedEnergie: null as null|FeedDataType,
+    selectedMeteoData: null as null|FeedDataType,
     selectedGranularite: getGranularite(GranulariteType.Jour),
   } as State,
   getters: {
@@ -55,6 +56,13 @@ export const store = createStore({
 
       return null
     },
+    selectedMeteoFeedDataId: (state) => {
+      if (!(state.selectedPlace && state.selectedMeteoData)) {
+        return null
+      }
+
+      return selectedMeteoFeedDataId(state, state.selectedMeteoData.id)
+    },
     selectedTemperatureFeedDataId: state => selectedMeteoFeedDataId(state, DataType.Temperature),
     selectedDjuFeedDataId: state => selectedMeteoFeedDataId(state, DataType.Dju),
     selectedNebulosityFeedDataId: state => selectedMeteoFeedDataId(state, DataType.Nebulosity),
@@ -71,6 +79,9 @@ export const store = createStore({
     [SET_SELECTED_ENERGIE] (state, feedDataType) {
       state.selectedEnergie = feedDataType
     },
+    [SET_SELECTED_METEO_DATA] (state, feedDataType) {
+      state.selectedMeteoData = feedDataType
+    },
     [SET_SELECTED_GRANULARITE] (state, granularite) {
       state.selectedGranularite = granularite
     },
@@ -85,6 +96,9 @@ export const store = createStore({
 
         // On sélectionne une place
         dispatch(UPDATE_SELECTED_PLACE, state.placeList[0] ?? null)
+
+        // On présélectionne les DJU
+        commit(SET_SELECTED_METEO_DATA, getFeedDataType(DataType.Dju))
       })
     },
     [UPDATE_SELECTED_PLACE] ({commit, dispatch, getters, state}, place) {
@@ -103,7 +117,6 @@ export const store = createStore({
         //   default:
         //     energie = getFeedDataType(DataType.ConsoEnergie)
         // }
-
         commit(SET_SELECTED_ENERGIE, energie)
       }
     }

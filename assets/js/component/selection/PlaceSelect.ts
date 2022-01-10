@@ -1,12 +1,20 @@
 import { UPDATE_SELECTED_PLACE } from '@/store/actions';
-import Dropdown, { DropdownChangeEvent } from 'primevue/dropdown';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
 import { defineComponent } from 'vue';
 import { mapGetters, mapState } from 'vuex';
+import { Place } from '@/type/Place';
 
 export default defineComponent({
   name: 'PlaceSelect',
   components: {
-    Dropdown
+    Dialog,
+    Button,
+  },
+  data() {
+    return {
+      displayDialog: false,
+    }
   },
   computed: {
     ...mapState([
@@ -18,8 +26,12 @@ export default defineComponent({
     ]),
   },
   methods: {
-    setSelectedPlace (event: DropdownChangeEvent) {
-      this.$store.dispatch(UPDATE_SELECTED_PLACE, event.value)
+    openDialog() {
+      this.displayDialog = true;
+    },
+    setSelectedPlace (place: Place) {
+      this.$store.dispatch(UPDATE_SELECTED_PLACE, place)
+      this.displayDialog = false
     }
   }
 });

@@ -55,7 +55,7 @@ export const minWeekDayList = [
 ] as [string, string, string, string, string, string, string]
 
 export interface DataPoint {
-  id: number,
+  id: number|string,
   value: number,
   date: Date
 }

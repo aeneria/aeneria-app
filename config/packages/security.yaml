@@ -20,6 +20,10 @@ security:
                 provider: app_user_provider
                 authenticators:
                     - App\Security\LoginFormAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path: '%env(BASE_PATH)%'
             logout:
                 path: security.logout
                 target: security.login

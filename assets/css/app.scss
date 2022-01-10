@@ -1,5 +1,5 @@
 
-@import "fonts.scss";
+@import "fonts";
 @import "variables";
 
 :root {
@@ -23,13 +23,14 @@
 }
 
 // @import 'primevue/resources/themes/lara-light-indigo/theme.css';
-@import 'primevue/resources/themes/mdc-light-deeppurple/theme.css';
+// @import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+@import 'primevue/resources/themes/bootstrap4-light-purple/theme.css';
 @import 'primevue/resources/primevue.css';
 @import 'primeflex/primeflex.css';
 @import 'primeicons/primeicons.css';
 @import 'tippy.js/dist/tippy.css';
 
-// @import "~@fortawesome/fontawesome-free/css/all.css";
+@import "~@fortawesome/fontawesome-free/css/all.css";
 
 // @import "structure.scss";
 // @import "navigation_desktop.scss";
@@ -59,4 +60,29 @@ body {
 .graph text, .tippy-content{
   font-family: $font-monospace;
   font-size: 0.8rem;
+}
+
+h1 {
+  font-family: $font-title;
+  font-weight: 500;
+}
+
+h2 {
+  font-family: $font-title;
+  font-size: 1.50rem;
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 1rem;
+  text-align: center;
+}
+a.p-button {
+  text-decoration: none;
+}
+.p-datepicker table td > span {
+  border-radius: 20px;
+}
+.p-divider .p-divider-content {
+  background-color: $body-bg-color;
 }
