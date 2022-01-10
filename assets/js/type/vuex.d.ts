@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
     selectedPlace: null|Place
     selectedPeriode: [Date, Date]
     selectedEnergie: null|FeedDataType
+    selectedMeteoData: null|FeedDataType
     selectedGranularite: null|Granularite
   }
 

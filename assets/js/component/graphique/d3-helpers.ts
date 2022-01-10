@@ -109,8 +109,7 @@ export const adaptToGranularite = (granularite: Granularite, dateToAdapt: Date):
       break
 
     case GranulariteType.Semaine:
-      const w = 0 == date.getDay() ? 6 : date.getDay() - 1
-      date.setDate(date.getDate() - w)
+      date.setDate(dateToAdapt.getDate() - dateToAdapt.getDay() + 1)
       break
 
     case GranulariteType.Mois:

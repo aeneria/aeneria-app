@@ -1,8 +1,11 @@
 <template>
-  <div class="selection-form p-d-flex p-pt-3 p-mb-4">
-    <div class="p-formgroup-inline p-ml-auto p-mr-auto">
+  <div class="selection-form p-d-flex p-ai-center p-pt-3 p-mb-2">
+    <div class="p-formgroup-inline p-ai-center p-ml-auto p-mr-auto">
       <div class="p-field">
         <EnergieSelect/>
+      </div>
+      <div v-if="type=='analyse'" class="p-field">
+        <MeteoSelect/>
       </div>
       <div class="p-field">
         <PeriodeSelect/>
@@ -20,7 +23,6 @@
   @import '../../../css/variables';
 
   .selection-form {
-    background-color: $selection-bg-color;
     margin-right: -1em;
   }
 </style>

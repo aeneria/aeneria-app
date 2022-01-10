@@ -1,0 +1,10 @@
+<template>
+  <Dropdown
+    :modelValue="selectedMeteoData"
+    :options="feedDataTypeMeteoList"
+    optionLabel="label"
+    @change="setSelectedMeteoData"
+  />
+</template>
+
+<script lang="ts" src="./MeteoSelect.ts" />

@@ -5,4 +5,6 @@ export const SET_SELECTED_PERIODE = 'setSelectedPeriode'
 
 export const SET_SELECTED_ENERGIE = 'setSelectedEnergie'
 
+export const SET_SELECTED_METEO_DATA = 'setSelectedMeteoData'
+
 export const SET_SELECTED_GRANULARITE = 'setSelectedGranularite'
