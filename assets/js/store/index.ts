@@ -1,11 +1,11 @@
-import { queryPlaces } from '@/api/configuration'
+import { postUserPassword, queryConfiguration, queryPlaces, queryUser } from '@/api/configuration'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
 import { getGranularite, GranulariteType } from '@/type/Granularite'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_PLACE_LIST, UPDATE_SELECTED_PLACE } from './actions'
-import { SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE } from './mutations'
+import { INIT_CONFIGURATION, INIT_PLACE_LIST, UPDATE_SELECTED_PLACE, UPDATE_USER_PASSWORD } from './actions'
+import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
 
 const lastMonth = new Date('2020-02-09');
 lastMonth.setMonth(lastMonth.getMonth() -1)
@@ -13,7 +13,9 @@ const now = new Date('2021-10-04');
 
 export const store = createStore({
   state: {
-    placeList: [] as Place[],
+    configuration: null,
+    utilisateur: null,
+    placeList: new Array<Place>(),
     selectedPlace: null as null|Place,
     selectedPeriode: [lastMonth, now],
     selectedEnergie: null as null|FeedDataType,
@@ -23,8 +25,10 @@ export const store = createStore({
   getters: {
     onlyOnePlace: (state) => state.placeList.length <= 1,
     onlyOneEnergie: (state, getters) => getters.feedDataTypeEnergieList?.length <= 1,
+    isAdmin: (state) => state?.utilisateur?.roles.includes('ADMIN') ?? false,
+    isDemoMode: (state) => state.configuration ? state.configuration.isDemoMode : true,
     feedDataTypeEnergieList (state) {
-      let ret = [] as FeedDataType[]
+      let ret = new Array<FeedDataType>()
 
       if (state.selectedPlace && state.selectedPlace.feedList) {
         for(const feed of state.selectedPlace.feedList) {
@@ -70,6 +74,12 @@ export const store = createStore({
     selectedHumidityFeedDataId: state => selectedMeteoFeedDataId(state, DataType.Humidity),
   },
   mutations: {
+    [SET_CONFIGURATION] (state, data) {
+      state.configuration = data
+    },
+    [SET_USER] (state, data) {
+      state.utilisateur = data
+    },
     [SET_PLACE_LIST] (state, placeList) {
       state.placeList = placeList
     },
@@ -90,6 +100,14 @@ export const store = createStore({
     },
   },
   actions: {
+    [INIT_CONFIGURATION] ({commit}) {
+      queryConfiguration().then(data => {
+        commit(SET_CONFIGURATION, data)
+      })
+      queryUser().then(data => {
+        commit(SET_USER, data)
+      })
+    },
     [INIT_PLACE_LIST] ({commit, dispatch, getters, state}) {
       queryPlaces().then(placeList => {
         commit(SET_PLACE_LIST, placeList)
@@ -119,7 +137,11 @@ export const store = createStore({
         // }
         commit(SET_SELECTED_ENERGIE, energie)
       }
-    }
+    },
+    [UPDATE_USER_PASSWORD] ({commit, dispatch, getters, state}, data) {
+      postUserPassword(data.oldPassword, data.newPassword, data.newPassword2)
+      //@todo deal with confirm messages
+    },
   }
 })
 

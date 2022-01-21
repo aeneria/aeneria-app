@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use JsonSerializable;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Place
  */
-class User implements UserInterface, Serializable
+class User implements UserInterface, Serializable, JsonSerializable
 {
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_USER = 'ROLE_USER';
@@ -244,5 +245,23 @@ class User implements UserInterface, Serializable
             $this->roles,
             $this->sharedPlaces
         ) = \json_decode($serialized);
+    }
+
+    public function jsonSerialize()
+    {
+        $places = \iterator_to_array($this->getPlaces());
+
+        return [
+            'id' => $this->id,
+            'active' => $this->active,
+            'username' => $this->username,
+            'places' => \array_map(
+                function (Place $place) {
+                    return $place->jsonSerialize();
+                },
+                $places
+            ),
+            'roles' => $this->roles,
+        ];
     }
 }

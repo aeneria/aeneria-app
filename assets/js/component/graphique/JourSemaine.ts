@@ -37,7 +37,7 @@ export default defineComponent({
   } ,
   data() {
     return {
-      data: [] as Array<DataRepartition>,
+      data: new Array<DataRepartition>(),
 
       barWidth: 6,
       barWithMarge: 18,

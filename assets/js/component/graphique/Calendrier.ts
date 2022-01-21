@@ -45,7 +45,7 @@ export default defineComponent({
   } ,
   data() {
     return {
-      data: [] as Array<DataPoint>,
+      data: new Array<DataPoint>(),
 
       daySize: 17,
       axeColor: '#6d6d6d',

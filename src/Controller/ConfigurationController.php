@@ -212,9 +212,9 @@ class ConfigurationController extends AbstractAppController
     /**
      * Export Place data form view
      */
-    public function placeImportAction(bool $userCanExport, Request $request, PendingActionService $pendingActionService, string $projectDir, string $id)
+    public function placeImportAction(bool $userCanImport, Request $request, PendingActionService $pendingActionService, string $projectDir, string $id)
     {
-        if (!$userCanExport) {
+        if (!$userCanImport) {
             throw new NotFoundHttpException();
         }
 

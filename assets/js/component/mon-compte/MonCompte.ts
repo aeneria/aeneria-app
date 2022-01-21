@@ -5,6 +5,8 @@ import Card from 'primevue/card';
 import Place from './Place';
 import Menu from 'primevue/menu';
 import Divider from 'primevue/divider';
+import EditEmailForm from './EditEmailForm';
+import EditPasswordForm from './EditPasswordForm';
 
 export default defineComponent({
   name: 'MonCompte',
@@ -14,6 +16,8 @@ export default defineComponent({
     Divider,
     Place,
     Menu,
+    EditEmailForm,
+    EditPasswordForm,
   },
   setup() {
     const menuMonCompte = ref()
@@ -24,32 +28,36 @@ export default defineComponent({
   },
   data() {
     return {
+      displayEditEmailForm: false,
+      displayEditPasswordForm: false,
       menuMonCompteItems: [
         {
             label: 'Modifier mon adresse e-mail',
             icon: 'pi pi-pencil',
-            command: () => {
-              // this.$router.push('/app/a-propos')
-            }
+            command: () => this.toggleEditEmailForm()
         },
         {
             label: 'Modifier mon mot de passe',
             icon: 'pi pi-lock',
-            command: () => {
-              // window.open('https://docs.aeneria.com', '_blank')
-            }
+            command: () => this.toggleEditPasswordForm()
         },
       ]
     }
   },
   computed: {
     ...mapState([
-      'placeList',
+      'utilisateur',
     ]),
   },
   methods: {
     toggleMenuMonCompte(event) {
-      this.menuMonCompte.toggle(event);
-    }
+      this.menuMonCompte.toggle(event)
+    },
+    toggleEditEmailForm() {
+      this.displayEditEmailForm = !this.displayEditEmailForm
+    },
+    toggleEditPasswordForm() {
+      this.displayEditPasswordForm = !this.displayEditPasswordForm
+    },
   }
 });

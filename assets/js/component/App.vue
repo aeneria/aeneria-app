@@ -56,7 +56,7 @@
         />
       </div>
       <div id="main-content" class="p-col">
-        <router-view v-if="selectedPlace"></router-view>
+        <router-view v-if="selectedPlace && configuration"></router-view>
         <Spinner v-else />
       </div>
     </div>

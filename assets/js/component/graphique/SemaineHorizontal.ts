@@ -45,7 +45,7 @@ export default defineComponent({
   } ,
   data() {
     return {
-      data: [] as Array<DataDoubleRepartition>,
+      data: new Array<DataDoubleRepartition>(),
 
       daySize: 16,
       barWidth: 6,

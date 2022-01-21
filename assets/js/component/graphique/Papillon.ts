@@ -48,8 +48,8 @@ export default defineComponent({
   } ,
   data() {
     return {
-      data1: [] as Array<DataPoint>,
-      data2: [] as Array<DataPoint>,
+      data1: new Array<DataPoint>(),
+      data2: new Array<DataPoint>(),
 
       barWidth: 4,
       axeColor: '#6d6d6d',

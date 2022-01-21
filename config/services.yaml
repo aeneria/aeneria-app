@@ -58,7 +58,7 @@ services:
             $userCanSharePlace: '%aeneria.user.can_share_place%'
             $userCanFetch: '%aeneria.user.can_fetch%'
             $userCanExport: '%aeneria.user.can_export%'
-            $userCanIMport: '%aeneria.user.can_import%'
+            $userCanImport: '%aeneria.user.can_import%'
             $isDemoMode: '%aeneria.demo_mode%'
             $placeCanBePublic: '%aeneria.place_can_be_public%'
 
