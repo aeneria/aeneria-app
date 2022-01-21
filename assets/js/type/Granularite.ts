@@ -28,7 +28,7 @@ export interface Granularite {
   frequence: Frequence,
 }
 
-export const granulariteList = [
+export const granulariteList = new Array<Granularite>(
   {
     type: GranulariteType.Jour,
     label: 'Jour',
@@ -49,7 +49,7 @@ export const granulariteList = [
     label: 'Année',
     frequence: Frequence.Year
   },
-] as Granularite[]
+)
 
 export function getGranularite(type: GranulariteType): Granularite
 {

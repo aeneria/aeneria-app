@@ -19,8 +19,10 @@
         />
       </div>
 
-      <p><span class="pi pi-id-card"></span> Email&nbsp;: toto@pourt.com</p>
-      <p><span class="pi pi-calendar"></span> Créé le 12/06/2019</p>
+      <p><span class="pi pi-id-card p-pr-2"></span>{{ utilisateur?.username }}</p>
+
+      <EditEmailForm :visible="displayEditEmailForm" v-on:toggleVisible="toggleEditEmailForm"/>
+      <EditPasswordForm :visible="displayEditPasswordForm" v-on:toggleVisible="toggleEditPasswordForm"/>
 
       <Divider align="left">
         <div class="p-d-inline-flex p-ai-center">
@@ -28,7 +30,7 @@
         </div>
       </Divider>
       <div class="p-d-flex p-flex-wrap">
-        <template v-for="place in placeList" :key="place.id">
+        <template v-for="place in utilisateur?.places" :key="place.id">
           <Place :place="place"/>
         </template>
       </div>

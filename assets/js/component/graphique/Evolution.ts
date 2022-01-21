@@ -39,7 +39,7 @@ export default defineComponent({
   } ,
   data() {
     return {
-      data: [] as Array<DataPoint>,
+      data: new Array<DataPoint>(),
 
       barWidth: 6,
       axeColor: '#6d6d6d',
@@ -356,7 +356,7 @@ export default defineComponent({
         .attr('fill', 'transparent')
         .attr('data-point-id', d => d.id)
         .datum((d, i) => {
-          const ret = [] as DataPoint[]
+          const ret = new Array<DataPoint>()
           if (i > 0) {
             ret.push({
               id: d.id,
@@ -403,7 +403,7 @@ export default defineComponent({
         .selectAll('.area-event path')
         .data(this.data)
         .datum((d, i) => {
-          const ret = [] as DataPoint[]
+          const ret = new Array<DataPoint>()
           if (i > 0) {
             ret.push({
               id: d.id,

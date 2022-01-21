@@ -28,7 +28,7 @@ export enum DataType {
   Rain = 'RAIN',
 }
 
-export const feedDataTypeList = [
+export const feedDataTypeList = new Array<FeedDataType>(
   {
     id: DataType.ConsoEnergie,
     label: "Énergie totale",
@@ -72,7 +72,7 @@ export const feedDataTypeList = [
   {
     id: DataType.ConsoGaz,
     label: "Gaz",
-    unite: 'm³',
+    unite: 'L',
     coefficientNormalisateur: 1,
     precision: 1,
     color: '#2171b5',
@@ -249,7 +249,7 @@ export const feedDataTypeList = [
     ],
     hasHourlyData: false,
   },
-] as FeedDataType[]
+)
 
 export function getFeedDataType(type: DataType): FeedDataType
 {

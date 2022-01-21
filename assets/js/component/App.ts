@@ -1,4 +1,4 @@
-import { INIT_PLACE_LIST } from '@/store/actions';
+import { INIT_PLACE_LIST, INIT_CONFIGURATION } from '@/store/actions';
 import { defineComponent, ref } from 'vue';
 import { mapGetters, mapState } from 'vuex';
 import PlaceSelect from './selection/PlaceSelect';
@@ -7,6 +7,7 @@ import SidebarLink from './misc/SidebarLink';
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 import { RouterLink, RouterView } from 'vue-router';
+import { MenuItem } from 'primevue/menuitem';
 
 export default defineComponent({
   name: 'App',
@@ -27,11 +28,21 @@ export default defineComponent({
     }
   },
   mounted() {
+    this.$store.dispatch(INIT_CONFIGURATION)
     this.$store.dispatch(INIT_PLACE_LIST)
   },
-  data() {
-    return {
-      menuMonCompteItems: [
+  computed: {
+    ...mapState([
+      'configuration',
+      'selectedPlace',
+    ]),
+    ...mapGetters([
+      'onlyOneEnergie',
+      'isDemoMode',
+      'isAdmin',
+    ]),
+    menuMonCompteItems(): MenuItem[] {
+      const menuMonCompteItems = new Array<MenuItem>(
         {
             label: 'À Propos',
             icon: 'pi pi-info-circle',
@@ -42,34 +53,35 @@ export default defineComponent({
             icon: 'pi pi-question-circle',
             url: 'https://docs.aeneria.com',
             target: '_blank',
-        },
-        {
-            label: 'Administration',
-            icon: 'pi pi-shield',
-            to: '/app/admin',
-        },
-        {
+        }
+      )
+
+      if (this.isAdmin) {
+        menuMonCompteItems.push({
+          label: 'Administration',
+          icon: 'pi pi-shield',
+          to: '/app/admin',
+        })
+      }
+
+      if(!(this.isDemoMode)) {
+        menuMonCompteItems.push({
             label: 'Mon compte',
             icon: 'pi pi-user',
             to: '/app/mon-compte',
-        },
-        {
-            label: 'Déconnexion',
-            icon: 'pi pi-sign-out',
-            command: () => {
-                window.location.href = '/logout'
-            }
-        },
-      ]
+        })
+      }
+
+      menuMonCompteItems.push({
+          label: 'Déconnexion',
+          icon: 'pi pi-sign-out',
+          command: () => {
+              window.location.href = '/logout'
+          }
+      })
+
+      return menuMonCompteItems
     }
-  },
-  computed: {
-    ...mapState([
-      'selectedPlace',
-    ]),
-    ...mapGetters([
-      'onlyOneEnergie',
-    ])
   },
   methods: {
     toggleMenuMonCompte(event) {
