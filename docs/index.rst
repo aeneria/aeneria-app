@@ -20,7 +20,7 @@ Installer æneria facilement avec YunoHost !
 ***********************************************
 
 .. image:: https://install-app.yunohost.org/install-with-yunohost.png
-    :target: https://install-app.yunohost.org/?app=pilea
+    :target: https://install-app.yunohost.org/?app=aeneria
     :align: center
 
 .. toctree::
