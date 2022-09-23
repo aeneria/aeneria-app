@@ -1,0 +1,21 @@
+api.config.configuration:
+  path: /
+  controller: App\Controller\ApiConfigController::getConfiguration
+
+api.config.user:
+  path: /user
+  controller: App\Controller\ApiConfigController::getUserData
+
+api.config.user.edit.password:
+  path: /user/edit-password
+  controller: App\Controller\ApiConfigController::updatePassword
+  methods: 'POST'
+
+api.config.user.edit.email:
+  path: /user/edit-email
+  controller: App\Controller\ApiConfigController::updateEmail
+  methods: 'POST'
+
+api.config.places:
+  path: /places
+  controller: App\Controller\ApiConfigController::getPlaces

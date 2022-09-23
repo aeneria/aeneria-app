@@ -155,6 +155,14 @@ class Place implements \JsonSerializable
         return null;
     }
 
+    public function findFeed(int $feedId): ?Feed {
+        foreach ($this->feeds as $feed) {
+            if ($feedId === $feed->getId()) {
+                return $feed;
+            }
+        }
+    }
+
     /**
      * @return FeedData[]
      */

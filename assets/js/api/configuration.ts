@@ -11,7 +11,7 @@ export function queryUser(): Promise<Utilisateur> {
   return queryData(`/api/config/user`).then(data => data);
 }
 
-export function postUserPassword(oldPassword: string, newPassword: string, newPassword2: string): Promise<Utilisateur> {
+export function postUserPassword(oldPassword: string, newPassword: string, newPassword2: string): Promise<any> {
   return postData(
     `/api/config/user/edit-password`,
     {
@@ -24,6 +24,28 @@ export function postUserPassword(oldPassword: string, newPassword: string, newPa
   );
 }
 
+export function postUserEmail(newEmail: string): Promise<any> {
+  return postData(
+    `/api/config/user/edit-email`,
+    {
+      newEmail: newEmail,
+    },
+    'POST',
+    []
+  );
+}
+
 export function queryConfiguration(): Promise<Configuration> {
-  return queryData(`/api/config`).then(data => data);
+  return queryData(`/api/config`).then(data => {
+    return {
+      userMaxPlaces: parseInt(data.userMaxPlaces),
+      userCanSharePlace: data.userCanSharePlace === '1',
+      userCanFetch: data.userCanFetch === '1',
+      userCanExport: data.userCanExport === '1',
+      userCanImport: data.userCanImport === '1',
+      placeCanBePublic: data.placeCanBePublic === '1',
+      isDemoMode: data.isDemoMode === '1',
+      version: data.version,
+    }
+  });
 }

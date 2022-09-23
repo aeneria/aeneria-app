@@ -6,4 +6,7 @@ app.home.trailing:
   path: /app/{path}
   controller: App\Controller\AppController::appAction
   requirements:
-      token: .+
+      path: .+
+api:
+    resource: "./api/index.yaml"
+    prefix: /api

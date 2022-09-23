@@ -9,6 +9,7 @@ import * as d3 from 'd3';
 import App from './component/App';
 import PrimeVue from 'primevue/config';
 import Tooltip from 'primevue/tooltip';
+import ConfirmationServiceMethods from 'primevue/confirmationservice';
 import { d3LocaleDef } from './component/graphique/d3-helpers';
 import { router } from './router';
 
@@ -17,6 +18,7 @@ if (rootContainer) {
   createApp(App)
     .use(router)
     .use(store)
+    .use( ConfirmationServiceMethods)
     .use(PrimeVue, {locale: {
       startsWith: 'Commence par',
       contains: 'Contient',

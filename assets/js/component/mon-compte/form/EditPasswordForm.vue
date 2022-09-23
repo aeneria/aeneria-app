@@ -9,7 +9,7 @@
     <div>
       <div class="p-field p-grid">
         <label for="oldPassword" :class="{'p-col-fixed': true,'p-error':v$.oldPassword.$invalid && submitted}" style="width:320px">
-          Mot de passe actuel*&nbsp;:
+          Mot de passe actuel&nbsp;:
         </label>
         <div class="p-col">
           <Password
@@ -23,7 +23,7 @@
       </div>
       <div class="p-field p-grid">
         <label for="newPassword" :class="{'p-col-fixed': true,'p-error':v$.newPassword.$invalid && submitted}" style="width:320px">
-          Nouveau mot de passe*&nbsp;:
+          Nouveau mot de passe&nbsp;:
         </label>
         <div class="p-col">
           <Password
@@ -37,7 +37,7 @@
       </div>
       <div class="p-field p-grid">
         <label for="newPassword2" :class="{'p-col-fixed': true,'p-error':v$.newPassword2.$invalid && submitted}" style="width:320px">
-          Confirmer votre nouveau mot de passe*&nbsp;:
+          Confirmer votre nouveau mot de passe&nbsp;:
         </label>
         <div class="p-col p-d-bloc">
           <Password
@@ -57,8 +57,19 @@
       </div>
     </div>
     <template #footer>
-        <Button label="Annuler" icon="pi pi-times" @click="closeBasic" class="p-button-text p-button-secondary"/>
-        <Button label="Enregistrer" icon="pi pi-check" @click="post(!v$.$invalid)" autofocus class="p-button-success"/>
+      <Button
+        label="Annuler"
+        icon="pi pi-times"
+        @click="closeBasic"
+        class="p-button-text p-button-rounded p-button-secondary"
+      />
+      <Button
+        label="Enregistrer"
+        icon="pi pi-check"
+        @click="post(!v$.$invalid)"
+        autofocus
+        class="p-button-rounded p-button-secondary"
+      />
     </template>
   </Dialog>
 </template>

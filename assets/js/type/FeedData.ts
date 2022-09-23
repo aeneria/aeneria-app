@@ -72,7 +72,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
   {
     id: DataType.ConsoGaz,
     label: "Gaz",
-    unite: 'L',
+    unite: 'm³',
     coefficientNormalisateur: 1,
     precision: 1,
     color: '#2171b5',

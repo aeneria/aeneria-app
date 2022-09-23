@@ -38,7 +38,6 @@ export default defineComponent({
     ]),
     ...mapGetters([
       'onlyOneEnergie',
-      'isDemoMode',
       'isAdmin',
     ]),
     menuMonCompteItems(): MenuItem[] {
@@ -64,7 +63,7 @@ export default defineComponent({
         })
       }
 
-      if(!(this.isDemoMode)) {
+      if(!(this.configuration?.isDemoMode)) {
         menuMonCompteItems.push({
             label: 'Mon compte',
             icon: 'pi pi-user',

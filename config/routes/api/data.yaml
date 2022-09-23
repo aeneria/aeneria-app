@@ -1,23 +1,23 @@
 api.data.point:
-  path: api/data/point/{feedDataId}/{frequence}/{debut}/{fin}
+  path: /point/{feedDataId}/{frequence}/{debut}/{fin}
   controller: App\Controller\ApiDataController::getPointAction
 
 api.data.repartition:
-  path: api/data/repartition/{feedDataId}/{frequence}/{colonne}/{debut}/{fin}
+  path: /repartition/{feedDataId}/{frequence}/{colonne}/{debut}/{fin}
   controller: App\Controller\ApiDataController::getRepartitionAction
 
 api.data.double_repartition:
-  path: api/data/double_repartition/{feedDataId}/{frequence}/{colonneX}/{colonneY}/{debut}/{fin}
+  path: /double_repartition/{feedDataId}/{frequence}/{colonneX}/{colonneY}/{debut}/{fin}
   controller: App\Controller\ApiDataController::getDoubleRepartitionAction
 
 api.data.croisement:
-  path: api/data/croisement/{feedDataId}/{frequence}/{colonneX}/{colonneY}/{debut}/{fin}
+  path: /croisement/{feedDataId}/{frequence}/{colonneX}/{colonneY}/{debut}/{fin}
   controller: App\Controller\ApiDataController::getDoubleRepartitionAction
 
 api.data.somme:
-  path: api/data/somme/{feedDataId}/{frequence}/{debut}/{fin}
+  path: /somme/{feedDataId}/{frequence}/{debut}/{fin}
   controller: App\Controller\ApiDataController::getSemaineAction
 
 api.data.nombreInferieur:
-  path: api/data/inf/{feedDataId}/{valeur}/{frequence}/{debut}/{fin}
+  path: /inf/{feedDataId}/{valeur}/{frequence}/{debut}/{fin}
   controller: App\Controller\ApiDataController::getNombreInferieurAction

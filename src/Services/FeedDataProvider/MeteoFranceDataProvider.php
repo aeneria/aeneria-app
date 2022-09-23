@@ -5,6 +5,7 @@ namespace App\Services\FeedDataProvider;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Model\FetchingError;
+use App\Model\StationSynop;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
@@ -53,6 +54,9 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
     /** @var HttpClientInterface */
     private $httpClient;
 
+    /** @var StationSynop[] */
+    private $availableStations = [];
+
     public function __construct(
         string $projectDir,
         EntityManagerInterface $entityManager,
@@ -84,6 +88,10 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
      */
     public function getAvailableStations(): array
     {
+        if ($this->availableStations) {
+            return $this->availableStations;
+        }
+
         $stations = [];
         $header = [];
 
@@ -99,14 +107,31 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
                 $row = \array_combine($header, $row);
 
                 // We only keep ID and name for each station.
-                $stations[\ucwords(\strtolower($row['Nom']))] = (int) $row['ID'];
+                $stations[] = new StationSynop(
+                    (int) $row['ID'],
+                    \ucwords(\strtolower($row['Nom'])),
+                    (float) $row['Latitude'],
+                    (float) $row['Longitude'],
+                    (float) $row['Altitude']
+                );
             }
         }
 
         // Sort stations.
-        \ksort($stations, \SORT_STRING);
+        \usort($stations, function (StationSynop $station) { return $station->label;});
 
-        return $stations;
+        return $this->availableStations = $stations;
+    }
+
+    public function findStationByKey(int $key): ?StationSynop
+    {
+        foreach($this->getAvailableStations() as $station) {
+            if ($station->key === $key) {
+                return $station;
+            }
+        }
+
+        return null;
     }
 
     /**

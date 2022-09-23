@@ -1,17 +1,20 @@
 import { defineComponent } from 'vue';
+import { mapState } from 'vuex';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import Password from 'primevue/password';
-import { UPDATE_USER_PASSWORD } from '@/store/actions';
-import { required, sameAs } from "@vuelidate/validators";
+import InputText from 'primevue/inputtext';
+import Message from 'primevue/message';
+import { USER_UPDATE_EMAIL } from '@/store/actions';
+import { required, email } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 
 export default defineComponent({
-  name: 'EditPasswordForm',
+  name: 'EditEmailForm',
   components: {
     Button,
     Dialog,
-    Password,
+    InputText,
+    Message,
   },
   setup: () => ({ v$: useVuelidate() }),
   props: {
@@ -23,27 +26,25 @@ export default defineComponent({
   data() {
     return {
       submitted: false,
-      oldPassword: '',
-      newPassword: '',
-      newPassword2: '',
+      newEmail: '',
     }
   },
   validations() {
     return {
-      oldPassword: {
-        required
-      },
-      newPassword: {
-        required
-      },
-      newPassword2: {
+      newEmail: {
         required,
-        sameAsPassword: sameAs(this.newPassword),
+        email,
       },
     }
   },
+  computed: {
+    ...mapState([
+      'utilisateur',
+    ]),
+  },
   methods: {
     closeBasic() {
+      this.newEmail = ''
       this.$emit('toggleVisible')
     },
     post(isValid: boolean) {
@@ -53,15 +54,10 @@ export default defineComponent({
         return
       }
 
-      this.$store.dispatch(UPDATE_USER_PASSWORD, {
-        oldPassword: this.oldPassword,
-        newPassword: this.newPassword,
-        newPassword2: this.newPassword2,
+      this.$store.dispatch(USER_UPDATE_EMAIL, {
+        newEmail: this.newEmail,
       })
       this.$emit('toggleVisible')
-      this.oldPassword = ''
-      this.newPassword = ''
-      this.newPassword2 = ''
-    }
+    },
   }
 });

@@ -2,25 +2,6 @@
 @import "fonts";
 @import "variables";
 
-:root {
-  --primary-color: #{$secondary-color};
-  @keyframes p-progress-spinner-color {
-    100%,
-    0% {
-        stroke: #eaebec;
-    }
-    40% {
-        stroke: #eaebec;
-    }
-    66% {
-        stroke: #eaebec;
-    }
-    80%,
-    90% {
-        stroke: #eaebec;
-    }
-  }
-}
 
 // @import 'primevue/resources/themes/lara-light-indigo/theme.css';
 // @import 'primevue/resources/themes/md-light-deeppurple/theme.css';
@@ -44,6 +25,7 @@
 // @import "misc.scss";
 body {
   background-color: $body-bg-color;
+  font-family: $font-text;
 }
 
 .p-card {
@@ -55,6 +37,11 @@ body {
     font-size: 1.5rem;
     font-weight: 500;
   }
+}
+
+.p-title {
+  font-family: $font-title;
+  font-weight: 500;
 }
 
 .graph text, .tippy-content{
@@ -83,6 +70,24 @@ a.p-button {
 .p-datepicker table td > span {
   border-radius: 20px;
 }
-.p-divider .p-divider-content {
+.p-divider.bg-color .p-divider-content {
   background-color: $body-bg-color;
+}
+.p-button.p-button-sm,
+.p-button.p-button-rounded.p-button-sm {
+  height: 2rem;
+  &.p-button-icon-only {
+    width: 2rem;
+  }
+}
+
+.p-button.p-button-xs,
+.p-button.p-button-rounded.p-button-xs {
+  height: 1.5rem;
+  &.p-button-icon-only {
+    width: 1.5rem;
+  }
+  .p-button-icon {
+    font-size: 0.675rem;
+  }
 }

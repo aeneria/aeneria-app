@@ -7,4 +7,5 @@ export interface Configuration {
   userCanImport: boolean,
   placeCanBePublic: boolean,
   isDemoMode: boolean,
+  version: string,
 }
