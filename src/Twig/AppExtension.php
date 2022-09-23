@@ -40,34 +40,13 @@ final class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('aeneria_version', [$this, 'getVersion']),
-            new TwigFunction('aeneria_repo_git', [$this, 'getGitRepo']),
             new TwigFunction('aeneria_documentation', [$this, 'getDocumentation']),
             new TwigFunction('aeneria_help_icon_link', [$this, 'getHelpIconLink']),
             new TwigFunction('aeneria_help_graph', [$this, 'getGraphHelp']),
-            new TwigFunction('aeneria_user_max_places', [$this, 'getUserMaxPlaces']),
-            new TwigFunction('aeneria_user_can_share_place', [$this, 'canUserSharePlace']),
-            new TwigFunction('aeneria_user_can_fetch', [$this, 'canUserFetchData']),
-            new TwigFunction('aeneria_user_can_export', [$this, 'canUserExportData']),
-            new TwigFunction('aeneria_user_can_import', [$this, 'canUserImportData']),
-            new TwigFunction('aeneria_place_can_be_public', [$this, 'canPlaceBePublic']),
-            new TwigFunction('aeneria_user_can_add_place', [$this, 'canUserAddPlace']),
-            new TwigFunction('aeneria_linky_description', [$this, 'getLinkyDescription']),
-            new TwigFunction('aeneria_gazpar_description', [$this, 'getGazparDescription']),
             new TwigFunction('aeneria_demo_mode', [$this, 'isDemoMode']),
             new TwigFunction('aeneria_welcome_message', [$this, 'getWelcomeMessage']),
             new TwigFunction('aeneria_matomo', [$this, 'getMatomo']),
         ];
-    }
-
-    public function getVersion(): string
-    {
-        return $this->parameters->get('aeneria.version');
-    }
-
-    public function getGitRepo(): string
-    {
-        return $this->parameters->get('aeneria.repo_git');
     }
 
     public function getDocumentation(?string $path = ''): string
@@ -97,47 +76,6 @@ final class AppExtension extends AbstractExtension
         return $this->getHelpIconLink($path, "Comment lire ce graphique ?", "help");
     }
 
-    public function getUserMaxPlaces(): ?int
-    {
-        $userMaxPlaces = (int) $this->parameters->get('aeneria.user.max_places');
-
-        return -1 === $userMaxPlaces ? null : $userMaxPlaces;
-    }
-
-    public function canUserSharePlace(): bool
-    {
-        return (bool) $this->parameters->get('aeneria.user.can_share_place');
-    }
-
-    public function canUserFetchData(): bool
-    {
-        return (bool) $this->parameters->get('aeneria.user.can_fetch');
-    }
-
-    public function canUserExportData(): bool
-    {
-        return (bool) $this->parameters->get('aeneria.user.can_export');
-    }
-
-    public function canUserImportData(): bool
-    {
-        return (bool) $this->parameters->get('aeneria.user.can_import');
-    }
-
-    public function canPlaceBePublic(): bool
-    {
-        return (bool) $this->parameters->get('aeneria.place_can_be_public');
-    }
-
-    public function canUserAddPlace(User $user): bool
-    {
-        if ($userMaxPlaces = $this->getUserMaxPlaces()) {
-            return \count($user->getPlaces()) < $userMaxPlaces;
-        }
-
-        return true;
-    }
-
     public function isDemoMode(): bool
     {
         return $this->parameters->get('aeneria.demo_mode');
@@ -146,28 +84,6 @@ final class AppExtension extends AbstractExtension
     public function getWelcomeMessage(): string
     {
         return $this->parameters->get('aeneria.welcome_message');
-    }
-
-    public function getLinkyDescription(?Feed $feed): ?string
-    {
-        if ($feed && Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT === $feed->getFeedDataProviderType()) {
-            $address = $this->enedisDataConnectProvider->getAddressFrom($feed);
-
-            return 'PDL - ' . $address->getUsagePointId();
-        }
-
-        return null;
-    }
-
-    public function getGazparDescription(?Feed $feed): ?string
-    {
-        if ($feed && Feed::FEED_DATA_PROVIDER_GRDF_ADICT === $feed->getFeedDataProviderType()) {
-            $pce = $this->grdfAdictProvider->getPce($feed);
-
-            return 'PCE - ' . $pce;
-        }
-
-        return null;
     }
 
     public function getMatomo(): ?string
