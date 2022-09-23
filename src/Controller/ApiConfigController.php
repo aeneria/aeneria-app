@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -12,30 +13,24 @@ class ApiConfigController extends AbstractAppController
     /**
      * Obtenir la configuration globale de l'application.
      */
-    public function getConfigurationAction(
-        int $userMaxPlaces,
-        bool $userCanSharePlace,
-        bool $userCanFetch,
-        bool $userCanExport,
-        bool $userCanImport,
-        bool $placeCanBePublic,
-        bool $isDemoMode
-    ): JsonResponse {
+    public function getConfiguration(ContainerBagInterface $parameters): JsonResponse {
         return new JsonResponse([
-            'userMaxPlaces' => $userMaxPlaces,
-            'userCanSharePlace' => $userCanSharePlace,
-            'userCanFetch' => $userCanFetch,
-            'userCanExport' => $userCanExport,
-            'userCanImport' => $userCanImport,
-            'placeCanBePublic' => $placeCanBePublic,
-            'isDemoMode' => $isDemoMode,
+            'userMaxPlaces' => $parameters->get('aeneria.user.max_places'),
+            'userCanSharePlace' => $parameters->get('aeneria.user.can_share_place'),
+            'userCanFetch' => $parameters->get('aeneria.user.can_fetch'),
+            'userCanExport' => $parameters->get('aeneria.user.can_export'),
+            'userCanImport' => $parameters->get('aeneria.user.can_import'),
+            'placeCanBePublic' => $parameters->get('aeneria.place_can_be_public'),
+            'isDemoMode' => $parameters->get('aeneria.demo_mode'),
+            'welcomeMessage' => $parameters->get('aeneria.welcome_message'),
+            'version' => $parameters->get('aeneria.version'),
         ], 200);
     }
 
     /**
      * Obtenir des infromations sur l'utilisateur courant.
      */
-    public function getUserAction(): JsonResponse {
+    public function getUserData(): JsonResponse {
         return new JsonResponse($this->getUser()->jsonSerialize(), 200);
     }
 
@@ -48,7 +43,7 @@ class ApiConfigController extends AbstractAppController
             return new JsonResponse("Le mot de passe renseigné ne correspond pas au mot de passe actuelle.", 403);
         }
         if (!$data->newPassword) {
-            return new JsonResponse("Vous devez fournir un nouveau mot de passe.", 412);
+            return new JsonResponse("Vous devez fournir un nouveau mot de passe 'newPassword'.", 412);
         }
 
         if ($data->newPassword !== $data->newPassword2) {
@@ -64,10 +59,27 @@ class ApiConfigController extends AbstractAppController
         return new JsonResponse('', 200);
     }
 
+    public function updateEmail(Request $request, EntityManagerInterface $entityManager):JsonResponse
+    {
+        $user = $this->checkUser();
+        $data = \json_decode($request->getContent());
+
+        if (!$data->newEmail) {
+            return new JsonResponse("Vous devez fournir un nouveau email.", 412);
+        }
+
+        $user->setUsername($data->newEmail);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new JsonResponse('', 200);
+    }
+
     /**
      * Obtenir les places authorisées pour l'utilisateur courant.
      */
-    public function getPlacesAction(): JsonResponse
+    public function getPlaces(): JsonResponse
     {
         $result = $this->placeRepository->getAllowedPlaces($this->getUser());
 

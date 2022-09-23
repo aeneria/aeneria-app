@@ -9,7 +9,7 @@
           @click="toggleMenuMonCompte"
           aria-haspopup="true"
           aria-controls="overlay_menu_mon_compte"
-          class="button-place-change p-button-rounded p-button-secondary p-button-icon-only p-ml-4"
+          class="p-button-rounded p-button-secondary p-button-icon-only p-ml-4"
         />
         <Menu
           id="overlay_menu_mon_compte"
@@ -24,8 +24,9 @@
       <EditEmailForm :visible="displayEditEmailForm" v-on:toggleVisible="toggleEditEmailForm"/>
       <EditPasswordForm :visible="displayEditPasswordForm" v-on:toggleVisible="toggleEditPasswordForm"/>
 
-      <Divider align="left">
+      <Divider align="left" class="bg-color">
         <div class="p-d-inline-flex p-ai-center">
+            <i class="pi pi-directions p-mr-2"></i>
             <h2>Mes Adresses</h2>
         </div>
       </Divider>
@@ -36,9 +37,10 @@
       </div>
       <div class="p-d-flex p-jc-center">
         <Button
-          icon="pi pi-plus"
+          icon="pi pi-plus-circle"
           label="Ajouter une adresse"
-          class="button-place-change p-button-rounded p-button-secondary"
+          class="p-button-rounded p-button-secondary"
+          @click="goToNewPLace"
         />
       </div>
     </div>

@@ -41,7 +41,7 @@ export default defineComponent({
     return {
       data: new Array<DataPoint>(),
 
-      barWidth: 6,
+      barWidth: 4,
       axeColor: '#6d6d6d',
       gridColor: '#dddddd',
       marginTop: 20,

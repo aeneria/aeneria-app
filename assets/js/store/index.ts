@@ -1,10 +1,12 @@
-import { postUserPassword, queryConfiguration, queryPlaces, queryUser } from '@/api/configuration'
+import { postUserEmail, postUserPassword, queryConfiguration, queryPlaces, queryUser } from '@/api/configuration'
+import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
+import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
 import { getGranularite, GranulariteType } from '@/type/Granularite'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_CONFIGURATION, INIT_PLACE_LIST, UPDATE_SELECTED_PLACE, UPDATE_USER_PASSWORD } from './actions'
+import { INIT_CONFIGURATION, INIT_PLACE_LIST, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, UPDATE_SELECTED_PLACE, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
 import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
 
 const lastMonth = new Date('2020-02-09');
@@ -113,7 +115,9 @@ export const store = createStore({
         commit(SET_PLACE_LIST, placeList)
 
         // On sélectionne une place
-        dispatch(UPDATE_SELECTED_PLACE, state.placeList[0] ?? null)
+        if (!state.selectedPlace) {
+          dispatch(UPDATE_SELECTED_PLACE, state.placeList[0] ?? null)
+        }
 
         // On présélectionne les DJU
         commit(SET_SELECTED_METEO_DATA, getFeedDataType(DataType.Dju))
@@ -138,8 +142,67 @@ export const store = createStore({
         commit(SET_SELECTED_ENERGIE, energie)
       }
     },
-    [UPDATE_USER_PASSWORD] ({commit, dispatch, getters, state}, data) {
+    [USER_UPDATE_PASSWORD] ({}, data) {
       postUserPassword(data.oldPassword, data.newPassword, data.newPassword2)
+      //@todo deal with confirm messages
+    },
+    [USER_UPDATE_EMAIL] ({commit}, data) {
+      postUserEmail(data.newEmail).then(() => {
+        queryUser().then(data => {
+          commit(SET_USER, data)
+        })
+      })
+      //@todo deal with confirm messages
+    },
+    [PLACE_CREATE] ({}, data) {
+      postPlaceCreate(data.name, data.meteo.key).then((place) => {
+        if(data.type == 'enedis') {
+          return queryEnedisConsentUrl(place.id)
+        } else if (data.type == 'grdf') {
+          return queryGrdfConsentUrl(place.id)
+        }
+
+        throw new Error("Le choix ne peut être qu'enedis ou grdf.")
+      }).then(url => {
+        location.href = url
+      })
+    },
+    [PLACE_EDIT_METEO] ({commit}, data) {
+      postFeedMeteoUpdate(data.placeId, data.meteo).then(() => {
+        queryUser().then(data => {
+          commit(SET_USER, data)
+        })
+      })
+      //@todo deal with confirm messages
+    },
+    [PLACE_EDIT_NOM] ({dispatch, commit}, data) {
+      postPlaceName(data.placeId, data.newName).then(() => {
+        queryUser().then(data => {
+          dispatch(INIT_PLACE_LIST)
+          commit(SET_USER, data)
+        })
+      })
+      //@todo deal with confirm messages
+    },
+    [PLACE_DELETE] ({dispatch, commit}, data) {
+      postPlaceDelete(data.placeId, ).then(() => {
+        dispatch(INIT_PLACE_LIST)
+        queryUser().then(data => {
+          commit(SET_USER, data)
+        })
+      })
+      //@todo deal with confirm messages
+    },
+    [PLACE_EXPORT_DATA] ({}, data) {
+      postPlaceDataExport(data.placeId, data.start, data.end)
+      //@todo deal with confirm messages
+    },
+    [PLACE_IMPORT_DATA] ({}, data) {
+      postPlaceDataImport(data.placeId, data.file)
+      //@todo deal with confirm messages
+    },
+    [PLACE_REFRESH_DATA] ({}, data) {
+      postPlaceDataRefresh(data.placeId, data.feedId, data.start, data.end)
       //@todo deal with confirm messages
     },
   }

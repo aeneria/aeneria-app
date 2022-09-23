@@ -5,7 +5,7 @@
       v-if="placeList.length"
       icon="pi pi-directions"
       title="Sélectionner une autre adresse"
-      class="button-place-change p-button-rounded p-button-secondary p-button-icon"
+      class="p-button-rounded p-button-secondary p-button-icon"
       @click="openDialog()"
     />
   </p>

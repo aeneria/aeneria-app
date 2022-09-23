@@ -36,7 +36,7 @@ function _urlHandleValue(name: string, value: any): {name: string, value: string
   return [{ name: name, value: queryKeyValue }]
 }
 
-function url(path: string, query: null|any[]) {
+export function url(path: string, query: null|any[]) {
     let baseUri = getBaseUrl()
     if (!baseUri.endsWith('/') && !path.startsWith('/')) {
         baseUri += '/'
@@ -58,7 +58,7 @@ function url(path: string, query: null|any[]) {
     return baseUri + path
 }
 
-function handleFetchError(response: Response) {
+export function handleFetchError(response: Response) {
   if ('application/json' === response.headers.get('Content-Type')) {
     return response.json().then(body => {
       var _a, _b
@@ -101,15 +101,15 @@ export function queryData(route: string, query: null|any[] = null) {
   })
 }
 
-export function postData(route: string, content: any, method: string, query: any[]) {
+export function postData(route: string, content: any, method: string, query: any[], jsonify: Boolean = true) {
   return fetch(url(route, query), {
     method: method !== null && method !== void 0 ? method : 'POST',
     mode: 'cors',
     cache: 'default',
     credentials: 'include',
-    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+    headers: jsonify ? { 'Accept': 'application/json', 'Content-Type': 'application/json', } : {},
     referrerPolicy: 'no-referrer',
-    body: JSON.stringify(content)
+    body: jsonify ? JSON.stringify(content) : content,
   })
   .then(response => {
     if (response.ok) {

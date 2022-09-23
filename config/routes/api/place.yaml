@@ -1,0 +1,23 @@
+api.place.create:
+  path: /create
+  controller: App\Controller\ApiPlaceController::create
+
+api.place.edit.name:
+  path: /edit-name
+  controller: App\Controller\ApiPlaceController::updateName
+
+api.place.delete:
+  path: /delete
+  controller: App\Controller\ApiPlaceController::delete
+
+api.place.data.export:
+  path: /data/export
+  controller: App\Controller\ApiPlaceController::dataExport
+
+api.place.data.import:
+  path: /data/import
+  controller: App\Controller\ApiPlaceController::dataImport
+
+api.place.data.refresh:
+  path: /data/refresh
+  controller: App\Controller\ApiPlaceController::dataRefresh

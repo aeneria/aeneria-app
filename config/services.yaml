@@ -6,8 +6,6 @@
 parameters:
     locale: 'fr'
     aeneria.version: '1.1.6'
-    aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
-    aeneria.documentation: 'https://docs.aeneria.com/fr/'
 
     # aeneria features
     aeneria.user.max_places: "%env(AENERIA_USER_MAX_PLACES)%"

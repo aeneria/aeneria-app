@@ -1,18 +1,16 @@
 import { defineComponent, ref } from 'vue';
 import { mapState } from 'vuex';
 import Button from 'primevue/button';
-import Card from 'primevue/card';
-import Place from './Place';
+import Place from './place/Place';
 import Menu from 'primevue/menu';
 import Divider from 'primevue/divider';
-import EditEmailForm from './EditEmailForm';
-import EditPasswordForm from './EditPasswordForm';
+import EditEmailForm from './form/EditEmailForm';
+import EditPasswordForm from './form/EditPasswordForm';
 
 export default defineComponent({
   name: 'MonCompte',
   components: {
     Button,
-    Card,
     Divider,
     Place,
     Menu,
@@ -59,5 +57,8 @@ export default defineComponent({
     toggleEditPasswordForm() {
       this.displayEditPasswordForm = !this.displayEditPasswordForm
     },
-  }
+    goToNewPLace() {
+      this.$router.push({name: 'new-place'})
+    },
+  },
 });
