@@ -149,11 +149,11 @@ instance d'æneria puisse bénéficier du compte d'aeneria.com.
 
 Au lieu d'utiliser le comportement classique pour se connecter à Enedis :
 
-``votre instance æneria <=[via vos propres idientifiants de connexion enedis]=> Enedis Data Connect``
+``votre instance æneria <=[via vos propres identifiants de connexion enedis]=> Enedis Data Connect``
 
 Vous pouvez configurez votre instance comme ça :
 
-``votre instance æneria <=> proxy.aeneria.com <=[via les idientifiants de connexion d'aeneria.com]=> Enedis Data Connect``
+``votre instance æneria <=> proxy.aeneria.com <=[via les identifiants de connexion d'aeneria.com]=> Enedis Data Connect``
 
 Il y a donc 2 sortes de mode :
 
