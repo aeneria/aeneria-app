@@ -40,40 +40,10 @@ final class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('aeneria_documentation', [$this, 'getDocumentation']),
-            new TwigFunction('aeneria_help_icon_link', [$this, 'getHelpIconLink']),
-            new TwigFunction('aeneria_help_graph', [$this, 'getGraphHelp']),
             new TwigFunction('aeneria_demo_mode', [$this, 'isDemoMode']),
             new TwigFunction('aeneria_welcome_message', [$this, 'getWelcomeMessage']),
             new TwigFunction('aeneria_matomo', [$this, 'getMatomo']),
         ];
-    }
-
-    public function getDocumentation(?string $path = ''): string
-    {
-        $documentationBaseUri = $this->parameters->get('aeneria.documentation');
-        $version = $this->parameters->get('aeneria.version');
-
-        return \sprintf("%s%s/%s", $documentationBaseUri, $version, $path);
-    }
-
-    public function getHelpIconLink(?string $path, ?string $title = null, ?string $class = null): string
-    {
-        $link = $this->getDocumentation(\sprintf("%s", $path));
-
-        return \sprintf(
-            '<a href="%s" target="_blank" class="%s" title="%s"><i class="fas fa-question-circle"></i></a>',
-            $link,
-            $class,
-            $title
-        );
-    }
-
-    public function getGraphHelp(?string $graph): string
-    {
-        $path = \sprintf("utilisateur/graph.html#%s", $graph);
-
-        return $this->getHelpIconLink($path, "Comment lire ce graphique ?", "help");
     }
 
     public function isDemoMode(): bool
