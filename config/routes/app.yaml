@@ -6,7 +6,22 @@ app.home.trailing:
   path: /app/{path}
   controller: App\Controller\AppController::appAction
   requirements:
-      path: .+
+    path: .+
 api:
-    resource: "./api/index.yaml"
-    prefix: /api
+  resource: "./api/index.yaml"
+  prefix: /api
+
+security.logout:
+  path: /logout
+  controller: App\Controller\SecurityController::logout
+
+security.login:
+  path: /login
+  controller: App\Controller\SecurityController::login
+
+app.redirect:
+  path: /
+  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+  defaults:
+    route: app.home
+    permanent: true
