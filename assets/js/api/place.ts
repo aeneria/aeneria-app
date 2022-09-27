@@ -11,7 +11,7 @@ export function postPlaceCreate(name: string, meteo: string): Promise<Place> {
     },
     'POST',
     []
-  );
+  )
 }
 
 export function postPlaceName(placeId: string, newName: string): Promise<any> {
@@ -23,7 +23,7 @@ export function postPlaceName(placeId: string, newName: string): Promise<any> {
     },
     'POST',
     []
-  );
+  )
 }
 
 export function postPlaceDelete(placeId: string): Promise<any> {
@@ -34,34 +34,34 @@ export function postPlaceDelete(placeId: string): Promise<any> {
     },
     'POST',
     []
-  );
+  )
 }
 
 export function postPlaceDataExport(placeId: string, start: null|Date, end: null|Date): void {
-  const form = document.createElement('form');
-  form.method = 'POST';
+  const form = document.createElement('form')
+  form.method = 'POST'
   form.action = '/api/place/data/export'
 
-  const placeIdField = document.createElement('input');
-  placeIdField.type = 'hidden';
-  placeIdField.name = 'placeId';
-  placeIdField.value = placeId;
-  form.appendChild(placeIdField);
+  const placeIdField = document.createElement('input')
+  placeIdField.type = 'hidden'
+  placeIdField.name = 'placeId'
+  placeIdField.value = placeId
+  form.appendChild(placeIdField)
 
-  const startField = document.createElement('input');
-  startField.type = 'hidden';
-  startField.name = 'start';
-  startField.value = start !== null ? timeFormat("%d/%m/%Y")(start) : '';
-  form.appendChild(startField);
+  const startField = document.createElement('input')
+  startField.type = 'hidden'
+  startField.name = 'start'
+  startField.value = start !== null ? timeFormat("%d/%m/%Y")(start) : ''
+  form.appendChild(startField)
 
-  const endField = document.createElement('input');
-  endField.type = 'hidden';
-  endField.name = 'end';
-  endField.value = end !== null ? timeFormat("%d/%m/%Y")(end) : '';
-  form.appendChild(endField);
+  const endField = document.createElement('input')
+  endField.type = 'hidden'
+  endField.name = 'end'
+  endField.value = end !== null ? timeFormat("%d/%m/%Y")(end) : ''
+  form.appendChild(endField)
 
-  document.body.appendChild(form);
-  form.submit();
+  document.body.appendChild(form)
+  form.submit()
 }
 
 export function postPlaceDataImport(placeId: string, file: File): Promise<any> {
@@ -97,5 +97,5 @@ export function postPlaceDataRefresh(placeId: string, feedId: string, start: Dat
     },
     'POST',
     []
-  );
+  )
 }

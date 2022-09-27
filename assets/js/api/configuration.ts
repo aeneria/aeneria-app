@@ -4,11 +4,11 @@ import { Utilisateur } from "@/type/Utilisateur";
 import { postData, queryData } from "@/utils";
 
 export function queryPlaces(): Promise<Place[]> {
-  return queryData(`/api/config/places`).then(data => Object.values(data));
+  return queryData(`/api/config/places`).then(data => Object.values(data))
 }
 
 export function queryUser(): Promise<Utilisateur> {
-  return queryData(`/api/config/user`).then(data => data);
+  return queryData(`/api/config/user`).then(data => data)
 }
 
 export function postUserPassword(oldPassword: string, newPassword: string, newPassword2: string): Promise<any> {
@@ -21,7 +21,7 @@ export function postUserPassword(oldPassword: string, newPassword: string, newPa
     },
     'POST',
     []
-  );
+  )
 }
 
 export function postUserEmail(newEmail: string): Promise<any> {
@@ -32,7 +32,28 @@ export function postUserEmail(newEmail: string): Promise<any> {
     },
     'POST',
     []
-  );
+  )
+}
+
+export function postUserDelete(password: string, yesIamSure: boolean): void {
+  const form = document.createElement('form')
+  form.method = 'POST'
+  form.action = '/delete-account'
+
+  const passwordField = document.createElement('input')
+  passwordField.type = 'hidden'
+  passwordField.name = 'password'
+  passwordField.value = password
+  form.appendChild(passwordField)
+
+  const IamSureField = document.createElement('input')
+  IamSureField.type = 'hidden'
+  IamSureField.name = 'yes-i-am-sure'
+  IamSureField.value = yesIamSure ? '1' : '0'
+  form.appendChild(IamSureField)
+
+  document.body.appendChild(form)
+  form.submit()
 }
 
 export function queryConfiguration(): Promise<Configuration> {
@@ -47,5 +68,5 @@ export function queryConfiguration(): Promise<Configuration> {
       isDemoMode: data.isDemoMode === '1',
       version: data.version,
     }
-  });
+  })
 }
