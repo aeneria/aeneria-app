@@ -23,6 +23,7 @@
 
       <EditEmailForm :visible="displayEditEmailForm" v-on:toggleVisible="toggleEditEmailForm"/>
       <EditPasswordForm :visible="displayEditPasswordForm" v-on:toggleVisible="toggleEditPasswordForm"/>
+      <DeleteAccountForm :visible="displayDeleteAccountForm" v-on:toggleVisible="toggleDeleteAccountForm"/>
 
       <Divider align="left" class="bg-color">
         <div class="p-d-inline-flex p-ai-center">

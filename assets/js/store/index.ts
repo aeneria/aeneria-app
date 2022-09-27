@@ -1,4 +1,4 @@
-import { postUserEmail, postUserPassword, queryConfiguration, queryPlaces, queryUser } from '@/api/configuration'
+import { postUserDelete, postUserEmail, postUserPassword, queryConfiguration, queryPlaces, queryUser } from '@/api/configuration'
 import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
 import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
@@ -6,7 +6,7 @@ import { getGranularite, GranulariteType } from '@/type/Granularite'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_CONFIGURATION, INIT_PLACE_LIST, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, UPDATE_SELECTED_PLACE, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
+import { INIT_CONFIGURATION, INIT_PLACE_LIST, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, UPDATE_SELECTED_PLACE, USER_DELETE_ACCOUNT, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
 import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
 
 const lastMonth = new Date('2020-02-09');
@@ -153,6 +153,9 @@ export const store = createStore({
         })
       })
       //@todo deal with confirm messages
+    },
+    [USER_DELETE_ACCOUNT] ({}, data) {
+      postUserDelete(data.password, data.yesIamSure)
     },
     [PLACE_CREATE] ({}, data) {
       postPlaceCreate(data.name, data.meteo.key).then((place) => {
