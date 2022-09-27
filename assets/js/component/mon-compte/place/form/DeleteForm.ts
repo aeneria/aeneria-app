@@ -20,12 +20,10 @@ export default defineComponent({
     Message,
     ConfirmDialog
   },
-  setup: () => {
-    return {
-      confirmService: useConfirm(),
-      v$: useVuelidate(),
-    }
-  },
+  setup: () => ({
+    confirmService: useConfirm(),
+    v$: useVuelidate(),
+  }),
   props: {
     visible: {
       type: Boolean,
@@ -72,7 +70,7 @@ export default defineComponent({
         acceptClass: 'p-button-danger p-button-rounded',
         rejectLabel: 'Annuler',
         rejectClass: 'p-button-text p-button-rounded p-button-secondary',
-      });
+      })
     },
     post() {
       this.$store.dispatch(PLACE_DELETE, {

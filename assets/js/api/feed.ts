@@ -2,7 +2,7 @@ import { Place } from "@/type/Place";
 import { postData, queryData } from "@/utils";
 
 export function queryMeteoStationList(): Promise<Array<{key: string, isLabeledStatement: string}>> {
-  return queryData(`/api/feed/meteo/station-list`).then(data => Object.values(data));
+  return queryData(`/api/feed/meteo/station-list`).then(data => Object.values(data))
 }
 
 export function postFeedMeteoUpdate(placeId: number, meteo: string): Promise<Place> {
@@ -13,13 +13,13 @@ export function postFeedMeteoUpdate(placeId: number, meteo: string): Promise<Pla
       },
       'POST',
       []
-    );
+    )
   }
 
 export function queryEnedisConsentUrl(placeId: number): Promise<string> {
-  return queryData(`api/feed/enedis/consent/${placeId}`, );
+  return queryData(`api/feed/enedis/consent/${placeId}`, )
 }
 
 export function queryGrdfConsentUrl(placeId: number): Promise<string> {
-  return queryData(`api/feed/grdf/consent/${placeId}`, );
+  return queryData(`api/feed/grdf/consent/${placeId}`, )
 }
