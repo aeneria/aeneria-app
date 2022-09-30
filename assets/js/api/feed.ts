@@ -1,7 +1,7 @@
 import { Place } from "@/type/Place";
 import { postData, queryData } from "@/utils";
 
-export function queryMeteoStationList(): Promise<Array<{key: string, isLabeledStatement: string}>> {
+export function queryMeteoStationList(): Promise<Array<{key: string, label: string}>> {
   return queryData(`/api/feed/meteo/station-list`).then(data => Object.values(data))
 }
 

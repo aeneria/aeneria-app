@@ -1,4 +1,4 @@
-import { postUserDelete, postUserEmail, postUserPassword, queryConfiguration, queryPlaces, queryUser } from '@/api/configuration'
+import { postUserDelete, postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
 import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
 import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
@@ -8,13 +8,15 @@ import { State } from 'vue'
 import { createStore } from 'vuex'
 import { INIT_CONFIGURATION, INIT_PLACE_LIST, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, UPDATE_SELECTED_PLACE, USER_DELETE_ACCOUNT, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
 import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
+import { ToastServiceMethods } from "primevue/toastservice";
 
 const lastMonth = new Date('2020-02-09');
 lastMonth.setMonth(lastMonth.getMonth() -1)
 const now = new Date('2021-10-04');
 
-export const store = createStore({
+export const store = (toastService: ToastServiceMethods) => createStore({
   state: {
+    toast: toastService,
     configuration: null,
     utilisateur: null,
     hasNoPlace: null as null|boolean,
@@ -113,6 +115,23 @@ export const store = createStore({
       queryUser().then(data => {
         commit(SET_USER, data)
       })
+      queryNotifications().then( (data) => {
+        for(const notification of data) {
+          if (notification.level === 'danger') {
+            notification.level = 'error'
+          } else if (notification.level === 'success') {
+            notification.level = 'success'
+          } else {
+            notification.level = 'info'
+          }
+
+          this.state.toast.add({
+            severity: notification.level,
+            summary: "Notification du système",
+            detail: notification.message
+          })
+        }
+      })
     },
     [INIT_PLACE_LIST] ({commit, dispatch, getters, state}) {
       queryPlaces().then(placeList => {
@@ -148,7 +167,11 @@ export const store = createStore({
     },
     [USER_UPDATE_PASSWORD] ({}, data) {
       postUserPassword(data.oldPassword, data.newPassword, data.newPassword2)
-      //@todo deal with confirm messages
+      this.state.toast.add({
+        severity:'success',
+        summary: "Votre modification a été enregistrée.",
+        detail: `Votre mot de passe a été correctement mis à jour.`
+      })
     },
     [USER_UPDATE_EMAIL] ({commit}, data) {
       postUserEmail(data.newEmail).then(() => {
@@ -156,7 +179,11 @@ export const store = createStore({
           commit(SET_USER, data)
         })
       })
-      //@todo deal with confirm messages
+      this.state.toast.add({
+        severity:'success',
+        summary: "Votre modification a été enregistrée.",
+        detail: `Votre adresse e-mail est désormais ${data.newEmail}.`
+      })
     },
     [USER_DELETE_ACCOUNT] ({}, data) {
       postUserDelete(data.password, data.yesIamSure)
@@ -175,12 +202,16 @@ export const store = createStore({
       })
     },
     [PLACE_EDIT_METEO] ({commit}, data) {
-      postFeedMeteoUpdate(data.placeId, data.meteo).then(() => {
+      postFeedMeteoUpdate(data.placeId, data.meteo.key).then(() => {
         queryUser().then(data => {
           commit(SET_USER, data)
         })
+        this.state.toast.add({
+          severity:'success',
+          summary: "L'adresse a été correctement mise à jour.",
+          detail: `Elle utilisera maintenant les données de la station ${data.meteo.label}.`
+        })
       })
-      //@todo deal with confirm messages
     },
     [PLACE_EDIT_NOM] ({dispatch, commit}, data) {
       postPlaceName(data.placeId, data.newName).then(() => {
@@ -188,8 +219,13 @@ export const store = createStore({
           dispatch(INIT_PLACE_LIST)
           commit(SET_USER, data)
         })
+      }).then(() => {
+        this.state.toast.add({
+          severity:'success',
+          summary: "L'adresse a été correctement mise à jour.",
+          detail: `Son nom est maintenant ${data.newName}.`
+        })
       })
-      //@todo deal with confirm messages
     },
     [PLACE_DELETE] ({dispatch, commit}, data) {
       postPlaceDelete(data.placeId, ).then(() => {
@@ -197,20 +233,30 @@ export const store = createStore({
         queryUser().then(data => {
           commit(SET_USER, data)
         })
+      }).then(() => {
+        this.state.toast.add({severity:'success', summary: "L'adresse a été correctement supprimée."})
       })
-      //@todo deal with confirm messages
     },
     [PLACE_EXPORT_DATA] ({}, data) {
       postPlaceDataExport(data.placeId, data.start, data.end)
-      //@todo deal with confirm messages
     },
     [PLACE_IMPORT_DATA] ({}, data) {
-      postPlaceDataImport(data.placeId, data.file)
-      //@todo deal with confirm messages
+      postPlaceDataImport(data.placeId, data.file).then(() => {
+        this.state.toast.add({
+          severity:'info',
+          summary: "L'import a été programmé",
+          detail: `Il s'effectuera dans les prochaines minutes`
+        })
+      })
     },
     [PLACE_REFRESH_DATA] ({}, data) {
-      postPlaceDataRefresh(data.placeId, data.feedId, data.start, data.end)
-      //@todo deal with confirm messages
+      postPlaceDataRefresh(data.placeId, data.feedId, data.start, data.end).then(() => {
+        this.state.toast.add({
+          severity:'info',
+          summary: "Le rafraissement des données a été programmé",
+          detail: `Il s'effectuera dans les prochaines minutes`
+        })
+      })
     },
   }
 })

@@ -5,22 +5,24 @@ import { MenuItem } from 'primevue/menuitem';
 import { RouterLink, RouterView } from 'vue-router';
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
-import NoAdresse from './misc/NoAdresse';
+import Welcome from './misc/Welcome';
 import PlaceSelect from './selection/PlaceSelect';
 import SidebarLink from './misc/SidebarLink';
 import Spinner from './graphique/Spinner';
+import Toast from 'primevue/toast';
 
 export default defineComponent({
   name: 'App',
   components: {
     Button,
     Menu,
-    NoAdresse,
+    Welcome,
     PlaceSelect,
     RouterLink,
     RouterView,
     SidebarLink,
     Spinner,
+    Toast,
   },
   setup() {
     const menuMonCompte = ref()
@@ -84,7 +86,7 @@ export default defineComponent({
 
       return menuMonCompteItems
     },
-    displayNoAdresse(): boolean {
+    displayWelcome(): boolean {
       return this.hasNoPlace && this.$router.currentRoute.value.name !== 'new-place'
     }
   },

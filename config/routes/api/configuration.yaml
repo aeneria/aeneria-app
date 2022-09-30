@@ -24,3 +24,7 @@ api.config.user.delete:
 api.config.places:
   path: /places
   controller: App\Controller\ApiConfigController::getPlaces
+
+api.config.notifications:
+  path: /notifications
+  controller: App\Controller\ApiConfigController::getNotifications

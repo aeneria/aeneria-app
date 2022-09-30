@@ -1,3 +1,4 @@
+import { ToastServiceMethods } from 'primevue/toastservice';
 import { Store } from 'vuex'
 import { Configuration } from './Configuration';
 import { FeedDataType } from './FeedData';
@@ -7,6 +8,7 @@ import { Utilisateur } from './Utilisateur';
 
 declare module '@vue/runtime-core' {
   interface State {
+    toast: ToastServiceMethods
     configuration: null|Configuration
     utilisateur: null|Utilisateur
     hasNoPlace: null|boolean

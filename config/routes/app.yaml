@@ -3,10 +3,11 @@ app.home:
   controller: App\Controller\AppController::appAction
 
 app.home.trailing:
-  path: /app/{path}
+  path: /app/{slug}
   controller: App\Controller\AppController::appAction
   requirements:
     path: .+
+
 api:
   resource: "./api/index.yaml"
   prefix: /api
@@ -24,4 +25,15 @@ app.redirect:
   controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
   defaults:
     route: app.home
+    permanent: true
+
+# En dernier recours, on redirige vers /app/{path} au cas où, si cette page
+# n'existe pas non-plus dans l'app vue, c'est elle qui se chargera de faire une 404
+app.redirect.ultime:
+  path: /{slug}
+  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+  requirements:
+    slug: .+
+  defaults:
+    route: app.home.trailing
     permanent: true
