@@ -6,7 +6,7 @@
     :breakpoints="{'650px': '100vw'}"
     :modal="true" :closable="false"
   >
-    <div class="p-text-center p-mb-''">
+    <div class="p-text-center p-mb-4">
       <img class="img-fluid" src="/image/logo-grdf.png" alt="Logo de GRDF">
     </div>
     <p>

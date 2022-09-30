@@ -1,24 +1,26 @@
-import { INIT_PLACE_LIST, INIT_CONFIGURATION } from '@/store/actions';
 import { defineComponent, ref } from 'vue';
+import { INIT_PLACE_LIST, INIT_CONFIGURATION } from '@/store/actions';
 import { mapGetters, mapState } from 'vuex';
-import PlaceSelect from './selection/PlaceSelect';
-import Spinner from './graphique/Spinner';
-import SidebarLink from './misc/SidebarLink';
+import { MenuItem } from 'primevue/menuitem';
+import { RouterLink, RouterView } from 'vue-router';
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
-import { RouterLink, RouterView } from 'vue-router';
-import { MenuItem } from 'primevue/menuitem';
+import NoAdresse from './misc/NoAdresse';
+import PlaceSelect from './selection/PlaceSelect';
+import SidebarLink from './misc/SidebarLink';
+import Spinner from './graphique/Spinner';
 
 export default defineComponent({
   name: 'App',
   components: {
+    Button,
+    Menu,
+    NoAdresse,
     PlaceSelect,
-    Spinner,
     RouterLink,
     RouterView,
     SidebarLink,
-    Menu,
-    Button,
+    Spinner,
   },
   setup() {
     const menuMonCompte = ref()
@@ -35,6 +37,7 @@ export default defineComponent({
     ...mapState([
       'configuration',
       'selectedPlace',
+      'hasNoPlace',
     ]),
     ...mapGetters([
       'onlyOneEnergie',
@@ -80,6 +83,9 @@ export default defineComponent({
       })
 
       return menuMonCompteItems
+    },
+    displayNoAdresse(): boolean {
+      return this.hasNoPlace && this.$router.currentRoute.value.name !== 'new-place'
     }
   },
   methods: {
