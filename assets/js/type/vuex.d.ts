@@ -7,8 +7,9 @@ import { Utilisateur } from './Utilisateur';
 
 declare module '@vue/runtime-core' {
   interface State {
-    configuration: null|Configuration,
-    utilisateur: null|Utilisateur,
+    configuration: null|Configuration
+    utilisateur: null|Utilisateur
+    hasNoPlace: null|boolean
     placeList: Place[]
     selectedPlace: null|Place
     selectedPeriode: [Date, Date]

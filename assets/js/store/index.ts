@@ -17,6 +17,7 @@ export const store = createStore({
   state: {
     configuration: null,
     utilisateur: null,
+    hasNoPlace: null as null|boolean,
     placeList: new Array<Place>(),
     selectedPlace: null as null|Place,
     selectedPeriode: [lastMonth, now],
@@ -84,6 +85,9 @@ export const store = createStore({
     },
     [SET_PLACE_LIST] (state, placeList) {
       state.placeList = placeList
+      if (placeList.length === 0) {
+        state.hasNoPlace = true
+      }
     },
     [SET_SELECTED_PLACE] (state, place) {
       state.selectedPlace = place

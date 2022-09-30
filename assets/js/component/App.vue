@@ -56,8 +56,9 @@
         />
       </div>
       <div id="main-content" class="p-col">
-        <router-view v-if="selectedPlace && configuration"></router-view>
-        <Spinner v-else />
+        <Spinner v-if="!configuration" />
+        <NoAdresse v-else-if="displayNoAdresse"/>
+        <router-view v-else></router-view>
       </div>
     </div>
   </div>
