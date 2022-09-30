@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -118,6 +119,16 @@ class ApiConfigController extends AbstractAppController
     public function getPlaces(): JsonResponse
     {
         $result = $this->placeRepository->getAllowedPlaces($this->getUser());
+
+        return new JsonResponse($result, 200);
+    }
+
+    /**
+     * Obtenir les notifications de l'utilisateur courant.
+     */
+    public function getNotifications(NotificationService $notificationService): JsonResponse
+    {
+        $result = $notificationService->getAndDeleteNotificationFor($this->getUser());
 
         return new JsonResponse($result, 200);
     }

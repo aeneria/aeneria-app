@@ -10,21 +10,24 @@ import MonCompte from './component/mon-compte/MonCompte';
 import NewPlace from './component/mon-compte/place/form/new/NewPlace';
 import CallbackEnedis from './component/mon-compte/place/CallbackEnedis';
 import CallbackGrdf from './component/mon-compte/place/CallbackGrdf';
+import NotFound from './component/misc/NotFound';
 
 
-export const router = createRouter({
+export const router = (basePath: string) => createRouter({
   history: createWebHistory(),
   routes: [
-    { name: 'home', path: '/app/', component: Home },
-    { name: 'energie', path: '/app/energie', component: Energie },
-    { name: 'meteo', path: '/app/meteo', component: Meteo },
-    { name: 'analyse', path: '/app/analyse', component: Analyse },
-    { name: 'comparaison', path: '/app/comparaison', component: Comparaison },
-    { name: 'mon-compte', path: '/app/mon-compte', component: MonCompte },
-    { name: 'new-place', path: '/app/mon-compte/nouvelle-adresse', component: NewPlace },
-    { name: 'callback-enedis', path: '/app/mon-compte/callback/enedis/:placeId', component: CallbackEnedis },
-    { name: 'callback-grdf', path: '/app/mon-compte/callback/grdf/:placeId', component: CallbackGrdf },
-    { name: 'admin', path: '/app/admin', component: Admin },
-    { name: 'about', path: '/app/a-propos', component: About },
+    { name: 'home', path: basePath + '/', component: Home },
+    { name: 'energie', path: basePath + '/energie', component: Energie },
+    { name: 'meteo', path: basePath + '/meteo', component: Meteo },
+    { name: 'analyse', path: basePath + '/analyse', component: Analyse },
+    { name: 'comparaison', path: basePath + '/comparaison', component: Comparaison },
+    { name: 'mon-compte', path: basePath + '/mon-compte', component: MonCompte },
+    { name: 'new-place', path: basePath + '/mon-compte/nouvelle-adresse', component: NewPlace },
+    { name: 'callback-enedis', path: basePath + '/mon-compte/callback/enedis/:placeId', component: CallbackEnedis },
+    { name: 'callback-grdf', path: basePath + '/mon-compte/callback/grdf/:placeId', component: CallbackGrdf },
+    { name: 'admin', path: basePath + '/admin', component: Admin },
+    { name: 'about', path: basePath + '/a-propos', component: About },
+    { name: 'not-found', path: basePath + '/:pathMatch(.*)*', component: NotFound },
   ],
+
 })

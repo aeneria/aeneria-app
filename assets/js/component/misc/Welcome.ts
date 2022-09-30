@@ -3,7 +3,7 @@ import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 
 export default defineComponent({
-  name: 'NoAdresse',
+  name: 'Welcome',
   components: {
     Button,
     Dialog,

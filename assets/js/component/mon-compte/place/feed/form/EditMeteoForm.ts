@@ -34,8 +34,8 @@ export default defineComponent({
   data() {
     return {
       submitted: false,
-      meteoValue: null as null|{key: string, isLabeledStatement: string},
-      meteoOptionList: null as null|Array<{key: string, isLabeledStatement: string}>
+      meteoValue: null as null|{key: string, label: string},
+      meteoOptionList: null as null|Array<{key: string, label: string}>
     }
   },
   validations() {
@@ -54,7 +54,7 @@ export default defineComponent({
 
       this.$store.dispatch(PLACE_EDIT_METEO, {
         placeId: this.place.id,
-        meteo: this.meteoValue?.key,
+        meteo: this.meteoValue,
       })
       this.$emit('toggleVisible')
     },

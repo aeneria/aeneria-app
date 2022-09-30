@@ -3,21 +3,21 @@
 import '../css/app.scss';
 
 import { createApp } from 'vue';
+import { d3LocaleDef } from './component/graphique/d3-helpers';
 import { minWeekDayList, monthList, shortMonthList, shortWeekDayList, weekDayList } from './type/DataValue';
+import { router } from './router';
 import { store } from './store';
 import * as d3 from 'd3';
 import App from './component/App';
-import PrimeVue from 'primevue/config';
-import Tooltip from 'primevue/tooltip';
 import ConfirmationServiceMethods from 'primevue/confirmationservice';
-import { d3LocaleDef } from './component/graphique/d3-helpers';
-import { router } from './router';
+import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
+import Tooltip from 'primevue/tooltip';
 
 const rootContainer = document.querySelector("#app")
 if (rootContainer) {
-  createApp(App)
-    .use(router)
-    .use(store)
+  const app = createApp(App)
+    .use(router(rootContainer.getAttribute('data-app-path') ?? '/'))
     .use( ConfirmationServiceMethods)
     .use(PrimeVue, {locale: {
       startsWith: 'Commence par',
@@ -62,8 +62,13 @@ if (rootContainer) {
       emptyFilterMessage: 'Aucun résultat',
       emptyMessage: 'Aucune option'
     }})
+    .use(ToastService)
     .directive('tooltip', Tooltip)
-    .mount(rootContainer)
+
+
+  app.use(store(app.config.globalProperties.$toast))
+
+  app.mount(rootContainer)
 
   d3.timeFormatDefaultLocale(d3LocaleDef)
 }

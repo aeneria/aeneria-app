@@ -57,10 +57,11 @@
       </div>
       <div id="main-content" class="p-col">
         <Spinner v-if="!configuration" />
-        <NoAdresse v-else-if="displayNoAdresse"/>
+        <Welcome v-else-if="displayWelcome"/>
         <router-view v-else></router-view>
       </div>
     </div>
+    <Toast />
   </div>
 </template>
 

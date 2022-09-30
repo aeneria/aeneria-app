@@ -7,7 +7,7 @@ namespace App\Entity;
 /**
  * Notification
  */
-class Notification
+class Notification implements \JsonSerializable
 {
     const LEVEL_ERROR = 'danger';
     const LEVEL_SUCCESS = 'success';
@@ -120,5 +120,18 @@ class Notification
         $this->message = $message;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'type' => $this->type,
+            'level' => $this->level,
+            'user' => $this->user,
+            'place' => $this->place,
+            'date' => $this->date,
+            'message' => $this->message,
+        ];
     }
 }

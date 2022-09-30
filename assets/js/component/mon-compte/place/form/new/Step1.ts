@@ -24,15 +24,15 @@ export default defineComponent({
       type: String,
     },
     meteo: {
-      type: Object as PropType<{key: string, isLabeledStatement: string}>,
+      type: Object as PropType<{key: string, label: string}>,
     },
   },
   data() {
     return {
-      meteoValue: null as null|{key: string, isLabeledStatement: string},
+      meteoValue: null as null|{key: string, label: string},
       nameValue: null as null|string,
       submitted: false,
-      meteoOptionList: null as null|Array<{key: string, isLabeledStatement: string}>
+      meteoOptionList: null as null|Array<{key: string, label: string}>
     }
   },
   validations() {
