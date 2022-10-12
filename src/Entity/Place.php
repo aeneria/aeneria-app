@@ -30,6 +30,18 @@ class Place implements \JsonSerializable
     /** @var Feed[]|null */
     private $feeds = [];
 
+    /** @var \DateTimeImmutable|null
+     *
+     * N'est pas hydraté automatiquement. à setter à la main si nécessaire
+     */
+    private $periodeMin = null;
+
+    /** @var \DateTimeImmutable|null
+     *
+     * N'est pas hydraté automatiquement. à setter à la main si nécessaire
+     */
+    private $periodeMax = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -214,6 +226,19 @@ class Place implements \JsonSerializable
         return $this;
     }
 
+    public function setPeriodeAmplitude(?\DateTimeImmutable $min, ?\DateTimeImmutable $max): self
+    {
+        $this->periodeMin = $min;
+        $this->periodeMax = $max;
+
+        return $this;
+    }
+
+    public function getPeriodeAmplitude(): array
+    {
+        return [$this->periodeMin, $this->periodeMax];
+    }
+
     public function jsonSerialize()
     {
         $feedList = \iterator_to_array($this->getFeeds());
@@ -228,6 +253,8 @@ class Place implements \JsonSerializable
                 },
                 $feedList
             ),
+            'periodeMin' => $this->periodeMin,
+            'periodeMax' => $this->periodeMax,
         ];
     }
 }

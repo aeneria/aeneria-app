@@ -3,8 +3,9 @@ Installer æneria
 
 Tout d'abord pour utiliser æneria,
 
-* Vous devez avoir accès à un Linky et à un `compte Enedis <https://espace-client-connexion.enedis.fr/auth/UI/Login?realm=particuliers>`_
-* Via ce compte, vous devez activer l'option *Courbe de charge* pour pouvoir avoir accès à votre consommation horaire
+* Vous devez avoir accès
+    * soit à un compteur Linky
+    * soit à un compteur Gazpar
 
 Installation via YunoHost
 **************************
@@ -35,17 +36,6 @@ Prérequis
 
 * PHP 7.3 et supérieur
 * PostgreSQL (9.6 et supérieur)
-
-.. note::
-
-    MySQL et SQLite devraient fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
-
-    Il n'est pas prévu que æneria Les supporte *officiellement*.
-
-.. warning::
-
-    Les migrations de æneria sont uniquement générées pour PostgreSQL, si vous utilisez un autre type de serveur, gardez à l'esprit qu'il
-    faudra vérifier chaque migration avant de la lancer !
 
 Installation
 =============
@@ -95,38 +85,6 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
     ...
 
 
-Adaptez également le fichier ``config/packages/doctrine.yaml`` si votre serveur de base de données n'est pas PostgreSQL :
-
-.. code-block:: yaml
-
-    # fichier config/packages/doctrine.yaml
-
-    ...
-
-    # Renseigner ici les info de votre dbal
-    doctrine:
-        dbal:
-            # Configure these for your database server
-
-            # Mysql
-            # driver: 'pdo_mysql'
-            # server_version: '5.2'
-            # charset: utf8mb4
-            # default_table_options:
-            #     charset: utf8mb4
-            #     collate: utf8mb4_unicode_ci
-
-            # PostgreSQL
-            driver: 'pdo_pgsql'
-            server_version: '9.6'
-            charset: utf8
-
-            #SQLLite
-            # driver:   pdo_sqlite
-            # charset: utf8
-
-    ...
-
 3. Générer la base de données
 -------------------------------
 
@@ -136,8 +94,8 @@ Lancez le commande d'installation d'aeneria :
 
     php7.3 bin/console aeneria:install
 
-4. Configurer Enedis Data-connect
-------------------------------------
+4. Configurer Enedis Data-connect et GrDF Addict
+------------------------------------------------
 
 æneria utilise l'API Enedis Data Connect pour obtenir les données de consommation
 d'électricité. Mais pour utiliser cette API il est nécessaire d'avoir un compte.

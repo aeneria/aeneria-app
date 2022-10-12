@@ -6,6 +6,10 @@
     :breakpoints="{'650px': '100vw'}"
     :modal="true" :closable="false"
   >
+    <p>
+      Il peut parfois être nécessaire de rafraichir les données d'une adresse manuellement : c'est
+      à dire forcer la mise à jour des données depuis les serveurs d'Enedis, GrDF et de Météo France.
+    </p>
     <Message severity="info" :closable="false" class="p-mb-4 p-mt-1">
       <p>
         Avant de commencer à rafraichir des données, lisez ces quelques informations :

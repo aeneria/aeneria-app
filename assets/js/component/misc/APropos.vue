@@ -23,6 +23,24 @@
                 </a>
               </li>
               <li class="p-m-1">
+                <a
+                  target="_blank"
+                  href="https://gitlab.com/aeneria/aeneria-app"
+                  class="p-button p-button-rounded p-button-secondary ml-1"
+                >
+                  <i class="fab fa-gitlab p-mr-2"></i>Dépôt Gitlab
+                </a>
+              </li>
+              <li class="p-m-1">
+                <a
+                  target="_blank"
+                  href="https://twitter.com/aeneria_app"
+                  class="p-button p-button-rounded p-button-secondary ml-1"
+                >
+                  <i class="fab fa-twitter p-mr-2"></i>@aeneria-app
+                </a>
+              </li>
+              <li class="p-m-1">
                 <a target="_blank" href="https://docs.aeneria.com/"
                 class="p-button p-button-rounded p-button-secondary ml-1"
               >
@@ -47,38 +65,20 @@
                   <i class="fa fa-balance-scale p-mr-2"></i>License AGPLv3
                 </a>
               </li>
-              <li class="p-m-1">
-                <a
-                  target="_blank"
-                  href="https://gitlab.com/aeneria/aeneria-app"
-                  class="p-button p-button-rounded p-button-secondary ml-1"
-                >
-                  <i class="fab fa-gitlab p-mr-2"></i>Dépôt Gitlab
-                </a>
-              </li>
-              <li class="p-m-1">
-                <a
-                  target="_blank"
-                  href="https://twitter.com/aeneria_app"
-                  class="p-button p-button-rounded p-button-secondary ml-1"
-                >
-                  <i class="fab fa-twitter p-mr-2"></i>@aeneria-app
-                </a>
-              </li>
             </ul>
           </template>
         </Card>
         <Card class="card-about p-m-2">
           <template #title>
             <div class="p-d-flex">
-              <i class="fas fa-bullhorn p-mr-4"></i>
+              <i class="fas fa-hands-clapping p-mr-4"></i>
               <p class="p-my-0">Envie d'encourager æneria ?</p>
             </div>
           </template>
           <template #content>
             <div class="row justify-content-center">
               <div class="col">
-                <p>Faites un don&nbsp;:</p>
+                <p>Faîtes un don&nbsp;:</p>
                 <ul class="p-d-flex p-flex-wrap">
                 <li class="p-m-1">
                   <a
@@ -111,7 +111,7 @@
             </div>
           </template>
           <template #content>
-            <p>Faites-le savoir :</p>
+            <p>Faîtes-le savoir :</p>
             <ul class="p-d-flex p-flex-wrap">
               <li class="p-m-1">
                 <a
@@ -119,7 +119,16 @@
                   href="https://gitlab.com/aeneria/aeneria-app/-/issues"
                   class="p-button p-button-rounded p-button-secondary"
                 >
-                  <i class="fab fa-gitlab p-mr-2"></i>Ouvrez une issue sur Gitlab
+                  <i class="fab fa-gitlab p-mr-2"></i>Avec une issue sur Gitlab
+                </a>
+              </li>
+              <li class="p-m-1">
+                <a
+                  target="_blank"
+                  href="mailto:bonjour@aeneria.com"
+                  class="p-button p-button-rounded p-button-secondary"
+                >
+                  <i class="fas fa-paper-plane p-mr-2"></i>Par email
                 </a>
               </li>
               <li class="p-m-1">
@@ -128,7 +137,7 @@
                   href="https://twitter.com/aeneria_app"
                   class="p-button p-button-rounded p-button-secondary"
                 >
-                  <i class="fab fa-twitter p-mr-2"></i>Contactez-nous via Twitter
+                  <i class="fab fa-twitter p-mr-2"></i>Via Twitter
                 </a>
               </li>
             </ul>
@@ -144,8 +153,8 @@
           <template #content>
             <p>Développé avec <i class="fas fa-heart"></i> par Simon Mellerin, avec l'aide de&nbsp;:</p>
             <ul class="">
-              <li><i class="fas fa-server p-mr-2"></i>Côté back : PHP, MySQL, Symfony et son outillage</li>
-              <li><i class="fas fa-desktop p-mr-2"></i>Côté front : Vue.js, PrimeVUE, Webpack, Bootstrap, jQuery, D3.js, Popper.js, Fontawesome</li>
+              <li><i class="fas fa-server p-mr-2"></i>Côté back : PHP, PostgreSQL, Symfony et son outillage</li>
+              <li><i class="fas fa-desktop p-mr-2"></i>Côté front : Vue.js, PrimeVUE, Webpack, D3.js, Popper.js, Fontawesome</li>
               <li><i class="fas fa-image p-mr-2"></i>Icones issues de <a target="_blank" href="https://thenounproject.com/" >the Noun Project</a> :
                 <a target="_blank" href="https://thenounproject.com/iconisland/">Icon Island</a>, <a target="_blank" href="https://thenounproject.com/coquet_adrien">Adrien Coquet</a>,
                 <a target="_blank" href="https://thenounproject.com/grega.cresnar">Gregor Cresnar</a>, <a target="_blank" href="https://thenounproject.com/creativestall/"> Creative Stall</a>

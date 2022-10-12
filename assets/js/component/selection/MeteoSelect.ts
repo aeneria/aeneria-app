@@ -1,6 +1,5 @@
 import { defineComponent } from 'vue';
 import Dropdown, { DropdownChangeEvent } from 'primevue/dropdown';
-import {  mapState } from 'vuex';
 import { SET_SELECTED_METEO_DATA } from '@/store/mutations';
 import { DataType, getFeedDataType } from '@/type/FeedData';
 
@@ -18,13 +17,11 @@ export default defineComponent({
         getFeedDataType(DataType.Humidity),
         getFeedDataType(DataType.Nebulosity),
         getFeedDataType(DataType.Rain),
-      ]
+      ],
     }
   },
   computed: {
-    ...mapState([
-      'selectedMeteoData',
-    ]),
+    meteoData() { return this.$store.state.selection.meteoData },
   },
   methods: {
     setSelectedMeteoData (event: DropdownChangeEvent) {

@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue';
 import Dropdown, { DropdownChangeEvent } from 'primevue/dropdown';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { SET_SELECTED_ENERGIE } from '@/store/mutations';
 
 export default defineComponent({
@@ -9,9 +9,7 @@ export default defineComponent({
     Dropdown
   },
   computed: {
-    ...mapState([
-      'selectedEnergie',
-    ]),
+    energie() { return this.$store.state.selection.energie },
     ...mapGetters([
       'onlyOneEnergie',
       'feedDataTypeEnergieList'

@@ -4,12 +4,15 @@
     <div class="p-col-12 p-md-4 p-lg-3">
       <Card class="card-calendrier">
         <template #title>
-          {{ energie?.label }}
+          <div class="p-d-flex p-jc-between">
+            <div>{{ energie?.label }}</div>
+            <AideCalendrier/>
+          </div>
         </template>
         <template #content>
           <Calendrier
             id="calendrier"
-            :periode="periode"
+            :rawPeriode="periode"
             :feedDataId="feedDataId"
             :feedDataType="energie"
             :min="0"
@@ -22,10 +25,13 @@
         <div class="p-col">
           <Card class="card-repartition-jour-heure">
             <template #title>
-              En moyenne sur la semaine
+              <div class="p-d-flex p-jc-between">
+                <div>En moyenne sur la semaine</div>
+                <AideSemaineJours/>
+              </div>
             </template>
             <template #content>
-              <template v-if="energie.hasHourlyData">
+              <template v-if="energie?.hasHourlyData">
                 <SemaineHorizontal
                   v-if="['xl', 'lg', 'md'].includes(grid.breakpoint)"
                   id="semaine-h"
@@ -65,7 +71,10 @@
         <div class="p-col">
           <Card class="evol-conso">
             <template #title>
-              Évolution de la consommation
+              <div class="p-d-flex p-jc-between">
+                <div>Évolution de la consommation</div>
+                <AideEvolution/>
+              </div>
             </template>
             <template #content>
               <Evolution

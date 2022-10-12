@@ -22,10 +22,7 @@ export default defineComponent({
   },
   data() {
     return {
-      periode : [
-        new Date(this.$store.state.selectedPeriode[0]),
-        new Date(this.$store.state.selectedPeriode[1]),
-      ],
+      periode : this.$store.state.selection.periode ?? [new Date(), new Date()],
       selectMenuItem: [
         {
           label: 'Semaine en cours',

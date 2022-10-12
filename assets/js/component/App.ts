@@ -1,5 +1,5 @@
 import { defineComponent, ref } from 'vue';
-import { INIT_PLACE_LIST, INIT_CONFIGURATION } from '@/store/actions';
+import { INIT_CONFIGURATION } from '@/store/actions';
 import { mapGetters, mapState } from 'vuex';
 import { MenuItem } from 'primevue/menuitem';
 import { RouterLink, RouterView } from 'vue-router';
@@ -33,10 +33,10 @@ export default defineComponent({
   },
   mounted() {
     this.$store.dispatch(INIT_CONFIGURATION)
-    this.$store.dispatch(INIT_PLACE_LIST)
   },
   computed: {
     ...mapState([
+      'initialized',
       'configuration',
       'selectedPlace',
       'hasNoPlace',
@@ -46,7 +46,17 @@ export default defineComponent({
       'isAdmin',
     ]),
     menuMonCompteItems(): MenuItem[] {
-      const menuMonCompteItems = new Array<MenuItem>(
+      const menuMonCompteItems = new Array<MenuItem>()
+
+      if(!(this.configuration?.isDemoMode)) {
+        menuMonCompteItems.push({
+            label: 'Mon compte',
+            icon: 'pi pi-user',
+            to: '/app/mon-compte',
+        })
+      }
+
+      menuMonCompteItems.push(
         {
             label: 'À Propos',
             icon: 'pi pi-info-circle',
@@ -55,8 +65,7 @@ export default defineComponent({
         {
             label: 'Aide',
             icon: 'pi pi-question-circle',
-            url: 'https://docs.aeneria.com',
-            target: '_blank',
+            to: '/app/aide',
         }
       )
 
@@ -65,14 +74,6 @@ export default defineComponent({
           label: 'Administration',
           icon: 'pi pi-shield',
           to: '/app/admin',
-        })
-      }
-
-      if(!(this.configuration?.isDemoMode)) {
-        menuMonCompteItems.push({
-            label: 'Mon compte',
-            icon: 'pi pi-user',
-            to: '/app/mon-compte',
         })
       }
 

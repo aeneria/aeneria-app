@@ -2,30 +2,41 @@ import { postUserDelete, postUserEmail, postUserPassword, queryConfiguration, qu
 import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
 import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
-import { getGranularite, GranulariteType } from '@/type/Granularite'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_CONFIGURATION, INIT_PLACE_LIST, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, UPDATE_SELECTED_PLACE, USER_DELETE_ACCOUNT, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
+import { INIT_CONFIGURATION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_DELETE_ACCOUNT, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
 import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
 import { ToastServiceMethods } from "primevue/toastservice";
+import { granulariteList } from '@/type/Granularite'
+// import VuexPersistence from 'vuex-persist'
 
-const lastMonth = new Date('2020-02-09');
+const lastMonth = new Date();
 lastMonth.setMonth(lastMonth.getMonth() -1)
-const now = new Date('2021-10-04');
+const now = new Date();
+const beforelastMonth = new Date();
+beforelastMonth.setMonth(beforelastMonth.getMonth() -2)
+
+// const vuexLocal = new VuexPersistence<State>({
+//   storage: window.localStorage
+// })
 
 export const store = (toastService: ToastServiceMethods) => createStore({
   state: {
     toast: toastService,
     configuration: null,
+    initialized: false,
     utilisateur: null,
     hasNoPlace: null as null|boolean,
     placeList: new Array<Place>(),
-    selectedPlace: null as null|Place,
-    selectedPeriode: [lastMonth, now],
-    selectedEnergie: null as null|FeedDataType,
-    selectedMeteoData: null as null|FeedDataType,
-    selectedGranularite: getGranularite(GranulariteType.Jour),
+    selection: {
+      place: null,
+      periode: [lastMonth, now],
+      periode2: [beforelastMonth, lastMonth],
+      energie: null,
+      meteoData: null,
+      granularite: granulariteList[0],
+    },
   } as State,
   getters: {
     onlyOnePlace: (state) => state.placeList.length <= 1,
@@ -33,31 +44,16 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     isAdmin: (state) => state?.utilisateur?.roles.includes('ADMIN') ?? false,
     isDemoMode: (state) => state.configuration ? state.configuration.isDemoMode : true,
     feedDataTypeEnergieList (state) {
-      let ret = new Array<FeedDataType>()
-
-      if (state.selectedPlace && state.selectedPlace.feedList) {
-        for(const feed of state.selectedPlace.feedList) {
-          for(const feedData of feed.feedDataList)
-          if (isFeedDataEnergie(feedData)) {
-            ret.push(getFeedDataType(feedData.type))
-          }
-        }
-
-        if (ret.length > 1) {
-          ret.push(getFeedDataType(DataType.ConsoEnergie))
-        }
-      }
-
-      return ret
+      return getFeedDataTypeEnergieList(state)
     },
     selectedEnergieFeedDataId: (state) => {
-      if (!(state.selectedPlace && state.selectedEnergie)) {
+      if (!(state.selection.place && state.selection.energie)) {
         return null
       }
 
-      for(const feed of state.selectedPlace.feedList) {
+      for(const feed of state.selection.place.feedList) {
         for(const feedData of feed.feedDataList) {
-          if (state.selectedEnergie.id == feedData.type) {
+          if (state.selection.energie.id == feedData.type) {
             return feedData.id
           }
         }
@@ -66,11 +62,11 @@ export const store = (toastService: ToastServiceMethods) => createStore({
       return null
     },
     selectedMeteoFeedDataId: (state) => {
-      if (!(state.selectedPlace && state.selectedMeteoData)) {
+      if (!(state.selection.place && state.selection.meteoData)) {
         return null
       }
 
-      return selectedMeteoFeedDataId(state, state.selectedMeteoData.id)
+      return selectedMeteoFeedDataId(state, state.selection.meteoData.id)
     },
     selectedTemperatureFeedDataId: state => selectedMeteoFeedDataId(state, DataType.Temperature),
     selectedDjuFeedDataId: state => selectedMeteoFeedDataId(state, DataType.Dju),
@@ -92,29 +88,61 @@ export const store = (toastService: ToastServiceMethods) => createStore({
       }
     },
     [SET_SELECTED_PLACE] (state, place) {
-      state.selectedPlace = place
+      state.selection.place = place
+      // @todo faire ça de manière plus fine !
+      state.selection.periode = [lastMonth, now]
+      state.selection.periode = [beforelastMonth, lastMonth]
+
+      if (place) {
+        const energieList = getFeedDataTypeEnergieList(state)
+        if (energieList.length) {
+          state.selection.energie = energieList[0]
+        }
+      }
     },
     [SET_SELECTED_ENERGIE] (state, feedDataType) {
-      state.selectedEnergie = feedDataType
+      state.selection.energie = feedDataType
     },
     [SET_SELECTED_METEO_DATA] (state, feedDataType) {
-      state.selectedMeteoData = feedDataType
+      state.selection.meteoData = feedDataType
     },
     [SET_SELECTED_GRANULARITE] (state, granularite) {
-      state.selectedGranularite = granularite
+      state.selection.granularite = granularite
     },
     [SET_SELECTED_PERIODE] (state, periode) {
-      state.selectedPeriode = periode
+      state.selection.periode = periode
     },
   },
   actions: {
-    [INIT_CONFIGURATION] ({commit}) {
-      queryConfiguration().then(data => {
+    [INIT_CONFIGURATION] ({commit, dispatch}) {
+      queryConfiguration()
+      .then(data => {
         commit(SET_CONFIGURATION, data)
       })
-      queryUser().then(data => {
+      .then(() => queryUser())
+      .then(data => {
         commit(SET_USER, data)
       })
+      .then(() => queryPlaces())
+      .then(placeList => {
+        commit(SET_PLACE_LIST, placeList)
+
+        // On sélectionne une place
+        if (!this.state.selection.place) {
+          commit(SET_SELECTED_PLACE, placeList[0] ?? null)
+        }
+
+        // On présélectionne les DJU
+        if (!this.state.selection.meteoData) {
+          commit(SET_SELECTED_METEO_DATA, getFeedDataType(DataType.Dju))
+        }
+      })
+      .then(() => {
+        this.state.initialized = true
+      })
+
+      // Les notifications ne sont pas essentielles,
+      // ça peut être fait en asynchrone
       queryNotifications().then( (data) => {
         for(const notification of data) {
           if (notification.level === 'danger') {
@@ -132,38 +160,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
           })
         }
       })
-    },
-    [INIT_PLACE_LIST] ({commit, dispatch, getters, state}) {
-      queryPlaces().then(placeList => {
-        commit(SET_PLACE_LIST, placeList)
 
-        // On sélectionne une place
-        if (!state.selectedPlace) {
-          dispatch(UPDATE_SELECTED_PLACE, state.placeList[0] ?? null)
-        }
-
-        // On présélectionne les DJU
-        commit(SET_SELECTED_METEO_DATA, getFeedDataType(DataType.Dju))
-      })
-    },
-    [UPDATE_SELECTED_PLACE] ({commit, dispatch, getters, state}, place) {
-      commit(SET_SELECTED_PLACE, place)
-
-      if (place) {
-        let energie = getFeedDataType(getters.feedDataTypeEnergieList[0].id)
-        // let energie = undefined;
-        // switch (getters.feedDataTypeEnergieList.length) {
-        //   case 0:
-        //     energie = null
-        //     break
-        //   case 1:
-        //     energie = getFeedDataType(getters.feedDataTypeEnergieList[0].id)
-        //     break
-        //   default:
-        //     energie = getFeedDataType(DataType.ConsoEnergie)
-        // }
-        commit(SET_SELECTED_ENERGIE, energie)
-      }
     },
     [USER_UPDATE_PASSWORD] ({}, data) {
       postUserPassword(data.oldPassword, data.newPassword, data.newPassword2)
@@ -216,7 +213,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     [PLACE_EDIT_NOM] ({dispatch, commit}, data) {
       postPlaceName(data.placeId, data.newName).then(() => {
         queryUser().then(data => {
-          dispatch(INIT_PLACE_LIST)
+          dispatch(INIT_CONFIGURATION)
           commit(SET_USER, data)
         })
       }).then(() => {
@@ -229,7 +226,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     },
     [PLACE_DELETE] ({dispatch, commit}, data) {
       postPlaceDelete(data.placeId, ).then(() => {
-        dispatch(INIT_PLACE_LIST)
+        dispatch(INIT_CONFIGURATION)
         queryUser().then(data => {
           commit(SET_USER, data)
         })
@@ -258,15 +255,16 @@ export const store = (toastService: ToastServiceMethods) => createStore({
         })
       })
     },
-  }
+  },
+  // plugins: [vuexLocal.plugin],
 })
 
 function selectedMeteoFeedDataId(state: State, dataType: DataType): null|Number {
-  if (!(state.selectedPlace)) {
+  if (!(state.selection.place)) {
     return null
   }
 
-  for(const feed of state.selectedPlace.feedList) {
+  for(const feed of state.selection.place.feedList) {
     for(const feedData of feed.feedDataList) {
       if (dataType == feedData.type) {
         return feedData.id
@@ -275,4 +273,23 @@ function selectedMeteoFeedDataId(state: State, dataType: DataType): null|Number 
   }
 
   return null
+}
+
+function getFeedDataTypeEnergieList (state: State) {
+  let ret = new Array<FeedDataType>()
+
+  if (state.selection.place && state.selection.place.feedList) {
+    for(const feed of state.selection.place.feedList) {
+      for(const feedData of feed.feedDataList)
+      if (isFeedDataEnergie(feedData)) {
+        ret.push(getFeedDataType(feedData.type))
+      }
+    }
+
+    if (ret.length > 1) {
+      ret.push(getFeedDataType(DataType.ConsoEnergie))
+    }
+  }
+
+  return ret
 }

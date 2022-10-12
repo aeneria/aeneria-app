@@ -5,7 +5,7 @@ import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 import ConfirmDialog from 'primevue/confirmdialog';
 import { useConfirm } from "primevue/useconfirm";
-import { INIT_PLACE_LIST, PLACE_DELETE } from '@/store/actions';
+import { INIT_CONFIGURATION, PLACE_DELETE } from '@/store/actions';
 import { required } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { Place } from '@/type/Place';
@@ -77,7 +77,7 @@ export default defineComponent({
         placeId: this.place.id,
       }).then(() => {
         this.confirmService.close();
-        this.$store.dispatch(INIT_PLACE_LIST)
+        this.$store.dispatch(INIT_CONFIGURATION)
       })
     },
   },

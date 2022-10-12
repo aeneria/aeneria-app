@@ -13,7 +13,7 @@
         <template #content>
           <Calendrier
             :id="'calendrier-' + item.type.id"
-            :periode="periode"
+            :rawPeriode="periode"
             :feedDataId="item.feedDataId"
             :feedDataType="item.type"
             :min="0"

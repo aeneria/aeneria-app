@@ -6,6 +6,18 @@
     :breakpoints="{'650px': '100vw'}"
     :modal="true" :closable="false"
   >
+    <p>
+      Il est possible d'importer un fichier de données provenant
+      d'une exportation æneria.
+    </p>
+    <Message severity="error" :closable="false" class="p-mb-4 p-mt-1">
+      Attention, si des données existent pour les dates importées, elle seront écrasées !
+    </Message>
+    <Message severity="warn" :closable="false" class="p-mb-4 p-mt-1">
+      Cette fonctionnalité a été réalisée pour importer des fichiers provenant d'un export
+      de données créé via æneria : si vous essayez d'importer des fichiers provenant d'une
+      autre source, faites-le à vos risques et périls !
+    </Message>
     <div class="">
       <FileUpload
         name="file[]"

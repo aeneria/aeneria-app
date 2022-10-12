@@ -1,5 +1,9 @@
 import { defineComponent } from 'vue';
+import SelectionForm from '../selection/SelectionForm';
 
 export default defineComponent({
-  name: 'DashboardComparaison'
+  name: 'DashboardComparaison',
+  components: {
+    SelectionForm,
+  },
 });

@@ -1,9 +1,9 @@
-import { UPDATE_SELECTED_PLACE } from '@/store/actions';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { defineComponent } from 'vue';
 import { mapGetters, mapState } from 'vuex';
 import { Place } from '@/type/Place';
+import { SET_SELECTED_PLACE } from '@/store/mutations';
 
 export default defineComponent({
   name: 'PlaceSelect',
@@ -17,10 +17,10 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState([
-      'placeList',
-      'selectedPlace',
-    ]),
+    place() { return this.$store.state.selection.place },
+    ...mapState({
+      placeList: 'placeList',
+    }),
     ...mapGetters([
       'onlyOnePlace'
     ]),
@@ -30,7 +30,7 @@ export default defineComponent({
       this.displayDialog = true;
     },
     setSelectedPlace (place: Place) {
-      this.$store.dispatch(UPDATE_SELECTED_PLACE, place)
+      this.$store.commit(SET_SELECTED_PLACE, place)
       this.displayDialog = false
     }
   }

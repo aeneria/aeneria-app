@@ -168,7 +168,7 @@ export default defineComponent({
         .attr('height', this.barWidth)
         .each((d, i, element) => {
           tippy(element[i] as SVGRectElement, {
-            content: 'Le ' + weekDayList[d.groupBy].toLowerCase() + '</br> ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
+            content: 'Le ' + weekDayList[d.groupBy].toLowerCase() + '</br>en moyenne, ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
             allowHTML: true,
             placement: 'right',
           })
