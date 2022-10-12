@@ -6,6 +6,7 @@ use App\Entity\Feed;
 use App\Entity\PendingAction;
 use App\Entity\Place;
 use App\Entity\User;
+use App\Model\FetchingError;
 use App\Repository\FeedRepository;
 use App\Repository\PendingActionRepository;
 use App\Repository\PlaceRepository;
@@ -223,7 +224,7 @@ class PendingActionService
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'end' ou celui-ci est mal formé.");
         }
 
-        if (!$force = $action->getSingleParam('force')) {
+        if (null === ($force = $action->getSingleParam('force'))) {
             $this->logger->error("Pending Action - Missing parameter 'force', delete action", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'force'");
@@ -240,7 +241,7 @@ class PendingActionService
         } catch (\Exception $e) {
             $this->logger->error("Pending Action - Error while processing action", ['user' => $action->getUser()->getId(), 'action' => $action->getId(), 'message' => $e->getMessage()]);
 
-            $this->notificationService->handleFetchDataNotification($action->getUser(), $feed, [$e->getMessage()]);
+            $this->notificationService->handleFetchDataNotification($action->getUser(), $feed, [new FetchingError($feed, $start, $e)]);
         } finally {
             $this->logger->info("Pending Action - Fetch data action processed, delete it", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);

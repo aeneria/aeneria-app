@@ -1,6 +1,4 @@
-export const INIT_PLACE_LIST = 'initPlaceList'
 export const INIT_CONFIGURATION = 'initConfiguration'
-export const UPDATE_SELECTED_PLACE = 'updateSelectedPlace'
 export const USER_UPDATE_PASSWORD = 'userUpdatePassowrd'
 export const USER_UPDATE_EMAIL = 'userUpdateEmail'
 export const USER_DELETE_ACCOUNT = 'userDeleteAccount'

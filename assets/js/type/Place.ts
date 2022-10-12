@@ -5,6 +5,8 @@ export interface Place {
   name: string
   icon: string
   feedList: Feed[]
+  periodeMin: Date|null
+  periodeMax: Date|null
 }
 
 export function findFeedByType(place: Place, type: FeedType): Feed|null

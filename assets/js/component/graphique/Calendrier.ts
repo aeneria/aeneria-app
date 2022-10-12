@@ -22,8 +22,8 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    periode: {
-      type: Array as unknown as PropType<[Date, Date]>,
+    rawPeriode: {
+      type: Array as unknown as PropType<[Date|null, Date|null]>,
       required: true,
     },
     feedDataId: {
@@ -89,6 +89,12 @@ export default defineComponent({
     minValeur(): number {
       return d3.min(d3.map(this.data, d => d.value)) ?? 0
     },
+    periode(): [Date, Date] {
+      return [
+        this.rawPeriode[0] ?? new Date(),
+        this.rawPeriode[1] ?? new Date(),
+      ]
+    }
   },
   mounted() {
     this.refresh()
@@ -106,16 +112,17 @@ export default defineComponent({
       this.error = false
       this.loading = true
 
-      if (!this.feedDataId) {
+      if (!this.feedDataId || !this.rawPeriode[0] || !this.rawPeriode[1]) {
         this.error = true
         this.loading = false
         return
       }
+
       queryDataPoint(
         this.feedDataId,
         Frequence.Day,
-        this.periode[0],
-        this.periode[1]
+        this.rawPeriode[0],
+        this.rawPeriode[1]
       ).then((data) => {
         this.data = d3.sort(data, d => d.date)
         this.loading = false

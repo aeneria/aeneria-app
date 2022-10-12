@@ -4,8 +4,19 @@ import { Notification } from "@/type/Notification";
 import { Utilisateur } from "@/type/Utilisateur";
 import { postData, queryData } from "@/utils";
 
-export function queryPlaces(): Promise<Place[]> {
-  return queryData(`/api/config/places`).then(data => Object.values(data))
+export function queryPlaces(): Promise<Array<Place>> {
+  return queryData(`/api/config/places`).then(data => {
+    // return Object.values(data)
+    if (!data) {
+      return null
+    }
+    return JSON.parse(data, (key, value) => {
+      if (['periodeMin', 'periodeMax'].includes(key)) {
+        return value ? new Date(value.date) : null
+      }
+      return value
+    })
+  })
 }
 
 export function queryNotifications(): Promise<Notification[]> {

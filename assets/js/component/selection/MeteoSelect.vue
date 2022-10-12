@@ -1,6 +1,6 @@
 <template>
   <Dropdown
-    :modelValue="selectedMeteoData"
+    :modelValue="meteoData"
     :options="feedDataTypeMeteoList"
     optionLabel="label"
     @change="setSelectedMeteoData"

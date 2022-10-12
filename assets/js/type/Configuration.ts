@@ -1,4 +1,3 @@
-
 export interface Configuration {
   userMaxPlaces: number,
   userCanSharePlace: boolean,

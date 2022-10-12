@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Admin from './component/admin/Admin';
 import Analyse from './component/dashboard/Analyse';
 import About from './component/misc/APropos';
+import Aide from './component/aide/Aide';
 import Comparaison from './component/dashboard/Comparaison';
 import Energie from './component/dashboard/Energie';
 import Home from './component/dashboard/Home';
@@ -27,6 +28,7 @@ export const router = (basePath: string) => createRouter({
     { name: 'callback-grdf', path: basePath + '/mon-compte/callback/grdf/:placeId', component: CallbackGrdf },
     { name: 'admin', path: basePath + '/admin', component: Admin },
     { name: 'about', path: basePath + '/a-propos', component: About },
+    { name: 'aide', path: basePath + '/aide', component: Aide },
     { name: 'not-found', path: basePath + '/:pathMatch(.*)*', component: NotFound },
   ],
 

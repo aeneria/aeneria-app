@@ -65,7 +65,6 @@ if (rootContainer) {
     .use(ToastService)
     .directive('tooltip', Tooltip)
 
-
   app.use(store(app.config.globalProperties.$toast))
 
   app.mount(rootContainer)

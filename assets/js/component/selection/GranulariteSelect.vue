@@ -1,6 +1,6 @@
 <template>
   <SelectButton
-    :modelValue="selectedGranularite"
+    :modelValue="granularite"
     :options="granulariteList"
     optionLabel="label"
     @change="setSelectedGranularite"

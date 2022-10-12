@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Place;
+use App\Repository\DataValueRepository;
 use App\Repository\UserRepository;
 use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ApiConfigController extends AbstractAppController
@@ -116,11 +117,25 @@ class ApiConfigController extends AbstractAppController
     /**
      * Obtenir les places authorisées pour l'utilisateur courant.
      */
-    public function getPlaces(): JsonResponse
+    public function getPlaces(DataValueRepository $dataValueRepository): JsonResponse
     {
-        $result = $this->placeRepository->getAllowedPlaces($this->getUser());
+        $ret = [];
 
-        return new JsonResponse($result, 200);
+        if ($result = $this->placeRepository->getAllowedPlaces($this->getUser())) {
+            foreach($result as $place) {
+                \assert($place instanceof Place);
+
+                if ($periode = $dataValueRepository->getPeriodDataAmplitude($place)) {
+                    $place->setPeriodeAmplitude(
+                        new \DateTimeImmutable($periode[1]) ?? null,
+                        new \DateTimeImmutable($periode[2]) ?? null
+                    );
+                }
+                $ret[] = $place;
+            }
+        }
+
+        return new JsonResponse(\json_encode($ret), 200);
     }
 
     /**

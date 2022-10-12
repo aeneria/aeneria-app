@@ -4,7 +4,10 @@
     <div class="p-col-12 p-md-4 p-lg-3">
       <Card class="card-papillon">
         <template #title>
-          Analyse temporelle
+          <div class="p-d-flex p-jc-between">
+            <div>Analyse temporelle</div>
+            <AidePapillon/>
+          </div>
         </template>
         <template #content>
           <Papillon
@@ -22,7 +25,10 @@
     <div class="p-col-12 p-md-8 p-lg-9">
       <Card class="card-analse-croisee">
         <template #title>
-          Analyse croisée
+          <div class="p-d-flex p-jc-between">
+            <div>Analyse croisée</div>
+            <AideAnalyseCroisee/>
+          </div>
         </template>
         <template #content>
           <NuagePoint

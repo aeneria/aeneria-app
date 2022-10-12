@@ -1,7 +1,7 @@
 <template>
   <Dropdown
     v-if="!onlyOneEnergie"
-    :modelValue="selectedEnergie"
+    :modelValue="energie"
     :options="feedDataTypeEnergieList"
     optionLabel="label"
     @change="setSelectedEnergie"
