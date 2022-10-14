@@ -34,6 +34,37 @@ export default defineComponent({
   mounted() {
     this.$store.dispatch(INIT_CONFIGURATION)
   },
+  data() {
+    return {
+      sideBarLinks: {
+        'home' : {
+          to: "/app/",
+          icon: "fa-solid fa-house",
+          titre:"Accueil",
+        },
+        'energie' : {
+          to: "/app/energie",
+          icon: "fa-solid fa-bolt-lightning",
+          titre:"La consommation d'énergie en détail",
+        },
+        'meteo' : {
+          to: "/app/meteo",
+          icon: "fa-solid fa-cloud-sun-rain",
+          titre:"La météo sous tous les angles",
+        },
+        'analyse' : {
+          to: "/app/analyse",
+          icon: "fa-solid fa-magnifying-glass-chart",
+          titre:"Analyse croisée énergie/météo",
+        },
+        'comparaison' : {
+          to: "/app/comparaison",
+          icon: "fa-solid fa-scale-balanced",
+          titre:"Comparaison de 2 périodes",
+        },
+      }
+    }
+  },
   computed: {
     ...mapState([
       'initialized',
@@ -56,6 +87,14 @@ export default defineComponent({
         })
       }
 
+      if (this.isAdmin) {
+        menuMonCompteItems.push({
+          label: 'Administration',
+          icon: 'pi pi-shield',
+          to: '/app/admin',
+        })
+      }
+
       menuMonCompteItems.push(
         {
             label: 'À Propos',
@@ -68,14 +107,6 @@ export default defineComponent({
             to: '/app/aide',
         }
       )
-
-      if (this.isAdmin) {
-        menuMonCompteItems.push({
-          label: 'Administration',
-          icon: 'pi pi-shield',
-          to: '/app/admin',
-        })
-      }
 
       menuMonCompteItems.push({
           label: 'Déconnexion',

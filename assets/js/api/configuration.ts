@@ -51,7 +51,7 @@ export function postUserEmail(newEmail: string): Promise<any> {
   )
 }
 
-export function postUserDelete(password: string, yesIamSure: boolean): void {
+export function postDeleteAccount(password: string, yesIamSure: boolean): void {
   const form = document.createElement('form')
   form.method = 'POST'
   form.action = '/delete-account'

@@ -20,8 +20,14 @@ class ApiDataController extends AbstractAppController
     /** @var DataValueRepository */
     private $dataValueRepository;
 
-    public function __construct(bool $userCanSharePlace, bool $placeCanBePublic, PlaceRepository $placeRepository, bool $isDemoMode, FeedDataRepository $feedDataRepository, DataValueRepository $dataValueRepository)
-    {
+    public function __construct(
+        bool $userCanSharePlace,
+        bool $placeCanBePublic,
+        bool $isDemoMode,
+        PlaceRepository $placeRepository,
+        FeedDataRepository $feedDataRepository,
+        DataValueRepository $dataValueRepository
+    ) {
         parent::__construct($userCanSharePlace, $placeCanBePublic, $isDemoMode, $placeRepository);
 
         $this->feedDataRepository = $feedDataRepository;

@@ -6,6 +6,7 @@ use App\Entity\Place;
 use App\Entity\User;
 use App\Repository\PlaceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -64,5 +65,15 @@ abstract class AbstractAppController extends AbstractController
         }
 
         return $user;
+    }
+
+    final protected function dataValidationErrorResponse(string $dataKey, string $message): JsonResponse
+    {
+        return new JsonResponse(\json_encode([
+            'error' => [
+                'dataKey' => $dataKey,
+                'message' => $message
+            ]
+        ]), 400);
     }
 }

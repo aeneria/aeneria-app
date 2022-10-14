@@ -36,7 +36,7 @@ function _urlHandleValue(name: string, value: any): {name: string, value: string
   return [{ name: name, value: queryKeyValue }]
 }
 
-export function url(path: string, query: null|any[]) {
+export function url(path: string, query: null|any) {
     let baseUri = getBaseUrl()
     if (!baseUri.endsWith('/') && !path.startsWith('/')) {
         baseUri += '/'
@@ -82,7 +82,7 @@ export function handleFetchError(response: Response) {
   }
 }
 
-export function queryData(route: string, query: null|any[] = null) {
+export function queryData(route: string, query: null|any = null) {
   return fetch(url(route, query), {
     method: 'GET',
     mode: 'cors',

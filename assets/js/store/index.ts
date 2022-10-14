@@ -1,4 +1,4 @@
-import { postUserDelete, postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
+import { postDeleteAccount, postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
 import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
 import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
@@ -41,7 +41,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
   getters: {
     onlyOnePlace: (state) => state.placeList.length <= 1,
     onlyOneEnergie: (state, getters) => getters.feedDataTypeEnergieList?.length <= 1,
-    isAdmin: (state) => state?.utilisateur?.roles.includes('ADMIN') ?? false,
+    isAdmin: (state) => state?.utilisateur?.roles.includes('ROLE_ADMIN') ?? false,
     isDemoMode: (state) => state.configuration ? state.configuration.isDemoMode : true,
     feedDataTypeEnergieList (state) {
       return getFeedDataTypeEnergieList(state)
@@ -183,7 +183,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
       })
     },
     [USER_DELETE_ACCOUNT] ({}, data) {
-      postUserDelete(data.password, data.yesIamSure)
+      postDeleteAccount(data.password, data.yesIamSure)
     },
     [PLACE_CREATE] ({}, data) {
       postPlaceCreate(data.name, data.meteo.key).then((place) => {

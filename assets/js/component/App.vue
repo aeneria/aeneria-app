@@ -48,29 +48,11 @@
     <div class="p-grid">
       <div id="side-menu" class="p-col-fixed p-d-flex p-flex-column p-pt-3">
         <SidebarLink
-          to="/app/"
-          icon="fa-solid fa-house"
-          titre="Accueil"
-        />
-        <SidebarLink
-          to="/app/energie"
-          icon="fa-solid fa-bolt"
-          titre="La consommation d'énergie en détail"
-        />
-        <SidebarLink
-          to="/app/meteo"
-          icon="fa-solid fa-cloud-sun-rain"
-          titre="La météo sous tous les angles"
-        />
-        <SidebarLink
-          to="/app/analyse"
-          icon="fa-solid fa-magnifying-glass-chart"
-          titre="Analyse croisée énergie/météo"
-        />
-        <SidebarLink
-          to="/app/comparaison"
-          icon="fa-solid fa-scale-balanced"
-          titre="Comparaison de 2 périodes"
+          v-for="item in sideBarLinks"
+          :key="item.to"
+          :to="item.to"
+          :icon="item.icon"
+          :titre="item.titre"
         />
       </div>
       <div id="main-content" class="p-col">
