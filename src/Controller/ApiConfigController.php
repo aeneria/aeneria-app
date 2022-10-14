@@ -17,7 +17,8 @@ class ApiConfigController extends AbstractAppController
     /**
      * Obtenir la configuration globale de l'application.
      */
-    public function getConfiguration(ContainerBagInterface $parameters): JsonResponse {
+    public function getConfiguration(ContainerBagInterface $parameters): JsonResponse
+    {
         return new JsonResponse([
             'userMaxPlaces' => $parameters->get('aeneria.user.max_places'),
             'userCanSharePlace' => $parameters->get('aeneria.user.can_share_place'),
@@ -34,7 +35,8 @@ class ApiConfigController extends AbstractAppController
     /**
      * Obtenir des informations sur l'utilisateur courant.
      */
-    public function getUserData(): JsonResponse {
+    public function getUserData(): JsonResponse
+    {
         return new JsonResponse($this->getUser()->jsonSerialize(), 200);
     }
 
@@ -47,16 +49,15 @@ class ApiConfigController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->oldPassword || !$passwordEncoder->isPasswordValid($user, $data->oldPassword)) {
-            return new JsonResponse("Le mot de passe renseigné ne correspond pas au mot de passe actuelle.", 403);
+            return $this->dataValidationErrorResponse('oldPassword', "Le mot de passe renseigné ne correspond pas au mot de passe actuelle.");
         }
         if (!$data->newPassword) {
-            return new JsonResponse("Vous devez fournir un nouveau mot de passe 'newPassword'.", 412);
+            return $this->dataValidationErrorResponse('newPassword', "Vous devez fournir un nouveau mot de passe 'newPassword'.");
         }
 
         if ($data->newPassword !== $data->newPassword2) {
-            return new JsonResponse("Les 2 mots de passe ne sont pas identiques.", 412);
+            return $this->dataValidationErrorResponse('newPassword2', "Les 2 mots de passe ne sont pas identiques.");
         }
-
 
         $user->setPassword($passwordEncoder->encodePassword($user, $data->newPassword));
 
@@ -72,7 +73,7 @@ class ApiConfigController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->newEmail) {
-            return new JsonResponse("Vous devez fournir un nouveau email.", 412);
+            return $this->dataValidationErrorResponse('newEmail', "Vous devez fournir un nouveau email.");
         }
 
         $user->setUsername($data->newEmail);
@@ -94,17 +95,17 @@ class ApiConfigController extends AbstractAppController
 
         // Vérifier le mot de passe
         if (!$data['password'] || !$passwordEncoder->isPasswordValid($user, $data['password'])) {
-            return new JsonResponse("Mot de passe invalide.", 403);
+            return $this->dataValidationErrorResponse('password', "Mot de passe invalide.");
         }
 
         if (!$data['yes-i-am-sure']) {
-            throw new \DomainException("La case de sécurité n'a pas été fournit.");
+            return $this->dataValidationErrorResponse('yes-i-am-sure', "La case de sécurité n'a pas été fournit.");
         }
 
         // Vérifier qu'il y aura toujours un admin après la suppression
         $username = $user->getUsername();
         if ($this->userRepository->isLastAdmin($username)) {
-            throw new \DomainException("Vous ne pouvez pas supprimer votre compte, vous êtes le seul administrateur !");
+            return $this->dataValidationErrorResponse('none', "Vous ne pouvez pas supprimer votre compte, vous êtes le seul administrateur !");
         }
 
         $userRepository->purge($user);

@@ -4,8 +4,7 @@
     <template v-slot="slotProps">
       <Button
         :icon="icon"
-        :class="'p-button-lg p-button-rounded p-button-secondary' + (slotProps.isActive ? '' : ' p-button-outlined')"
-        @click="goTo"
+        :class="'p-button-lg p-button-rounded p-button-secondary' + (slotProps.isActive ? '' : ' p-button-text')"
       />
     </template>
   </router-link>

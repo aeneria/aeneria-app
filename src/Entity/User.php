@@ -35,7 +35,7 @@ class User implements UserInterface, Serializable, JsonSerializable
     private $password;
 
     /** @var Place[] */
-    private $places;
+    private $places = [];
 
     /** @var Place[] */
     private $sharedPlaces;
@@ -136,7 +136,7 @@ class User implements UserInterface, Serializable, JsonSerializable
         // $this->plainPassword = null;
     }
 
-    public function getPlaces(): ?iterable
+    public function getPlaces(): iterable
     {
         return $this->places;
     }
@@ -249,7 +249,9 @@ class User implements UserInterface, Serializable, JsonSerializable
 
     public function jsonSerialize()
     {
-        $places = \iterator_to_array($this->getPlaces());
+        if (!\is_array($places = $this->getPlaces())) {
+            $places = \iterator_to_array($places);
+        }
 
         return [
             'id' => $this->id,

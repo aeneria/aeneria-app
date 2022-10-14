@@ -73,10 +73,10 @@ class ApiFeedController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->meteo) {
-            return new JsonResponse("Vous devez fournir un id de station meteo 'meteo'.", 412);
+            return $this->dataValidationErrorResponse('meteo', "Vous devez fournir un id de station meteo 'meteo'.");
         }
         if(!$station = $meteoFranceDataProvider->findStationByKey((int) $data->meteo)) {
-            return new JsonResponse(\sprintf("La station météo '%s' n'existe pas.", $data->meteo), 412);
+            return $this->dataValidationErrorResponse('meteo', \sprintf("La station météo '%s' n'existe pas.", $data->meteo));
         }
         $meteoFeed = $this->feedRepository->getOrCreateMeteoFranceFeed([
             'STATION_ID' => $station->key,
@@ -132,10 +132,10 @@ class ApiFeedController extends AbstractAppController
         \assert($user instanceof User);
 
         if (!$code = $request->get('code')) {
-            throw new BadRequestHttpException();
+            return $this->dataValidationErrorResponse('code', "Un argument 'code' doit être fourni.");
         }
         if (!$state = $request->get("state")) {
-            throw new BadRequestHttpException();
+            return $this->dataValidationErrorResponse('state', "Un argument 'state' doit être fourni.");
         }
 
         $token = (string) $this->jwtService->decode($state);
@@ -222,10 +222,10 @@ class ApiFeedController extends AbstractAppController
         \assert($user instanceof User);
 
         if (!$code = $request->get('code')) {
-            throw new BadRequestHttpException();
+            return $this->dataValidationErrorResponse('code', "Un argument 'code' doit être fourni.");
         }
         if (!$state = $request->get("state")) {
-            throw new BadRequestHttpException();
+            return $this->dataValidationErrorResponse('state', "Un argument 'state' doit être fourni.");
         }
 
         $token = (string) $this->jwtService->decode($state);

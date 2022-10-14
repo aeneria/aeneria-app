@@ -21,22 +21,6 @@ final class UserRepositoryTest extends AppTestCase
         self::assertSame($user->getId(), $userFromRepo->getId());
     }
 
-    public function testUserList()
-    {
-        $entityManager = $this->getEntityManager();
-        $userRepository = $this->getUserRepository();
-
-        $user = $this->createPersistedUser([
-            'username' => $username = 'toto' . \rand(),
-        ]);
-        $entityManager->flush();
-        $entityManager->clear();
-
-        $userList = $userRepository->getUsersList();
-
-        self::assertSame($userList[$username], $user->getId());
-    }
-
     public function testisLastAdmin()
     {
         $entityManager = $this->getEntityManager();

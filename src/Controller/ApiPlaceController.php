@@ -35,13 +35,13 @@ class ApiPlaceController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->name) {
-            return new JsonResponse("Vous devez fournir un nom 'name'.", 412);
+            return $this->dataValidationErrorResponse('name', "Vous devez fournir un nom 'name'.");
         }
         if (!$data->meteo) {
-            return new JsonResponse("Vous devez fournir un id de station meteo 'meteo'.", 412);
+            return $this->dataValidationErrorResponse('meteo', "Vous devez fournir un id de station meteo 'meteo'.");
         }
         if(!$station = $meteoFranceDataProvider->findStationByKey((int) $data->meteo)) {
-            return new JsonResponse(\sprintf("La station météo '%s' n'existe pas.", $data->meteo), 412);
+            return $this->dataValidationErrorResponse('meteo', \sprintf("La station météo '%s' n'existe pas.", $data->meteo));
         }
 
         $place = new Place();
@@ -69,10 +69,10 @@ class ApiPlaceController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->placeId) {
-            return new JsonResponse("Vous devez fournir un id d'adresse 'placeId'.", 412);
+            return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
         if (!$data->newName) {
-            return new JsonResponse("Vous devez fournir un nouveau nom 'newName'.", 412);
+            return $this->dataValidationErrorResponse('newName', "Vous devez fournir un nouveau nom 'newName'.");
         }
 
         $place = $this->checkPlace($data->placeId);
@@ -89,7 +89,7 @@ class ApiPlaceController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->placeId) {
-            return new JsonResponse("Vous devez fournir un id d'adresse 'placeId'.", 412);
+            return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
 
         $place = $this->checkPlace($data->placeId);
@@ -110,7 +110,7 @@ class ApiPlaceController extends AbstractAppController
         $data = $request->request->all();
 
         if (!\array_key_exists('placeId', $data)) {
-            return new JsonResponse("Vous devez fournir un id d'adresse 'placeId'.", 412);
+            return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
 
         $startDate = \array_key_exists('start', $data) && $data['start'] ? \DateTimeImmutable::createFromFormat('!d/m/Y', $data['start']) : null;
@@ -138,10 +138,10 @@ class ApiPlaceController extends AbstractAppController
         }
 
         if (!$request->request->has('placeId')) {
-            return new JsonResponse("Vous devez fournir un id d'adresse 'placeId'.", 412);
+            return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
         if (!$request->files->has('file')) {
-            return new JsonResponse("Vous devez fournir un fichier à importer 'file'.", 412);
+            return $this->dataValidationErrorResponse('metfileo', "Vous devez fournir un fichier à importer 'file'.");
         }
 
         $place = $this->checkPlace($request->request->get('placeId'));
@@ -174,25 +174,25 @@ class ApiPlaceController extends AbstractAppController
         $data = \json_decode($request->getContent());
 
         if (!$data->placeId) {
-            return new JsonResponse("Vous devez fournir un id d'adresse 'placeId'.", 412);
+            return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
 
         if (!$data->feedId) {
-            return new JsonResponse("Vous devez fournir un id de flux 'feedId'.", 412);
+            return $this->dataValidationErrorResponse('plfeedIdaceId', "Vous devez fournir un id de flux 'feedId'.");
         }
 
         if (!$data->start || !$startDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data->start)) {
-            return new JsonResponse("Vous devez fournir une date de début 'start' au format `dd/mm/yyyy`.", 412);
+            return $this->dataValidationErrorResponse('start', "Vous devez fournir une date de début 'start' au format `dd/mm/yyyy`.");
         }
 
         if (!$data->end || !$endDate = \DateTimeImmutable::createFromFormat('!d/m/Y', $data->end)) {
-            return new JsonResponse("Vous devez fournir une date de fin 'end' au format `dd/mm/yyyy`.", 412);
+            return $this->dataValidationErrorResponse('end', "Vous devez fournir une date de fin 'end' au format `dd/mm/yyyy`.");
         }
 
         $place = $this->checkPlace($data->placeId);
 
         if (!$feed = $place->findFeed($data->feedId)) {
-            return new JsonResponse("Le flux donné ne correspond pas à l'adresse donnée.", 412);
+            return $this->dataValidationErrorResponse('feedId', "Le flux donné ne correspond pas à l'adresse donnée.");
         }
 
         $pendingActionService->createDataFetchAction(

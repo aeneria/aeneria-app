@@ -13,3 +13,7 @@ place:
 feed:
     resource: "./feed.yaml"
     prefix: /feed
+
+admin:
+    resource: "./admin.yaml"
+    prefix: /admin
