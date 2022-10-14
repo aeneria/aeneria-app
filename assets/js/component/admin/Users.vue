@@ -42,7 +42,7 @@
           <i v-else class="pi false-icon pi-times-circle"></i>
         </template>
       </Column>
-      <Column header="" bodyStyle="min-width: 180px;" headerStyle="min-width: 180px;">
+      <Column header="">
         <template #body="{data}">
           <Button
             :title="data.active ? 'Désactiver' : 'Activer'"
