@@ -3,7 +3,7 @@
     <div class="p-col-12">
         <h1>Administration</h1>
         <div class="p-grid dash-analyse">
-          <div class="p-col-12 p-md-6 p-lg-6">
+          <div class="p-col-12 p-md-8 p-lg-8">
             <Card class="card-admin">
               <template #title>
                 <div class="p-d-flex">
@@ -16,7 +16,7 @@
               </template>
             </Card>
           </div>
-          <div class="p-col-12 p-md-6 p-lg-6">
+          <div class="p-col-12 p-md-4 p-lg-4">
             <Card class="card-admin">
               <template #title>
                 <div class="p-d-flex">
@@ -54,3 +54,9 @@
 </template>
 
 <script lang="ts" src="./Admin.ts"></script>
+
+<style lang="scss">
+.card-admin {
+  height: 100%;
+}
+</style>

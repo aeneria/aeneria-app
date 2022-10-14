@@ -2,7 +2,7 @@
   <p class="select-place p-d-flex p-ai-center">
     <span class="p-pr-2">{{ place?.name }}</span>
     <Button
-      v-if="placeList.length"
+      v-if="placeList.length > 1"
       icon="pi pi-directions"
       title="Sélectionner une autre adresse"
       class="p-button-rounded p-button-secondary p-button-icon"
