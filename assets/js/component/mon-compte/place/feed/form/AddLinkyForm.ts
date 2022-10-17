@@ -4,7 +4,7 @@ import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 import { Place } from '@/type/Place';
-import { queryGrdfConsentUrl } from '@/api/feed';
+import { queryEnedisConsentUrl } from '@/api/feed';
 
 export default defineComponent({
   name: 'AddLinkyForm',
@@ -19,10 +19,6 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    update: {
-      type: Boolean,
-      default: false,
-    },
     place: {
       type: Object as PropType<Place>,
       required: true
@@ -33,7 +29,7 @@ export default defineComponent({
       this.$emit('toggleVisible')
     },
     post(isValid: boolean) {
-      queryGrdfConsentUrl(this.place.id).then(url => {
+      queryEnedisConsentUrl(this.place.id).then(url => {
         location.href = url
       })
     },

@@ -6,7 +6,7 @@ app.home.trailing:
   path: /app/{slug}
   controller: App\Controller\AppController::appAction
   requirements:
-    path: .+
+    slug: .+
 
 api:
   resource: "./api/index.yaml"

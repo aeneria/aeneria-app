@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import Button from 'primevue/button';
 import { findFeedByType, Place } from '@/type/Place';
-import AddGazparForm from './form/AddGazparForm';
+import AddGazparForm from './feed/form/AddGazparForm';
 import Spinner from '../../graphique/Spinner';
 import { mapState } from 'vuex';
 import { Feed as FeedObject, FeedType } from '@/type/Feed';

@@ -29,7 +29,7 @@ export function feedLabelLong(feed: Feed): string {
     case DataProvider.linky :
       return 'Compte Enedis&nbsp;: ' + feed.param['LOGIN']
     case DataProvider.enedisDataConnect :
-      return 'Linky&nbsp;: PDL&nbsp;-&nbsp;'+ feed.param['ADDRESS'].usagePointId
+      return 'Linky&nbsp;: PDL&nbsp;-&nbsp;'+ JSON.parse(feed.param['ADDRESS'])?.usagePointId
     case DataProvider.grdfAdict :
       return 'Gazpar&nbsp;: PCE&nbsp;-&nbsp;'+ feed.param['PCE']
     case DataProvider.meteoFrance :
@@ -51,6 +51,20 @@ export function feedLabelShort(feed: Feed): string {
       return 'Météo France'
     case DataProvider.fake :
       return 'FakeProvider'
+  }
+}
+export function feedTechnicalId(feed: Feed): string {
+  switch(feed.dataProvider) {
+    case DataProvider.linky :
+      return 'N/A'
+    case DataProvider.enedisDataConnect :
+      return JSON.parse(feed.param['ADDRESS'])?.usagePointId
+    case DataProvider.grdfAdict :
+      return feed.param['PCE']
+    case DataProvider.meteoFrance :
+      return 'N/A'+ feed.param['CITY']
+    case DataProvider.fake :
+      return 'N/A'
   }
 }
 

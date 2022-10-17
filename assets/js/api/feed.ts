@@ -20,6 +20,14 @@ export function queryEnedisConsentUrl(placeId: number): Promise<string> {
   return queryData(`api/feed/enedis/consent/${placeId}`, )
 }
 
+export function queryEnedisConsentCheck(placeId: number): Promise<any> {
+  return queryData(`api/feed/enedis/consent/${placeId}/check`, )
+}
+
 export function queryGrdfConsentUrl(placeId: number): Promise<string> {
   return queryData(`api/feed/grdf/consent/${placeId}`, )
+}
+
+export function queryGrdfConsentCheck(placeId: number): Promise<any> {
+  return queryData(`api/feed/grdf/consent/${placeId}/check`, )
 }

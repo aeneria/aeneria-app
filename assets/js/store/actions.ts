@@ -1,7 +1,6 @@
 export const INIT_CONFIGURATION = 'initConfiguration'
 export const USER_UPDATE_PASSWORD = 'userUpdatePassowrd'
 export const USER_UPDATE_EMAIL = 'userUpdateEmail'
-export const USER_DELETE_ACCOUNT = 'userDeleteAccount'
 export const PLACE_CREATE = 'placeCreate'
 export const PLACE_DELETE = 'placeDelete'
 export const PLACE_EDIT_NOM = 'placeEditNom'

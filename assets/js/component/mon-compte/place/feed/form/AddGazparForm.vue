@@ -1,6 +1,6 @@
 <template>
   <Dialog
-    :header="(update ? 'Modifier votre' : 'Associer un') + ' compteur Gazpar de GRDF'"
+    header="Associer un compteur Gazpar de GRDF"
     v-model:visible="visible"
     :style="{width: '650px'}"
     :breakpoints="{'650px': '100vw'}"
@@ -22,7 +22,7 @@
           class="p-button-text p-button-rounded p-button-secondary"
         />
         <Button
-          :label="(update ? 'Modifier votre' : 'Associer un') + ' compteur Gazpar'"
+          label="Associer un compteur Gazpar"
           icon="pi pi-arrow-right"
           @click="post()"
           class="p-button-rounded p-button-secondary"

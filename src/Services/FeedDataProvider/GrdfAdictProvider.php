@@ -4,6 +4,7 @@ namespace App\Services\FeedDataProvider;
 
 use Aeneria\GrdfAdictApi\Exception\GrdfAdictConsentException;
 use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
+use Aeneria\GrdfAdictApi\Model\InfoTechnique;
 use Aeneria\GrdfAdictApi\Model\Token;
 use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
 use App\Entity\DataValue;
@@ -120,6 +121,35 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         }
 
         return $this->accessToken->getAccessToken();
+    }
+
+    /**
+     * Check enedis consent for a feed by trying
+     * to get address informations.
+     */
+    public function consentCheck(Feed $feed): ?InfoTechnique
+    {
+        if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Should be an array of GrdfAdict Feeds overhere !");
+        }
+
+        try {
+            $accessToken = $this->getAccessToken();
+        } catch (GrdfAdictException $e) {
+            return null;
+        }
+
+        try {
+            return $this->grdfAdict
+                ->getContratService()
+                ->requestInfoTechnique(
+                    $accessToken,
+                    $this->getPce($feed)
+                )
+            ;
+        } catch (GrdfAdictException $e) {
+            return null;
+        }
     }
 
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array

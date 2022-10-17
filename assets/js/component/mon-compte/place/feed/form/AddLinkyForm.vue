@@ -1,6 +1,6 @@
 <template>
   <Dialog
-    :header="(update ? 'Modifier votre' : 'Associer un') + ' compteur Linky dEnedis'"
+    header="Associer un compteur Linky d'Enedis"
     v-model:visible="visible"
     :style="{width: '650px'}"
     :breakpoints="{'650px': '100vw'}"
@@ -12,7 +12,6 @@
 
     <p>
       En cliquant sur ce bouton, vous allez accéder à votre compte personnel Enedis où vous pourrez donner votre accord pour qu’Enedis nous transmette vos données.
-
     </p>
     <Message v-if="!update" severity="warn" :closable="false">
       <p>Pour donner votre autorisation, vous devez avoir un compte personnel Enedis.</p>
@@ -33,7 +32,7 @@
           class="p-button-text p-button-rounded p-button-secondary"
         />
         <Button
-          :label="(update ? 'Modifier votre' : 'Associer un') + ' votre compteur Linky'"
+          label="Associer un compteur Linky"
           icon="pi pi-arrow-right"
           @click="post()"
           class="p-button-rounded p-button-secondary"

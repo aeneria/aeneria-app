@@ -15,10 +15,10 @@ export default defineComponent({
   name: 'DeleteForm',
   components: {
     Button,
+    ConfirmDialog,
     Dialog,
     InputText,
     Message,
-    ConfirmDialog
   },
   setup: () => ({
     confirmService: useConfirm(),
@@ -64,6 +64,7 @@ export default defineComponent({
       this.confirmService.require({
         message: 'Êtes-vous sûr·e de vouloir supprimer l\'adresse \'' + this.place.name + '\' ?',
         header: 'Confirmation',
+        group: this.place.id.toString(),
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Je confirme',
         accept: this.post,

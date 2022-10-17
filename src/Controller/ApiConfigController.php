@@ -9,6 +9,7 @@ use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -88,7 +89,7 @@ class ApiConfigController extends AbstractAppController
         Request $request,
         UserRepository $userRepository,
         UserPasswordEncoderInterface $passwordEncoder
-    ): JsonResponse {
+    ): RedirectResponse {
         $user = $this->checkUser();
 
         $data = $request->request->all();
@@ -104,15 +105,13 @@ class ApiConfigController extends AbstractAppController
 
         // Vérifier qu'il y aura toujours un admin après la suppression
         $username = $user->getUsername();
-        if ($this->userRepository->isLastAdmin($username)) {
+        if ($userRepository->isLastAdmin($username)) {
             return $this->dataValidationErrorResponse('none', "Vous ne pouvez pas supprimer votre compte, vous êtes le seul administrateur !");
         }
 
         $userRepository->purge($user);
 
-        $this->addFlash('success', "Votre compte a bien été supprimé. À bientôt.");
-
-        $this->redirectToRoute('security.login');
+        return $this->redirectToRoute('security.login');
     }
 
     /**
