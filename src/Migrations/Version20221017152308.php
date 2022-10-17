@@ -19,7 +19,7 @@ final class Version20221017152308 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        $this->addSql("UPDATE feed set fetch_error = coalesce((param->>'FETCH_ERROR')::INT, 0) from feed;");
+        $this->addSql("UPDATE feed set fetch_error = coalesce((param->>'FETCH_ERROR')::INT, 0);");
     }
 
     public function down(Schema $schema) : void

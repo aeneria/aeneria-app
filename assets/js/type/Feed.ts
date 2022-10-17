@@ -22,6 +22,7 @@ export interface Feed {
   param: any[]
   frequencies: number[]
   feedDataList: FeedData[]
+  fetchError: number
 }
 
 export function feedLabelLong(feed: Feed): string {
