@@ -1,8 +1,8 @@
 import { defineComponent, PropType } from 'vue';
 import Button from 'primevue/button';
 import EditMeteoForm from './form/EditMeteoForm';
-import AddLinkyForm from '../form/AddLinkyForm';
-import AddGazparForm from '../form/AddGazparForm';
+import EditLinkyForm from './form/EditLinkyForm';
+import EditGazparForm from './form/EditGazparForm';
 import { Feed, feedDescription, feedIcon, feedLabelLong, FeedType } from '@/type/Feed';
 import { Place } from '@/type/Place';
 
@@ -11,8 +11,8 @@ export default defineComponent({
   components: {
     Button,
     EditMeteoForm,
-    AddLinkyForm,
-    AddGazparForm,
+    EditLinkyForm,
+    EditGazparForm,
   },
   props: {
     place: {

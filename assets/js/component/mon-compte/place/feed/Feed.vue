@@ -4,7 +4,7 @@
     <span :class="icon + ' p-mr-2 icon'" :title="description"></span>
     <span v-html="label"></span>
     <Button
-      icon="pi pi-pencil"
+      icon="pi pi-wrench"
       title="Modifier"
       class="p-button-xs p-button-rounded p-button-secondary p-button-icon-only p-ml-1"
       @click="toggleForm"
@@ -15,19 +15,21 @@
       v-on:toggleVisible="toggleForm()"
       :place="place"
     />
-    <AddLinkyForm
+    <EditLinkyForm
       v-if="isElectricityFeed"
       :visible="displayForm"
       :update="true"
       v-on:toggleVisible="toggleForm()"
       :place="place"
+      :feed="feed"
     />
-    <AddGazparForm
+    <EditGazparForm
       v-if="isGazFeed"
       :visible="displayForm"
       :update="true"
       v-on:toggleVisible="toggleForm()"
       :place="place"
+      :feed="feed"
     />
   </div>
 </template>

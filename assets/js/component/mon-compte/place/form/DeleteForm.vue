@@ -44,7 +44,9 @@
           />
     </template>
   </Dialog>
-  <ConfirmDialog></ConfirmDialog>
+  <ConfirmDialog
+    :group="place.id.toString()"
+  />
 </template>
 
 <script lang="ts" src="./DeleteForm.ts" />

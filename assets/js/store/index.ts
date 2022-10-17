@@ -1,11 +1,11 @@
-import { postDeleteAccount, postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
+import { postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
 import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
 import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
 import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_CONFIGURATION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_DELETE_ACCOUNT, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
+import { INIT_CONFIGURATION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
 import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
 import { ToastServiceMethods } from "primevue/toastservice";
 import { granulariteList } from '@/type/Granularite'
@@ -181,9 +181,6 @@ export const store = (toastService: ToastServiceMethods) => createStore({
         summary: "Votre modification a été enregistrée.",
         detail: `Votre adresse e-mail est désormais ${data.newEmail}.`
       })
-    },
-    [USER_DELETE_ACCOUNT] ({}, data) {
-      postDeleteAccount(data.password, data.yesIamSure)
     },
     [PLACE_CREATE] ({}, data) {
       postPlaceCreate(data.name, data.meteo.key).then((place) => {

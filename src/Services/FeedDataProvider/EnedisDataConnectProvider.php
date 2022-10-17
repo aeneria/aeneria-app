@@ -110,6 +110,39 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         return $errors;
     }
 
+    /**
+     * Check enedis consent for a feed by trying
+     * to get address informations.
+     */
+    public function consentCheck(Feed $feed): ?Address
+    {
+        if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
+        }
+
+        try {
+            $this->ensureAccessToken($feed);
+        } catch (DataConnectException $e) {
+            return null;
+        }
+
+        if (!$token = $this->getTokenFrom($feed)) {
+            return null;
+        }
+
+        try {
+            return $this->dataConnect
+                ->getCustomersService()
+                ->requestUsagePointAdresse(
+                    $token->getAccessToken(),
+                    $token->getUsagePointsId()
+                )
+            ;
+        } catch (DataConnectException $e) {
+            return null;
+        }
+    }
+
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
         $data = [];

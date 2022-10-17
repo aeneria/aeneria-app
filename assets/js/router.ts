@@ -12,9 +12,10 @@ import NewPlace from './component/mon-compte/place/form/new/NewPlace';
 import CallbackEnedis from './component/mon-compte/place/CallbackEnedis';
 import CallbackGrdf from './component/mon-compte/place/CallbackGrdf';
 import NotFound from './component/misc/NotFound';
+import { Store } from 'vuex';
+import { State } from 'vue';
 
-
-export const router = (basePath: string) => createRouter({
+export const router = (basePath: string, store: Store<State>) => createRouter({
   history: createWebHistory(),
   routes: [
     { name: 'home', path: basePath + '/', component: Home },
@@ -26,10 +27,21 @@ export const router = (basePath: string) => createRouter({
     { name: 'new-place', path: basePath + '/mon-compte/nouvelle-adresse', component: NewPlace },
     { name: 'callback-enedis', path: basePath + '/mon-compte/callback/enedis/:placeId', component: CallbackEnedis },
     { name: 'callback-grdf', path: basePath + '/mon-compte/callback/grdf/:placeId', component: CallbackGrdf },
-    { name: 'admin', path: basePath + '/admin', component: Admin },
+    {
+      name: 'admin',
+      path: basePath + '/admin',
+      component: Admin,
+      beforeEnter: (to, from) => {
+        // reject the navigation
+        if (!store.getters.isAdmin) {
+          return { name: 'not-found' }
+        }
+
+        return true
+      },
+    },
     { name: 'about', path: basePath + '/a-propos', component: About },
     { name: 'aide', path: basePath + '/aide', component: Aide },
     { name: 'not-found', path: basePath + '/:pathMatch(.*)*', component: NotFound },
   ],
-
 })

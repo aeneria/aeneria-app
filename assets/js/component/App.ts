@@ -119,7 +119,7 @@ export default defineComponent({
       return menuMonCompteItems
     },
     displayWelcome(): boolean {
-      return this.hasNoPlace && this.$router.currentRoute.value.name !== 'new-place'
+      return this.hasNoPlace && !['mon-compte', 'new-place'].includes(this.$router.currentRoute?.value?.name?.toString() ?? '')
     }
   },
   methods: {

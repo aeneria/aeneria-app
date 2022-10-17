@@ -4,10 +4,10 @@ import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 import { Place } from '@/type/Place';
-import { queryEnedisConsentUrl } from '@/api/feed';
+import { queryGrdfConsentUrl } from '@/api/feed';
 
 export default defineComponent({
-  name: 'AddLinkyForm',
+  name: 'AddGazparForm',
   components: {
     Button,
     Dialog,
@@ -19,10 +19,6 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    update: {
-      type: Boolean,
-      default: false,
-    },
     place: {
       type: Object as PropType<Place>,
       required: true
@@ -33,7 +29,7 @@ export default defineComponent({
       this.$emit('toggleVisible')
     },
     post(isValid: boolean) {
-      queryEnedisConsentUrl(this.place.id).then(url => {
+      queryGrdfConsentUrl(this.place.id).then(url => {
         location.href = url
       })
     },

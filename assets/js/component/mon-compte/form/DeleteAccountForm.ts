@@ -1,7 +1,6 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { required, sameAs } from "@vuelidate/validators";
-import { USER_DELETE_ACCOUNT } from '@/store/actions';
 import { useVuelidate } from "@vuelidate/core";
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
@@ -10,6 +9,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import Message from 'primevue/message';
 import Password from 'primevue/password';
 import { useConfirm } from 'primevue/useconfirm';
+import { postDeleteAccount } from '@/api/configuration';
 
 export default defineComponent({
   name: 'DeleteAccountForm',
@@ -59,13 +59,15 @@ export default defineComponent({
       this.password = ''
       this.$emit('toggleVisible')
     },
-    confirmation() {
+    confirmation(isValid: boolean) {
       this.submitted = true
-
-      this.closeBasic()
+      if (!isValid) {
+        return
+      }
       this.confirmService.require({
         message: 'Désolé d\'insister, mais cette action étant irreversible : êtes-vous sûr·e de vouloir supprimer votre compte ?',
         header: 'Confirmation',
+        group: this.utilisateur.username,
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Je confirme',
         accept: this.post,
@@ -76,13 +78,7 @@ export default defineComponent({
     },
     post() {
       this.submitted = true
-
-      this.closeBasic()
-      this.$store.dispatch(USER_DELETE_ACCOUNT, {
-        password: this.password,
-        yesIamSure: this.yesIamSure,
-      })
-      this.$emit('toggleVisible')
+      postDeleteAccount(this.password, this.yesIamSure)
     },
   }
 });

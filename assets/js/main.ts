@@ -17,7 +17,6 @@ import Tooltip from 'primevue/tooltip';
 const rootContainer = document.querySelector("#app")
 if (rootContainer) {
   const app = createApp(App)
-    .use(router(rootContainer.getAttribute('data-app-path') ?? '/'))
     .use( ConfirmationServiceMethods)
     .use(PrimeVue, {locale: {
       startsWith: 'Commence par',
@@ -66,6 +65,10 @@ if (rootContainer) {
     .directive('tooltip', Tooltip)
 
   app.use(store(app.config.globalProperties.$toast))
+  app.use(router(
+    rootContainer.getAttribute('data-app-path') ?? '/',
+    app.config.globalProperties.$store
+  ))
 
   app.mount(rootContainer)
 

@@ -10,6 +10,8 @@ use App\Entity\Feed;
 use App\Entity\User;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
+use App\Services\FeedDataProvider\EnedisDataConnectProvider;
+use App\Services\FeedDataProvider\GrdfAdictProvider;
 use App\Services\FeedDataProvider\MeteoFranceDataProvider;
 use App\Services\JwtService;
 use App\Services\PendingActionService;
@@ -17,7 +19,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -97,7 +98,7 @@ class ApiFeedController extends AbstractAppController
     }
 
     public function enedisConsent(
-        string $placeId ,
+        string $placeId,
         DataConnectServiceInterface $dataConnectService
     ): JsonResponse {
         $user = $this->getUser();
@@ -121,6 +122,24 @@ class ApiFeedController extends AbstractAppController
         );
 
         return new JsonResponse($enedisUrl, 200);
+    }
+
+    public function enedisConsentCheck(
+        string $placeId,
+        EnedisDataConnectProvider $enedisDataConnectProvider
+    ): JsonResponse {
+        $place = $this->checkPlace($placeId);
+
+        $enedisFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
+        if (!$enedisFeed or Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $enedisFeed->getFeedDataProviderType()) {
+            return $this->dataValidationErrorResponse('feed', "Aucun compteur Linky n'est associé à cette adresse.");
+        }
+
+        if (!$address = $enedisDataConnectProvider->consentCheck($enedisFeed)) {
+            return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
+        }
+
+        return new JsonResponse(\json_encode($address), 200);
     }
 
     public function enedisConsentCallback(
@@ -158,7 +177,7 @@ class ApiFeedController extends AbstractAppController
         } catch (DataConnectException $e) {
             // Sur une erreur au retour d'enedis data-connect, sur une erreur
             // on renvoit sur une page d'erreur du front
-            return $this->redirectToRoute('app.home.trailing', ['path' => '/app/mon-compte/callback/error/' . $place->getId()]);
+            return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/error/' . $place->getId()]);
         }
 
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
@@ -183,7 +202,7 @@ class ApiFeedController extends AbstractAppController
 
         $this->actionService->delete($pendingAction);
 
-        return $this->redirectToRoute('app.home.trailing', ['path' => '/app/mon-compte/callback/enedis/' . $place->getId()]);
+        return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/enedis/' . $place->getId()]);
     }
 
     public function grdfConsent(
@@ -211,6 +230,24 @@ class ApiFeedController extends AbstractAppController
         );
 
         return new JsonResponse($grdfUrl, 200);
+    }
+
+    public function grdfConsentCheck(
+        string $placeId,
+        GrdfAdictProvider $grdfAdictProvider
+    ): JsonResponse {
+        $place = $this->checkPlace($placeId);
+
+        $grdfFeed = $place->getFeed(Feed::FEED_TYPE_GAZ);
+        if (!$grdfFeed or Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $grdfFeed->getFeedDataProviderType()) {
+            return $this->dataValidationErrorResponse('feed', "Aucun compteur Gazpar n'est associé à cette adresse.");
+        }
+
+        if (!$info = $grdfAdictProvider->consentCheck($grdfFeed)) {
+            return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
+        }
+
+        return new JsonResponse(\json_encode($info), 200);
     }
 
     public function grdfConsentCallback(
@@ -247,7 +284,7 @@ class ApiFeedController extends AbstractAppController
             try {
                 $info = $grdfAdictService
                     ->getContratService()
-                    ->requestContratInfo(
+                    ->requestInfoTechnique(
                         $authorisationToken->getAccessToken(),
                         $consentement->getPce()
                     )
@@ -258,7 +295,7 @@ class ApiFeedController extends AbstractAppController
         } catch (GrdfAdictConsentException $e) {
             // Sur une erreur au retour d'grdf, sur une erreur
             // on renvoit sur une page d'erreur du front
-            return $this->redirectToRoute('app.home.trailing', ['path' => 'mon-compte/callback/error/' . $place->getId()]);
+            return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/error/' . $place->getId()]);
         }
 
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
@@ -269,6 +306,7 @@ class ApiFeedController extends AbstractAppController
         }
 
         $feed->setName($info ? (string) $info : '');
+        $feed->setSingleParam('FETCH_ERROR', 0);
         $feed->setSingleParam('PCE', $consentement->getPce());
         if ($info) {
             $feed->setSingleParam('INFO', $serializer->serialize($info, 'json'));
@@ -284,6 +322,6 @@ class ApiFeedController extends AbstractAppController
 
         $this->actionService->delete($pendingAction);
 
-        return $this->redirectToRoute('app.home.trailing', ['path' => 'mon-compte/callback/grdf/' . $place->getId()]);
+        return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/grdf/' . $place->getId()]);
     }
 }
