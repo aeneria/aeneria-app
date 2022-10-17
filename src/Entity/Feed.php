@@ -31,6 +31,9 @@ class Feed implements \JsonSerializable
     /** @var string */
     private $feedDataProviderType;
 
+    /** @var int */
+    private $fetchError = 0;
+
     /** @var array */
     private $param = [];
 
@@ -158,6 +161,43 @@ class Feed implements \JsonSerializable
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function addFetchError(): self
+    {
+        $this->fetchError = $this->fetchError + 1;
+
+        return $this;
+    }
+
+    public function setFetchError(int $nbErrors): self
+    {
+        $this->fetchError = $nbErrors;
+
+        return $this;
+    }
+
+    public function getFetchError(): int
+    {
+        return $this->fetchError;
+    }
+
+    /**
+     * Est-ce que le feed courant a déjà eu trop de problème lors des dernières
+     * récupérations de données
+     */
+    public function hasToManyFetchError(): bool
+    {
+        $nbFetchErrors = $this->getFetchError();
+
+        return ($nbFetchErrors > 100);
+    }
+
+    public function resetFetchError(): self
+    {
+        $this->fetchError = 0;
+
+        return $this;
     }
 
     public function setParam(array $param): self

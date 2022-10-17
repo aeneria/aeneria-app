@@ -7,6 +7,7 @@
         <field name="name" column="name" type="string" length="150"/>
         <field name="feedType" column="feed_type" type="string" length="150"/>
         <field name="feedDataProviderType" column="feed_data_provider_type" type="string" length="150"/>
+        <field name="fetchError" column="fetch_error" type="integer" default="0"/>
         <field name="param" column="param" type="json"/>
         <one-to-many field="feedDatas" target-entity="App\Entity\FeedData" mapped-by="feed">
             <join-column nullable="false"/>

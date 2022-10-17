@@ -95,7 +95,11 @@ class FetchDataCommand extends Command
                 $this->feedDataProviderFactory->fromFeed($feed)
             );
         } else {
-            $feedDataProviderTypes = [Feed::FEED_DATA_PROVIDER_METEO_FRANCE, Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT];
+            $feedDataProviderTypes = [
+                Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
+                Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT,
+                Feed::FEED_DATA_PROVIDER_GRDF_ADICT,
+            ];
 
             foreach ($feedDataProviderTypes as $feedDataProviderType) {
                 // We fetch all Feeds data.
@@ -131,22 +135,6 @@ class FetchDataCommand extends Command
             $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
 
             $errors = $feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
-        }
-
-        if ($errors) {
-            foreach ($errors as $error) {
-                \assert($error instanceof FetchingError);
-
-                $feed = $error->getFeed();
-
-                if ($place = $feed->getFirstPlace()) {
-                    $this->notificationService->handleFetchDataNotification(
-                        $place->getUser(),
-                        $feed,
-                        [$error]
-                    );
-                }
-            }
         }
     }
 }
