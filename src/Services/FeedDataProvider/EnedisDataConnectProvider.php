@@ -2,7 +2,6 @@
 
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\EnedisDataConnectApi\Exception\DataConnectConsentException;
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
 use Aeneria\EnedisDataConnectApi\Model\Address;
 use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
@@ -28,16 +27,11 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
-    use FetchErrorTrait;
-
     /** @var DataConnectServiceInterface */
     private $dataConnect;
 
     /** @var SerializerInterface */
     private $serializer;
-
-    /** @var NotificationService */
-    private $notificationService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -51,9 +45,15 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     ) {
         $this->dataConnect = $dataConnect;
         $this->serializer = $serializer;
-        $this->notificationService = $notificationService;
 
-        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
+        parent::__construct(
+            $entityManager,
+            $feedRepository,
+            $feedDataRepository,
+            $dataValueRepository,
+            $notificationService,
+            $logger
+        );
     }
 
     /**
@@ -89,7 +89,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
             // while fetching data, we stop asking for data for it.
             // We also display a notification to warn user about this situation.
-            if ($this->hasToManyFetchError($feed)) {
+            if ($feed->hasToManyFetchError()) {
                 $this->notificationService->handleTooManyFetchErrorsNotification($feed);
 
                 continue;
@@ -100,7 +100,10 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
                 if ($data = $this->fetchDataForFeed($date, $feed, $errors)) {
                     $this->persistData($date, $feed, $data);
-                    $this->resetFetchError($feed);
+
+                    $feed->resetFetchError();
+                    $this->entityManager->persist($feed);
+                    $this->entityManager->flush();
 
                     $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
@@ -150,10 +153,6 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         try {
             $this->ensureAccessToken($feed);
         } catch (DataConnectException $e) {
-            $this->logError(
-                $feed,
-                $e instanceof DataConnectConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
-            );
             $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
 
@@ -163,10 +162,6 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         try {
             $data['days'] = $this->getDailyData($date, $feed);
         } catch (DataConnectException $e) {
-            $this->logError(
-                $feed,
-                $e instanceof DataConnectConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
-            );
             $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
         }
@@ -174,10 +169,6 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         try {
             $data['hours'] = $this->getHourlyData($date, $feed);
         } catch (DataConnectException $e) {
-            $this->logError(
-                $feed,
-                $e instanceof DataConnectConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
-            );
             $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
         }

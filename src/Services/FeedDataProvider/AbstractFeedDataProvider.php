@@ -3,9 +3,11 @@
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\Feed;
+use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -29,6 +31,9 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     /** @var DataValueRepository */
     protected $dataValueRepository;
 
+    /** @var NotificationService */
+    private $notificationService;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -37,6 +42,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
+        NotificationService $notificationService,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
@@ -44,6 +50,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
         $this->feedDataRepository = $feedDataRepository;
         $this->dataValueRepository = $dataValueRepository;
 
+        $this->notificationService = $notificationService;
         $this->logger = $logger;
     }
 
@@ -108,7 +115,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
             throw new \Exception(\sprintf("Strategy '%s' is unkown", $this->getFetchStrategy()));
         }
 
-        return $errors;
+        return $this->handleErrors($errors);
     }
 
     /**
@@ -116,7 +123,9 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
      */
     final public function fetchDataFor(\DateTimeImmutable $date, array $feeds, bool $force): array
     {
-        return $this->fetchData($date, $feeds, $force);
+        $errors = $this->fetchData($date, $feeds, $force);
+
+        return $this->handleErrors($errors);
     }
 
     /**
@@ -133,6 +142,31 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
                 $this->fetchDataFor(\DateTimeImmutable::createFromMutable($date), $feeds, $force)
             );
             $date->add(new \DateInterval('P1D'));
+        }
+
+        return $this->handleErrors($errors);
+    }
+
+    /**
+     * @param FetchingError[] $errors
+     */
+    final private function handleErrors(array $errors): array
+    {
+        if ($errors) {
+            foreach ($errors as $error) {
+                $feed = $error->getFeed();
+                $feed->addFetchError();
+                $this->entityManager->persist($feed);
+                $this->entityManager->flush();
+
+                if ($place = $feed->getFirstPlace()) {
+                    $this->notificationService->handleFetchDataNotification(
+                        $place->getUser(),
+                        $feed,
+                        [$error]
+                    );
+                }
+            }
         }
 
         return $errors;
