@@ -9,6 +9,7 @@ use App\Model\StationSynop;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -63,10 +64,18 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
+        NotificationService $notificationService,
         HttpClientInterface $httpClient,
         LoggerInterface $logger
     ) {
-        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
+        parent::__construct(
+            $entityManager,
+            $feedRepository,
+            $feedDataRepository,
+            $dataValueRepository,
+            $notificationService,
+            $logger
+        );
 
         $this->projectDir = $projectDir;
         $this->httpClient = $httpClient;

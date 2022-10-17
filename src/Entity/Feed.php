@@ -349,6 +349,7 @@ class Feed implements \JsonSerializable
                 },
                 $feedDataList
             ),
+            'fetchError' => $this->fetchError
         ];
     }
 }

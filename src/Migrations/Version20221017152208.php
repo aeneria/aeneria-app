@@ -20,7 +20,7 @@ final class Version20221017152208 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE feed ADD fetch_error INT NOT NULL');
+        $this->addSql('ALTER TABLE feed ADD fetch_error INT NOT NULL DEFAULT 0');
     }
 
     public function down(Schema $schema) : void
