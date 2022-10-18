@@ -61,7 +61,7 @@
     <template #footer>
       <div class="p-text-center">
         <Button
-          label="Annuler"
+          label="Fermer"
           icon="pi pi-times"
           @click="closeBasic()"
           class="p-button-text p-button-rounded p-button-secondary"
