@@ -1,7 +1,7 @@
 import { adaptToGranularite, formatWithGranularite } from './d3-helpers';
 import { DataPoint } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
-import { FeedDataType } from '@/type/FeedData';
+import { FeedDataType, getFeedDataTypeColor } from '@/type/FeedData';
 import { Granularite, GranulariteType } from '@/type/Granularite';
 import { queryDataPoint } from '@/api/data';
 import * as d3 from 'd3';
@@ -10,7 +10,7 @@ import Spinner from './Spinner';
 import tippy from 'tippy.js';
 
 export default defineComponent({
-  name: 'Papillon',
+  name: 'DoubleEvolution',
   components: {
     Erreur,
     Spinner,
@@ -20,23 +20,19 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    periode: {
+    periode1: {
       type: Array as unknown as PropType<[Date, Date]>,
       required: true,
     },
-    feedDataId1: {
+    periode2: {
+      type: Array as unknown as PropType<[Date, Date]>,
+      required: true,
+    },
+    feedDataId: {
       type: Number,
       required: true,
     },
-    feedDataType1: {
-      type: Object as PropType<FeedDataType>,
-      required: true,
-    },
-    feedDataId2: {
-      type: Number,
-      required: true,
-    },
-    feedDataType2: {
+    feedDataType: {
       type: Object as PropType<FeedDataType>,
       required: true,
     },
@@ -44,7 +40,7 @@ export default defineComponent({
       type: Object as PropType<Granularite>,
       required: true,
     },
-  } ,
+  },
   data() {
     return {
       data1: new Array<DataPoint>(),
@@ -77,16 +73,30 @@ export default defineComponent({
     height(): number {
       switch (this.granularite.type) {
         case GranulariteType.Jour:
-          return d3.utcDay.count(this.periode[0], this.periode[1]) * 5
-        case GranulariteType.Semaine:
-          return d3.utcWeek.count(this.periode[0], this.periode[1]) * 12
-        case GranulariteType.Mois:
-          return d3.utcMonth.count(this.periode[0], this.periode[1]) * 50
-        case GranulariteType.Annee:
-          return d3.utcYear.count(this.periode[0], this.periode[1]) * 100
-      }
+          return (d3.max([
+            d3.utcDay.count(this.periode1[0], this.periode1[1]),
+            d3.utcDay.count(this.periode2[0], this.periode2[1]),
 
-      return 600
+          ]) ?? 0) * 4
+        case GranulariteType.Semaine:
+          return (d3.max([
+            d3.utcWeek.count(this.periode1[0], this.periode1[1]),
+            d3.utcWeek.count(this.periode2[0], this.periode2[1]),
+
+          ]) ?? 0) * 12
+        case GranulariteType.Mois:
+          return (d3.max([
+            d3.utcMonth.count(this.periode1[0], this.periode1[1]),
+            d3.utcMonth.count(this.periode2[0], this.periode2[1]),
+
+          ]) ?? 0) * 50
+        case GranulariteType.Annee:
+          return (d3.max([
+            d3.utcYear.count(this.periode1[0], this.periode1[1]),
+            d3.utcYear.count(this.periode2[0], this.periode2[1]),
+
+          ]) ?? 0) * 100
+      }
     },
     width(): number {
       return this.totalWidth - this.marginLeft - this.marginRight
@@ -97,18 +107,47 @@ export default defineComponent({
     maxValeur2(): number {
       return d3.max(d3.map(this.data2, d => d.value)) ?? 0
     },
+    nbDate(): number {
+      return d3.max([this.nbDatePeriode1, this.nbDatePeriode2]) ?? 0
+    },
+    nbDatePeriode1(): number {
+      return this.nbDateFor(this.periode1)
+    },
+    nbDatePeriode2(): number {
+      return this.nbDateFor(this.periode2)
+    },
+    resizedPeriode1(): [Date, Date] {
+      if (this.nbDate == this.nbDatePeriode1) {
+        return this.periode1
+      }
+
+      return [
+        this.periode1[0],
+        this.adaptEndDate(this.periode1[0])
+      ]
+    },
+    resizedPeriode2(): [Date, Date] {
+      if (this.nbDate == this.nbDatePeriode2) {
+        return this.periode2
+      }
+
+      return [
+        this.periode2[0],
+        this.adaptEndDate(this.periode2[0])
+      ]
+    },
   },
   mounted() {
     this.refresh()
   },
   watch: {
-    periode() {
+    periode1() {
       this.refresh()
     },
-    feedDataId1() {
+    periode2() {
       this.refresh()
     },
-    feedDataId2() {
+    feedDataId() {
       this.refresh()
     },
     granularite() {
@@ -120,17 +159,17 @@ export default defineComponent({
       this.error = false
       this.loading = true
 
-      if (!this.feedDataId1 && !this.feedDataId2) {
+      if (!this.feedDataId) {
         this.error = true
         this.loading = false
         return
       }
 
       queryDataPoint(
-        this.feedDataId1,
+        this.feedDataId,
         this.granularite.frequence,
-        this.periode[0],
-        this.periode[1]
+        this.periode1[0],
+        this.periode1[1]
       ).then((data) => {
         this.data1 = d3.sort<DataPoint>(
           data,
@@ -138,10 +177,10 @@ export default defineComponent({
         )
       }).then(() => {
         queryDataPoint(
-          this.feedDataId2,
+          this.feedDataId,
           this.granularite.frequence,
-          this.periode[0],
-          this.periode[1]
+          this.periode2[0],
+          this.periode2[1]
         ).then((data) => {
           this.data2 = d3.sort<DataPoint>(
             data,
@@ -180,25 +219,29 @@ export default defineComponent({
         .append('g')
         .attr('transform','translate(0,' + this.marginTop + ')')
 
-      const x = this.appendXaxis(chart)
+      const x1 = this.appendXaxis(chart, 1)
+      const x2 = this.appendXaxis(chart, 2)
       const y1 = this.appendYaxis(chart, 1)
       const y2 = this.appendYaxis(chart, 2)
-      this.appendArea(chart, x, y1, 1)
-      this.appendArea(chart, x, y2, 2)
-      this.appendCourbe(chart, x, y1, 1)
-      this.appendCourbe(chart, x, y2, 2)
-      this.appendBar(chart, x, y1, 1)
-      this.appendBar(chart, x, y2, 2)
-      this.appendEventArea(chart, x, y1, 1)
-      this.appendEventArea(chart, x, y2, 2)
-      this.appendCircle(chart, x, y1, 1)
-      this.appendCircle(chart, x, y2, 2)
+      this.appendArea(chart, x1, y1, 1)
+      this.appendArea(chart, x2, y2, 2)
+      this.appendCourbe(chart, x1, y1, 1)
+      this.appendCourbe(chart, x2, y2, 2)
+      this.appendBar(chart, x1, y1, 1)
+      this.appendBar(chart, x2, y2, 2)
+      this.appendEventArea(chart, x1, y1, 1)
+      this.appendEventArea(chart, x2, y2, 2)
+      this.appendCircle(chart, x1, y1, 1)
+      this.appendCircle(chart, x2, y2, 2)
     },
-    appendXaxis(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>): d3.ScaleTime<number, number, never> {
+    appendXaxis(
+      chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+      dataNb: 1|2,
+    ): d3.ScaleTime<number, number, never> {
       const x = d3.scaleTime()
         .domain([
-          adaptToGranularite(this.granularite, this.periode[0]),
-          adaptToGranularite(this.granularite, this.periode[1]),
+          adaptToGranularite(this.granularite, dataNb == 1 ? this.resizedPeriode1[0] : this.resizedPeriode2[0]),
+          adaptToGranularite(this.granularite, dataNb == 1 ? this.resizedPeriode1[1] : this.resizedPeriode2[1]),
         ])
         .range([0, this.height])
 
@@ -209,14 +252,14 @@ export default defineComponent({
           .attr("x", -30)
           .attr("text-anchor", "end")
           .attr("y", this.marginTop + this.height + 5)
-          .text(this.feedDataType1.unite)
+          .text(this.feedDataType.unite)
           .style('font-size', '1em')
           .style('fill', this.axeColor)
         )
         .call(g => g.append("text")
           .attr("x", 30)
           .attr("y", this.marginTop + this.height + 5)
-          .text(this.feedDataType2.unite)
+          .text(this.feedDataType.unite)
           .style('font-size', '1em')
           .style('fill', this.axeColor)
         )
@@ -273,7 +316,7 @@ export default defineComponent({
         .selectAll('circle')
         .data(this['data' + dataNb] as DataPoint[])
         .join('circle')
-        .attr('fill', this['feedDataType' + dataNb].color)
+        .attr('fill', this.feedDataTypeXColor(dataNb))
         .attr('stroke-width', 1)
         .attr('stroke', 'white')
         .attr('cy', d => x(d.date))
@@ -282,7 +325,7 @@ export default defineComponent({
         .attr('display', 'none')
         .each((d, i, element) => {
           tippy(element[i] as SVGRectElement, {
-            content: formatWithGranularite(this.granularite, d.date) + '</br> ' + d.value.toFixed(this['feedDataType' + dataNb].precision) + ' ' + this['feedDataType' + dataNb].unite,
+            content: formatWithGranularite(this.granularite, d.date) + '</br> ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
             allowHTML: true,
             triggerTarget: Array.from(chart.node()?.querySelectorAll<Element>('[data-point-id="' + d.date.toISOString() + '"]') ?? []),
             placement: dataNb ==1 ? 'top' : 'bottom',
@@ -325,7 +368,7 @@ export default defineComponent({
         .duration(800)
         .ease(d3.easeCubic)
         .attr('x', (d, i) => dataNb == 1 ? y(d.value) : this.width/2)
-        .attr('width', (d, i) => dataNb == 1 ? y(d.value) + this.width/2 : y(d.value) - this.width/2)
+        .attr('width', (d, i) => dataNb == 1 ? y(d.value) + this.width/2 : this.width/2 - y(d.value))
     },
     appendCourbe(
       chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
@@ -335,7 +378,7 @@ export default defineComponent({
     ) {
       chart.append("g")
         .append("path")
-        .attr('stroke', this['feedDataType' + dataNb].color)
+        .attr('stroke', this.feedDataTypeXColor(dataNb))
         .attr('stroke-width', this.barWidth)
         .attr('stroke-linecap', 'round')
         .attr('fill', 'transparent')
@@ -371,7 +414,7 @@ export default defineComponent({
         .append("path")
         .attr('stroke-width', 0)
         .attr('stroke-linecap', 'round')
-        .attr('fill', this['feedDataType' + dataNb].color)
+        .attr('fill', this.feedDataTypeXColor(dataNb))
         .attr('fill-opacity', '0.3')
         .attr('class', 'area-' + dataNb)
         .datum(this['data' + dataNb])
@@ -490,6 +533,41 @@ export default defineComponent({
             .x0(this.width/2)
             .x1(d => y(d.value))
         )
+    },
+    nbDateFor(periode: [Date, Date]): number {
+      switch (this.granularite.type) {
+        case GranulariteType.Jour:
+          return d3.utcDay.count(periode[0], periode[1])
+        case GranulariteType.Semaine:
+          return d3.utcWeek.count(periode[0], periode[1])
+        case GranulariteType.Mois:
+          return d3.utcMonth.count(periode[0], periode[1])
+        case GranulariteType.Annee:
+          return d3.utcYear.count(periode[0], periode[1])
+      }
+    },
+    adaptEndDate(date: Date): Date {
+      const ret = new Date(date)
+
+      switch (this.granularite.type) {
+        case GranulariteType.Jour:
+          ret.setDate(ret.getDate() + this.nbDate)
+          break
+        case GranulariteType.Semaine:
+          ret.setDate(ret.getDate() + (this.nbDate*7))
+          break
+        case GranulariteType.Mois:
+          ret.setMonth(ret.getMonth() + this.nbDate)
+          break
+        case GranulariteType.Annee:
+          ret.setFullYear(ret.getFullYear() + this.nbDate)
+          break
+      }
+
+      return ret
+    },
+    feedDataTypeXColor(color: 1|2): string {
+      return getFeedDataTypeColor(this.feedDataType, color)
     },
   },
 })

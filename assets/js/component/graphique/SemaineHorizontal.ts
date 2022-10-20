@@ -1,14 +1,14 @@
+import { DataDoubleRepartition, weekDayList } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Frequence, RepartitionColonne } from '@/type/Granularite';
+import { hourFormat, weekDayFormat } from './d3-helpers';
 import { queryDoubleRepartition } from '@/api/data';
-import { DataDoubleRepartition, weekDayList } from '@/type/DataValue';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
 import Legende from './Legende';
 import Spinner from './Spinner';
 import tippy from 'tippy.js';
-import { hourFormat, weekDayFormat } from './d3-helpers';
 
 export default defineComponent({
   name: 'SemaineHorizontal',

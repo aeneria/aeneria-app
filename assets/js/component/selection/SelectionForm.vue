@@ -7,12 +7,12 @@
       <div v-if="['analyse', 'comparaison'].includes(type)" class="p-field">
         <MeteoSelect/>
       </div>
-      <div class="p-field">
+
+      <DoublePeriodeSelect v-if="type=='comparaison'"/>
+      <div v-else class="p-field">
         <PeriodeSelect/>
       </div>
-      <div v-if="type=='comparaison'" class="p-field">
-        <Periode2Select/>
-      </div>
+
       <div class="p-field">
         <GranulariteSelect/>
       </div>

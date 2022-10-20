@@ -1,13 +1,13 @@
+import { DataPoint } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
-import { FeedDataType } from '@/type/FeedData';
+import { FeedDataType, getFeedDataTypeColor } from '@/type/FeedData';
+import { formatWithGranularite } from './d3-helpers';
 import { Granularite } from '@/type/Granularite';
 import { queryDataPoint } from '@/api/data';
-import { DataPoint } from '@/type/DataValue';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
 import Spinner from './Spinner';
 import tippy from 'tippy.js';
-import { formatWithGranularite } from './d3-helpers';
 
 export default defineComponent({
   name: 'NuagePoint',
@@ -23,6 +23,10 @@ export default defineComponent({
     periode: {
       type: Array as unknown as PropType<[Date, Date]>,
       required: true,
+    },
+    periode2: {
+      type: Array as unknown as PropType<[Date, Date]>,
+      required: false,
     },
     feedDataIdX: {
       type: Number,
@@ -49,6 +53,9 @@ export default defineComponent({
     return {
       dataX: new Array<DataPoint>(),
       dataY: new Array<DataPoint>(),
+
+      dataX2: new Array<DataPoint>(),
+      dataY2: new Array<DataPoint>(),
 
       barWidth: 8,
       axeColor: '#6d6d6d',
@@ -80,10 +87,16 @@ export default defineComponent({
       return this.totalWidth - this.marginLeft - this.marginRight
     },
     maxValeurX(): number {
-      return d3.max(d3.map(this.dataX, d => d.value)) ?? 0
+      return d3.max([
+        d3.max(d3.map(this.dataX, d => d.value)) ?? 0,
+        d3.max(d3.map(this.dataX2, d => d.value)) ?? 0,
+      ]) ?? 0
     },
     maxValeurY(): number {
-      return d3.max(d3.map(this.dataY, d => d.value)) ?? 0
+      return d3.max([
+        d3.max(d3.map(this.dataY, d => d.value)) ?? 0,
+        d3.max(d3.map(this.dataY2, d => d.value)) ?? 0,
+      ]) ?? 0
     },
   },
   mounted() {
@@ -91,6 +104,9 @@ export default defineComponent({
   },
   watch: {
     periode() {
+      this.refresh()
+    },
+    periode2() {
       this.refresh()
     },
     feedDataIdX() {
@@ -119,26 +135,62 @@ export default defineComponent({
         this.granularite.frequence,
         this.periode[0],
         this.periode[1]
-      ).then((data) => {
+      )
+      .then((data) => {
         this.dataX = d3.sort<DataPoint>(
           data,
           d => d.date
         )
-      }).then(() => {
+      })
+      .then(() => {
         queryDataPoint(
           this.feedDataIdY,
           this.granularite.frequence,
           this.periode[0],
           this.periode[1]
-        ).then((data) => {
+        )
+        .then((data) => {
           this.dataY = d3.sort<DataPoint>(
             data,
             d => d.date
           )
-
-          this.loading = false
-          this.rebuildGraph()
         })
+      })
+      .then(() => {
+        if (this.periode2) {
+          queryDataPoint(
+            this.feedDataIdX,
+            this.granularite.frequence,
+            this.periode2[0],
+            this.periode2[1]
+          )
+          .then((data) => {
+            this.dataX2 = d3.sort<DataPoint>(
+              data,
+              d => d.date
+            )
+          })
+        }
+      })
+      .then(() => {
+        if (this.periode2) {
+          queryDataPoint(
+            this.feedDataIdY,
+            this.granularite.frequence,
+            this.periode2[0] ,
+            this.periode2[1]
+          )
+          .then((data) => {
+            this.dataY2 = d3.sort<DataPoint>(
+              data,
+              d => d.date
+            )
+          })
+        }
+      })
+      .then(() => {
+        this.loading = false
+        this.rebuildGraph()
       })
       .catch(error => {
         this.error = true
@@ -170,7 +222,27 @@ export default defineComponent({
 
       const x = this.appendXaxis(chart)
       const y = this.appendYaxis(chart)
-      this.appendCircle(chart, x, y)
+      this.appendCircle(
+        chart,
+        x,
+        y,
+        this.dataX,
+        this.dataY,
+        this.feedDataTypeXColor(1),
+        'point1'
+      )
+
+      if (this.periode2) {
+        this.appendCircle(
+          chart,
+          x,
+          y,
+          this.dataX2,
+          this.dataY2,
+          this.feedDataTypeXColor(2),
+          'point2'
+        )
+      }
     },
     appendXaxis(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>): d3.ScaleLinear<number, number, never> {
       const x = d3.scaleLinear()
@@ -242,17 +314,21 @@ export default defineComponent({
       chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
       x: d3.ScaleLinear<number, number, never>,
       y: d3.ScaleLinear<number, number, never>,
+      inputDataX: Array<DataPoint>,
+      inputDataY: Array<DataPoint>,
+      pointColor: string,
+      pointClass: string
     ) {
-      const dataX = d3.map(this.dataX, d => {return {axe: 'x', date: d.date, value: d.value}}) as {axe: 'x'|'y', date: Date, value: number}[]
-      const dataY = d3.map(this.dataY, d => {return {axe: 'y', date: d.date, value: d.value}}) as {axe: 'x'|'y', date: Date, value: number}[]
+      const dataX = d3.map(inputDataX, d => {return {axe: 'x', date: d.date, value: d.value}}) as {axe: 'x'|'y', date: Date, value: number}[]
+      const dataY = d3.map(inputDataY, d => {return {axe: 'y', date: d.date, value: d.value}}) as {axe: 'x'|'y', date: Date, value: number}[]
       const data = d3.group([...dataX, ...dataY], d => d.date, d => d.axe) as d3.InternMap<Date, d3.InternMap<'x'|'y', {axe: 'x'|'y',date: Date,value: number}[]>>
 
       chart.append("g")
-        .attr('class', 'point')
+        .attr('class', pointClass)
         .selectAll('circle')
         .data(data)
         .join('circle')
-        .attr('fill', this.feedDataTypeX.color)
+        .attr('fill', pointColor)
         .attr('stroke-width', 0)
         .attr('stroke', 'white')
         .attr('cx', ([date, d]) => {
@@ -280,7 +356,7 @@ export default defineComponent({
         .on('mouseleave', (event, d) => d3.select(event.currentTarget).attr('r', this.barWidth/2))
 
       chart
-        .selectAll('.point circle')
+        .selectAll(`.${pointClass} circle`)
         .data(data)
         .transition()
         .duration(800)
@@ -288,5 +364,8 @@ export default defineComponent({
         .ease(d3.easeCubic)
         .attr('r', this.barWidth/2)
     },
+    feedDataTypeXColor(color: 1|2): string {
+      return this.periode2 ? getFeedDataTypeColor(this.feedDataTypeX, color) : this.feedDataTypeX.color
+    }
   },
 })

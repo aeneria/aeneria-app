@@ -3,7 +3,7 @@ import EnergieSelect from './EnergieSelect';
 import MeteoSelect from './MeteoSelect';
 import GranulariteSelect from './GranulariteSelect';
 import PeriodeSelect from './PeriodeSelect';
-import Periode2Select from './Periode2Select';
+import DoublePeriodeSelect from './DoublePeriodeSelect';
 
 export default defineComponent({
   name: 'SelectionForm',
@@ -12,7 +12,7 @@ export default defineComponent({
     MeteoSelect,
     GranulariteSelect,
     PeriodeSelect,
-    Periode2Select,
+    DoublePeriodeSelect,
   },
   props: {
     type: {
