@@ -1,6 +1,6 @@
 import { defineComponent, PropType } from 'vue';
-import * as d3 from 'd3';
 import { FeedDataType } from '@/type/FeedData';
+import * as d3 from 'd3';
 import tippy from 'tippy.js';
 
 export default defineComponent({

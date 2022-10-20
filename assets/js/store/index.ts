@@ -6,7 +6,7 @@ import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
 import { INIT_CONFIGURATION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
-import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PLACE, SET_USER } from './mutations'
+import { SET_CONFIGURATION, SET_PLACE_LIST, SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PERIODE2, SET_SELECTED_PLACE, SET_USER } from './mutations'
 import { ToastServiceMethods } from "primevue/toastservice";
 import { granulariteList } from '@/type/Granularite'
 // import VuexPersistence from 'vuex-persist'
@@ -111,6 +111,9 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     },
     [SET_SELECTED_PERIODE] (state, periode) {
       state.selection.periode = periode
+    },
+    [SET_SELECTED_PERIODE2] (state, periode) {
+      state.selection.periode2 = periode
     },
   },
   actions: {
@@ -283,9 +286,9 @@ function getFeedDataTypeEnergieList (state: State) {
       }
     }
 
-    if (ret.length > 1) {
-      ret.push(getFeedDataType(DataType.ConsoEnergie))
-    }
+    // if (ret.length > 1) {
+    //   ret.push(getFeedDataType(DataType.ConsoEnergie))
+    // }
   }
 
   return ret

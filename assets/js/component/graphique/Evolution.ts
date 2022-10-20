@@ -1,13 +1,13 @@
+import { adaptToGranularite, formatMulti, formatWithGranularite } from './d3-helpers';
+import { DataPoint } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Granularite } from '@/type/Granularite';
 import { queryDataPoint } from '@/api/data';
-import { DataPoint } from '@/type/DataValue';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
 import Spinner from './Spinner';
 import tippy from 'tippy.js';
-import { adaptToGranularite, formatMulti, formatWithGranularite } from './d3-helpers';
 
 export default defineComponent({
   name: 'Evolution',

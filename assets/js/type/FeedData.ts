@@ -72,7 +72,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
   {
     id: DataType.ConsoGaz,
     label: "Gaz",
-    unite: 'm³',
+    unite: 'KWh',
     coefficientNormalisateur: 1,
     precision: 1,
     color: '#2171b5',
@@ -254,6 +254,11 @@ export const feedDataTypeList = new Array<FeedDataType>(
 export function getFeedDataType(type: DataType): FeedDataType
 {
   return feedDataTypeList.find((element: FeedDataType) => element.id === type) ?? feedDataTypeList[0]
+}
+
+export function getFeedDataTypeColor(feedDataType: FeedDataType, color: 1|2): string
+{
+  return color == 1 ? feedDataType.colors[4] : feedDataType.colors[8]
 }
 
 export function isFeedDataEnergie(feedData: FeedData): boolean

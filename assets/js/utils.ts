@@ -94,6 +94,9 @@ export function queryData(route: string, query: null|any = null) {
   })
   .then(response => {
     if (response.ok) {
+      // if (getBaseUrl + '/login' == response.url) {
+      //   alert('toto')
+      // }
       return response.json()
     }
 

@@ -72,15 +72,15 @@ export function feedTechnicalId(feed: Feed): string {
 export function feedIcon(feed: Feed): string {
   switch(feed.dataProvider) {
     case DataProvider.linky :
-      return 'fas fa-tachometer-alt'
+      return 'fa-solid fa-tachometer-alt'
     case DataProvider.enedisDataConnect :
-      return 'fas fa-plug'
+      return 'fa-solid fa-plug'
     case DataProvider.grdfAdict :
-      return 'fas fa-burn'
+      return 'fa-solid fa-fire'
     case DataProvider.meteoFrance :
-      return 'fas fa-cloud-sun'
+      return 'fa-solid fa-cloud-sun'
     case DataProvider.fake :
-      return 'fas fa-code'
+      return 'fa-solid fa-code'
   }
 }
 

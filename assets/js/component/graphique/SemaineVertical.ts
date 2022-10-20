@@ -1,8 +1,8 @@
+import { DataDoubleRepartition, shortWeekDayList, weekDayList } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Frequence, RepartitionColonne } from '@/type/Granularite';
 import { queryDoubleRepartition } from '@/api/data';
-import { DataDoubleRepartition, shortWeekDayList, weekDayList } from '@/type/DataValue';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
 import Legende from './Legende';
