@@ -1,5 +1,5 @@
 <template>
-  <div class="p-field p-d-flex p-ai-center">
+  <div class="p-field">
     <div class="p-inputgroup">
       <span
         class="p-inputgroup-addon addon-periode"
@@ -29,7 +29,7 @@
     :model="selectMenuItem1"
     :popup="true"
   />
-  <div class="p-field p-d-flex p-ai-center">
+  <div class="p-field">
     <div class="p-inputgroup">
       <span
         class="p-inputgroup-addon addon-periode"

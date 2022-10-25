@@ -113,6 +113,7 @@ export default defineComponent({
         this.loading = false
         return
       }
+
       queryDoubleRepartition(
         this.feedDataId,
         Frequence.Hour,
@@ -120,7 +121,8 @@ export default defineComponent({
         RepartitionColonne.Hour,
         this.periode[0],
         this.periode[1]
-      ).then((data) => {
+      )
+      .then((data) => {
         this.data = d3.sort(
           d3.sort(
             data,

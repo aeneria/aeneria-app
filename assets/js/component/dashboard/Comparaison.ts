@@ -1,5 +1,8 @@
 import { defineComponent } from 'vue';
+import { Frequence } from '@/type/Granularite';
 import { mapGetters } from 'vuex';
+import { max } from 'd3';
+import { queryMax } from '@/api/data';
 import { screen, grid } from '../../composable/vue-screen';
 import AideAnalyseCroisee from '../aide/graphique/AideAnalyseCroisee';
 import AideCalendrier from '../aide/graphique/AideCalendrier';
@@ -34,6 +37,28 @@ export default defineComponent({
       grid
     }
   },
+  mounted() {
+    this.refreshMaxEnergieP1()
+    this.refreshMaxEnergieP2()
+  },
+  watch: {
+    periode1() {
+      this.refreshMaxEnergieP1()
+    },
+    periode2() {
+      this.refreshMaxEnergieP2()
+    },
+    feedDataId1() {
+      this.refreshMaxEnergieP1()
+      this.refreshMaxEnergieP2()
+    }
+  },
+  data() {
+    return {
+      maxEnergieP1: 0,
+      maxEnergieP2: 0,
+    }
+  },
   computed: {
     periode1() { return this.$store.state.selection.periode },
     periode2() { return this.$store.state.selection.periode2 },
@@ -43,6 +68,33 @@ export default defineComponent({
     ...mapGetters({
       feedDataId1: 'selectedEnergieFeedDataId',
       feedDataId2: 'selectedMeteoFeedDataId',
-    })
+    }),
+    maxEnergie() {
+      return max([this.maxEnergieP1, this.maxEnergieP2]) ?? 0
+    }
+  },
+  methods: {
+    refreshMaxEnergieP1() {
+      queryMax(
+        this.feedDataId1,
+        Frequence.Day,
+        this.periode1[0] ?? new Date(),
+        this.periode1[1] ?? new Date()
+      )
+      .then((data) =>{
+        this.maxEnergieP1 = data
+      })
+    },
+    refreshMaxEnergieP2() {
+      queryMax(
+        this.feedDataId1,
+        Frequence.Day,
+        this.periode2[0] ?? new Date(),
+        this.periode2[1] ?? new Date()
+      )
+      .then((data) =>{
+        this.maxEnergieP2 = data
+      })
+    },
   },
 });

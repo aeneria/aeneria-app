@@ -58,6 +58,15 @@ export default defineComponent({
     minValeur() {
       this.rebuild()
     },
+    min() {
+      this.rebuild()
+    },
+    max() {
+      this.rebuild()
+    },
+    range() {
+      this.rebuild()
+    }
   },
   methods: {
     rebuild() {

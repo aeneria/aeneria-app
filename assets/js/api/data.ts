@@ -53,17 +53,6 @@ export function queryDoubleRepartition(
   })
 }
 
-export function queryCroisement(
-  feedDataIdX: number,
-  feedDataIdY: number,
-  frequence: Frequence,
-  debut: Date,
-  fin: Date,
-): Promise<number> {
-  return queryData(`/api/data/croisement/${feedDataIdX}/${feedDataIdY}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
-  .then(data => data.data as number)
-}
-
 export function querySomme(
   feedDataId: number,
   frequence: Frequence,
@@ -71,7 +60,17 @@ export function querySomme(
   fin: Date,
 ): Promise<number> {
   return queryData(`/api/data/somme/${feedDataId}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
-  .then(data => data.data as number)
+  .then(data => parseFloat(data) as number)
+}
+
+export function queryMax(
+  feedDataId: number,
+  frequence: Frequence,
+  debut: Date,
+  fin: Date,
+): Promise<number> {
+  return queryData(`/api/data/max/${feedDataId}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
+  .then(data => parseFloat(data) as number)
 }
 
 export function queryNombreInferieur(
@@ -81,8 +80,8 @@ export function queryNombreInferieur(
   debut: Date,
   fin: Date,
 ): Promise<number> {
-  return queryData(`/api/data/min/${feedDataId}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
-  .then(data => data.data as number)
+  return queryData(`/api/data/inf/${feedDataId}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
+  .then(data => parseFloat(data) as number)
 }
 
 

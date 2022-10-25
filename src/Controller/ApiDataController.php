@@ -37,7 +37,7 @@ class ApiDataController extends AbstractAppController
     /**
      * Obtenir des points de mesure pour un FeeData.
      */
-    public function getPointAction(string $feedDataId, string $frequence, string $debut, string $fin): JsonResponse
+    public function getPoint(string $feedDataId, string $frequence, string $debut, string $fin): JsonResponse
     {
         $feedData = $this->canSeeFeedData($feedDataId);
 
@@ -53,7 +53,7 @@ class ApiDataController extends AbstractAppController
     /**
      * Obtenir points de mesure agrégés selon une colonne de la table dataValue.
      */
-    public function getRepartitionAction(string $feedDataId, string $frequence, string $colonne, string $debut, string $fin): JsonResponse
+    public function getRepartition(string $feedDataId, string $frequence, string $colonne, string $debut, string $fin): JsonResponse
     {
         $feedData = $this->canSeeFeedData($feedDataId);
 
@@ -69,7 +69,7 @@ class ApiDataController extends AbstractAppController
     /**
      * Obtenir points de mesure agrégés selon 2 colonnes de la table dataValue.
      */
-    public function getDoubleRepartitionAction(string $feedDataId, string $frequence, string $colonneX, string $colonneY, string $debut, string $fin): JsonResponse
+    public function getDoubleRepartition(string $feedDataId, string $frequence, string $colonneX, string $colonneY, string $debut, string $fin): JsonResponse
     {
         $feedData = $this->canSeeFeedData($feedDataId);
 
@@ -85,7 +85,7 @@ class ApiDataController extends AbstractAppController
     /**
      * Obtenir la somme de points de mesure.
      */
-    public function getSommeAction(string $feedDataId, string $frequence, string $debut, string $fin): JsonResponse
+    public function getSomme(string $feedDataId, string $frequence, string $debut, string $fin): JsonResponse
     {
         $feedData = $this->canSeeFeedData($feedDataId);
 
@@ -96,13 +96,30 @@ class ApiDataController extends AbstractAppController
         // Get data between $debut & $fin for requested frequency.
         $result = $this->dataValueRepository->getSumValue($debut, $fin, $feedData, $frequence);
 
-        return new JsonResponse(\json_encode($result), 200);
+        return new JsonResponse($result[0]['value'] ?? 0, 200);
+    }
+
+    /**
+     * Obtenir le max de points de mesure.
+     */
+    public function getMax(string $feedDataId, string $frequence, string $debut, string $fin): JsonResponse
+    {
+        $feedData = $this->canSeeFeedData($feedDataId);
+
+        $frequence = DataValue::getFrequencyFromMachineName(\strtoupper($frequence));
+        $debut = DataValue::adaptToFrequency(new \DateTimeImmutable($debut), $frequence);
+        $fin = new \DateTimeImmutable($fin . ' 23:59:59');
+
+        // Get data between $debut & $fin for requested frequency.
+        $result = $this->dataValueRepository->getMaxValue($debut, $fin, $feedData, $frequence);
+
+        return new JsonResponse($result[0]['value'] ?? 0, 200);
     }
 
     /**
      * Obtenir le nombre de jours/mois/... où la mesure demandée a été inférieure à une valeur.
      */
-    public function getNombreInferieurAction(string $feedDataId, string $valeur, string $frequence, string $debut, string $fin): JsonResponse
+    public function getNombreInferieur(string $feedDataId, string $valeur, string $frequence, string $debut, string $fin): JsonResponse
     {
         $feedData = $this->canSeeFeedData($feedDataId);
 
@@ -113,25 +130,7 @@ class ApiDataController extends AbstractAppController
         // Get data between $debut & $fin for requested frequency.
         $result = $this->dataValueRepository->getNumberInfValue($debut, $fin, $feedData, $frequence, $valeur);
 
-        return new JsonResponse(\json_encode($result), 200);
-    }
-
-    /**
-     * Obtenir le croisement de 2 données.
-     */
-    public function getCroisementAction(string $feedDataIdX, string $feedDataIdY, string $frequence, string $debut, string $fin): JsonResponse
-    {
-        $feedDataX = $this->canSeeFeedData($feedDataIdX);
-        $feedDataY = $this->canSeeFeedData($feedDataIdY);
-
-        $frequence = DataValue::getFrequencyFromMachineName(\strtoupper($frequence));
-        $debut = DataValue::adaptToFrequency(new \DateTimeImmutable($debut), $frequence);
-        $fin = new \DateTimeImmutable($fin . ' 23:59:59');
-
-        // Get data between $debut & $fin for requested frequency.
-        $result = $this->dataValueRepository->getXY($debut, $fin, $feedDataX, $feedDataY, $frequence);
-
-        return new JsonResponse(\json_encode($result), 200);
+        return new JsonResponse($result[0]['value'] ?? 0, 200);
     }
 
     private function canSeeFeedData(string $feedDataId): FeedData

@@ -101,11 +101,11 @@ export default defineComponent({
     width(): number {
       return this.totalWidth - this.marginLeft - this.marginRight
     },
-    maxValeur1(): number {
-      return d3.max(d3.map(this.data1, d => d.value)) ?? 0
-    },
-    maxValeur2(): number {
-      return d3.max(d3.map(this.data2, d => d.value)) ?? 0
+    maxValeur(): number {
+      return d3.max([
+        d3.max(d3.map(this.data1, d => d.value)) ?? 0,
+        d3.max(d3.map(this.data2, d => d.value)) ?? 0,
+      ]) ?? 0
     },
     nbDate(): number {
       return d3.max([this.nbDatePeriode1, this.nbDatePeriode2]) ?? 0
@@ -175,8 +175,9 @@ export default defineComponent({
           data,
           d => d.date
         )
-      }).then(() => {
-        queryDataPoint(
+      })
+      .then(() => {
+        return queryDataPoint(
           this.feedDataId,
           this.granularite.frequence,
           this.periode2[0],
@@ -186,10 +187,11 @@ export default defineComponent({
             data,
             d => d.date
           )
-
-          this.loading = false
-          this.rebuildGraph()
         })
+      })
+      .then(() => {
+        this.loading = false
+        this.rebuildGraph()
       })
       .catch(error => {
         this.error = true
@@ -281,7 +283,7 @@ export default defineComponent({
       dataNb: 1|2,
     ): d3.ScaleLinear<number, number, never> {
       const y = d3.scaleLinear()
-        .domain(dataNb === 1 ? [0, this.maxValeur1] : [0, this.maxValeur2])
+        .domain([0, this.maxValeur])
         .nice()
         .range(dataNb === 1 ? [this.width/2, 0] : [this.width/2, this.width])
 

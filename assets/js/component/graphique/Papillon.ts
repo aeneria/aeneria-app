@@ -131,18 +131,21 @@ export default defineComponent({
         this.granularite.frequence,
         this.periode[0],
         this.periode[1]
-      ).then((data) => {
+      )
+      .then((data) => {
         this.data1 = d3.sort<DataPoint>(
           data,
           d => d.date
         )
-      }).then(() => {
-        queryDataPoint(
+      })
+      .then(() => {
+        return queryDataPoint(
           this.feedDataId2,
           this.granularite.frequence,
           this.periode[0],
           this.periode[1]
-        ).then((data) => {
+        )
+        .then((data) => {
           this.data2 = d3.sort<DataPoint>(
             data,
             d => d.date

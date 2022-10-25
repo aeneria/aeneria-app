@@ -104,7 +104,8 @@ export default defineComponent({
         this.granularite.frequence,
         this.periode[0],
         this.periode[1]
-      ).then((data) => {
+      )
+      .then((data) => {
         this.data = d3.sort<DataPoint>(
           data,
           d => d.date
@@ -112,7 +113,8 @@ export default defineComponent({
 
         this.loading = false
         this.rebuildGraph()
-      }).catch(error => {
+      })
+      .catch(error => {
         this.error = true
         this.loading = false
         console.log(error)

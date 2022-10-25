@@ -5,6 +5,8 @@
         selectionMode="range"
         :yearNavigator="true"
         :showButtonBar="true"
+        :min-date="place.periodeMin"
+        :max-date="place.periodeMax"
         @update:modelValue="setSelectedPeriode"
       />
       <Button

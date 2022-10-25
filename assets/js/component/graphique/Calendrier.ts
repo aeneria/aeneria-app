@@ -106,6 +106,9 @@ export default defineComponent({
     feedDataId() {
       this.refresh()
     },
+    max() {
+      this.rebuildGraph()
+    }
   },
   methods: {
     refresh() {
@@ -123,11 +126,13 @@ export default defineComponent({
         Frequence.Day,
         this.rawPeriode[0],
         this.rawPeriode[1]
-      ).then((data) => {
+      )
+      .then((data) => {
         this.data = d3.sort(data, d => d.date)
         this.loading = false
         this.rebuildGraph()
-      }).catch(error => {
+      })
+      .catch(error => {
         this.error = true
         this.loading = false
         console.log(error)
