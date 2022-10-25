@@ -18,6 +18,7 @@
                 :feedDataId="feedDataId1"
                 :feedDataType="energie"
                 :min="0"
+                :max="maxEnergie"
               />
             </div>
             <div class="p-col">
@@ -27,6 +28,7 @@
                 :feedDataId="feedDataId1"
                 :feedDataType="energie"
                 :min="0"
+                :max="maxEnergie"
               />
             </div>
           </div>

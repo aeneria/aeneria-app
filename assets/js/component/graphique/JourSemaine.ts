@@ -83,13 +83,15 @@ export default defineComponent({
         this.loading = false
         return
       }
+
       queryRepartition(
         this.feedDataId,
         Frequence.Day,
         RepartitionColonne.WeekDay,
         this.periode[0],
         this.periode[1]
-      ).then((data) => {
+      )
+      .then((data) => {
         this.data = d3.sort<DataRepartition>(
           data,
           d => d.groupBy
@@ -97,7 +99,8 @@ export default defineComponent({
 
         this.loading = false
         this.rebuildGraph()
-      }).catch(error => {
+      })
+      .catch(error => {
         this.error = true
         this.loading = false
         console.log(error)

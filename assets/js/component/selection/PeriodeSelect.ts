@@ -27,6 +27,9 @@ export default defineComponent({
       selectMenuItem: preselectPeriodMenuItem(this.setPreselectedPeriode),
     }
   },
+  computed: {
+    place() { return this.$store.state.selection.place },
+  },
   methods: {
     toggleSelectMenu(event) {
       this.selectMenu.toggle(event);

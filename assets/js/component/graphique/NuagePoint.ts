@@ -143,7 +143,7 @@ export default defineComponent({
         )
       })
       .then(() => {
-        queryDataPoint(
+        return queryDataPoint(
           this.feedDataIdY,
           this.granularite.frequence,
           this.periode[0],
@@ -158,7 +158,7 @@ export default defineComponent({
       })
       .then(() => {
         if (this.periode2) {
-          queryDataPoint(
+          return queryDataPoint(
             this.feedDataIdX,
             this.granularite.frequence,
             this.periode2[0],
@@ -171,10 +171,12 @@ export default defineComponent({
             )
           })
         }
+
+        return Promise.resolve()
       })
       .then(() => {
         if (this.periode2) {
-          queryDataPoint(
+          return queryDataPoint(
             this.feedDataIdY,
             this.granularite.frequence,
             this.periode2[0] ,
@@ -187,6 +189,8 @@ export default defineComponent({
             )
           })
         }
+
+        return Promise.resolve()
       })
       .then(() => {
         this.loading = false
