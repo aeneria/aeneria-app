@@ -28,7 +28,7 @@
   .selection-form {
     margin-right: -1em;
     .p-calendar {
-      max-width: 220px;
+      max-width: 230px;
     }
   }
 </style>

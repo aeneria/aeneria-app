@@ -126,3 +126,29 @@ export const preselectedPeriode = (value: string) => {
 
   return [startDate, endDate] as [Date|null, Date|null]
 }
+
+export function serializedSelection(selection: Selection): string {
+  return JSON.stringify(selection, (key, value) => {
+    if (['periode', 'periode2', 'periodeMin', 'periodeMax'].includes(key)) {
+      return value ? [value[0].toString(), value[1].toString()] : [null, null]
+    }
+    if (['periodeMin', 'periodeMax'].includes(key)) {
+      return value ? value.toString() : null
+    }
+
+    return value
+  })
+}
+
+export function deserializedSelection(data: string): Selection {
+  return JSON.parse(data, (key, value) => {
+    if (['periode', 'periode2'].includes(key)) {
+      return value ? [new Date(value[0]), new Date(value[1])] : [null, null]
+    }
+    if (['periodeMin', 'periodeMax'].includes(key)) {
+      return value ? new Date(value) : null
+    }
+
+    return value
+  }) as Selection
+}
