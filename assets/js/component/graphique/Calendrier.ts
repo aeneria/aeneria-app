@@ -42,7 +42,7 @@ export default defineComponent({
       type: Number,
       required: false,
     },
-  } ,
+  },
   data() {
     return {
       data: new Array<DataPoint>(),

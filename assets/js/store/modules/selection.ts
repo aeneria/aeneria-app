@@ -1,4 +1,4 @@
-import { DataType, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
+import { DataType, FeedData, FeedDataType, getFeedDataType, isFeedDataEnergie } from '@/type/FeedData'
 import { SET_SELECTED_ENERGIE, SET_SELECTED_GRANULARITE, SET_SELECTED_METEO_DATA, SET_SELECTED_PERIODE, SET_SELECTED_PERIODE2, SET_SELECTED_PLACE, SET_SELECTION } from '../mutations'
 import { granulariteList } from '@/type/Granularite'
 import { deserializedSelection, Selection, serializedSelection } from '@/type/Selection'
@@ -27,6 +27,13 @@ export const moduleSelection = {
     feedDataTypeEnergieList (state) {
       if (state.place) {
         return getFeedDataTypeEnergieList(state.place)
+      }
+
+      return []
+    },
+    feedDataEnergieList (state): FeedData[] {
+      if (state.place) {
+        return getFeedDataEnergieList(state.place)
       }
 
       return []
@@ -162,6 +169,21 @@ function getFeedDataTypeEnergieList (place: Place) {
     // if (ret.length > 1) {
     //   ret.push(getFeedDataType(DataType.ConsoEnergie))
     // }
+  }
+
+  return ret
+}
+
+function getFeedDataEnergieList (place: Place) {
+  let ret = new Array<FeedData>()
+
+  if (place.feedList) {
+    for(const feed of place.feedList) {
+      for(const feedData of feed.feedDataList)
+      if (isFeedDataEnergie(feedData)) {
+        ret.push(feedData)
+      }
+    }
   }
 
   return ret

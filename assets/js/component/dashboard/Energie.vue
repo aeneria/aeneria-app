@@ -10,6 +10,11 @@
           </div>
         </template>
         <template #content>
+          <Index
+            :feedDataType="energie"
+            :valeur="indexEnergie"
+            texte="consommés sur la période"
+          />
           <Calendrier
             id="calendrier"
             :rawPeriode="periode"
