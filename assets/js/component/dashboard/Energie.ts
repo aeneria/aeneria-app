@@ -1,16 +1,19 @@
 import { defineComponent } from 'vue';
-import Card from 'primevue/card';
+import { Frequence } from '@/type/Granularite';
+import { mapGetters } from 'vuex';
+import { querySomme } from '@/api/data';
+import { screen, grid } from '../../composable/vue-screen';
 import AideCalendrier from '../aide/graphique/AideCalendrier';
-import AideSemaineJours from '../aide/graphique/AideSemaineJours';
 import AideEvolution from '../aide/graphique/AideEvolution';
+import AideSemaineJours from '../aide/graphique/AideSemaineJours';
 import Calendrier from '../graphique/Calendrier';
+import Card from 'primevue/card';
 import Evolution from '../graphique/Evolution';
-import SemaineHorizontal from '../graphique/SemaineHorizontal';
-import SemaineVertical from '../graphique/SemaineVertical';
+import Index from '../graphique/Index';
 import JourSemaine from '../graphique/JourSemaine';
 import SelectionForm from '../selection/SelectionForm';
-import { mapGetters } from 'vuex';
-import { screen, grid } from '../../composable/vue-screen';
+import SemaineHorizontal from '../graphique/SemaineHorizontal';
+import SemaineVertical from '../graphique/SemaineVertical';
 
 export default defineComponent({
   name: 'DashboardEnergie',
@@ -22,6 +25,7 @@ export default defineComponent({
     Calendrier,
     JourSemaine,
     Evolution,
+    Index,
     SelectionForm,
     SemaineHorizontal,
     SemaineVertical,
@@ -32,6 +36,11 @@ export default defineComponent({
       grid
     }
   },
+  data() {
+    return {
+      indexEnergie: 0,
+    }
+  },
   computed: {
     periode() { return this.$store.state.selection.periode },
     energie() { return this.$store.state.selection.energie },
@@ -39,5 +48,29 @@ export default defineComponent({
     ...mapGetters({
       feedDataId: 'selectedEnergieFeedDataId',
     })
+  },
+  mounted() {
+    this.refreshIndexEnergie()
+  },
+  watch: {
+    periode() {
+      this.refreshIndexEnergie()
+    },
+    feedDataId() {
+      this.refreshIndexEnergie()
+    },
+  },
+  methods: {
+    refreshIndexEnergie() {
+      querySomme(
+        this.feedDataId,
+        Frequence.Day,
+        this.periode[0] ?? new Date(),
+        this.periode[1] ?? new Date(),
+      )
+      .then ((data) => {
+        this.indexEnergie = data
+      })
+    }
   },
 });

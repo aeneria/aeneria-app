@@ -80,7 +80,7 @@ export function queryNombreInferieur(
   debut: Date,
   fin: Date,
 ): Promise<number> {
-  return queryData(`/api/data/inf/${feedDataId}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
+  return queryData(`/api/data/inf/${feedDataId}/${valeur}/${frequence}/${formatDate(debut)}/${formatDate(fin)}`)
   .then(data => parseFloat(data) as number)
 }
 

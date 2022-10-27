@@ -12,6 +12,7 @@ export interface FeedDataType {
   color: string,
   colors: string[],
   hasHourlyData: boolean,
+  icon: string,
 }
 
 export enum DataType {
@@ -32,7 +33,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
   {
     id: DataType.ConsoEnergie,
     label: "Énergie totale",
-    unite: 'KWhep',
+    unite: 'kWhep',
     coefficientNormalisateur: 1,
     precision: 1,
     color: '#dba225',
@@ -48,11 +49,12 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#c68622',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-sigma',
   },
   {
     id: DataType.ConsoElec,
     label: "Électricité",
-    unite: 'KWh',
+    unite: 'kWh',
     coefficientNormalisateur: 1.8,
     precision: 1,
     color: '#dba225',
@@ -68,11 +70,12 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#c68622',
     ],
     hasHourlyData: true,
+    icon: 'fa-solid fa-bolt',
   },
   {
     id: DataType.ConsoGaz,
     label: "Gaz",
-    unite: 'KWh',
+    unite: 'kWh',
     coefficientNormalisateur: 1,
     precision: 1,
     color: '#2171b5',
@@ -88,6 +91,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#08306b',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-fire-flame-simple',
   },
   {
     id: DataType.Temperature,
@@ -108,6 +112,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#d73027',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-temperature-half',
   },
   {
     id: DataType.TemperatureMin,
@@ -128,6 +133,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#d73027',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-temperature-empty',
   },
   {
     id: DataType.TemperatureMax,
@@ -148,6 +154,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#d73027',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-temperature-full',
   },
   {
     id: DataType.Dju,
@@ -168,6 +175,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#0277BD',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-temperature-half',
   },
   {
     id: DataType.Pressure,
@@ -188,6 +196,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#c68622',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-gauge-high',
   },
   {
     id: DataType.Humidity,
@@ -208,6 +217,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#253494',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-droplet',
   },
   {
     id: DataType.Nebulosity,
@@ -228,6 +238,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#747E7C',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-cloud',
   },
   {
     id: DataType.Rain,
@@ -248,6 +259,7 @@ export const feedDataTypeList = new Array<FeedDataType>(
       '#084081',
     ],
     hasHourlyData: false,
+    icon: 'fa-solid fa-cloud-showers-heavy',
   },
 )
 

@@ -11,6 +11,13 @@
           {{ item.type.label }}
         </template>
         <template #content>
+          <Index
+            :feedDataType="item.index.type"
+            :valeur="item.index.valeur"
+            :total="item.index.total"
+            :texte="item.index.texte"
+            :unite="item.index.unite"
+          />
           <Calendrier
             :id="'calendrier-' + item.type.id"
             :rawPeriode="periode"
