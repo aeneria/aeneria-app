@@ -4,7 +4,7 @@
     <div
       v-for="item in meteoList"
       :key="item.type.id"
-      class="p-col-12 p-sm-6 p-md-6 p-lg-3"
+      class="p-col-12 p-sm-6 p-xl-3"
     >
       <Card :class="'card-' + item.type.id + '-calendrier'">
         <template #title>

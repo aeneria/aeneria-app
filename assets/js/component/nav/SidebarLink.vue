@@ -5,9 +5,18 @@
       <Button
         :icon="icon"
         :class="'p-button-lg p-button-rounded p-button-secondary' + (slotProps.isActive ? '' : ' p-button-text')"
+        :label="isMobile ? label : undefined"
       />
     </template>
   </router-link>
 </template>
 
 <script lang="ts" src="./SidebarLink.ts"/>
+
+<style lang="scss">
+  @import '../../../css/variables';
+
+  .side-bar-link .p-button-label {
+    font-family: $font-title;
+  }
+</style>

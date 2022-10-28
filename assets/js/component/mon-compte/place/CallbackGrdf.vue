@@ -1,5 +1,5 @@
 <template>
-   <div v-if="place" class="parameter p-d-grid p-ai-start p-mt-2">
+   <div v-if="place" class="parameter p-grid p-ai-start p-mt-2">
     <div class="p-col-12">
       <h1>C'est tout bon !</h1>
       <p>Votre compteur Gazpar a été correctement configuré. Des données devraient commencer à apparaitre d'ici ~15 minutes.</p>

@@ -11,7 +11,7 @@ import TabPanel from 'primevue/tabpanel';
 import TabView from 'primevue/tabview';
 
 export default defineComponent({
-  name: 'About',
+  name: 'Aide',
   components: {
     AideCalendrier,
     AideSemaineJours,

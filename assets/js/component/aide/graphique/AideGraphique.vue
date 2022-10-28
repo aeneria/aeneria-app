@@ -11,6 +11,7 @@
       v-model:visible="display"
       :breakpoints="{'960px': '75vw', '640px': '90vw'}"
       :style="{width: '50vw'}"
+      :modal="true"
     >
       <slot></slot>
     </Dialog>

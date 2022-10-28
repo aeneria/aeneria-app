@@ -2,7 +2,7 @@ import { defineComponent } from 'vue';
 import { Frequence } from '@/type/Granularite';
 import { mapGetters } from 'vuex';
 import { querySomme } from '@/api/data';
-import { screen, grid } from '../../composable/vue-screen';
+import { grid } from '../../composable/vue-screen';
 import AideCalendrier from '../aide/graphique/AideCalendrier';
 import AideEvolution from '../aide/graphique/AideEvolution';
 import AideSemaineJours from '../aide/graphique/AideSemaineJours';
@@ -32,7 +32,6 @@ export default defineComponent({
   },
   setup() {
     return {
-      screen,
       grid
     }
   },

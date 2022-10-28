@@ -1,5 +1,5 @@
 <template>
-  <div class="p-grid p-mt-3 dash-home">
+  <div class="p-grid dash-home">
     <div
       class="p-col-12 p-sm-offset-1 p-sm-10 p-md-offset-2 p-md-8 p-lg-offset-0 p-lg-12 p-mb-2"
       v-for="month in monthsToDisplay"
@@ -10,7 +10,8 @@
         <template #content>
           <MonthSummary
             :month="month"
-         />
+            :place="place"
+          />
         </template>
       </Card>
     </div>

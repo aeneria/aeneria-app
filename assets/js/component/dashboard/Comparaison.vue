@@ -1,7 +1,7 @@
 <template>
   <SelectionForm type="comparaison"/>
   <div class="p-grid dash-comparaison">
-    <div class="p-col-12 p-lg-6">
+    <div class="p-col-12 p-md-offset-1 p-md-10 p-lg-offset-2  p-lg-8 p-xl-offset-0 p-xl-6">
       <Card class="card-calendrier">
         <template #title>
           <div class="p-d-flex p-jc-between">
@@ -35,7 +35,7 @@
         </template>
       </Card>
     </div>
-    <div class="p-col-12 p-lg-6">
+    <div class="p-col-12 p-md-offset-1 p-md-10 p-lg-offset-2  p-lg-8 p-xl-offset-0 p-xl-6">
       <Card class="card-semaine">
         <template #title>
           <div class="p-d-flex p-jc-between">
@@ -45,7 +45,7 @@
         </template>
         <template #content>
           <div class="p-grid">
-            <div class="p-col p-md-6">
+            <div class="p-col p-md-6 p-d-flex p-flex-column p-ai-center p-jc-center">
               <SemaineVertical
                 id="semaine1-v"
                 v-if="energie?.hasHourlyData"
@@ -61,7 +61,7 @@
                 :feedDataType="energie"
               />
             </div>
-            <div class="p-col p-md-6">
+            <div class="p-col p-md-6 p-d-flex p-flex-column p-ai-center p-jc-center">
               <SemaineVertical
                 id="semaine2-v"
                 v-if="energie?.hasHourlyData"

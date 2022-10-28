@@ -1,10 +1,21 @@
 import { defineComponent } from 'vue';
-import SelectButton, { SelectButtonChangeEvent } from 'primevue/selectbutton';
-import { SET_SELECTED_GRANULARITE } from '@/store/mutations';
 import { granulariteList } from '@/type/Granularite';
+import { SET_SELECTED_GRANULARITE } from '@/store/mutations';
+import SelectButton, { SelectButtonChangeEvent } from 'primevue/selectbutton';
+import Dropdown from 'primevue/dropdown';
 
 export default defineComponent({
   name: 'GranulariteSelect',
+  components: {
+    SelectButton,
+    Dropdown,
+  },
+  props: {
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       granulariteList: granulariteList,
@@ -12,9 +23,6 @@ export default defineComponent({
   },
   computed: {
     granularite() { return this.$store.state.selection.granularite },
-  },
-  components: {
-    SelectButton
   },
   methods: {
     setSelectedGranularite (event: SelectButtonChangeEvent) {

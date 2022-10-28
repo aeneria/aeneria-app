@@ -24,6 +24,9 @@ export default defineComponent({
       previousMonth: previousMonth,
     }
   },
+  computed: {
+    place() { return this.$store.state.selection.place },
+  },
   methods: {
     addMonth() {
       this.monthsToDisplay.push(new Date(this.previousMonth))

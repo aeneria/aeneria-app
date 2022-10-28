@@ -1,6 +1,5 @@
 <template>
   <Dropdown
-    v-if="!onlyOneEnergie"
     :modelValue="energie"
     :options="feedDataTypeEnergieList"
     optionLabel="label"

@@ -3,7 +3,7 @@
     <div :id="id" >
     </div>
     <Legende
-      class="p-mr-5 p-ml-5"
+      class="p-ml-3"
       :id="id + '--legende'"
       :max="max"
       :min="min"

@@ -1,6 +1,6 @@
 
 <template>
-  <div class="parameter p-d-grid p-ai-start p-mt-2">
+  <div class="parameter p-grid p-ai-start">
     <div class="p-col-12">
       <div class="p-d-flex p-jc-center">
         <Card class="card-404 p-mt-2">

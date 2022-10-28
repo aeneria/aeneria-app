@@ -1,6 +1,6 @@
 
 <template>
-  <div class="parameter p-d-grid p-ai-start p-mt-2">
+  <div class="parameter p-grid p-ai-start">
     <div class="p-col-12">
       <h1>Aide</h1>
       <TabView>

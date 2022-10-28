@@ -47,7 +47,7 @@ export default defineComponent({
     return {
       data: new Array<DataPoint>(),
 
-      daySize: 17,
+      daySize: 16,
       axeColor: '#6d6d6d',
       cols : 7,
       marginTop : 35,
@@ -100,14 +100,20 @@ export default defineComponent({
     this.refresh()
   },
   watch: {
-    periode() {
-      this.refresh()
+    periode(newValue, oldValue) {
+      if (newValue[0] != oldValue[0] && newValue[1] != oldValue[1]) {
+        this.refresh()
+      }
     },
-    feedDataId() {
-      this.refresh()
+    feedDataId(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.refresh()
+      }
     },
-    max() {
-      this.rebuildGraph()
+    max(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.rebuildGraph()
+      }
     }
   },
   methods: {
@@ -176,7 +182,7 @@ export default defineComponent({
         .text(weekDayFormat)
           .style('fill', this.axeColor)
           .attr('transform', (d, i) => {
-            return 'rotate(-90)translate(-30,' + (i * this.daySize + this.marginLeft + 12) + ')'
+            return 'rotate(-90)translate(-30,' + (i * this.daySize + this.marginTop + 12) + ')'
           })
     },
     appendMonthLabel(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
@@ -186,7 +192,7 @@ export default defineComponent({
         .data(d3.utcMonths(this.periode[0], this.periode[1]))
         .join("text")
           .attr("x", this.marginLeft -5)
-          .attr("y", d => d3.utcSunday.count(this.periode[0], d) * this.daySize + 10 + this.marginTop)
+          .attr("y", d => d3.utcSunday.count(this.periode[0], d) * this.daySize + 10 + this.marginLeft)
           .text((d,i) => monthFormat(d))
           .style('text-anchor', 'end')
           .style('fill', this.axeColor)
