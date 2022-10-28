@@ -41,7 +41,7 @@ export default defineComponent({
   },
   data() {
     return {
-      daySize: 15,
+      daySize: 14,
       axeColor: '#6d6d6d',
     }
   },

@@ -1,6 +1,6 @@
 
 <template>
-  <div class="parameter p-d-grid p-ai-start p-mt-2">
+  <div class="parameter p-grid p-ai-start">
     <div class="p-col-12">
       <h1>À Propos</h1>
       <div class="p-grid">
@@ -149,9 +149,9 @@
               <ul class="">
                 <li class="p-mb-3"><i class="fas fa-server p-mr-2"></i>Côté back : PHP, PostgreSQL, Symfony et son outillage</li>
                 <li class="p-mb-3"><i class="fas fa-desktop p-mr-2"></i>Côté front : Vue.js, PrimeVUE, Webpack, D3.js, Popper.js, Fontawesome</li>
-                <li class="p-mb-3"><i class="fas fa-image p-mr-2"></i>Icones issues de <a target="_blank" href="https://thenounproject.com/" >the Noun Project</a> :
-                  <a target="_blank" href="https://thenounproject.com/iconisland/">Icon Island</a>, <a target="_blank" href="https://thenounproject.com/coquet_adrien">Adrien Coquet</a>,
-                  <a target="_blank" href="https://thenounproject.com/grega.cresnar">Gregor Cresnar</a>, <a target="_blank" href="https://thenounproject.com/creativestall/"> Creative Stall</a>
+                <li class="p-mb-3"><i class="fas fa-image p-mr-2"></i>
+                  Logo issu de <a target="_blank" href="https://thenounproject.com/" >the Noun Project</a>,
+                  dessinée par <a target="_blank" href="https://thenounproject.com/iconisland/">Icon Island</a>
                 </li>
             </ul>
             </template>

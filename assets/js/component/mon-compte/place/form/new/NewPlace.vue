@@ -1,5 +1,5 @@
 <template>
-  <div class="parameter p-d-grid p-ai-start p-mt-2">
+  <div class="parameter p-grid p-ai-start p-mt-2">
     <div class="p-col-12">
         <h1>Ajouter une nouvelle adresse</h1>
       <Step1

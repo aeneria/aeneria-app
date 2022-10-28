@@ -9,7 +9,7 @@ export default defineComponent({
       required: true,
     },
     valeur: {
-      type: Number,
+      type: [String, Number],
       required: true,
     },
     total: {

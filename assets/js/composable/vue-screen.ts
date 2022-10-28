@@ -2,8 +2,8 @@ import { useScreen, useGrid } from 'vue-screen'
 
 export const screen = useScreen()
 export const grid = useGrid({
-  sm: '640px',
-  md: '720px',
-  lg: '960px',
-  xl: '1080px',
+  sm: '576px',
+  md: '768px',
+  lg: '992px',
+  xl: '1200px',
 })

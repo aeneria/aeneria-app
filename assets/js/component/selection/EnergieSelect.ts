@@ -11,7 +11,6 @@ export default defineComponent({
   computed: {
     energie() { return this.$store.state.selection.energie },
     ...mapGetters([
-      'onlyOneEnergie',
       'feedDataTypeEnergieList'
     ])
   },

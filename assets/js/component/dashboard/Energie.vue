@@ -1,7 +1,7 @@
 <template>
   <SelectionForm type="classique"/>
   <div class="p-grid dash-energie">
-    <div class="p-col-12 p-md-4 p-lg-3">
+    <div class="p-col-12 p-sm-offset-1 p-sm-10 p-md-offset-0 p-md-6 p-xl-3">
       <Card class="card-calendrier">
         <template #title>
           <div class="p-d-flex p-jc-between">
@@ -25,9 +25,9 @@
         </template>
       </Card>
     </div>
-    <div class="p-col-12 p-md-8 p-lg-9">
+    <div v-if="['xl'].includes(grid.breakpoint)" class="p-col-9">
       <div class="p-grid p-mb-2">
-        <div class="p-col">
+        <div class="p-col-12">
           <Card class="card-repartition-jour-heure">
             <template #title>
               <div class="p-d-flex p-jc-between">
@@ -36,31 +36,14 @@
               </div>
             </template>
             <template #content>
-              <template v-if="energie?.hasHourlyData">
-                <SemaineHorizontal
-                  v-if="['xl', 'lg', 'md'].includes(grid.breakpoint)"
-                  id="semaine-h"
-                  :periode="periode"
-                  :feedDataId="feedDataId"
-                  :feedDataType="energie"
-                  :min="0"
-                />
-                <template v-else>
-                  <SemaineVertical
-                    id="semaine-v"
-                    :periode="periode"
-                    :feedDataId="feedDataId"
-                    :feedDataType="energie"
-                    :min="0"
-                  />
-                  <JourSemaine
-                    id="semaine-j"
-                    :periode="periode"
-                    :feedDataId="feedDataId"
-                    :feedDataType="energie"
-                  />
-                </template>
-              </template>
+              <SemaineHorizontal
+                v-if="energie?.hasHourlyData"
+                id="semaine-h"
+                :periode="periode"
+                :feedDataId="feedDataId"
+                :feedDataType="energie"
+                :min="0"
+              />
               <JourSemaine
                 v-else
                 id="semaine-j"
@@ -71,9 +54,7 @@
             </template>
           </Card>
         </div>
-      </div>
-      <div class="p-grid">
-        <div class="p-col">
+        <div class="p-col-12">
           <Card class="evol-conso">
             <template #title>
               <div class="p-d-flex p-jc-between">
@@ -94,6 +75,55 @@
         </div>
       </div>
     </div>
+    <template v-else>
+      <div class="p-col-12 p-sm-offset-1 p-sm-10 p-md-offset-0 p-md-6 p-xl-9">
+        <Card class="card-repartition-jour-heure">
+          <template #title>
+            <div class="p-d-flex p-jc-between">
+              <div>En moyenne sur la semaine</div>
+              <AideSemaineJours/>
+            </div>
+          </template>
+          <template #content>
+            <div class="p-d-flex p-flex-column p-ai-center p-jc-center">
+              <SemaineVertical
+                v-if="energie?.hasHourlyData"
+                id="semaine-h"
+                :periode="periode"
+                :feedDataId="feedDataId"
+                :feedDataType="energie"
+                :min="0"
+              />
+              <JourSemaine
+                id="semaine-j"
+                :periode="periode"
+                :feedDataId="feedDataId"
+                :feedDataType="energie"
+              />
+            </div>
+          </template>
+        </Card>
+      </div>
+      <div class="p-col-12">
+        <Card class="evol-conso">
+          <template #title>
+            <div class="p-d-flex p-jc-between">
+              <div>Évolution de la consommation</div>
+              <AideEvolution/>
+            </div>
+          </template>
+          <template #content>
+            <Evolution
+              id="evolution"
+              :periode="periode"
+              :granularite="granularite"
+              :feedDataId="feedDataId"
+              :feedDataType="energie"
+            />
+          </template>
+        </Card>
+      </div>
+    </template>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="parameter admin p-d-grid p-ai-start p-mt-2">
+  <div class="parameter admin p-grid p-ai-start p-mt-2">
     <div class="p-col-12">
         <h1>Administration</h1>
         <div class="p-grid dash-analyse">

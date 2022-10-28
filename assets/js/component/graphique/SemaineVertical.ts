@@ -1,7 +1,8 @@
-import { DataDoubleRepartition, shortWeekDayList, weekDayList } from '@/type/DataValue';
+import { DataDoubleRepartition, weekDayList } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Frequence, RepartitionColonne } from '@/type/Granularite';
+import { hourFormat, weekDayFormat } from './d3-helpers';
 import { queryDoubleRepartition } from '@/api/data';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
@@ -44,8 +45,16 @@ export default defineComponent({
   } ,
   data() {
     return {
-      daySize: 17,
+      data: new Array<DataDoubleRepartition>(),
+
+      daySize: 16,
       axeColor: '#6d6d6d',
+      gridColor: '#dddddd',
+      rows: 24,
+      cols: 7,
+      marginTop: 35,
+      marginLeft: 35,
+      marginBottom: 30,
 
       maxValeur: 0,
       moyValeur: 0,
@@ -65,6 +74,14 @@ export default defineComponent({
     },
     feedDataId() {
       this.refresh()
+    },
+  },
+  computed: {
+    totalHeight(): number {
+      return this.marginTop + this.rows * this.daySize + this.marginBottom
+    },
+    totalWidth(): number {
+      return this.marginLeft + this.cols * this.daySize
     },
   },
   methods: {
@@ -108,25 +125,17 @@ export default defineComponent({
             ])
           .range([...Array(this.feedDataType.colors.length).keys()])
 
+        this.data = sortedData
         this.loading = false
-        this.rebuildGraph(sortedData)
+
+        this.rebuildGraph()
       }).catch(error => {
         this.error = true
         this.loading = false
         console.log(error)
       })
     },
-    rebuildGraph(data: Array<DataDoubleRepartition>) {
-      const rows = 24
-      const cols = 7
-      const marginTop = 35
-      const marginLeft = 35
-      const marginBottom = 30
-      const totalHeight = marginTop + rows * this.daySize + marginBottom
-      const totalWidth = marginLeft + cols * this.daySize
-      const weekDayFormat = (i: number) => shortWeekDayList[(i + 1)%7]
-      const hourFormat = (i: number) => ('00' + i % 24).slice(-2) + 'h'
-
+    rebuildGraph() {
       const element = d3
         .select('#' + this.id)
 
@@ -141,15 +150,23 @@ export default defineComponent({
       const svg = element
         .append('svg')
           .attr('class', 'chart')
-          .attr('width', totalWidth)
-          .attr('height', totalHeight)
+          .attr('width', this.totalWidth)
+          .attr('height', this.totalHeight)
 
       const chart = svg
         .append('g')
           .attr('class', 'chart')
-          .attr('width', totalWidth)
-          .attr('height', totalHeight)
+          .attr('width', this.totalWidth)
+          .attr('height', this.totalHeight)
 
+      this.appendDayLabel(chart)
+      this.appendHourLabel(chart)
+      this.appendNoDataRect(chart)
+      this.appendDataRect(chart)
+
+
+    },
+    appendDayLabel(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
       chart.append('g')
       .attr('class', 'dayLabel')
         .selectAll('text')
@@ -158,42 +175,43 @@ export default defineComponent({
         .text(weekDayFormat)
           .style('fill', this.axeColor)
           .attr('transform', (d, i) => {
-            return 'rotate(-90)translate(-30,' + (i * this.daySize + marginLeft + 12) + ')'
+            return 'rotate(-90)translate(-30,' + (i * this.daySize + this.marginTop + 12) + ')'
           })
-
+    },
+    appendHourLabel(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
       chart.append('g')
          .attr('class', 'timeLabel')
         .selectAll('text')
         .data(d3.range(24))
         .join('text')
         .text((d, i) => i % 3 === 0 ? hourFormat(d) : null)
-          .style('text-anchor', 'left')
+          .attr("x", this.marginLeft -5)
+          .attr("y", (d, i) => (i * this.daySize + this.marginLeft + 12))
+          .style('text-anchor', 'end')
           .style('fill', this.axeColor)
-          .attr('transform', (d, i) => {
-            return 'translate(10,' + (i * this.daySize + marginTop + 12) + ')'
-          })
-          .attr('font-family', 'sans-serif')
-          .attr('font-size', 10)
-
+    },
+    appendNoDataRect(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
       chart.append('g')
           .attr('class', 'no-data')
         .selectAll('rect')
         .data(d3.utcHours(new Date('2021-12-27 00:00'), new Date('2022-01-02 24:00')))
         .join('rect')
-        .attr("x", d => d.getUTCDay() * this.daySize + marginLeft)
-        .attr("y", d => d.getUTCHours() * this.daySize + marginTop)
+        .attr("x", d => d.getUTCDay() * this.daySize + this.marginTop)
+        .attr("y", d => d.getUTCHours() * this.daySize + this.marginLeft)
           .attr('rx', 10)
           .attr('width', this.daySize)
           .attr('height', this.daySize)
           .attr('fill', '#eaebec')
+    },
+    appendDataRect(chart: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
 
       chart.append('g')
           .attr('class', 'data')
         .selectAll('rect')
-        .data(data)
+        .data(this.data)
         .join('rect')
-          .attr("x", d => d.axeX * this.daySize + 0.5 * this.daySize + marginLeft)
-          .attr("y", d => d.axeY * this.daySize + 0.5 * this.daySize + marginTop)
+          .attr("x", d => d.axeX * this.daySize + this.marginLeft)
+          .attr("y", d => d.axeY * this.daySize + this.marginTop)
           .attr('rx', 10)
           .attr('width', 0)
           .attr('height', 0)
@@ -208,13 +226,13 @@ export default defineComponent({
 
       chart
         .selectAll('.data rect')
-        .data(data)
+        .data(this.data)
         .transition()
         .duration(300)
         .delay((d, i) => i * 5)
         .ease(d3.easeCubic)
-        .attr("x", d => d.axeX * this.daySize + marginLeft)
-        .attr("y", d => d.axeY * this.daySize + marginTop)
+        .attr("x", d => d.axeX * this.daySize + this.marginLeft)
+        .attr("y", d => d.axeY * this.daySize + this.marginTop)
           .attr('width', this.daySize - 1)
           .attr('height', this.daySize - 1)
     },

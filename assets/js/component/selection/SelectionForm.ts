@@ -1,18 +1,29 @@
 import { defineComponent, PropType } from 'vue';
-import EnergieSelect from './EnergieSelect';
-import MeteoSelect from './MeteoSelect';
-import GranulariteSelect from './GranulariteSelect';
-import PeriodeSelect from './PeriodeSelect';
+import { grid } from '../../composable/vue-screen';
+import { mapGetters } from 'vuex';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
 import DoublePeriodeSelect from './DoublePeriodeSelect';
+import EnergieSelect from './EnergieSelect';
+import GranulariteSelect from './GranulariteSelect';
+import MeteoSelect from './MeteoSelect';
+import PeriodeSelect from './PeriodeSelect';
 
 export default defineComponent({
   name: 'SelectionForm',
   components: {
-    EnergieSelect,
-    MeteoSelect,
-    GranulariteSelect,
-    PeriodeSelect,
+    Button,
+    Dialog,
     DoublePeriodeSelect,
+    EnergieSelect,
+    GranulariteSelect,
+    MeteoSelect,
+    PeriodeSelect,
+  },
+  setup() {
+    return {
+      grid,
+    }
   },
   props: {
     type: {
@@ -20,4 +31,19 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      displayDialog: false
+    }
+  },
+  computed: {
+    ...mapGetters({
+      onlyOneEnergie: 'onlyOneEnergie',
+    }),
+  },
+  methods: {
+    toggleDialog() {
+      this.displayDialog = !this.displayDialog
+    }
+  }
 });

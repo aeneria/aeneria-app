@@ -21,6 +21,14 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    label: {
+      type: String,
+      required: true,
+    },
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     goTo() {
