@@ -45,6 +45,7 @@ final class DataImporterTest extends AppTestCase
             $this->getResourceDir() . '/broken-export.ods'
         );
 
+        var_dump($errors);
         // The file contains 4 errors
         self::assertCount(4, $errors);
     }

@@ -5,6 +5,8 @@ Les assets sont gérer avec `Webpack Encore <https://symfony.com/doc/current/fro
 
 .. code-block:: bash
 
+    nvm use
+
     # Installer les dépendances
     yarn install
 

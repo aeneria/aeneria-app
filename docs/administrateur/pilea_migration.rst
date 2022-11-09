@@ -8,7 +8,7 @@ Un peu d'histoire
 Pilea est l'ancien nom d'æneria.
 
 Les versions 0.5.x de Pilea reposaient sur l'architecture de l'ancien espace personnel Enedis. Elles
-utilisaient des technique de web-scrapping pour récupérer les données de consommation d'électricité.
+utilisaient des techniques de web-scrapping pour récupérer les données de consommation d'électricité.
 
 Cette solution n'était pas pérenne et au moment où Enedis a changé son site, les scripts de
 Pilea ne fonctionnaient plus.

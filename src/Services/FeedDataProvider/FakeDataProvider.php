@@ -33,6 +33,9 @@ class FakeDataProvider extends AbstractFeedDataProvider
                     case Feed::FEED_TYPE_ELECTRICITY:
                         $this->generateElectricityData($date, $feed);
                         break;
+                    case Feed::FEED_TYPE_GAZ:
+                        $this->generateGazData($date, $feed);
+                        break;
                 }
             }
         }
@@ -146,6 +149,42 @@ class FakeDataProvider extends AbstractFeedDataProvider
 
         $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_DAY);
         $this->entityManager->flush();
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
+        $this->entityManager->flush();
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
+        $this->entityManager->flush();
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Generate Fake data for a gaz typed feed for date for all frenquencies.
+     */
+    private function generateGazData(\DateTimeImmutable $date, Feed $feed)
+    {
+        // Get feedData.
+        $feedData = $this->feedDataRepository->findOneByFeed($feed);
+        switch ((int) $date->format('n')) {
+            case 10:
+            case 11:
+            case 12:
+            case 1:
+            case 2:
+            case 3:
+                $value = \rand(0, 120);
+                break;
+            default:
+                $value = \rand(0, 10);
+        }
+
+        $this->dataValueRepository->updateOrCreateValue(
+            $feedData,
+            $date,
+            DataValue::FREQUENCY_DAY,
+            $value
+        );
+        $this->entityManager->flush();
+
         $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
         $this->entityManager->flush();
         $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
