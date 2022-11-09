@@ -72,8 +72,8 @@ abstract class AbstractAppController extends AbstractController
         return new JsonResponse(\json_encode([
             'error' => [
                 'dataKey' => $dataKey,
-                'message' => $message
-            ]
+                'message' => $message,
+            ],
         ]), 400);
     }
 }

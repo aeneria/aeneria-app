@@ -45,7 +45,7 @@ class ApiConfigController extends AbstractAppController
         Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordEncoderInterface $passwordEncoder
-    ):JsonResponse {
+    ): JsonResponse {
         $user = $this->checkUser();
         $data = \json_decode($request->getContent());
 
@@ -68,7 +68,7 @@ class ApiConfigController extends AbstractAppController
         return new JsonResponse('', 200);
     }
 
-    public function updateEmail(Request $request, EntityManagerInterface $entityManager):JsonResponse
+    public function updateEmail(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $user = $this->checkUser();
         $data = \json_decode($request->getContent());
@@ -122,7 +122,7 @@ class ApiConfigController extends AbstractAppController
         $ret = [];
 
         if ($result = $this->placeRepository->getAllowedPlaces($this->getUser())) {
-            foreach($result as $place) {
+            foreach ($result as $place) {
                 \assert($place instanceof Place);
 
                 if ($periode = $dataValueRepository->getPeriodDataAmplitude($place)) {

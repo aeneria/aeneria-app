@@ -4,7 +4,7 @@ namespace App\Model;
 
 class StationSynop
 {
-  /** @var int */
+    /** @var int */
     public $key;
     /** @var string */
     public $label;
@@ -22,10 +22,10 @@ class StationSynop
       string $longitude,
       string $altitude
     ) {
-      $this->key = $key;
-      $this->label = $label;
-      $this->latitude = $latitude;
-      $this->longitude = $longitude;
-      $this->altitude = $altitude;
+        $this->key = $key;
+        $this->label = $label;
+        $this->latitude = $latitude;
+        $this->longitude = $longitude;
+        $this->altitude = $altitude;
     }
 }

@@ -127,14 +127,16 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
         }
 
         // Sort stations.
-        \usort($stations, function (StationSynop $station) { return $station->label;});
+        \usort($stations, function (StationSynop $station) {
+            return $station->label;
+        });
 
         return $this->availableStations = $stations;
     }
 
     public function findStationByKey(int $key): ?StationSynop
     {
-        foreach($this->getAvailableStations() as $station) {
+        foreach ($this->getAvailableStations() as $station) {
             if ($station->key === $key) {
                 return $station;
             }

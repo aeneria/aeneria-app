@@ -76,7 +76,7 @@ class ApiFeedController extends AbstractAppController
         if (!$data->meteo) {
             return $this->dataValidationErrorResponse('meteo', "Vous devez fournir un id de station meteo 'meteo'.");
         }
-        if(!$station = $meteoFranceDataProvider->findStationByKey((int) $data->meteo)) {
+        if (!$station = $meteoFranceDataProvider->findStationByKey((int) $data->meteo)) {
             return $this->dataValidationErrorResponse('meteo', \sprintf("La station météo '%s' n'existe pas.", $data->meteo));
         }
         $meteoFeed = $this->feedRepository->getOrCreateMeteoFranceFeed([

@@ -139,7 +139,7 @@ class ApiDataController extends AbstractAppController
             throw new NotFoundHttpException("Le flux de données cherché n'existe pas !");
         }
 
-        if ($feedData->getFeed()->getFeedType() == Feed::FEED_TYPE_METEO) {
+        if (Feed::FEED_TYPE_METEO == $feedData->getFeed()->getFeedType()) {
             // Tout le monde peut voir les flux de type météo. Ces données ne sont
             // pas personnelles
             return $feedData;
