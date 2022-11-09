@@ -16,6 +16,7 @@ import Password from 'primevue/password';
 import useVuelidate from '@vuelidate/core';
 import UserAddForm from './UserAddForm';
 import UserEditForm from './UserEditForm';
+import { timeFormat } from 'd3';
 
 export default defineComponent({
   name: 'Users',
@@ -71,6 +72,9 @@ export default defineComponent({
     },
     getMeteo(place: Place): string {
       return findFeedByType(place, FeedType.meteo)?.param['CITY'] ?? ''
+    },
+    formatDate(date: Date): string {
+      return timeFormat("%d/%m/%Y %H:%M")(date)
     },
     toggleActif(event, utilisateur: Utilisateur) {
       this.$confirm.require({

@@ -42,6 +42,21 @@
           <i v-else class="pi false-icon pi-times-circle"></i>
         </template>
       </Column>
+      <Column header="Créé le" bodyClass="text-center">
+        <template #body="{data}">
+          {{ formatDate(data.createdAt) }}
+        </template>
+      </Column>
+      <Column header="Modifié le" bodyClass="text-center">
+        <template #body="{data}">
+          {{ formatDate(data.updatedAt) }}
+        </template>
+      </Column>
+      <Column header="Dernière connexion" bodyClass="text-center">
+        <template #body="{data}">
+          {{ data.lastLogin ? formatDate(data.lastLogin) : '-' }}
+        </template>
+      </Column>
       <Column header="">
         <template #body="{data}">
           <Button

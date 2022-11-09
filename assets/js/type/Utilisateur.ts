@@ -6,4 +6,7 @@ export interface Utilisateur {
   username: string,
   roles: string[],
   places: Place[],
+  createdAt: Date,
+  updatedAt: Date,
+  lastLogin: Date,
 }

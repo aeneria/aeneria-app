@@ -40,6 +40,13 @@ class User implements UserInterface, Serializable, JsonSerializable
     /** @var Place[] */
     private $sharedPlaces;
 
+    /** @var \DateTimeInterface */
+    private $createdAt;
+    /** @var \DateTimeInterface */
+    private $updatedAt;
+    /** @var \DateTimeInterface */
+    private $lastLogin;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -167,6 +174,42 @@ class User implements UserInterface, Serializable, JsonSerializable
         return $this;
     }
 
+    public function getCreatedAt(): \DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): \DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getLastLogin(): \DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(\DateTimeInterface $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
     /**
      * Check if user can see place's data
      *
@@ -227,6 +270,9 @@ class User implements UserInterface, Serializable, JsonSerializable
             $this->places,
             $this->roles,
             $this->sharedPlaces,
+            $this->createdAt,
+            $this->updatedAt,
+            $this->lastLogin,
         ]);
     }
 
@@ -243,7 +289,10 @@ class User implements UserInterface, Serializable, JsonSerializable
             $this->password,
             $this->places,
             $this->roles,
-            $this->sharedPlaces
+            $this->sharedPlaces,
+            $this->createdAt,
+            $this->updatedAt,
+            $this->lastLogin
         ) = \json_decode($serialized);
     }
 
@@ -264,6 +313,9 @@ class User implements UserInterface, Serializable, JsonSerializable
                 $places
             ),
             'roles' => $this->roles,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'lastLogin' => $this->lastLogin,
         ];
     }
 }
