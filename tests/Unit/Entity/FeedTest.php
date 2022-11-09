@@ -39,6 +39,7 @@ final class FeedTest extends AppTestCase
     {
         self::assertSame(Feed::getAllowedDataProvidersFor(Feed::FEED_TYPE_ELECTRICITY), [Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT]);
         self::assertSame(Feed::getAllowedDataProvidersFor(Feed::FEED_TYPE_METEO), [Feed::FEED_DATA_PROVIDER_METEO_FRANCE]);
+        self::assertSame(Feed::getAllowedDataProvidersFor(Feed::FEED_TYPE_GAZ), [Feed::FEED_DATA_PROVIDER_GRDF_ADICT]);
 
         $this->expectExceptionMessageRegExp('/Feed type .* does not exist !/');
         Feed::getNameFor('Toto');
@@ -48,6 +49,7 @@ final class FeedTest extends AppTestCase
     {
         self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_ELECTRICITY), 'Électricité');
         self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_METEO), 'Météo');
+        self::assertSame(Feed::getNameFor(Feed::FEED_TYPE_GAZ), 'Gaz');
 
         $this->expectExceptionMessageRegExp('/Feed type .* does not exist !/');
         Feed::getNameFor('Toto');
@@ -61,11 +63,22 @@ final class FeedTest extends AppTestCase
         );
 
         self::assertSame(
+            Feed::getFrequenciesFor(Feed::FEED_TYPE_GAZ),
+            [
+                'DAY' => DataValue::FREQUENCY_DAY,
+                'WEEK' => DataValue::FREQUENCY_WEEK,
+                'MONTH' => DataValue::FREQUENCY_MONTH,
+                'YEAR' => DataValue::FREQUENCY_YEAR,
+            ]
+        );
+
+        self::assertSame(
             Feed::getFrequenciesFor(Feed::FEED_TYPE_METEO),
             [
-                DataValue::FREQUENCY_DAY,
-                DataValue::FREQUENCY_WEEK,
-                DataValue::FREQUENCY_MONTH,
+                'DAY' => DataValue::FREQUENCY_DAY,
+                'WEEK' => DataValue::FREQUENCY_WEEK,
+                'MONTH' => DataValue::FREQUENCY_MONTH,
+                'YEAR' => DataValue::FREQUENCY_YEAR,
             ]
         );
 
@@ -78,6 +91,10 @@ final class FeedTest extends AppTestCase
         self::assertSame(Feed::getDataTypeFor(
             Feed::FEED_TYPE_ELECTRICITY),
             [FeedData::FEED_DATA_CONSO_ELEC]
+        );
+        self::assertSame(Feed::getDataTypeFor(
+            Feed::FEED_TYPE_GAZ),
+            [FeedData::FEED_DATA_CONSO_GAZ]
         );
 
         self::assertSame(
