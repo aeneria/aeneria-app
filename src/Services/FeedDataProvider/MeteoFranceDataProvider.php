@@ -94,6 +94,8 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
 
     /**
      * Get all available station on MeteoFrance for SYNOP observation.
+     *
+     * @return StationSynop[]
      */
     public function getAvailableStations(): array
     {
@@ -161,7 +163,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
         try {
             $synopData = $this->fetchSynopData($date);
         } catch (\Exception $e) {
-            return [new FetchingError($feed, $date, $e)];
+            return [new FetchingError(\reset($feeds), $date, $e)];
         }
 
         foreach ($feeds as $feed) {

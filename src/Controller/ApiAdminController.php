@@ -130,7 +130,6 @@ class ApiAdminController extends AbstractAppController
             ->setUsername($data->email)
             ->setActive($data->isActive ?? false)
             ->setRoles(($data->isAdmin ?? false) ? ['ROLE_ADMIN'] : [])
-            ->setUpdatedAt(new \DateTimeImmutable())
         ;
         if ($data->password) {
             $user->setPassword($passwordEncoder->encodePassword($user, $data->password));
@@ -162,7 +161,6 @@ class ApiAdminController extends AbstractAppController
 
         $user
             ->setActive(false)
-            ->setUpdatedAt(new \DateTimeImmutable())
         ;
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -187,7 +185,6 @@ class ApiAdminController extends AbstractAppController
 
         $user
             ->setActive(true)
-            ->setUpdatedAt(new \DateTimeImmutable())
         ;
         $this->entityManager->persist($user);
         $this->entityManager->flush();

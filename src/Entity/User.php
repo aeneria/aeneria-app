@@ -40,11 +40,11 @@ class User implements UserInterface, Serializable, JsonSerializable
     /** @var Place[] */
     private $sharedPlaces;
 
-    /** @var \DateTimeInterface */
+    /** @var ?\DateTimeInterface */
     private $createdAt;
-    /** @var \DateTimeInterface */
+    /** @var ?\DateTimeInterface */
     private $updatedAt;
-    /** @var \DateTimeInterface */
+    /** @var ?\DateTimeInterface */
     private $lastLogin;
 
     public function getId(): ?int
@@ -174,7 +174,7 @@ class User implements UserInterface, Serializable, JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -186,7 +186,7 @@ class User implements UserInterface, Serializable, JsonSerializable
         return $this;
     }
 
-    public function getUpdatedAt(): \DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
