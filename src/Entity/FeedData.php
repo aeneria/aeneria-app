@@ -155,7 +155,7 @@ class FeedData implements \JsonSerializable
         return [
             'id' => $this->id,
             'label' => $this->getDisplayDataType(),
-            'type' => $this->dataType
+            'type' => $this->dataType,
         ];
     }
 }

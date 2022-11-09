@@ -2,7 +2,6 @@
 
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictConsentException;
 use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
 use Aeneria\GrdfAdictApi\Model\InfoTechnique;
 use Aeneria\GrdfAdictApi\Model\Token;

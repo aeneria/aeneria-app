@@ -14,7 +14,8 @@ final class AppExtension extends AbstractExtension
     /**
      * Default constructor
      */
-    public function __construct(ContainerBagInterface $parameters) {
+    public function __construct(ContainerBagInterface $parameters)
+    {
         $this->parameters = $parameters;
     }
 

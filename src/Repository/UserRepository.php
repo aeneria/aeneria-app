@@ -70,7 +70,7 @@ class UserRepository extends ServiceEntityRepository
             ->setFirstResult($offset)
         ;
 
-        if ($limit != -1) {
+        if (-1 != $limit) {
             $query->setMaxResults($limit);
         }
 

@@ -140,20 +140,20 @@ class DataValue implements \JsonSerializable
     public function updateDateRelatedData(): self
     {
         if ($this->frequency <= DataValue::FREQUENCY_HOUR) {
-            $this->setHour((int)$this->date->format('H'));
+            $this->setHour((int) $this->date->format('H'));
         }
         $weekDay = 0 == $this->date->format('w') ? 6 : $this->date->format('w') - 1;
         if ($this->frequency <= DataValue::FREQUENCY_DAY) {
             $this->setWeekDay($weekDay);
         }
         if ($this->frequency <= DataValue::FREQUENCY_WEEK) {
-            $this->setWeek((int)$this->date->format('W'));
+            $this->setWeek((int) $this->date->format('W'));
         }
         if ($this->frequency <= DataValue::FREQUENCY_MONTH) {
-            $this->setMonth((int)$this->date->format('m'));
+            $this->setMonth((int) $this->date->format('m'));
         }
         if ($this->frequency <= DataValue::FREQUENCY_YEAR) {
-            $this->setYear((int)$this->date->format('Y'));
+            $this->setYear((int) $this->date->format('Y'));
         }
 
         return $this;

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Controller\DataController;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -258,8 +257,12 @@ class DataValueRepository extends ServiceEntityRepository
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
             // Add condition on feedData
-            ->andWhere($queryBuilder->expr()->in('dx.feedData', \array_map(function($feedData) {return $feedData->getId();}, $feedDataX)))
-            ->andWhere($queryBuilder->expr()->in('dy.feedData', \array_map(function($feedData) {return $feedData->getId();}, $feedDataY)))
+            ->andWhere($queryBuilder->expr()->in('dx.feedData', \array_map(function ($feedData) {
+                return $feedData->getId();
+            }, $feedDataX)))
+            ->andWhere($queryBuilder->expr()->in('dy.feedData', \array_map(function ($feedData) {
+                return $feedData->getId();
+            }, $feedDataY)))
             // Add condition on frequency
             ->andWhere('dx.frequency = :frequency')
             ->andWhere('dy.frequency = :frequency')
@@ -458,7 +461,9 @@ class DataValueRepository extends ServiceEntityRepository
 
         // Add condition on feedData
         $queryBuilder
-            ->andWhere($queryBuilder->expr()->in('d.feedData', \array_map(function($feedData) {return $feedData->getId();}, $feedDatas)))
+            ->andWhere($queryBuilder->expr()->in('d.feedData', \array_map(function ($feedData) {
+                return $feedData->getId();
+            }, $feedDatas)))
         ;
 
         // Add condition on frequency

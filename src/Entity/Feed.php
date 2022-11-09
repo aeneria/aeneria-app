@@ -57,9 +57,9 @@ class Feed implements \JsonSerializable
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_GAZ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_GRDF_ADICT],
                 'FREQUENCIES' => [
-                    DataValue::FREQUENCY_DAY,
-                    DataValue::FREQUENCY_WEEK,
-                    DataValue::FREQUENCY_MONTH,
+                    'DAY' => DataValue::FREQUENCY_DAY,
+                    'WEEK' => DataValue::FREQUENCY_WEEK,
+                    'MONTH' => DataValue::FREQUENCY_MONTH,
                     'YEAR' => DataValue::FREQUENCY_YEAR,
                 ],
             ],
@@ -77,9 +77,9 @@ class Feed implements \JsonSerializable
                 ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_METEO_FRANCE],
                 'FREQUENCIES' => [
-                    DataValue::FREQUENCY_DAY,
-                    DataValue::FREQUENCY_WEEK,
-                    DataValue::FREQUENCY_MONTH,
+                    'DAY' => DataValue::FREQUENCY_DAY,
+                    'WEEK' => DataValue::FREQUENCY_WEEK,
+                    'MONTH' => DataValue::FREQUENCY_MONTH,
                     'YEAR' => DataValue::FREQUENCY_YEAR,
                 ],
             ],
@@ -190,7 +190,7 @@ class Feed implements \JsonSerializable
     {
         $nbFetchErrors = $this->getFetchError();
 
-        return ($nbFetchErrors > 100);
+        return $nbFetchErrors > 100;
     }
 
     public function resetFetchError(): self
@@ -349,7 +349,7 @@ class Feed implements \JsonSerializable
                 },
                 $feedDataList
             ),
-            'fetchError' => $this->fetchError
+            'fetchError' => $this->fetchError,
         ];
     }
 }

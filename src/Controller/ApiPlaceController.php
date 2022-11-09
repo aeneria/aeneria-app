@@ -24,7 +24,7 @@ class ApiPlaceController extends AbstractAppController
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
         MeteoFranceDataProvider $meteoFranceDataProvider
-    ):JsonResponse {
+    ): JsonResponse {
         $user = $this->getUser();
         \assert($user instanceof User);
 
@@ -40,7 +40,7 @@ class ApiPlaceController extends AbstractAppController
         if (!$data->meteo) {
             return $this->dataValidationErrorResponse('meteo', "Vous devez fournir un id de station meteo 'meteo'.");
         }
-        if(!$station = $meteoFranceDataProvider->findStationByKey((int) $data->meteo)) {
+        if (!$station = $meteoFranceDataProvider->findStationByKey((int) $data->meteo)) {
             return $this->dataValidationErrorResponse('meteo', \sprintf("La station météo '%s' n'existe pas.", $data->meteo));
         }
 
@@ -65,7 +65,7 @@ class ApiPlaceController extends AbstractAppController
     public function updateName(
         Request $request,
         EntityManagerInterface $entityManager
-    ):JsonResponse {
+    ): JsonResponse {
         $data = \json_decode($request->getContent());
 
         if (!$data->placeId) {
@@ -200,7 +200,7 @@ class ApiPlaceController extends AbstractAppController
             $feed,
             $startDate,
             $endDate,
-            !!($data->force ?? false)
+            (bool) ($data->force ?? false)
         );
 
         return new JsonResponse('', 200);

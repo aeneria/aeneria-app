@@ -75,7 +75,7 @@ class FeedDataRepository extends ServiceEntityRepository
      *
      * @return FeedData[]
      */
-    public function findByPlaceAndDataType(Place $place, $dataTypes): ?Array
+    public function findByPlaceAndDataType(Place $place, $dataTypes): ?array
     {
         $dataTypes = \is_array($dataTypes) ? $dataTypes : $dataTypes;
 

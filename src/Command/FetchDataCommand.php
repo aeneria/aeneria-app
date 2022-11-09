@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use App\Entity\Feed;
-use App\Model\FetchingError;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\FeedDataProviderFactory;

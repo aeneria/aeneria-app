@@ -119,7 +119,7 @@ class ApiAdminController extends AbstractAppController
             return $this->dataValidationErrorResponse('email', "L'adresse email est invalide.");
         }
         if ($founds = $this->userRepository->findByUsername($data->email)) {
-            foreach($founds as $found) {
+            foreach ($founds as $found) {
                 if ($found->getId() !== $user->getId()) {
                     return $this->dataValidationErrorResponse('email', "Un utilisateur existe déjà pour cette adresse email.");
                 }

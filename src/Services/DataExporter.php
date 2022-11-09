@@ -32,8 +32,8 @@ class DataExporter
     {
         if (!$from || !$to) {
             $maxDates = $this->dataValueRepository->getPeriodDataAmplitude($place);
-            $from = $from ?? ($maxDates[1] ?\DateTimeImmutable::createFromFormat('Y-m-d h:i:s', $maxDates[1]) : new \DateTimeImmutable('last year'));
-            $to = $to ?? ($maxDates[2] ?\DateTimeImmutable::createFromFormat('Y-m-d h:i:s', $maxDates[2]) : new \DateTimeImmutable('yesterday'));
+            $from = $from ?? ($maxDates[1] ? \DateTimeImmutable::createFromFormat('Y-m-d h:i:s', $maxDates[1]) : new \DateTimeImmutable('last year'));
+            $to = $to ?? ($maxDates[2] ? \DateTimeImmutable::createFromFormat('Y-m-d h:i:s', $maxDates[2]) : new \DateTimeImmutable('yesterday'));
         }
 
         $filename = \sprintf(
