@@ -10,7 +10,13 @@ export function queryUtilisateurs(limit: number, offset: number): Promise<Array<
     if (!data) {
       return null
     }
-    return JSON.parse(data)
+    return JSON.parse(data, (key, value) => {
+      if (['createdAt', 'updatedAt', 'lastLogin'].includes(key)) {
+        return value ? new Date(value.date) : null
+      }
+
+      return value
+    })
   })
 }
 

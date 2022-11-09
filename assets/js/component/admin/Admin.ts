@@ -1,35 +1,29 @@
 import { defineComponent } from 'vue';
-import Button from 'primevue/button';
-import Card from 'primevue/card';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
-import Dropdown from 'primevue/dropdown';
-import InputSwitch from 'primevue/inputswitch';
-import InputText from 'primevue/inputtext';
 import Logs from './Logs';
 import Message from 'primevue/message';
+import TabPanel from 'primevue/tabpanel';
+import TabView from 'primevue/tabview';
 import Users from './Users';
 
 export default defineComponent({
   name: 'Admin',
   components: {
-    Button,
-    Card,
     Column,
     DataTable,
-    Dropdown,
-    InputSwitch,
-    InputText,
     Logs,
     Message,
     Users,
+    TabPanel,
+    TabView,
   },
   data() {
     return {
       configs: [
         {
           libelle: "Nombre d'adresses max par utilisateur",
-          valeur: this.$store.state.configuration?.userMaxPlaces,
+          valeur: this.$store.state.configuration?.userMaxPlaces == -1 ? "Illimité" : this.$store.state.configuration?.userMaxPlaces,
         },
         {
           libelle: "Partage d'adresses entre utilisateurs",

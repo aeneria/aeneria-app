@@ -118,14 +118,19 @@ class ApiAdminController extends AbstractAppController
         if (\count($validator->validate($data->email, [new Email()]))) {
             return $this->dataValidationErrorResponse('email', "L'adresse email est invalide.");
         }
-        if ($this->userRepository->findOneByUsername($data->email)) {
-            return $this->dataValidationErrorResponse('email', "Un utilisateur existe déjà pour cette adresse email.");
+        if ($founds = $this->userRepository->findByUsername($data->email)) {
+            foreach($founds as $found) {
+                if ($found->getId() !== $user->getId()) {
+                    return $this->dataValidationErrorResponse('email', "Un utilisateur existe déjà pour cette adresse email.");
+                }
+            }
         }
 
         $user
             ->setUsername($data->email)
             ->setActive($data->isActive ?? false)
             ->setRoles(($data->isAdmin ?? false) ? ['ROLE_ADMIN'] : [])
+            ->setUpdatedAt(new \DateTimeImmutable())
         ;
         if ($data->password) {
             $user->setPassword($passwordEncoder->encodePassword($user, $data->password));
@@ -155,7 +160,10 @@ class ApiAdminController extends AbstractAppController
             return $this->dataValidationErrorResponse('isActive', "Vous ne pouvez pas désactiver cet utilisateur, c'est le dernier administrateur !");
         }
 
-        $user->setActive(false);
+        $user
+            ->setActive(false)
+            ->setUpdatedAt(new \DateTimeImmutable())
+        ;
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -177,7 +185,10 @@ class ApiAdminController extends AbstractAppController
             return $this->dataValidationErrorResponse('yesIamSure', "Vous devez fournir l'argument yesIamSure à true");
         }
 
-        $user->setActive(true);
+        $user
+            ->setActive(true)
+            ->setUpdatedAt(new \DateTimeImmutable())
+        ;
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
