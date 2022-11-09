@@ -1,0 +1,19 @@
+configuration:
+    resource: "./configuration.yaml"
+    prefix: /config
+
+data:
+    resource: "./data.yaml"
+    prefix: /data
+
+place:
+    resource: "./place.yaml"
+    prefix: /place
+
+feed:
+    resource: "./feed.yaml"
+    prefix: /feed
+
+admin:
+    resource: "./admin.yaml"
+    prefix: /admin

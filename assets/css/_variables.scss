@@ -5,99 +5,12 @@ $font-monospace: SourceSansPro;
 $font-text: RobotoSlab;
 
 $primary-color: #4f323b;
+$secondary-color: #6a8389;
 $white: #ffffff;
 $body-bg-color: #f4f4f4;
 $sidebar-bg-color: #313131;
 $selection-bg-color: #dddddd;
-$button-color: #6a8389;
-$theme-colors: (
-  "primary": #6a8389,
-  "danger": crimson
-);
 
 // Chart colors
 $grid-color: #dddddd;
 $axe-color: #6d6d6d;
-
-$chart-colors: (
-  'conso_elec': (
-    #feff9d
-    #ffee79
-    #fbde5e
-    #f5ce48
-    #edbf38
-    #e4b02c
-    #dba225
-    #d09422
-    #c68622
-  ),
-  'conso_gaz': (
-    #f7fbff,
-    #deebf7,
-    #c6dbef,
-    #9ecae1,
-    #6baed6,
-    #4292c6,
-    #2171b5,
-    #08519c,
-    #08306b
-  ),
-  'nebulosity': (
-    #20CFFE,
-    #48C4EB,
-    #5BBAD9,
-    #67AFC7,
-    #6EA5B7,
-    #729BA7,
-    #749198,
-    #758889,
-    #747E7C
-  ),
-  'dju': (
-    #B3E5FC,
-    #81D4FA,
-    #64B5F6,
-    #4FC3F7,
-    #29B6F6,
-    #03A9F4,
-    #039BE5,
-    #0288D1,
-    #0277BD
-  ),
-  'humidity': (
-    #f03b20,
-    #feb24c,
-    #ffeda0,
-    #ffffcc,
-    #c7e9b4,
-    #7fcdbb,
-    #41b6c4,
-    #2c7fb8,
-    #253494
-  ),
-  'rain': (
-    #f7fcf0,
-    #e0f3db,
-    #ccebc5,
-    #a8ddb5,
-    #7bccc4,
-    #4eb3d3,
-    #2b8cbe,
-    #0868ac,
-    #084081
-  ),
-  'temperature': (
-    #4575b4,
-    #74add1,
-    #abd9e9,
-    #e0f3f8,
-    #ffffbf,
-    #fee090,
-    #fdae61,
-    #f46d43,
-    #d73027,
-  )
-);
-
-$period-one: #f5ce48;
-$period-two: #dba225;

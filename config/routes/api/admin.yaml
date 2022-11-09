@@ -1,0 +1,31 @@
+api.admin.user.list:
+  path: /user
+  controller: App\Controller\ApiAdminController::userList
+
+api.admin.user.count:
+  path: /user/count
+  controller: App\Controller\ApiAdminController::userCount
+
+api.admin.user.add:
+  path: /user/add
+  controller: App\Controller\ApiAdminController::addUser
+
+api.admin.user.update:
+  path: /user/{id}/update
+  controller: App\Controller\ApiAdminController::updateUser
+
+api.admin.user.disable:
+  path: /user/{id}/disable
+  controller: App\Controller\ApiAdminController::disabledUser
+
+api.admin.user.enable:
+  path: /user/{id}/enable
+  controller: App\Controller\ApiAdminController::enableUser
+
+api.admin.user.delete:
+  path: /user/{id}/delete
+  controller: App\Controller\ApiAdminController::deleteUser
+
+api.admin.log:
+  path: /log
+  controller: App\Controller\ApiAdminController::displayLog

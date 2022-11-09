@@ -2,8 +2,8 @@
 
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictConsentException;
 use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
+use Aeneria\GrdfAdictApi\Model\InfoTechnique;
 use Aeneria\GrdfAdictApi\Model\Token;
 use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
 use App\Entity\DataValue;
@@ -22,16 +22,11 @@ use Psr\Log\LoggerInterface;
  */
 class GrdfAdictProvider extends AbstractFeedDataProvider
 {
-    use FetchErrorTrait;
-
     /** @var GrdfAdictServiceInterface */
     private $grdfAdict;
 
     /** @var Token */
     private $accessToken = null;
-
-    /** @var NotificationService */
-    private $notificationService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -43,9 +38,15 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         LoggerInterface $logger
     ) {
         $this->grdfAdict = $grdfAdict;
-        $this->notificationService = $notificationService;
 
-        parent::__construct($entityManager, $feedRepository, $feedDataRepository, $dataValueRepository, $logger);
+        parent::__construct(
+            $entityManager,
+            $feedRepository,
+            $feedDataRepository,
+            $dataValueRepository,
+            $notificationService,
+            $logger
+        );
     }
 
     /**
@@ -81,7 +82,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
             // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
             // while fetching data, we stop asking for data for it.
             // We also display a notification to warn user about this situation.
-            if ($this->hasToManyFetchError($feed)) {
+            if ($feed->hasToManyFetchError()) {
                 $this->notificationService->handleTooManyFetchErrorsNotification($feed);
 
                 continue;
@@ -92,7 +93,10 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
                 if ($data = $this->fetchDataForFeed($date, $feed, $errors)) {
                     $this->persistData($date, $feed, $data);
-                    $this->resetFetchError($feed);
+
+                    $feed->resetFetchError();
+                    $this->entityManager->persist($feed);
+                    $this->entityManager->flush();
 
                     $this->logger->info("GrdfAdict - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
@@ -122,6 +126,35 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         return $this->accessToken->getAccessToken();
     }
 
+    /**
+     * Check enedis consent for a feed by trying
+     * to get address informations.
+     */
+    public function consentCheck(Feed $feed): ?InfoTechnique
+    {
+        if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Should be an array of GrdfAdict Feeds overhere !");
+        }
+
+        try {
+            $accessToken = $this->getAccessToken();
+        } catch (GrdfAdictException $e) {
+            return null;
+        }
+
+        try {
+            return $this->grdfAdict
+                ->getContratService()
+                ->requestInfoTechnique(
+                    $accessToken,
+                    $this->getPce($feed)
+                )
+            ;
+        } catch (GrdfAdictException $e) {
+            return null;
+        }
+    }
+
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
         $data = [];
@@ -145,11 +178,6 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
             // on attends 1 seconde entre chaque requête
             \sleep(1);
         } catch (GrdfAdictException $e) {
-            $this->logError(
-                $feed,
-                $e instanceof GrdfAdictConsentException ? self::ERROR_CONSENT : self::ERROR_FETCH
-            );
-
             $this->logger->error("GrdfAdict - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
 
@@ -184,7 +212,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
         // Persist day data.
         foreach ($data as $currentDate => $value) {
-            if ($value && -1 !== (int) $value) {
+            if (isset($value) && -1 !== (int) $value) {
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),

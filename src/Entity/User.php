@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use JsonSerializable;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Place
  */
-class User implements UserInterface, Serializable
+class User implements UserInterface, Serializable, JsonSerializable
 {
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_USER = 'ROLE_USER';
@@ -32,10 +35,17 @@ class User implements UserInterface, Serializable
     private $password;
 
     /** @var Place[] */
-    private $places;
+    private $places = [];
 
     /** @var Place[] */
     private $sharedPlaces;
+
+    /** @var ?\DateTimeInterface */
+    private $createdAt;
+    /** @var ?\DateTimeInterface */
+    private $updatedAt;
+    /** @var ?\DateTimeInterface */
+    private $lastLogin;
 
     public function getId(): ?int
     {
@@ -133,7 +143,7 @@ class User implements UserInterface, Serializable
         // $this->plainPassword = null;
     }
 
-    public function getPlaces(): ?iterable
+    public function getPlaces(): iterable
     {
         return $this->places;
     }
@@ -160,6 +170,42 @@ class User implements UserInterface, Serializable
     public function setSharedPlaces(array $places): self
     {
         $this->sharedPlaces = $places;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getLastLogin(): \DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(\DateTimeInterface $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }
@@ -224,6 +270,9 @@ class User implements UserInterface, Serializable
             $this->places,
             $this->roles,
             $this->sharedPlaces,
+            $this->createdAt,
+            $this->updatedAt,
+            $this->lastLogin,
         ]);
     }
 
@@ -240,7 +289,33 @@ class User implements UserInterface, Serializable
             $this->password,
             $this->places,
             $this->roles,
-            $this->sharedPlaces
+            $this->sharedPlaces,
+            $this->createdAt,
+            $this->updatedAt,
+            $this->lastLogin
         ) = \json_decode($serialized);
+    }
+
+    public function jsonSerialize()
+    {
+        if (!\is_array($places = $this->getPlaces())) {
+            $places = \iterator_to_array($places);
+        }
+
+        return [
+            'id' => $this->id,
+            'active' => $this->active,
+            'username' => $this->username,
+            'places' => \array_map(
+                function (Place $place) {
+                    return $place->jsonSerialize();
+                },
+                $places
+            ),
+            'roles' => $this->roles,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'lastLogin' => $this->lastLogin,
+        ];
     }
 }

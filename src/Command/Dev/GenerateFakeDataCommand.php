@@ -130,12 +130,20 @@ class GenerateFakeDataCommand extends Command
                 ->setParam([])
             ;
 
+            $gazFeed = (new Feed())
+                ->setName(Feed::FEED_TYPE_GAZ)
+                ->setFeedType(Feed::FEED_TYPE_GAZ)
+                ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_FAKE)
+                ->setParam([])
+            ;
+
             $place = (new Place())
                 ->setName($placeName)
                 ->setPublic(true)
                 ->setUser($user)
                 ->addFeed($meteoFeed)
                 ->addFeed($electricityFeed)
+                ->addFeed($gazFeed)
             ;
 
             $this->entityManager->persist($place);

@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Place;
+use App\Entity\User;
 use App\Repository\PlaceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractAppController extends AbstractController
 {
@@ -57,12 +58,22 @@ abstract class AbstractAppController extends AbstractController
         return $place;
     }
 
-    final protected function checkUser(): ?UserInterface
+    final protected function checkUser(): ?User
     {
         if (!($user = $this->getUser()) || $this->isDemoMode) {
             throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à modifier le compte utilisateur.");
         }
 
         return $user;
+    }
+
+    final protected function dataValidationErrorResponse(string $dataKey, string $message): JsonResponse
+    {
+        return new JsonResponse(\json_encode([
+            'error' => [
+                'dataKey' => $dataKey,
+                'message' => $message,
+            ],
+        ]), 400);
     }
 }

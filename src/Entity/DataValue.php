@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use InvalidArgumentException;
@@ -7,7 +9,7 @@ use InvalidArgumentException;
 /**
  * DataValue
  */
-class DataValue
+class DataValue implements \JsonSerializable
 {
     /** @deprecated use DataValue::getAllFrequencies() instead */
     const FREQUENCY = [
@@ -138,20 +140,20 @@ class DataValue
     public function updateDateRelatedData(): self
     {
         if ($this->frequency <= DataValue::FREQUENCY_HOUR) {
-            $this->setHour($this->date->format('H'));
+            $this->setHour((int) $this->date->format('H'));
         }
         $weekDay = 0 == $this->date->format('w') ? 6 : $this->date->format('w') - 1;
         if ($this->frequency <= DataValue::FREQUENCY_DAY) {
             $this->setWeekDay($weekDay);
         }
         if ($this->frequency <= DataValue::FREQUENCY_WEEK) {
-            $this->setWeek($this->date->format('W'));
+            $this->setWeek((int) $this->date->format('W'));
         }
         if ($this->frequency <= DataValue::FREQUENCY_MONTH) {
-            $this->setMonth($this->date->format('m'));
+            $this->setMonth((int) $this->date->format('m'));
         }
         if ($this->frequency <= DataValue::FREQUENCY_YEAR) {
-            $this->setYear($this->date->format('Y'));
+            $this->setYear((int) $this->date->format('Y'));
         }
 
         return $this;
@@ -293,6 +295,16 @@ class DataValue
     public function getFeedData(): FeedData
     {
         return $this->feedData;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'value' => $this->value,
+            'date' => $this->date,
+            'frequency' => self::getFrequencyMachineName($this->frequency),
+        ];
     }
 
     /**

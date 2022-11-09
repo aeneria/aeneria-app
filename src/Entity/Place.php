@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 /**
  * Place
  */
-class Place
+class Place implements \JsonSerializable
 {
     /** @var int */
     private $id;
@@ -27,6 +29,18 @@ class Place
 
     /** @var Feed[]|null */
     private $feeds = [];
+
+    /** @var \DateTimeImmutable|null
+     *
+     * N'est pas hydraté automatiquement. à setter à la main si nécessaire
+     */
+    private $periodeMin = null;
+
+    /** @var \DateTimeImmutable|null
+     *
+     * N'est pas hydraté automatiquement. à setter à la main si nécessaire
+     */
+    private $periodeMax = null;
 
     public function getId(): ?int
     {
@@ -125,6 +139,9 @@ class Place
         return $this;
     }
 
+    /**
+     * @return \Iterable<Feed>
+     */
     public function getFeeds(): iterable
     {
         return $this->feeds;
@@ -150,6 +167,18 @@ class Place
         return null;
     }
 
+    public function findFeed(int $feedId): ?Feed
+    {
+        foreach ($this->feeds as $feed) {
+            if ($feedId === $feed->getId()) {
+                return $feed;
+            }
+        }
+    }
+
+    /**
+     * @return FeedData[]
+     */
     public function getFeedDatas(): array
     {
         $feedDatas = [];
@@ -183,6 +212,9 @@ class Place
         return null;
     }
 
+    /**
+     * @return \Iterable<User>
+     */
     public function getAllowedUsers(): ?iterable
     {
         return $this->allowedUsers;
@@ -193,5 +225,37 @@ class Place
         $this->allowedUsers = $allowedUsers;
 
         return $this;
+    }
+
+    public function setPeriodeAmplitude(?\DateTimeImmutable $min, ?\DateTimeImmutable $max): self
+    {
+        $this->periodeMin = $min;
+        $this->periodeMax = $max;
+
+        return $this;
+    }
+
+    public function getPeriodeAmplitude(): array
+    {
+        return [$this->periodeMin, $this->periodeMax];
+    }
+
+    public function jsonSerialize()
+    {
+        $feedList = \iterator_to_array($this->getFeeds());
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'icon' => 'home',
+            'feedList' => \array_map(
+                function (Feed $feed) {
+                    return $feed->jsonSerialize();
+                },
+                $feedList
+            ),
+            'periodeMin' => $this->periodeMin,
+            'periodeMax' => $this->periodeMax,
+        ];
     }
 }

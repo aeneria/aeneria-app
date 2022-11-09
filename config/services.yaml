@@ -6,8 +6,6 @@
 parameters:
     locale: 'fr'
     aeneria.version: '1.1.6'
-    aeneria.repo_git: 'https://gitlab.com/aeneria/aeneria-app'
-    aeneria.documentation: 'https://docs.aeneria.com/fr/'
 
     # aeneria features
     aeneria.user.max_places: "%env(AENERIA_USER_MAX_PLACES)%"
@@ -58,7 +56,7 @@ services:
             $userCanSharePlace: '%aeneria.user.can_share_place%'
             $userCanFetch: '%aeneria.user.can_fetch%'
             $userCanExport: '%aeneria.user.can_export%'
-            $userCanIMport: '%aeneria.user.can_import%'
+            $userCanImport: '%aeneria.user.can_import%'
             $isDemoMode: '%aeneria.demo_mode%'
             $placeCanBePublic: '%aeneria.place_can_be_public%'
 
@@ -78,6 +76,9 @@ services:
     App\Twig\:
         resource: '../src/Twig'
         tags: ['twig.extension', 'container.hot_path']
+
+    App\EventSubscriber\DoctrineEventSubscriber:
+        tags: ['doctrine.event_subscriber']
 
     Aeneria\EnedisDataConnectApi\Service\DataConnectService:
         arguments:

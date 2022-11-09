@@ -29,9 +29,9 @@ build:assets:
   inherit:
     default: false
   stage: build
-  image: node:10-alpine
+  image: node:16.16-alpine
   script:
-    - apk add --no-cache jq python gcc g++ make
+    - apk add --no-cache jq python3 gcc g++ make
     - yarn install
     - yarn build
   artifacts:

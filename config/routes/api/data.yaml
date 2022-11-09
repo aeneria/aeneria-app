@@ -1,0 +1,23 @@
+api.data.point:
+  path: /point/{feedDataId}/{frequence}/{debut}/{fin}
+  controller: App\Controller\ApiDataController::getPoint
+
+api.data.repartition:
+  path: /repartition/{feedDataId}/{frequence}/{colonne}/{debut}/{fin}
+  controller: App\Controller\ApiDataController::getRepartition
+
+api.data.double_repartition:
+  path: /double_repartition/{feedDataId}/{frequence}/{colonneX}/{colonneY}/{debut}/{fin}
+  controller: App\Controller\ApiDataController::getDoubleRepartition
+
+api.data.somme:
+  path: /somme/{feedDataId}/{frequence}/{debut}/{fin}
+  controller: App\Controller\ApiDataController::getSomme
+
+api.data.max:
+  path: /max/{feedDataId}/{frequence}/{debut}/{fin}
+  controller: App\Controller\ApiDataController::getMax
+
+api.data.nombreInferieur:
+  path: /inf/{feedDataId}/{valeur}/{frequence}/{debut}/{fin}
+  controller: App\Controller\ApiDataController::getNombreInferieur

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Unit\Repository;
 
-use App\Controller\DataController;
 use App\Entity\DataValue;
 use App\Entity\FeedData;
 use App\Tests\AppTestCase;
@@ -372,13 +371,11 @@ final class DataValueRepositoryTest extends AppTestCase
         self::assertEquals($values[4]->getDate(), $endDate);
         self::assertSame($values[4]->getValue(), $data['values'][$data['endDate']]);
 
-        $repartition = $dataValueRepository->getRepartitionValue($startDate, $endDate, $feedData, 'week', 'weekDay', DataValue::FREQUENCY_DAY, DataController::YEAR_VERTICAL_REPARTITION);
+        $repartition = $dataValueRepository->getRepartitionValue($startDate, $endDate, $feedData, 'week', 'weekDay', DataValue::FREQUENCY_DAY);
         self::assertEquals(\count($repartition), 5);
-        self::assertEquals($repartition[0]['year'], $startDate->format('Y'));
         self::assertEquals($repartition[0]['axeX'], $startDate->format('W'));
         self::assertEquals($repartition[0]['axeY'], $startDate->format('w') - 1);
         self::assertEquals($repartition[0]['value'], $data['values'][$data['startDate']]);
-        self::assertEquals($repartition[4]['year'], $endDate->format('Y'));
         self::assertEquals($repartition[4]['axeX'], $endDate->format('W'));
         self::assertEquals($repartition[4]['axeY'], $endDate->format('w') - 1);
         self::assertEquals($repartition[4]['value'], $data['values'][$data['endDate']]);

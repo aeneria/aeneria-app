@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Controller\DataController;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -71,6 +70,7 @@ class DataValueRepository extends ServiceEntityRepository
                     case FeedData::FEED_DATA_DJU:
                     case FeedData::FEED_DATA_RAIN:
                     case FeedData::FEED_DATA_CONSO_ELEC:
+                    case FeedData::FEED_DATA_CONSO_GAZ:
                         $agregateData = $this
                             ->getSumValue(
                                 $firstDay,
@@ -257,8 +257,12 @@ class DataValueRepository extends ServiceEntityRepository
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
             // Add condition on feedData
-            ->andWhere($queryBuilder->expr()->in('dx.feedData', \array_map(function($feedData) {return $feedData->getId();}, $feedDataX)))
-            ->andWhere($queryBuilder->expr()->in('dy.feedData', \array_map(function($feedData) {return $feedData->getId();}, $feedDataY)))
+            ->andWhere($queryBuilder->expr()->in('dx.feedData', \array_map(function ($feedData) {
+                return $feedData->getId();
+            }, $feedDataX)))
+            ->andWhere($queryBuilder->expr()->in('dy.feedData', \array_map(function ($feedData) {
+                return $feedData->getId();
+            }, $feedDataY)))
             // Add condition on frequency
             ->andWhere('dx.frequency = :frequency')
             ->andWhere('dy.frequency = :frequency')
@@ -364,10 +368,8 @@ class DataValueRepository extends ServiceEntityRepository
      * Get repartition
      *
      * @param FeedData|FeedData[] $feedData
-     * @param string $repartitionType
-     *  must be in DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION
      */
-    public function getRepartitionValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedData, string $axeX, string $axeY, int $frequency, string $repartitionType)
+    public function getRepartitionValue(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedData, string $axeX, string $axeY, int $frequency)
     {
         $feedData = \is_array($feedData) ? $feedData : [$feedData];
 
@@ -379,11 +381,28 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder->addGroupBy('d.' . $axeX);
         $queryBuilder->addGroupBy('d.' . $axeY);
 
-        // If this is a year repartition, we also group by year.
-        if (\in_array($repartitionType, [DataController::YEAR_HORIZONTAL_REPARTITION, DataController::YEAR_VERTICAL_REPARTITION])) {
-            $queryBuilder->addSelect('d.year AS year');
-            $queryBuilder->addGroupBy('d.year');
-        }
+        return $queryBuilder
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Get sum of value group by frequency (day, weekDay, week, month, year)
+     *
+     * @param FeedData|FeedData[] $feedData
+     */
+    public function getAvgValueGroupBy(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, $feedData, int $frequency, string $groupBy)
+    {
+        $feedData = \is_array($feedData) ? $feedData : [$feedData];
+
+        // Create the query builder
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $queryBuilder->select(
+            'AVG(d.value) AS value, d.' . $groupBy . ' AS groupBy');
+        $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
+        $queryBuilder->addGroupBy('d.' . $groupBy);
 
         return $queryBuilder
             ->getQuery()
@@ -442,7 +461,9 @@ class DataValueRepository extends ServiceEntityRepository
 
         // Add condition on feedData
         $queryBuilder
-            ->andWhere($queryBuilder->expr()->in('d.feedData', \array_map(function($feedData) {return $feedData->getId();}, $feedDatas)))
+            ->andWhere($queryBuilder->expr()->in('d.feedData', \array_map(function ($feedData) {
+                return $feedData->getId();
+            }, $feedDatas)))
         ;
 
         // Add condition on frequency

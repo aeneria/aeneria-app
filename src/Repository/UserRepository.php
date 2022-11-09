@@ -62,21 +62,21 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getUsersList(User $user = null)
+    public function list(int $offset, int $limit)
     {
-        $queryBuilder = $this
+        $query = $this
             ->createQueryBuilder('u')
-            ->select('u.id, u.username as username')
             ->orderBy('u.username', 'ASC')
+            ->setFirstResult($offset)
         ;
 
-        if ($user) {
-            $queryBuilder
-                ->andWhere('u.id <> :id')
-                ->setParameter('id', $user->getId())
-            ;
+        if (-1 != $limit) {
+            $query->setMaxResults($limit);
         }
 
-        return \array_column($queryBuilder->getQuery()->getResult() ?? [], "id", 'username');
+        return $query
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

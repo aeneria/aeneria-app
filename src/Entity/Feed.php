@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 /**
  * Feed
  */
-class Feed
+class Feed implements \JsonSerializable
 {
     const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
     const FEED_TYPE_GAZ = 'GAZ';
@@ -29,6 +31,9 @@ class Feed
     /** @var string */
     private $feedDataProviderType;
 
+    /** @var int */
+    private $fetchError = 0;
+
     /** @var array */
     private $param = [];
 
@@ -51,7 +56,12 @@ class Feed
                 'NAME' => 'Gaz',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_GAZ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_GRDF_ADICT],
-                'FREQUENCIES' => DataValue::getAllFrequencies(),
+                'FREQUENCIES' => [
+                    'DAY' => DataValue::FREQUENCY_DAY,
+                    'WEEK' => DataValue::FREQUENCY_WEEK,
+                    'MONTH' => DataValue::FREQUENCY_MONTH,
+                    'YEAR' => DataValue::FREQUENCY_YEAR,
+                ],
             ],
             self::FEED_TYPE_METEO => [
                 'NAME' => 'Météo',
@@ -67,9 +77,10 @@ class Feed
                 ],
                 'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_METEO_FRANCE],
                 'FREQUENCIES' => [
-                    DataValue::FREQUENCY_DAY,
-                    DataValue::FREQUENCY_WEEK,
-                    DataValue::FREQUENCY_MONTH,
+                    'DAY' => DataValue::FREQUENCY_DAY,
+                    'WEEK' => DataValue::FREQUENCY_WEEK,
+                    'MONTH' => DataValue::FREQUENCY_MONTH,
+                    'YEAR' => DataValue::FREQUENCY_YEAR,
                 ],
             ],
         ];
@@ -152,6 +163,43 @@ class Feed
         return $this->name;
     }
 
+    public function addFetchError(): self
+    {
+        $this->fetchError = $this->fetchError + 1;
+
+        return $this;
+    }
+
+    public function setFetchError(int $nbErrors): self
+    {
+        $this->fetchError = $nbErrors;
+
+        return $this;
+    }
+
+    public function getFetchError(): int
+    {
+        return $this->fetchError;
+    }
+
+    /**
+     * Est-ce que le feed courant a déjà eu trop de problème lors des dernières
+     * récupérations de données
+     */
+    public function hasToManyFetchError(): bool
+    {
+        $nbFetchErrors = $this->getFetchError();
+
+        return $nbFetchErrors > 100;
+    }
+
+    public function resetFetchError(): self
+    {
+        $this->fetchError = 0;
+
+        return $this;
+    }
+
     public function setParam(array $param): self
     {
         $this->param = $param;
@@ -211,7 +259,7 @@ class Feed
     }
 
     /**
-     * @return Place[]
+     * @return iterable<PLace>
      */
     public function getPlaces(): ?iterable
     {
@@ -257,7 +305,7 @@ class Feed
     }
 
     /**
-     * @return FeedData[]
+     * @return \Iterable<FeedData>
      */
     public function getFeedDatas(): ?iterable
     {
@@ -282,5 +330,26 @@ class Feed
         }
 
         return null;
+    }
+
+    public function jsonSerialize()
+    {
+        $feedDataList = \iterator_to_array($this->getFeedDatas());
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'type' => $this->feedType,
+            'dataProvider' => $this->feedDataProviderType,
+            'param' => $this->param,
+            'frequencies' => $this->getFrequencies(),
+            'feedDataList' => \array_map(
+                function (FeedData $feedData) {
+                    return $feedData->jsonSerialize();
+                },
+                $feedDataList
+            ),
+            'fetchError' => $this->fetchError,
+        ];
     }
 }

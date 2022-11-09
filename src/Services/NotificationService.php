@@ -168,7 +168,6 @@ class NotificationService
         return $notification;
     }
 
-
     /**
      * @return Notification[]
      */
@@ -176,7 +175,7 @@ class NotificationService
     {
         $notifications = $this->notificationRepository->findNotificationForUser($user);
 
-        if(\count($notifications)) {
+        if (\count($notifications)) {
             $this->deleteNotification($notifications);
         }
 

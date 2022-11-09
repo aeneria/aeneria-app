@@ -1,48 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'Connectez-vous' | trans }}{% endblock %}
-
-{% block selection %}{% endblock %}
-
 {% block body %}
-
-<div class="col">
-  <div class="row justify-content-center align-items-center">
-    <div class='card config-form col-xl-6 col-lg-8 col-md-12'>
-      <div class="card-body">
-        {{ aeneria_welcome_message()|raw }}
-
-        {% if app.user %}
-          <div class="mb-3">
-            <p>{{ 'Vous êtes déjà connecté en tant que' | trans }} {{ app.user.username }}</p>
-            <a href="{{ path('dashboard.home') }}" class="btn btn-primary">{{ 'Aller à la page d\'accueil' | trans }}</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">{{ 'Se déconnecter' | trans }}</a>
+<div class="p-d-flex p-jc-center">
+  <div class="p-card p-component card-about p-m-2">
+    <div class="p-card-body">
+      <div class="p-card-content">
+        <div class="row justify-content-center">
+          <div class="col-12 p-d-flex p-ai-center p-flex-column p-mb-4">
+            <img alt="logo d'æneria" width="50%" src="{{ asset('image/aeneria.svg') }}" class="logo">
+            {{ aeneria_welcome_message()|raw }}
           </div>
-        {% else %}
-          <form class="form" method="post">
-            {% if error %}
-              <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+          <div class="col">
+            {% if app.user %}
+              <div class="mb-3">
+                <p>Vous êtes déjà connecté en tant que {{ app.user.username }}</p>
+                <a href="{{ path('dashboard.home') }}" class="p-button p-component p-button-rounded p-button-secondary">{{ 'Aller à la page d\'accueil' | trans }}</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">{{ 'Se déconnecter' | trans }}</a>
+              </div>
+            {% else %}
+              <form class="form p-d-flex p-ai-center p-jc-center p-flex-column" method="post">
+                {% if error %}
+                  <div class="p-message p-component p-message-error" role="alert">
+                    <div class="p-message-wrapper">
+                      <span class="p-message-icon pi pi-times-circle"></span>
+                      <div class="p-message-text">
+                      {{ error.messageKey|trans(error.messageData, 'security') }}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+
+                <div class="p-field p-d-flex">
+                  <label for="inputUsername" class="p-mr-2">Adresse email&nbsp;:</label>
+                  <input class="p-inputtext p-component" type="text" value="{{ last_username }}" name="username" id="inputUsername"/>
+                </div>
+
+                <div class="p-field p-d-flex">
+                  <label for="inputPassword" class="p-mr-2">Mot de passe&nbsp;:</label>
+                  <div class="p-password p-component p-inputwrapper p-input-icon-right">
+                    <input class="p-inputtext p-component p-password-input p-password-input" name="password"  type="password" id="inputPassword"/>
+                    <i class="pi pi-eye"></i>
+                  </div>
+                </div>
+
+                <div class="p-field  p-d-flex">
+                  <label for="_remember_me" class="p-mr-2">Rester connecté</label>
+                  <input class="p-checkbox p-component" type="checkbox" id="_remember_me"/>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button class="p-button p-component p-button-rounded p-button-secondary" type="submit">
+                  Connexion
+                </button>
+              </form>
             {% endif %}
-
-            <div class="form-group">
-              <label for="inputUsername" >{{ 'Adresse email' | trans }}</label>
-              <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'Adresse email' | trans }}" required autofocus>
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" >{{ 'Mot de passe' | trans }}</label>
-              <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            </div>
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <div class="checkbox mb-3">
-              <label>
-                <input type="checkbox" name="_remember_me"> {{ 'Rester connecté' | trans }}
-              </label>
-            </div>
-
-            <button class="btn btn-lg btn-primary" type="submit">
-              {{ 'Connexion' | trans }}
-            </button>
-          </form>
-        {% endif %}
+          </div>
+        </div>
       </div>
     </div>
   </div>
