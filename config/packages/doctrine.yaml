@@ -25,7 +25,6 @@ doctrine:
         #SQLLite
         # driver:   pdo_sqlite
         # charset: utf8
-
         url: '%env(resolve:DATABASE_URL)%'
     orm:
         auto_generate_proxy_classes: true

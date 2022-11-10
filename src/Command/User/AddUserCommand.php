@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -27,17 +27,21 @@ class AddUserCommand extends Command
 
     /** @var EntityManagerInterface */
     private $entityManager;
-    /** @var UserPasswordEncoderInterface */
-    private $passwordEncoder;
+    /** @var UserPasswordHasherInterface */
+    private $passwordHasher;
     /** @var UserRepository */
     private $userRepository;
     /** @var ValidatorInterface */
     private $validator;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, UserRepository $userRepository, ValidatorInterface $validator)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        UserRepository $userRepository,
+        ValidatorInterface $validator
+    ) {
         $this->entityManager = $entityManager;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
         $this->validator = $validator;
 
@@ -75,7 +79,7 @@ class AddUserCommand extends Command
 
         $user = new User();
         $user->setUsername($username);
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $input->getArgument('password')));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $input->getArgument('password')));
         $user->setActive(true);
 
         $this->entityManager->persist($user);

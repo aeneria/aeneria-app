@@ -17,7 +17,7 @@
                 <a href="{{ path('dashboard.home') }}" class="p-button p-component p-button-rounded p-button-secondary">{{ 'Aller à la page d\'accueil' | trans }}</a> ou <a class="btn btn-danger" href="{{ path('security.logout') }}">{{ 'Se déconnecter' | trans }}</a>
               </div>
             {% else %}
-              <form class="form p-d-flex p-ai-center p-jc-center p-flex-column" method="post">
+              <form action="{{ path('security.login') }}" class="form p-d-flex p-ai-center p-jc-center p-flex-column" method="post">
                 {% if error %}
                   <div class="p-message p-component p-message-error" role="alert">
                     <div class="p-message-wrapper">
@@ -30,14 +30,14 @@
                 {% endif %}
 
                 <div class="p-field p-d-flex">
-                  <label for="inputUsername" class="p-mr-2">Adresse email&nbsp;:</label>
-                  <input class="p-inputtext p-component" type="text" value="{{ last_username }}" name="username" id="inputUsername"/>
+                  <label for="username" class="p-mr-2">Adresse email&nbsp;:</label>
+                  <input class="p-inputtext p-component" type="text" value="{{ last_username }}" name="_username" id="username"/>
                 </div>
 
                 <div class="p-field p-d-flex">
-                  <label for="inputPassword" class="p-mr-2">Mot de passe&nbsp;:</label>
+                  <label for="password" class="p-mr-2">Mot de passe&nbsp;:</label>
                   <div class="p-password p-component p-inputwrapper p-input-icon-right">
-                    <input class="p-inputtext p-component p-password-input p-password-input" name="password"  type="password" id="inputPassword"/>
+                    <input class="p-inputtext p-component p-password-input p-password-input" name="_password" type="password" id="password"/>
                     <i class="pi pi-eye"></i>
                   </div>
                 </div>

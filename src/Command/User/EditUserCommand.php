@@ -10,8 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -28,17 +27,21 @@ class EditUserCommand extends Command
 
     /** @var EntityManagerInterface */
     private $entityManager;
-    /** @var PasswordEncoderInterface */
-    private $passwordEncoder;
+    /** @var UserPasswordHasherInterface */
+    private $passwordHasher;
     /** @var UserRepository */
     private $userRepository;
     /** @var ValidatorInterface */
     private $validator;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, UserRepository $userRepository, ValidatorInterface $validator)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        UserRepository $userRepository,
+        ValidatorInterface $validator
+    ) {
         $this->entityManager = $entityManager;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
         $this->validator = $validator;
 
@@ -79,7 +82,7 @@ class EditUserCommand extends Command
             $user->setUsername($username);
         }
         if ($password = $input->getOption('password')) {
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+            $user->setPassword($this->passwordHasher->hashPassword($user, $password));
         }
         if (!\is_null($active = $input->getOption('active'))) {
             $user->setActive($active);

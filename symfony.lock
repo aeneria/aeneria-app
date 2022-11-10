@@ -128,6 +128,20 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
+    "phpunit/phpunit": {
+        "version": "9.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "9.3",
+            "ref": "a6249a6c4392e9169b87abf93225f7f9f59025e6"
+        },
+        "files": [
+            ".env.test",
+            "phpunit.xml.dist",
+            "tests/bootstrap.php"
+        ]
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -258,9 +272,6 @@
         "version": "v4.2.1"
     },
     "symfony/inflector": {
-        "version": "v4.2.1"
-    },
-    "symfony/intl": {
         "version": "v4.2.1"
     },
     "symfony/ldap": {

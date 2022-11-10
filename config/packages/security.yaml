@@ -1,5 +1,6 @@
 security:
-    encoders:
+    enable_authenticator_manager: true
+    password_hashers:
         App\Entity\User:
             algorithm: argon2i
 
@@ -15,15 +16,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-            guard:
-                provider: app_user_provider
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800 # 1 week in seconds
-                path: '/'
+            lazy: true
+            provider: app_user_provider
+            form_login:
+                login_path: security.login
+                check_path: security.login
+                enable_csrf: true
             logout:
                 path: security.logout
                 target: security.login

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Defined command to refresh all feeds
@@ -34,8 +34,8 @@ class GenerateFakeDataCommand extends Command
     /** @var FakeDataProvider */
     private $fakeDataProvider;
 
-    /** @var UserPasswordEncoderInterface */
-    private $passwordEncoder;
+    /** @var UserPasswordHasherInterface */
+    private $passwordHasher;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -43,7 +43,7 @@ class GenerateFakeDataCommand extends Command
         PlaceRepository $placeRepository,
         FeedRepository $feedRepository,
         FakeDataProvider $fakeDataProvider,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ) {
         $this->entityManager = $entityManager;
 
@@ -52,7 +52,7 @@ class GenerateFakeDataCommand extends Command
         $this->feedRepository = $feedRepository;
         $this->fakeDataProvider = $fakeDataProvider;
 
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
 
         parent::__construct();
     }
@@ -98,7 +98,7 @@ class GenerateFakeDataCommand extends Command
             $user->setUsername($username);
         }
 
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
         $user->setActive(true);
 
         $this->entityManager->persist($user);
