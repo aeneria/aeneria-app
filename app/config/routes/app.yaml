@@ -20,7 +20,7 @@ security.login:
   path: /login
   controller: App\Controller\SecurityController::login
 
-app.redirect:
+app.root:
   path: /
   controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
   defaults:

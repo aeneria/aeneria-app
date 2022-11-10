@@ -66,7 +66,7 @@ if (rootContainer) {
 
   app.use(store(app.config.globalProperties.$toast))
   app.use(router(
-    rootContainer.getAttribute('data-app-path') ?? '/',
+    (rootContainer.getAttribute('data-app-path') ?? '/') + 'app',
     app.config.globalProperties.$store
   ))
 
