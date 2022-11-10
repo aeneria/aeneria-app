@@ -12,16 +12,8 @@
         <field name="username" column="username" type="string" length="180" unique="true"/>
         <field name="password" column="password" type="string"/>
         <field name="roles" column="roles" type="json"/>
-        <field name="createdAt" column="created_at" type="datetime">
-            <options>
-                <option name="default">NOW()</option>
-            </options>
-        </field>
-        <field name="updatedAt" column="updated_at" type="datetime">
-            <options>
-                <option name="default">NOW()</option>
-            </options>
-        </field>
+        <field name="createdAt" column="created_at" type="datetime"/>
+        <field name="updatedAt" column="updated_at" type="datetime"/>
         <field name="lastLogin" column="last_login" type="datetime" nullable="true"/>
         <one-to-many field="places" target-entity="App\Entity\Place" mapped-by="user"/>
         <many-to-many field="sharedPlaces" target-entity="App\Entity\Place" mapped-by="allowedUsers"/>

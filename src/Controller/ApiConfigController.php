@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ApiConfigController extends AbstractAppController
 {
@@ -44,12 +44,12 @@ class ApiConfigController extends AbstractAppController
     public function updatePassword(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ): JsonResponse {
         $user = $this->checkUser();
         $data = \json_decode($request->getContent());
 
-        if (!$data->oldPassword || !$passwordEncoder->isPasswordValid($user, $data->oldPassword)) {
+        if (!$data->oldPassword || !$passwordHasher->isPasswordValid($user, $data->oldPassword)) {
             return $this->dataValidationErrorResponse('oldPassword', "Le mot de passe renseigné ne correspond pas au mot de passe actuelle.");
         }
         if (!$data->newPassword) {
@@ -60,7 +60,7 @@ class ApiConfigController extends AbstractAppController
             return $this->dataValidationErrorResponse('newPassword2', "Les 2 mots de passe ne sont pas identiques.");
         }
 
-        $user->setPassword($passwordEncoder->encodePassword($user, $data->newPassword));
+        $user->setPassword($passwordHasher->hashPassword($user, $data->newPassword));
 
         $entityManager->persist($user);
         $entityManager->flush();
@@ -88,14 +88,14 @@ class ApiConfigController extends AbstractAppController
     public function deleteAccount(
         Request $request,
         UserRepository $userRepository,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ): RedirectResponse {
         $user = $this->checkUser();
 
         $data = $request->request->all();
 
         // Vérifier le mot de passe
-        if (!$data['password'] || !$passwordEncoder->isPasswordValid($user, $data['password'])) {
+        if (!$data['password'] || !$passwordHasher->isPasswordValid($user, $data['password'])) {
             return $this->dataValidationErrorResponse('password', "Mot de passe invalide.");
         }
 

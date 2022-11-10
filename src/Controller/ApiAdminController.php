@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 
@@ -63,7 +63,7 @@ class ApiAdminController extends AbstractAppController
     /**
      * Add new user form view
      */
-    public function addUser(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
+    public function addUser(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
         $validator = Validation::createValidator();
@@ -86,7 +86,7 @@ class ApiAdminController extends AbstractAppController
 
         $newUser
             ->setUsername($data->email)
-            ->setPassword($passwordEncoder->encodePassword($newUser, $data->password))
+            ->setPassword($passwordHasher->hashPassword($newUser, $data->password))
             ->setActive($data->isActive ?? false)
             ->setRoles(($data->isAdmin ?? false) ? ['ROLE_ADMIN'] : [])
         ;
@@ -100,7 +100,7 @@ class ApiAdminController extends AbstractAppController
     public function updateUser(
         string $id,
         Request $request,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ): JsonResponse {
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
         $validator = Validation::createValidator();
@@ -132,7 +132,7 @@ class ApiAdminController extends AbstractAppController
             ->setRoles(($data->isAdmin ?? false) ? ['ROLE_ADMIN'] : [])
         ;
         if ($data->password) {
-            $user->setPassword($passwordEncoder->encodePassword($user, $data->password));
+            $user->setPassword($passwordHasher->hashPassword($user, $data->password));
         }
 
         $this->entityManager->persist($user);
