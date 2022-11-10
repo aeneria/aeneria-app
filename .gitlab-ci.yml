@@ -8,6 +8,7 @@ default:
       && docker-php-ext-enable xdebug
     - cd app
     - curl -sS https://getcomposer.org/installer | php
+    - cd ..
 
 services:
   - postgres:11.7-alpine
@@ -36,6 +37,7 @@ build:assets:
     - cd app
     - yarn install
     - yarn build
+    - cd ..
   artifacts:
     expire_in: '1 hour'
     paths:
@@ -49,6 +51,7 @@ build:composer-install:
   script:
     - cd app
     - php composer.phar install --no-dev
+    - cd ..
   artifacts:
     expire_in: '1 hour'
     paths:
@@ -69,6 +72,7 @@ test:phpunit:
     - php bin/console aeneria:user:grant admin@example.com
     - php bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test@example.com --user-password=password
     - php bin/phpunit --coverage-text --colors=never -vvv
+    - cd ..
 
 # On vérifie que la documentation build correctement
 test:documentation-build:
