@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Services\JwtService;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -95,27 +96,21 @@ class InstallCommand extends Command
 
         $rows[] = [$label, $status, $help];
 
-        // check MySQL & PostgreSQL version
+        // check PostgreSQL version
         $label = '<comment>Database version</comment>';
         $status = '<info>OK!</info>';
         $help = '';
 
-        // now check if MySQL isn't too old to handle utf8mb4
-        if ($conn->isConnected() && 'mysql' === $conn->getDatabasePlatform()->getName()) {
-            $version = $conn->query('select version()')->fetchColumn();
-            $minimalVersion = '5.5.4';
-
-            if (false === \version_compare($version, $minimalVersion, '>')) {
-                $fulfilled = false;
-                $status = '<error>ERROR!</error>';
-                $help = 'Your MySQL version (' . $version . ') is too old, consider upgrading (' . $minimalVersion . '+).';
-            }
+        // testing if connection and ensure sgbd is PostgreSQL > 9.1
+        if ($fulfilled && !$conn->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+            $fulfilled = false;
+            $status = '<error>ERROR!</error>';
+            $help = 'Only PostgreSQL is supported';
         }
 
-        // testing if PostgreSQL > 9.1
-        if ($conn->isConnected() && 'postgresql' === $conn->getDatabasePlatform()->getName()) {
+        if ($fulfilled) {
             // return version should be like "PostgreSQL 9.5.4 on x86_64-apple-darwin15.6.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.38), 64-bit"
-            $version = $doctrineManager->getConnection()->query('SELECT version();')->fetchColumn();
+            $version = (string) $doctrineManager->getConnection()->executeQuery('SELECT version();')->fetchFirstColumn();
 
             \preg_match('/PostgreSQL ([0-9\.]+)/i', $version, $matches);
 
