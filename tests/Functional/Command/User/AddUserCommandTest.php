@@ -12,7 +12,7 @@ final class AddUserCommandTest extends AppTestCase
     {
         $kernel = $this->getKernel();
         $application = new Application($kernel);
-        $passwordEncoder = $this->getPassordEncoder();
+        $passwordHasher = $this->getPasswordHasher();
 
         $command = $application->find('aeneria:user:add');
         $commandTester = new CommandTester($command);
@@ -24,6 +24,6 @@ final class AddUserCommandTest extends AppTestCase
 
         $userFromRepo = $this->getUserRepository()->findOneByUsername($username);
 
-        self::assertTrue($passwordEncoder->isPasswordValid($userFromRepo, $password));
+        self::assertTrue($passwordHasher->isPasswordValid($userFromRepo, $password));
     }
 }
