@@ -21,7 +21,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 trait AppTestTrait
 {
@@ -87,9 +87,9 @@ trait AppTestTrait
         return $this->getEntityManager()->getRepository(Notification::class);
     }
 
-    final protected function getPassordEncoder(): UserPasswordEncoderInterface
+    final protected function getPasswordHasher(): UserPasswordHasherInterface
     {
-        return $this->getContainer()->get('security.password_encoder');
+        return $this->getContainer()->get('security.password_hasher');
     }
 
     /**

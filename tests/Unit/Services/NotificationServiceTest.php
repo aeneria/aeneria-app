@@ -44,7 +44,7 @@ final class NotificationServiceTest extends AppTestCase
         self::assertSame($notification->getPlace(), $place);
         self::assertSame($notification->getLevel(), Notification::LEVEL_SUCCESS);
         self::assertSame($notification->getType(), Notification::TYPE_DATA_IMPORT);
-        self::assertContains('réalisé avec succès', $notification->getMessage());
+        self::assertStringContainsString('réalisé avec succès', $notification->getMessage());
     }
 
     public function testHandleImportNotificationWithError()
@@ -78,8 +78,8 @@ final class NotificationServiceTest extends AppTestCase
         self::assertSame($notification->getPlace(), $place);
         self::assertSame($notification->getLevel(), Notification::LEVEL_ERROR);
         self::assertSame($notification->getType(), Notification::TYPE_DATA_IMPORT);
-        self::assertContains('des erreurs', $notification->getMessage());
-        self::assertContains('blabla', $notification->getMessage());
+        self::assertStringContainsString('des erreurs', $notification->getMessage());
+        self::assertStringContainsString('blabla', $notification->getMessage());
     }
 
     public function testHandleFetchDataNotificationWithNoError()
@@ -114,7 +114,7 @@ final class NotificationServiceTest extends AppTestCase
         self::assertSame($notification->getPlace(), $place);
         self::assertSame($notification->getLevel(), Notification::LEVEL_SUCCESS);
         self::assertSame($notification->getType(), Notification::TYPE_DATA_FETCH);
-        self::assertContains('réalisé avec succès', $notification->getMessage());
+        self::assertStringContainsString('réalisé avec succès', $notification->getMessage());
     }
 
     public function testHandleDataFetchNotificationWithError()
@@ -151,8 +151,8 @@ final class NotificationServiceTest extends AppTestCase
         self::assertSame($notification->getPlace(), $place);
         self::assertSame($notification->getLevel(), Notification::LEVEL_ERROR);
         self::assertSame($notification->getType(), Notification::TYPE_DATA_FETCH);
-        self::assertContains('pas été correctement', $notification->getMessage());
-        self::assertContains('blalba', $notification->getMessage());
+        self::assertStringContainsString('pas été correctement', $notification->getMessage());
+        self::assertStringContainsString('blalba', $notification->getMessage());
     }
 
     public function testHandleTooManyFetchErrorsNotification()
@@ -185,7 +185,7 @@ final class NotificationServiceTest extends AppTestCase
         self::assertSame($notification->getPlace(), $place);
         self::assertSame($notification->getLevel(), Notification::LEVEL_ERROR);
         self::assertSame($notification->getType(), Notification::TYPE_TOO_MANY_FETCH_ERROR);
-        self::assertContains('eu des erreurs au moment', $notification->getMessage());
+        self::assertStringContainsString('eu des erreurs au moment', $notification->getMessage());
     }
 
     public function testGetAndDeleteNotificationFor()

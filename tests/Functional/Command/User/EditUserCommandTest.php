@@ -13,7 +13,7 @@ final class EditUserCommandTest extends AppTestCase
         $kernel = $this->getKernel();
         $application = new Application($kernel);
         $entityManager = $this->getEntityManager();
-        $passwordEncoder = $this->getPassordEncoder();
+        $passwordHasher = $this->getPasswordHasher();
 
         $user = $this->createPersistedUser([
             'active' => true,
@@ -35,6 +35,6 @@ final class EditUserCommandTest extends AppTestCase
 
         self::assertTrue(!$userFromRepo->isActive());
         self::assertEquals($userFromRepo->getUsername(), $newUsername);
-        self::assertTrue($passwordEncoder->isPasswordValid($userFromRepo, $newPassword));
+        self::assertTrue($passwordHasher->isPasswordValid($userFromRepo, $newPassword));
     }
 }

@@ -24,14 +24,4 @@ abstract class AppTestCase extends KernelTestCase
             $this->_kernel = self::bootKernel()
         );
     }
-
-    /**
-     * Get container
-     */
-    final protected function getContainer(): ContainerInterface
-    {
-        return $this->_container ?? (
-            $this->_container = $this->getKernel()->getContainer()
-        );
-    }
 }

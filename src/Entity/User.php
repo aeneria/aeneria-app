@@ -6,12 +6,13 @@ namespace App\Entity;
 
 use JsonSerializable;
 use Serializable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Place
  */
-class User implements UserInterface, Serializable, JsonSerializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Serializable, JsonSerializable
 {
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_USER = 'ROLE_USER';
@@ -50,6 +51,11 @@ class User implements UserInterface, Serializable, JsonSerializable
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
     }
 
     public function setActive(bool $isActive): self
