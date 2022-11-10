@@ -2,10 +2,23 @@ default:
   image: php:7.3
   before_script:
     - apt-get update -yqq
-    - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev postgresql postgresql-client libpq-dev -yqq
+    - apt-get install git \
+      zip \
+      zlib1g-dev \
+      libzip-dev \
+      libxml2-dev \
+      libpng-dev \
+      libghc-curl-dev \
+      libldb-dev \
+      libldap2-dev \
+      postgresql \
+      postgresql-client \
+      libpq-dev \
+      -yqq
     - docker-php-ext-install pgsql pdo_pgsql zip xml intl mbstring gd curl bcmath opcache ldap
     - pecl install xdebug-2.9.8 \
       && docker-php-ext-enable xdebug
+    - cd app
     - curl -sS https://getcomposer.org/installer | php
 
 services:
@@ -32,12 +45,13 @@ build:assets:
   image: node:16.16-alpine
   script:
     - apk add --no-cache jq python3 gcc g++ make
+    - cd app
     - yarn install
     - yarn build
   artifacts:
     expire_in: '1 hour'
     paths:
-      - public/build
+      - app/public/build
 
 # On descend les paquets composer
 build:composer-install:
@@ -45,11 +59,12 @@ build:composer-install:
     default: true
   stage: build
   script:
+    - cd app
     - php composer.phar install --no-dev
   artifacts:
     expire_in: '1 hour'
     paths:
-      - vendor
+      - app/vendor
 
 # Tests PHPUNIT
 test:phpunit:
@@ -58,6 +73,7 @@ test:phpunit:
   stage: tests
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   script:
+    - cd app
     - cp .env.dist .env
     - php composer.phar install
     - php bin/console aeneria:install -n
