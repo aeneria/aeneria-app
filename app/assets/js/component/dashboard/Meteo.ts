@@ -45,7 +45,7 @@ export default defineComponent({
             type: getFeedDataType(DataType.Dju),
             unite: 'DJU',
             texte: '(degrés jour unifié)',
-            valeur: this.indexDju,
+            valeur: this.indexDju?.toFixed(0),
             total: 0,
           }
         },
@@ -56,7 +56,7 @@ export default defineComponent({
             type: getFeedDataType(DataType.Nebulosity),
             unite: 'jours',
             texte: 'sans nuage',
-            valeur: this.indexNebulosite,
+            valeur: this.indexNebulosite?.toFixed(0),
             total: this.nbJours,
           }
         },
@@ -67,7 +67,7 @@ export default defineComponent({
             type: getFeedDataType(DataType.Rain),
             unite: 'jours',
             texte: 'sans pluie',
-            valeur: this.indexPrecipitations,
+            valeur: this.indexPrecipitations?.toFixed(0),
             total: this.nbJours,
           }
         },
@@ -78,7 +78,7 @@ export default defineComponent({
             type: getFeedDataType(DataType.Humidity),
             unite: 'jours',
             texte: 'à moins de 70%',
-            valeur: this.indexHumidite,
+            valeur: this.indexHumidite?.toFixed(0),
             total: this.nbJours,
           }
         },

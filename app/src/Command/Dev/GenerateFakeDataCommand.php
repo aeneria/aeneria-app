@@ -147,6 +147,7 @@ class GenerateFakeDataCommand extends Command
             ;
 
             $this->entityManager->persist($place);
+            $this->entityManager->flush();
 
             foreach ($place->getFeeds() as $feed) {
                 $this->entityManager->persist($feed);

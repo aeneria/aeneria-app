@@ -1,6 +1,9 @@
-function getBaseUrl(): string {
-  return '//app.aeneria.local' //@todo
+const rootContainer = document.querySelector("#app")
+let basePath = ''
+if (rootContainer) {
+  basePath = rootContainer.getAttribute('data-app-path') ?? ''
 }
+const baseUrl = '//' + window.location.host + basePath
 
 function _urlHandleValueArray(name: string, values: any[]): {name: string, value: string}[] {
   let ret = [] as {name: string, value: string}[]
@@ -37,10 +40,8 @@ function _urlHandleValue(name: string, value: any): {name: string, value: string
 }
 
 export function url(path: string, query: null|any) {
-    let baseUri = getBaseUrl()
-    if (!baseUri.endsWith('/') && !path.startsWith('/')) {
-        baseUri += '/'
-    }
+    path = path.replace(/^\//, "");
+
     if (query) {
         const components = [] as string[]
         let hasComponents = false
@@ -51,11 +52,11 @@ export function url(path: string, query: null|any) {
             }
         }
         if (hasComponents) {
-            return baseUri + path + "?" + components.join("&")
+            return baseUrl + path + "?" + components.join("&")
         }
-        return baseUri + path
+        return baseUrl + path
     }
-    return baseUri + path
+    return baseUrl + path
 }
 
 export function handleFetchError(response: Response) {
@@ -94,9 +95,6 @@ export function queryData(route: string, query: null|any = null) {
   })
   .then(response => {
     if (response.ok) {
-      // if (getBaseUrl + '/login' == response.url) {
-      //   alert('toto')
-      // }
       return response.json()
     }
 

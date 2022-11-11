@@ -73,7 +73,7 @@ export default defineComponent({
           index: {
             type: feedDataType,
             texte: 'consommé sur la période',
-            valeur: this.indexEnergy[feedData.id] ?? '-',
+            valeur: this.indexEnergy[feedData.id]?.toFixed(0) ?? '-',
           }
         })
       }
@@ -111,7 +111,7 @@ export default defineComponent({
       this.monthEnd
     )
     .then (data => {
-      this.indexDju = data
+      this.indexDju = data?.toFixed(0)
     })
   }
 });
