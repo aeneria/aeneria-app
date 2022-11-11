@@ -17,24 +17,24 @@ Pour créer votre environnement de développement, suivez ces étapes :
     git clone git@gitlab.com:aeneria/aeneria-app.git
 
     # Construire et lancer les containers dockers
-    docker-compose up --build -d
+    docker-compose up -d
     # Pour trouver le port où est exposée l'application
     docker-compose ps
 
     # Récupérer les dépendance composer
-    docker-compose userxec php-fpm composer install
+    docker-compose exec php-fpm composer install
 
     # Copier le .env.dist
-    cp .env.dist .env
+    cp app/.env.dist app/.env
     # L'adapter pour être en environnement de développement
 
     # Installer aeneria
-    docker-compose userxec php-fpm bin/console aeneria:install
+    docker-compose exec php-fpm bin/console aeneria:install
 
     # Générer des users de tests
-    docker-compose userxec php-fpm bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin@example.com --user-password=password
-    docker-compose userxec php-fpm bin/console aeneria:user:grant admin@example.com
-    docker-compose userxec php-fpm bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test@example.com --user-password=password
+    docker-compose exec php-fpm bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=admin@example.com --user-password=password
+    docker-compose exec php-fpm bin/console aeneria:user:grant admin@example.com
+    docker-compose exec php-fpm bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test@example.com --user-password=password
 
     # Générer les assests une première fois :
     cd app

@@ -11,6 +11,8 @@ services:
         POSTGRES_USER: db
     ports:
         - 5439:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
         - site
 
@@ -42,3 +44,6 @@ services:
 
 networks:
   site:
+
+volumes:
+  pgdata:
