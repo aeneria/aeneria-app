@@ -1,3 +1,4 @@
+import { ToastMessageOptions } from 'primevue/toast';
 import { ToastServiceMethods } from 'primevue/toastservice';
 import { Store } from 'vuex'
 import { Configuration } from './Configuration';
@@ -14,6 +15,8 @@ declare module '@vue/runtime-core' {
     hasNoPlace: null|boolean
     placeList: Array<Place>
     selection: Selection
+    notifications: Array<ToastMessageOptions>
+    isDisconnected: boolean
   }
 
   // provide typings for `this.$store`

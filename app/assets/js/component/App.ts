@@ -1,19 +1,24 @@
-import { defineComponent } from 'vue';
+import { defineComponent, State, watch } from 'vue';
 import { grid } from '../composable/vue-screen';
 import { INIT_CONFIGURATION } from '@/store/actions';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, useStore } from 'vuex';
 import { RouterLink, RouterView } from 'vue-router';
-import Welcome from './misc/Welcome';
+import { useToast } from "primevue/usetoast";
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
 import SidebarMenu from './nav/SidebarMenu';
 import Spinner from './graphique/Spinner';
 import Toast from 'primevue/toast';
 import TopbarDesktop from './nav/TopbarDesktop';
 import TopbarMobile from './nav/TopbarMobile';
+import Welcome from './misc/Welcome';
+import { RESET_NOTIFICATIONS } from '@/store/mutations';
 
 export default defineComponent({
   name: 'App',
   components: {
-    Welcome,
+    Button,
+    Dialog,
     RouterLink,
     RouterView,
     SidebarMenu,
@@ -21,8 +26,26 @@ export default defineComponent({
     Toast,
     TopbarDesktop,
     TopbarMobile,
+    Welcome,
   },
   setup() {
+    const store = useStore<State>();
+    const toast = useToast();
+
+    watch(
+      () =>
+       store.state.notifications,
+       (notifications, prevNotifications) => {
+        if(notifications.length) {
+          for(const notification of notifications) {
+            toast.add(notification)
+          }
+          store.commit(RESET_NOTIFICATIONS)
+        }
+      },
+      {deep: true}
+    );
+
     return {
       grid,
     }
@@ -36,6 +59,7 @@ export default defineComponent({
       'configuration',
       'selectedPlace',
       'hasNoPlace',
+      'isDisconnected',
     ]),
     ...mapGetters([
       'onlyOneEnergie',
@@ -45,4 +69,9 @@ export default defineComponent({
       return this.hasNoPlace && !['mon-compte', 'new-place'].includes(this.$router.currentRoute?.value?.name?.toString() ?? '')
     }
   },
+  methods: {
+    goToLogin() {
+      window.location.assign('/login')
+    },
+  }
 });

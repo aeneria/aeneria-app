@@ -9,3 +9,6 @@ export const SET_SELECTED_PERIODE2 = 'setSelectedPeriode2'
 export const SET_SELECTED_ENERGIE = 'setSelectedEnergie'
 export const SET_SELECTED_METEO_DATA = 'setSelectedMeteoData'
 export const SET_SELECTED_GRANULARITE = 'setSelectedGranularite'
+
+export const RESET_NOTIFICATIONS = 'resetNotifications'
+export const SET_DISCONNECTED = 'setDisconnected'

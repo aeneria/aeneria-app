@@ -1,3 +1,6 @@
+import { store } from "./store"
+import { SET_DISCONNECTED } from "./store/mutations"
+
 const rootContainer = document.querySelector("#app")
 let basePath = ''
 if (rootContainer) {
@@ -95,6 +98,8 @@ export function queryData(route: string, query: null|any = null) {
   })
   .then(response => {
     if (response.ok) {
+      handleDisconnexion(response)
+
       return response.json()
     }
 
@@ -114,9 +119,18 @@ export function postData(route: string, content: any, method: string, query: any
   })
   .then(response => {
     if (response.ok) {
+      handleDisconnexion(response)
+
       return response.json()
     }
 
     return handleFetchError(response)
   })
+}
+
+function handleDisconnexion(response): void
+{
+  if ('/login' == (new URL(response.url)).pathname) {
+    store.commit(SET_DISCONNECTED)
+  }
 }

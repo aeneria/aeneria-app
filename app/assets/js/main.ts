@@ -64,7 +64,7 @@ if (rootContainer) {
     .use(ToastService)
     .directive('tooltip', Tooltip)
 
-  app.use(store(app.config.globalProperties.$toast))
+  app.use(store)
   app.use(router(
     (rootContainer.getAttribute('data-app-path') ?? '/') + 'app',
     app.config.globalProperties.$store

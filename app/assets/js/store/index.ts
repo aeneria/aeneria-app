@@ -5,18 +5,19 @@ import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
 import { INIT_CONFIGURATION, INIT_SELECTION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
-import { SET_CONFIGURATION, SET_PLACE_LIST, SET_USER } from './mutations'
-import { ToastServiceMethods } from "primevue/toastservice";
+import { RESET_NOTIFICATIONS, SET_CONFIGURATION, SET_DISCONNECTED, SET_PLACE_LIST, SET_USER } from './mutations'
 import { moduleSelection, persistSelectionPlugin } from './modules/selection'
+import { ToastMessageOptions } from 'primevue/toast'
 
-export const store = (toastService: ToastServiceMethods) => createStore({
+export const store = createStore({
   state: {
-    toast: toastService,
     configuration: null,
     initialized: false,
     utilisateur: null,
     hasNoPlace: null as null|boolean,
     placeList: new Array<Place>(),
+    notifications: new Array<ToastMessageOptions>(),
+    isDisconnected: false,
   } as State,
   getters: {
     onlyOnePlace: (state) => state.placeList.length <= 1,
@@ -35,6 +36,12 @@ export const store = (toastService: ToastServiceMethods) => createStore({
       if (placeList.length === 0) {
         state.hasNoPlace = true
       }
+    },
+    [RESET_NOTIFICATIONS] (state) {
+      state.notifications = []
+    },
+    [SET_DISCONNECTED] (state) {
+      state.isDisconnected = true
     },
   },
   actions: {
@@ -69,7 +76,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
             notification.level = 'info'
           }
 
-          this.state.toast.add({
+          this.state.notifications.push({
             severity: notification.level,
             summary: "Notification du système",
             detail: notification.message
@@ -80,7 +87,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     },
     [USER_UPDATE_PASSWORD] ({}, data) {
       postUserPassword(data.oldPassword, data.newPassword, data.newPassword2)
-      this.state.toast.add({
+      this.state.notifications.push({
         severity:'success',
         summary: "Votre modification a été enregistrée.",
         detail: `Votre mot de passe a été correctement mis à jour.`
@@ -92,7 +99,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
           commit(SET_USER, data)
         })
       })
-      this.state.toast.add({
+      this.state.notifications.push({
         severity:'success',
         summary: "Votre modification a été enregistrée.",
         detail: `Votre adresse e-mail est désormais ${data.newEmail}.`
@@ -116,7 +123,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
         queryUser().then(data => {
           commit(SET_USER, data)
         })
-        this.state.toast.add({
+        this.state.notifications.push({
           severity:'success',
           summary: "L'adresse a été correctement mise à jour.",
           detail: `Elle utilisera maintenant les données de la station ${data.meteo.label}.`
@@ -130,7 +137,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
           commit(SET_USER, data)
         })
       }).then(() => {
-        this.state.toast.add({
+        this.state.notifications.push({
           severity:'success',
           summary: "L'adresse a été correctement mise à jour.",
           detail: `Son nom est maintenant ${data.newName}.`
@@ -144,7 +151,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
           commit(SET_USER, data)
         })
       }).then(() => {
-        this.state.toast.add({severity:'success', summary: "L'adresse a été correctement supprimée."})
+        this.state.notifications.push({severity:'success', summary: "L'adresse a été correctement supprimée."})
       })
     },
     [PLACE_EXPORT_DATA] ({}, data) {
@@ -152,7 +159,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     },
     [PLACE_IMPORT_DATA] ({}, data) {
       postPlaceDataImport(data.placeId, data.file).then(() => {
-        this.state.toast.add({
+        this.state.notifications.push({
           severity:'info',
           summary: "L'import a été programmé",
           detail: `Il s'effectuera dans les prochaines minutes`
@@ -161,7 +168,7 @@ export const store = (toastService: ToastServiceMethods) => createStore({
     },
     [PLACE_REFRESH_DATA] ({}, data) {
       postPlaceDataRefresh(data.placeId, data.feedId, data.start, data.end).then(() => {
-        this.state.toast.add({
+        this.state.notifications.push({
           severity:'info',
           summary: "Le rafraissement des données a été programmé",
           detail: `Il s'effectuera dans les prochaines minutes`
