@@ -37,7 +37,7 @@ export default defineComponent({
   },
   data() {
     return {
-      indexEnergie: 0,
+      indexEnergie: '-',
     }
   },
   computed: {
@@ -68,7 +68,7 @@ export default defineComponent({
         this.periode[1] ?? new Date(),
       )
       .then ((data) => {
-        this.indexEnergie = data
+        this.indexEnergie = data.toFixed(0)
       })
     }
   },
