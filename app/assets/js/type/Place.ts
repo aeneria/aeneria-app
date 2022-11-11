@@ -7,6 +7,8 @@ export interface Place {
   feedList: Feed[]
   periodeMin: Date|null
   periodeMax: Date|null
+  createdAt: Date
+  updatedAt: Date
 }
 
 export function findFeedByType(place: Place, type: FeedType): Feed|null

@@ -43,6 +43,11 @@ class Feed implements \JsonSerializable
     /** @var Place[] */
     private $places = [];
 
+    /** @var ?\DateTimeInterface */
+    private $createdAt;
+    /** @var ?\DateTimeInterface */
+    private $updatedAt;
+
     public static function getAllFeedTypes(): array
     {
         return [
@@ -332,6 +337,30 @@ class Feed implements \JsonSerializable
         return null;
     }
 
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         $feedDataList = \iterator_to_array($this->getFeedDatas());
@@ -350,6 +379,8 @@ class Feed implements \JsonSerializable
                 $feedDataList
             ),
             'fetchError' => $this->fetchError,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

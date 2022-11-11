@@ -16,5 +16,7 @@
         <many-to-many field="feeds" target-entity="App\Entity\Feed" mapped-by="places">
             <cascade><cascade-persist/></cascade>
         </many-to-many>
+        <field name="createdAt" column="created_at" type="datetime"/>
+        <field name="updatedAt" column="updated_at" type="datetime"/>
     </entity>
 </doctrine-mapping>

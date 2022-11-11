@@ -30,6 +30,11 @@ class Place implements \JsonSerializable
     /** @var Feed[]|null */
     private $feeds = [];
 
+    /** @var ?\DateTimeInterface */
+    private $createdAt;
+    /** @var ?\DateTimeInterface */
+    private $updatedAt;
+
     /** @var \DateTimeImmutable|null
      *
      * N'est pas hydraté automatiquement. à setter à la main si nécessaire
@@ -240,6 +245,30 @@ class Place implements \JsonSerializable
         return [$this->periodeMin, $this->periodeMax];
     }
 
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         $feedList = \iterator_to_array($this->getFeeds());
@@ -256,6 +285,8 @@ class Place implements \JsonSerializable
             ),
             'periodeMin' => $this->periodeMin,
             'periodeMax' => $this->periodeMax,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

@@ -4,15 +4,15 @@ export interface FeedData {
 }
 
 export interface FeedDataType {
-  id: DataType,
-  label: string,
-  unite: string,
-  coefficientNormalisateur: number,
-  precision: number,
-  color: string,
-  colors: string[],
-  hasHourlyData: boolean,
-  icon: string,
+  id: DataType
+  label: string
+  unite: string
+  coefficientNormalisateur: number
+  precision: number
+  color: string
+  colors: string[]
+  hasHourlyData: boolean
+  icon: string
 }
 
 export enum DataType {

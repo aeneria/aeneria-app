@@ -61,12 +61,12 @@ export interface DataPoint {
 }
 
 export interface DataRepartition {
-  value: number,
-  groupBy: number,
+  value: number
+  groupBy: number
 }
 
 export interface DataDoubleRepartition {
-  value: number,
-  axeX: number,
-  axeY: number,
+  value: number
+  axeX: number
+  axeY: number
 }

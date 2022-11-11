@@ -10,18 +10,20 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20221110090650 extends AbstractMigration
+final class Version20221111140811 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Ajout de champs created_at, updated_at et last_login sur les Users';
+        return 'Ajout de champs created_at et updated_at sur les Feeds et les Places';
     }
 
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE users ALTER created_at DROP DEFAULT');
-        $this->addSql('ALTER TABLE users ALTER updated_at DROP DEFAULT');
+        $this->addSql('ALTER TABLE feed ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT \'NOW()\'  NOT NULL');
+        $this->addSql('ALTER TABLE feed ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT \'NOW()\'  NOT NULL');
+        $this->addSql('ALTER TABLE place ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT \'NOW()\'  NOT NULL');
+        $this->addSql('ALTER TABLE place ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT \'NOW()\'  NOT NULL');
     }
 
     public function down(Schema $schema): void

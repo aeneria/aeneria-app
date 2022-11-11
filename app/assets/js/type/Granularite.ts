@@ -23,9 +23,9 @@ export enum Frequence {
 }
 
 export interface Granularite {
-  type: GranulariteType,
-  label: string,
-  frequence: Frequence,
+  type: GranulariteType
+  label: string
+  frequence: Frequence
 }
 
 export const granulariteList = new Array<Granularite>(

@@ -99,6 +99,16 @@
               {{ getMeteo(data) }}
             </template>
           </Column>
+          <Column header="Créé le">
+            <template #body="{data}">
+              {{ formatDate(data.createdAt) }}
+            </template>
+          </Column>
+          <Column header="Modifié le">
+            <template #body="{data}">
+              {{ formatDate(data.updatedAt) }}
+            </template>
+          </Column>
         </DataTable>
       </template>
     </DataTable>

@@ -60,7 +60,10 @@ class ApiConfigController extends AbstractAppController
             return $this->dataValidationErrorResponse('newPassword2', "Les 2 mots de passe ne sont pas identiques.");
         }
 
-        $user->setPassword($passwordHasher->hashPassword($user, $data->newPassword));
+        $user
+            ->setPassword($passwordHasher->hashPassword($user, $data->newPassword))
+            ->setUpdatedAt(new \DateTimeImmutable())
+        ;
 
         $entityManager->persist($user);
         $entityManager->flush();
@@ -77,7 +80,10 @@ class ApiConfigController extends AbstractAppController
             return $this->dataValidationErrorResponse('newEmail', "Vous devez fournir un nouveau email.");
         }
 
-        $user->setUsername($data->newEmail);
+        $user
+            ->setUsername($data->newEmail)
+            ->setUpdatedAt(new \DateTimeImmutable())
+        ;
 
         $entityManager->persist($user);
         $entityManager->flush();

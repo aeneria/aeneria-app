@@ -13,5 +13,7 @@
             <join-column nullable="false"/>
         </one-to-many>
         <many-to-many field="places" target-entity="App\Entity\Place" inversed-by="feeds"/>
+        <field name="createdAt" column="created_at" type="datetime"/>
+        <field name="updatedAt" column="updated_at" type="datetime"/>
     </entity>
 </doctrine-mapping>
