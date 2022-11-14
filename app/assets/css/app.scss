@@ -18,6 +18,9 @@ body {
   background-color: $body-bg-color;
   font-family: $font-text;
 }
+.p-component {
+  font-family: $font-text;
+}
 
 .p-card {
   border-radius: 10px;
@@ -36,7 +39,7 @@ body {
 }
 
 .graph text, .tippy-content{
-  font-family: $font-monospace;
+  font-family: $font-text;
   font-size: 0.8rem;
 }
 
