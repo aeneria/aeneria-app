@@ -9,24 +9,19 @@ Via l'interface web
 
 Les utilisateurs avec le rôle *Admin* ont accès aux informations d'administration d'æneria.
 
-.. |icon_configuration| image:: ../img/config.png
-             :alt: icone engrenage
-
-Pour accéder à ces informations, aller sur la page de configuration en cliquant sur le bouton |icon_configuration|
-dans la barre du haut. Si vous êtes administrateur, une carte supplémentaire apparait sous votre liste d'adresses :
-
-.. image:: ../img/admin_card.png
-    :alt: Aperçu de la partie administrateur de la page de configuration
-    :align: center
+Pour accéder à ces informations, aller sur l'écran d'administration via le menu en haut à droite.
 
 Plusieurs éléments sont visibles sur cette page:
 
-* Un bouton pour accéder à la gestion des utilisateurs
-* Un bouton pour accéder aux derniers logs de l'application
-* La liste des configurations courantes de l'application
+* La configuration courante d'æneria
+* La liste des utilistaurs
+* Les derniers logs de l'application
 
 Configurations
 ------------------------------
+
+.. image:: img/admin-1.png
+   :align: center
 
 Plusieurs fonctionnalités sont paramètrables dans æneria :
 
@@ -79,7 +74,8 @@ Ci-dessous, un exemple de paramètrage de ce fichier :
 Gestion des utilisateurs
 ------------------------------
 
-Accédez à la page de gestion fes utilisateurs en cliquant sur le bouton ``Gérer les utilisateurs`` ou en visitant la page ``/admin/users``.
+.. image:: img/admin-2.png
+   :align: center
 
 Sur cette page se trouve un tableau listant l'ensemble des utilisateurs d'æneria.
 
@@ -93,10 +89,15 @@ Pour créer un nouvel utilisateur, cliquez sur le bouton ``Ajouter un utilisateu
 
 Un utilisateur désactivé ne peut plus se connecter, mais ses données ne sont pas supprimées.
 
+Il est aussi possible de "déplier" une ligne pour voir les différentes adresses d'un utilisateur.
+
 Les logs
 ----------
 
-L'interface web permet de visualiser les derniers logs d'æneria. Cliquez sur le bouton ``Voir les derniers logs`` ou visitez la page ``/admin/log``.
+.. image:: img/admin-3.png
+   :align: center
+
+L'interface web permet de visualiser les derniers logs d'æneria.
 
 Via la console Symfony
 =============================

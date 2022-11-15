@@ -11,16 +11,18 @@ The idea of [æneria](aeneria.com) is to display energy consumption and weather 
 
 This software was developed for french people, it gets :
 * electricity data from [Enedis](https://datahub-enedis.fr/data-connect)
+* gaz data from [Grdf](https://sites.grdf.fr/web/portail-api-grdf-adict)
 * meteo data from [Meteo France](https://donneespubliques.meteofrance.fr/)
 
-![preview](docs/img/dash_accueil.png "Homepage")
+![preview](docs/img/preview-1.png "Homepage")
+
+![preview](docs/img/preview-2.png "Homepage")
 
 ## Documentation
 
 For more informations, see [æneria's documentation on Read the Docs](https://docs.aeneria.com/):
 
 * [Administrator documentation](https://docs.aeneria.com/fr/latest/administrateur.html)
-* [User documentation](https://docs.aeneria.com/fr/latest/utilisateur.html)
 * [Developper documentation](https://docs.aeneria.com/fr/latest/developpeur.html)
 
 *(sorry it's in french cause this project is dedicated to french users)*

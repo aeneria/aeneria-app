@@ -16,10 +16,10 @@ Pour créer votre environnement de développement, suivez ces étapes :
     # Récupérez le dépot git du projet
     git clone git@gitlab.com:aeneria/aeneria-app.git
 
+    cd aeneria-app
+
     # Construire et lancer les containers dockers
     docker-compose up -d
-    # Pour trouver le port où est exposée l'application
-    docker-compose ps
 
     # Récupérer les dépendance composer
     docker-compose exec php-fpm composer install
@@ -42,4 +42,15 @@ Pour créer votre environnement de développement, suivez ces étapes :
     yarn install # Installer les dépendances javascript
     yarn dev # Générer les assets en mode dev
 
-Et voilà, `votre environnement <http://localhost:8066>`_ est près.
+    cd ..
+
+    # Pour trouver le port où est exposée l'application
+    docker-compose ps
+
+Et voilà, votre environnement devrait être disponible à l'adresse `http://localhost:8066 <http://localhost:8066>`_.
+
+
+.. warning::
+
+    Cet environnement docker est une environnement de **développement** et ne doit
+    pas être utiliser en production.

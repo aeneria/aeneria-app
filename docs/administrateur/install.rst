@@ -4,8 +4,8 @@ Installer æneria
 Tout d'abord pour utiliser æneria,
 
 * Vous devez avoir accès
-    * soit à un compteur Linky
-    * soit à un compteur Gazpar
+    * soit à un compteur Linky (et donc à un compte Enedis raccroché à ce compteur)
+    * soit à un compteur Gazpar (et donc à un compte GRDF raccroché à ce compteur)
 
 Installation via YunoHost
 **************************
@@ -94,7 +94,7 @@ Lancez le commande d'installation d'aeneria :
 
     php7.3 bin/console aeneria:install
 
-4. Configurer Enedis Data-connect et GrDF Addict
+4. Configurer Enedis Data-connect et GRDF ADICT
 ------------------------------------------------
 
 æneria utilise l'API Enedis Data Connect pour obtenir les données de consommation
@@ -152,6 +152,9 @@ Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
 
     ...
 
+.. note::
+    Le même comportement a été reproduit pour l'API GRDF ADICT
+
 .. warning::
 
     proxy.aeneria.com est un serveur communautaire fourni à titre gracieux.
@@ -170,39 +173,6 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
 
     php7.3 bin/console aeneria:user:add [admin_email] [password]
     php7.3 bin/console aeneria:user:grant [admin_email]
-
-6. Générer l'ensemble des flux Météo (facultatif - usage avancée)
--------------------------------------------------------------------
-
-.. danger::
-
-    Cette fonctionnalité correspond à un usage avancée.
-    Testez d'abord æneria sans l'utiliser.
-
-Si vous le souhaitez, vous pouvez créer l'ensemble des flux météo pour l'utilisateur admin.
-L'intérêt est de commencer à stocker toutes les données météo dès l'installation de l'instance.
-Un utilisateur qui créée son compte dans le futur aura directement accès à l'ensemble de données météos
-depuis l'installation d'æneria.
-Par contre, en faisant ça, l'ensemble des données des 62 stations Météo sera historisé, ce qui augmente
-la taille de la base de données.
-
-Pour ça, lancer la commande suivante :
-
-.. code-block:: sh
-
-    php7.3 bin/console aeneria:feed:meteo:generate-all [username]
-
-.. note::
-
-    Les données Météo étant des données publiques, il n’y a pour elles pas de problème de confidentialité.
-    Pour simplifier les traitements, les données des flux météo ne sont jamais supprimées. Si vous souhaitez
-    quand même les supprimer, vous pouver le faire en utilisant la commande ``aeneria:feed:clean-orphans``.
-
-.. warning::
-
-    L'adresse générée par cette commande n'est pas destinée à ensuite être utilisée via
-    l'interface d'æneria. Elle a pour unique but de définir une première fois l'ensemble
-    des stations météo.
 
 7. Mettre en place le CRON
 ----------------------------
