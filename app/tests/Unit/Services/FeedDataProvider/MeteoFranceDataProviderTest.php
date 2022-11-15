@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services\FeedDataProvider;
 
 use App\Entity\Feed;
-use App\Model\StationSynop;
 use App\Services\FeedDataProvider\MeteoFranceDataProvider;
 use App\Services\NotificationService;
 use App\Tests\AppTestCase;
@@ -54,9 +53,10 @@ class MeteoFranceDataProviderTest extends AppTestCase
 
         $availableStations = $dataProvider->getAvailableStations();
 
-
         self::assertCount(62, $availableStations);
-        $ajaccioStations = \array_filter($availableStations, function ($station) {return $station->label === 'Ajaccio';});
+        $ajaccioStations = \array_filter($availableStations, function ($station) {
+            return 'Ajaccio' === $station->label;
+        });
 
         self::assertEquals('7761', \reset($ajaccioStations)->key);
     }
