@@ -51,7 +51,7 @@
                 <li class="p-m-1">
                   <a
                     target="_blank"
-                    href="https://gitlab.com/aeneria/aeneria-app/-/tags/{{ aeneria_version() }}"
+                    :href="'https://gitlab.com/aeneria/aeneria-app/-/tags/' + configuration.version"
                     class="p-button p-button-rounded p-button-secondary ml-1"
                   >
                     <i class="fa fa-code-branch p-mr-2"></i>Version {{ configuration.version }}
