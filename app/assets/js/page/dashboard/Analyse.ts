@@ -1,10 +1,10 @@
 import { defineComponent } from 'vue';
-import AidePapillon from '../aide/graphique/AidePapillon';
-import AideAnalyseCroisee from '../aide/graphique/AideAnalyseCroisee';
+import AidePapillon from '@/component/aide/AidePapillon';
+import AideAnalyseCroisee from '@/component/aide/AideAnalyseCroisee';
 import Card from 'primevue/card';
-import Papillon from '../graphique/Papillon';
-import NuagePoint from '../graphique/NuagePoint';
-import SelectionForm from '../selection/SelectionForm';
+import Papillon from '@/component/graphique/Papillon';
+import NuagePoint from '@/component/graphique/NuagePoint';
+import SelectionForm from '@/component/selection/SelectionForm';
 import { mapGetters } from 'vuex';
 
 export default defineComponent({

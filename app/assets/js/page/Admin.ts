@@ -1,11 +1,11 @@
 import { defineComponent } from 'vue';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
-import Logs from './Logs';
+import Logs from '@/component/admin/Logs';
 import Message from 'primevue/message';
 import TabPanel from 'primevue/tabpanel';
 import TabView from 'primevue/tabview';
-import Users from './Users';
+import Users from '@/component/admin/Users';
 
 export default defineComponent({
   name: 'Admin',

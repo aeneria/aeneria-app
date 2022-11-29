@@ -2,18 +2,18 @@ import { defineComponent } from 'vue';
 import { Frequence } from '@/type/Granularite';
 import { mapGetters } from 'vuex';
 import { querySomme } from '@/api/data';
-import { grid } from '../../composable/vue-screen';
-import AideCalendrier from '../aide/graphique/AideCalendrier';
-import AideEvolution from '../aide/graphique/AideEvolution';
-import AideSemaineJours from '../aide/graphique/AideSemaineJours';
-import Calendrier from '../graphique/Calendrier';
+import { grid } from '@/composable/vue-screen';
+import AideCalendrier from '@/component/aide/AideCalendrier';
+import AideEvolution from '@/component/aide/AideEvolution';
+import AideSemaineJours from '@/component/aide/AideSemaineJours';
+import Calendrier from '@/component/graphique/Calendrier';
 import Card from 'primevue/card';
-import Evolution from '../graphique/Evolution';
-import Index from '../graphique/Index';
-import JourSemaine from '../graphique/JourSemaine';
-import SelectionForm from '../selection/SelectionForm';
-import SemaineHorizontal from '../graphique/SemaineHorizontal';
-import SemaineVertical from '../graphique/SemaineVertical';
+import Evolution from '@/component/graphique/Evolution';
+import Index from '@/component/graphique/Index';
+import JourSemaine from '@/component/graphique/JourSemaine';
+import SelectionForm from '@/component/selection/SelectionForm';
+import SemaineHorizontal from '@/component/graphique/SemaineHorizontal';
+import SemaineVertical from '@/component/graphique/SemaineVertical';
 
 export default defineComponent({
   name: 'DashboardEnergie',

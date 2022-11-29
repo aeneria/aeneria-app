@@ -1,17 +1,17 @@
 import { defineComponent, State, watch } from 'vue';
-import { grid } from '../composable/vue-screen';
+import { grid } from '@/composable/vue-screen';
 import { INIT_CONFIGURATION } from '@/store/actions';
 import { mapGetters, mapState, useStore } from 'vuex';
 import { RouterLink, RouterView } from 'vue-router';
 import { useToast } from "primevue/usetoast";
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import SidebarMenu from './nav/SidebarMenu';
-import Spinner from './graphique/Spinner';
+import SidebarMenu from '@/component/nav/SidebarMenu';
+import Spinner from '@/component/graphique/Spinner';
 import Toast from 'primevue/toast';
-import TopbarDesktop from './nav/TopbarDesktop';
-import TopbarMobile from './nav/TopbarMobile';
-import Welcome from './misc/Welcome';
+import TopbarDesktop from '@/component/nav/TopbarDesktop';
+import TopbarMobile from '@/component/nav/TopbarMobile';
+import Welcome from '@/component/misc/Welcome';
 import { RESET_NOTIFICATIONS } from '@/store/mutations';
 
 export default defineComponent({

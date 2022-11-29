@@ -35,7 +35,6 @@
     </Dialog>
     <Toast>
       <template #message="slotProps">
-        <span :class="iconClass"></span>
         <div class="p-toast-message-text">
           <span class="p-toast-summary">{{slotProps.message.summary}}</span>
           <div class="p-toast-detail" v-html="slotProps.message.detail" />

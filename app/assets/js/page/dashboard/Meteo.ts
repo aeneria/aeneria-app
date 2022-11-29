@@ -3,11 +3,11 @@ import { defineComponent } from 'vue';
 import { Frequence, Granularite } from '@/type/Granularite';
 import { queryNombreInferieur, querySomme } from '@/api/data';
 import { utcDay } from 'd3';
-import Calendrier from '../graphique/Calendrier';
+import Calendrier from '@/component/graphique/Calendrier';
 import Card from 'primevue/card';
-import Evolution from '../graphique/Evolution';
-import Index from '../graphique/Index';
-import SelectionForm from '../selection/SelectionForm';
+import Evolution from '@/component/graphique/Evolution';
+import Index from '@/component/graphique/Index';
+import SelectionForm from '@/component/selection/SelectionForm';
 
 export default defineComponent({
   name: 'DashboardMeteo',

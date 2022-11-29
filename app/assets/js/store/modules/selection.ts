@@ -99,14 +99,18 @@ export const moduleSelection = {
   },
   actions: {
     [INIT_SELECTION] ({state, commit, dispatch, rootState}) {
-        const preSelection = window.sessionStorage.getItem('selection')
+        const rawPreSelection = window.sessionStorage.getItem('selection')
 
-        if (preSelection) {
-          try {
-            const toto = deserializedSelection(preSelection)
-            commit(SET_SELECTION, toto)
-          } catch (e) {
-            console.log(e)
+        if (rawPreSelection) {
+          const preSelection = JSON.parse(rawPreSelection)
+
+          if (preSelection.userId == rootState.utilisateur.id) {
+            try {
+              const selection = deserializedSelection(preSelection.selection)
+              commit(SET_SELECTION, selection)
+            } catch (e) {
+              console.log(e)
+            }
           }
         }
 
@@ -127,7 +131,7 @@ export const persistSelectionPlugin =
 (store: Store<State>) => {
   store.subscribe((mutation, state) => {
     if (state.initialized) {
-      window.sessionStorage.setItem('selection', serializedSelection(state.selection))
+      window.sessionStorage.setItem('selection', JSON.stringify({userId: state.utilisateur?.id, selection: serializedSelection(state.selection)}))
     }
   })
 }

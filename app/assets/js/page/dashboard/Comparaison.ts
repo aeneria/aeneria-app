@@ -3,18 +3,18 @@ import { Frequence } from '@/type/Granularite';
 import { mapGetters } from 'vuex';
 import { max } from 'd3';
 import { queryMax } from '@/api/data';
-import { screen, grid } from '../../composable/vue-screen';
-import AideAnalyseCroisee from '../aide/graphique/AideAnalyseCroisee';
-import AideCalendrier from '../aide/graphique/AideCalendrier';
-import AidePapillon from '../aide/graphique/AidePapillon';
-import AideSemaineJours from '../aide/graphique/AideSemaineJours';
-import Calendrier from '../graphique/Calendrier';
+import { screen, grid } from '@/composable/vue-screen';
+import AideAnalyseCroisee from '@/component/aide/AideAnalyseCroisee';
+import AideCalendrier from '@/component/aide/AideCalendrier';
+import AidePapillon from '@/component/aide/AidePapillon';
+import AideSemaineJours from '@/component/aide/AideSemaineJours';
+import Calendrier from '@/component/graphique/Calendrier';
 import Card from 'primevue/card';
-import DoubleEvolution from '../graphique/DoubleEvolution';
-import JourSemaine from '../graphique/JourSemaine';
-import NuagePoint from '../graphique/NuagePoint';
-import SelectionForm from '../selection/SelectionForm';
-import SemaineVertical from '../graphique/SemaineVertical';
+import DoubleEvolution from '@/component/graphique/DoubleEvolution';
+import JourSemaine from '@/component/graphique/JourSemaine';
+import NuagePoint from '@/component/graphique/NuagePoint';
+import SelectionForm from '@/component/selection/SelectionForm';
+import SemaineVertical from '@/component/graphique/SemaineVertical';
 
 export default defineComponent({
   name: 'DashboardComparaison',

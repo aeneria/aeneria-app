@@ -1,12 +1,12 @@
 import { defineComponent, ref } from 'vue';
 import { mapState } from 'vuex';
 import Button from 'primevue/button';
-import Place from './place/Place';
+import Place from '@/component/mon-compte/place/Place';
 import Menu from 'primevue/menu';
 import Divider from 'primevue/divider';
-import EditEmailForm from './form/EditEmailForm';
-import DeleteAccountForm from './form/DeleteAccountForm';
-import EditPasswordForm from './form/EditPasswordForm';
+import EditEmailForm from '@/component/mon-compte/form/EditEmailForm';
+import DeleteAccountForm from '@/component/mon-compte/form/DeleteAccountForm';
+import EditPasswordForm from '@/component/mon-compte/form/EditPasswordForm';
 
 export default defineComponent({
   name: 'MonCompte',

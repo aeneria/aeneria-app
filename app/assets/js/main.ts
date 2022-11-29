@@ -8,7 +8,7 @@ import { minWeekDayList, monthList, shortMonthList, shortWeekDayList, weekDayLis
 import { router } from './router';
 import { store } from './store';
 import * as d3 from 'd3';
-import App from './component/App';
+import App from './App';
 import ConfirmationServiceMethods from 'primevue/confirmationservice';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';

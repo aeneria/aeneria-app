@@ -1,8 +1,8 @@
 import { defineComponent } from 'vue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
-import MonthSummary from '../graphique/MonthSummary';
-import { formatWithGranularite } from '../graphique/d3-helpers';
+import MonthSummary from '@/component/graphique/MonthSummary';
+import { formatWithGranularite } from '@/component/graphique/d3-helpers';
 import { getGranularite, GranulariteType } from '@/type/Granularite';
 
 export default defineComponent({

@@ -1,5 +1,5 @@
-import { store } from "./store"
-import { SET_DISCONNECTED } from "./store/mutations"
+import { store } from "@/store"
+import { SET_DISCONNECTED } from "@/store/mutations"
 
 const rootContainer = document.querySelector("#app")
 let basePath = ''

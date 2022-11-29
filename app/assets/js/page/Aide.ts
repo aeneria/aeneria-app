@@ -1,10 +1,10 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import AideEvolution from './graphique/AideEvolution';
-import AideCalendrier from './graphique/AideCalendrier';
-import AideSemaineJours from './graphique/AideSemaineJours';
-import AidePapillon from '../aide/graphique/AidePapillon';
-import AideAnalyseCroisee from '../aide/graphique/AideAnalyseCroisee';
+import AideEvolution from '@/component/aide/AideEvolution';
+import AideCalendrier from '@/component/aide/AideCalendrier';
+import AideSemaineJours from '@/component/aide/AideSemaineJours';
+import AidePapillon from '@/component/aide/AidePapillon';
+import AideAnalyseCroisee from '@/component/aide/AideAnalyseCroisee';
 import Card from 'primevue/card';
 import Fieldset from 'primevue/fieldset';
 import TabPanel from 'primevue/tabpanel';

@@ -1,9 +1,9 @@
-import { ToastMessageOptions } from 'primevue/toast';
-import { ToastServiceMethods } from 'primevue/toastservice';
-import { Store } from 'vuex'
 import { Configuration } from './Configuration';
 import { Place } from './Place';
 import { Selection } from './Selection';
+import { Store } from 'vuex'
+import { ToastMessageOptions } from 'primevue/toast';
+import { ToastServiceMethods } from 'primevue/toastservice';
 import { Utilisateur } from './Utilisateur';
 
 declare module '@vue/runtime-core' {

@@ -29,8 +29,8 @@ Encore
 
     .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
     .addPlugin(new webpack.DefinePlugin({
-        __VUE_PROD_DEVTOOLS__: !Encore.isProduction()
-        //__VUE_OPTIONS_API__: !Encore.isProduction()
+        __VUE_PROD_DEVTOOLS__: !Encore.isProduction(),
+        __VUE_OPTIONS_API__: true
     }))
 
     .configureBabel(function(babelConfig) {
