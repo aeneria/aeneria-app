@@ -20,11 +20,14 @@ interface FeedDataProviderInterface
     public static function getParametersName(Feed $feed): array;
 
     /**
-     * Fetch data from last data to $date.
+     * Fetch data from last data to last available data.
+     *
+     * Each FeedDataProvider has to know what is
+     * "last available data" for its own implementation.
      *
      * @return FetchingError[]
      */
-    public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): array;
+    public function fetchDataUntilLastUpdateTo(array $feeds): array;
 
     /**
      * Fetch data for $date,

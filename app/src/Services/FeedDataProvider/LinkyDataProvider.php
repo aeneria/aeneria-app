@@ -47,9 +47,16 @@ class LinkyDataProvider extends AbstractFeedDataProvider
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function isAvailableDataDate(\DateTimeImmutable $date): bool
+    {
+        // This FeedDataProvider is depracted.
+        return false;
+    }
+
+    /**
      * Fetch ENEDIS data for $date and persist its in database.
-     *
-     * @param \DateTime $date
      */
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
@@ -89,7 +96,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
                 $this->dataValueRepository->updateOrCreateValue(
                     $feedData,
                     new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
-                    DataValue::FREQUENCY['HOUR'],
+                    DataValue::FREQUENCY_HOUR,
                     $value
                 );
             }
@@ -101,7 +108,7 @@ class LinkyDataProvider extends AbstractFeedDataProvider
             $this->dataValueRepository->updateOrCreateValue(
                 $feedData,
                 $date,
-                DataValue::FREQUENCY['DAY'],
+                DataValue::FREQUENCY_DAY,
                 $value
             );
         }
@@ -110,16 +117,16 @@ class LinkyDataProvider extends AbstractFeedDataProvider
         $this->entityManager->flush();
 
         // Persist week data.
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['WEEK']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_WEEK);
         $this->entityManager->flush();
 
         // Before, we used to get month value from enedis directly. But, this have two inconveniants :
         //  * First, data can be insconsistent : sum of days value for a month could be different than month value
         //  * When you get data for a date, it gives you the consumption as it was this particular day, so when you
         //    try to refetch data for a date, you have to refetch it also for the last date of the date's month.
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['MONTH']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_MONTH);
         $this->entityManager->flush();
-        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY['YEAR']);
+        $this->dataValueRepository->updateOrCreateAgregateValue($date, $feed, DataValue::FREQUENCY_YEAR);
         $this->entityManager->flush();
     }
 

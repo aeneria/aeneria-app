@@ -22,6 +22,18 @@ class FakeDataProvider extends AbstractFeedDataProvider
         return parent::FETCH_STRATEGY_ONE_BY_ONE;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function isAvailableDataDate(\DateTimeImmutable $date): bool
+    {
+        // Get yesterday datetime.
+        $reference = new \DateTimeImmutable();
+        $reference->sub(new \DateInterval('P1D'));
+
+        return new \DateTimeImmutable($reference->format("Y-m-d 00:00:00")) < $date;
+    }
+
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
         foreach ($feeds as $feed) {

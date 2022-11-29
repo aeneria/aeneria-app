@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class EnedisDataConnectDataProviderTest extends AppTestCase
 {
-    private function createEnedisDataConnectDataProvider(?SerializerInterface $serializer): EnedisDataConnectProvider
+    private function createEnedisDataConnectDataProvider(?SerializerInterface $serializer = null): EnedisDataConnectProvider
     {
         return new EnedisDataConnectProvider(
             $this->getEntityManager(),
@@ -123,6 +123,15 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
         $adressFromFeed = $dataProvider->getAddressFrom($feed);
 
         self::assertEquals($address, $adressFromFeed);
+    }
+
+    public function testIsAvailableDataDate()
+    {
+        $dataProvider = $this->createEnedisDataConnectDataProvider();
+
+        $this->assertTrue($dataProvider::isAvailableDataDate(new \DateTimeImmutable('2 days ago')));
+        $this->assertTrue($dataProvider::isAvailableDataDate(new \DateTimeImmutable('yesterday')));
+        $this->assertFalse($dataProvider::isAvailableDataDate(new \DateTimeImmutable('now')));
     }
 
     public function testFetchDataWithValidToken()

@@ -61,6 +61,15 @@ class MeteoFranceDataProviderTest extends AppTestCase
         self::assertEquals('7761', \reset($ajaccioStations)->key);
     }
 
+    public function testIsAvailableDataDate()
+    {
+        $dataProvider = $this->createMeteoFranceDataProvider();
+
+        $this->assertTrue($dataProvider::isAvailableDataDate(new \DateTimeImmutable('2 days ago')));
+        $this->assertTrue($dataProvider::isAvailableDataDate(new \DateTimeImmutable('yesterday')));
+        $this->assertFalse($dataProvider::isAvailableDataDate(new \DateTimeImmutable('now')));
+    }
+
     public function testFetchData()
     {
         $feed = $this->createMeteoFeed();

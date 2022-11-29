@@ -158,6 +158,18 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
     /**
      * {@inheritdoc}
      */
+    public static function isAvailableDataDate(\DateTimeImmutable $date): bool
+    {
+        // Get yesterday datetime.
+        $reference = new \DateTimeImmutable();
+        $reference = $reference->sub(new \DateInterval('P1D'));
+
+        return $reference->format("Y-m-d") >= $date->format("Y-m-d");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function fetchData(\DateTimeImmutable $date, array $feeds, bool $force = false): array
     {
         try {

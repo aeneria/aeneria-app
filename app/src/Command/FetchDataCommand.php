@@ -127,13 +127,8 @@ class FetchDataCommand extends Command
 
             $errors = $feedDataProvider->fetchDataBetween($startDate, $endDate, $feeds, $input->getOption('force'));
         } else {
-            // Else we update from last data to yesterday.
-            // Get yesterday datetime.
-            $date = new \DateTime();
-            $date->sub(new \DateInterval('P1D'));
-            $date = new \DateTimeImmutable($date->format("Y-m-d 00:00:00"));
-
-            $errors = $feedDataProvider->fetchDataUntilLastUpdateTo($date, $feeds);
+            // Else we update from last data to last available data.
+            $errors = $feedDataProvider->fetchDataUntilLastUpdateTo($feeds);
         }
     }
 }

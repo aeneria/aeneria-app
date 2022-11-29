@@ -81,33 +81,42 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     }
 
     /**
+     * Est-ce que la date donnée correspond à une donnée disponible.
+     *
+     * (dépend des règles métiers de chaque implémentation de FeedDataProvider)
+     */
+    abstract public static function isAvailableDataDate(\DateTimeImmutable $date): bool;
+
+    /**
      * {@inheritdoc}
      */
-    final public function fetchDataUntilLastUpdateTo(\DateTimeImmutable $date, array $feeds): array
+    final public function fetchDataUntilLastUpdateTo(array $feeds): array
     {
         $errors = [];
 
         if (self::FETCH_STRATEGY_GROUPED === $this->getFetchStrategy()) {
             $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
-            $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
+            $lastUpToDate = new \DateTimeImmutable($lastUpToDate->format("Y-m-d"));
 
-            while ($lastUpToDate <= $date) {
+            while ($this->isAvailableDataDate($lastUpToDate)) {
                 $errors = \array_merge(
                     $errors,
-                    $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), $feeds)
+                    $this->fetchData(\DateTimeImmutable::createFromInterface($lastUpToDate), $feeds)
                 );
+
                 $lastUpToDate->add(new \DateInterval('P1D'));
             }
         } elseif (self::FETCH_STRATEGY_ONE_BY_ONE === $this->getFetchStrategy()) {
             foreach ($feeds as $feed) {
                 $lastUpToDate = $this->feedRepository->getLastUpToDate([$feed]);
-                $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d 00:00:00"));
+                $lastUpToDate = new \DateTimeImmutable($lastUpToDate->format("Y-m-d"));
 
-                while ($lastUpToDate <= $date) {
+                while ($this->isAvailableDataDate($lastUpToDate)) {
                     $errors = \array_merge(
                         $errors,
-                        $this->fetchData(\DateTimeImmutable::createFromMutable($lastUpToDate), [$feed])
+                        $this->fetchData(\DateTimeImmutable::createFromInterface($lastUpToDate), [$feed])
                     );
+
                     $lastUpToDate->add(new \DateInterval('P1D'));
                 }
             }
