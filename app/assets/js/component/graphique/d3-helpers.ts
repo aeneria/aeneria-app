@@ -49,6 +49,7 @@ export const formatWithGranularite = (granularite: Granularite, dateToFormat: Da
 
 export const adaptToGranularite = (granularite: Granularite, dateToAdapt: Date): Date => {
   const date = new Date(dateToAdapt)
+  date.setHours(0, 0, 0, 0)
 
   switch (granularite.type) {
     case GranulariteType.Jour:

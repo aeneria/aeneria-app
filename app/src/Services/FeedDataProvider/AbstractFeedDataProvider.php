@@ -159,7 +159,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     /**
      * @param FetchingError[] $errors
      */
-    final private function handleErrors(array $errors): array
+    private function handleErrors(array $errors): array
     {
         if ($errors) {
             foreach ($errors as $error) {
