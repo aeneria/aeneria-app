@@ -3,7 +3,6 @@ import { FeedType } from '@/type/Feed';
 import { FilterMatchMode } from 'primevue/api';
 import { Place, findFeedByType } from '@/type/Place';
 import { postUserDelete, postUserDisable, postUserEnable, queryUtilisateurs } from '@/api/admin';
-import { required, email } from "@vuelidate/validators";
 import { Utilisateur } from '@/type/Utilisateur';
 import Button from 'primevue/button';
 import Column from 'primevue/column';
@@ -13,7 +12,6 @@ import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
-import useVuelidate from '@vuelidate/core';
 import UserAddForm from './UserAddForm';
 import UserEditForm from './UserEditForm';
 import { timeFormat } from 'd3';
@@ -32,7 +30,6 @@ export default defineComponent({
     UserAddForm,
     UserEditForm,
   },
-  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       loading: true,
@@ -43,14 +40,6 @@ export default defineComponent({
       expandedRows: [],
       editedUtilisateur: null as null|Utilisateur,
       showUserAddForm: false,
-    }
-  },
-  validations() {
-    return {
-      nameValue: {
-        required,
-        email,
-      },
     }
   },
   mounted() {

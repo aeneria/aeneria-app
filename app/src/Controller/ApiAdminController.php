@@ -53,13 +53,6 @@ class ApiAdminController extends AbstractAppController
         ), 200);
     }
 
-    public function userCount(): JsonResponse
-    {
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        return new JsonResponse($this->userRepository->count([]), 200);
-    }
-
     /**
      * Add new user form view
      */

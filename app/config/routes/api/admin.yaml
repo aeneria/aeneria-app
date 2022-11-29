@@ -2,10 +2,6 @@ api.admin.user.list:
   path: /user
   controller: App\Controller\ApiAdminController::userList
 
-api.admin.user.count:
-  path: /user/count
-  controller: App\Controller\ApiAdminController::userCount
-
 api.admin.user.add:
   path: /user/add
   controller: App\Controller\ApiAdminController::addUser

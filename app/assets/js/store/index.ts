@@ -1,10 +1,10 @@
 import { postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
 import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
-import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceName } from '@/api/place'
+import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceEdit } from '@/api/place'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_CONFIGURATION, INIT_SELECTION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT_NOM, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
+import { INIT_CONFIGURATION, INIT_SELECTION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
 import { RESET_NOTIFICATIONS, SET_CONFIGURATION, SET_DISCONNECTED, SET_PLACE_LIST, SET_USER } from './mutations'
 import { moduleSelection, persistSelectionPlugin } from './modules/selection'
 import { ToastMessageOptions } from 'primevue/toast'
@@ -130,8 +130,8 @@ export const store = createStore({
         })
       })
     },
-    [PLACE_EDIT_NOM] ({dispatch, commit}, data) {
-      postPlaceName(data.placeId, data.newName).then(() => {
+    [PLACE_EDIT] ({dispatch, commit}, data) {
+      postPlaceEdit(data.placeId, data.name, data.public, data.allowedUsers).then(() => {
         queryUser().then(data => {
           dispatch(INIT_CONFIGURATION)
           commit(SET_USER, data)
@@ -140,7 +140,7 @@ export const store = createStore({
         this.state.notifications.push({
           severity:'success',
           summary: "L'adresse a été correctement mise à jour.",
-          detail: `Son nom est maintenant ${data.newName}.`
+          detail: `Son nom est maintenant ${data.name}.`
         })
       })
     },

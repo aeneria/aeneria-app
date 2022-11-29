@@ -5,7 +5,7 @@ import Menu from 'primevue/menu';
 import Card from 'primevue/card';
 import Feed from './feed/Feed';
 import DeleteForm from './form/DeleteForm';
-import EditNomForm from './form/EditNomForm';
+import EditForm from './form/EditForm';
 import ExportDataForm from './form/ExportDataForm';
 import ImportDataForm from './form/ImportDataForm';
 import RefreshDataForm from './form/RefreshDataForm';
@@ -23,7 +23,7 @@ export default defineComponent({
     Menu,
     Feed,
     DeleteForm,
-    EditNomForm,
+    EditForm,
     ExportDataForm,
     ImportDataForm,
     RefreshDataForm,
@@ -96,7 +96,7 @@ export default defineComponent({
     menuEditionItems(): Array<MenuItem>{
       const menuEditionItems = new Array<MenuItem>(
         {
-          label: 'Modifier le nom',
+          label: 'Modifier l\'adresse',
           icon: 'pi pi-pencil',
           command: () => this.toggleEditNomForm(),
         },

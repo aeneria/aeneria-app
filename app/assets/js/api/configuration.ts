@@ -72,6 +72,10 @@ export function postDeleteAccount(password: string, yesIamSure: boolean): void {
   form.submit()
 }
 
+export function queryUsers(): Promise<Array<{id: number, username: string}>> {
+  return queryData(`/api/config/users`).then(data => JSON.parse(data))
+}
+
 export function queryConfiguration(): Promise<Configuration> {
   return queryData(`/api/config`).then(data => {
     return {

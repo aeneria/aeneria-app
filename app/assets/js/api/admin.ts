@@ -20,10 +20,6 @@ export function queryUtilisateurs(limit: number, offset: number): Promise<Array<
   })
 }
 
-export function queryUtilisateurCount(): Promise<number> {
-  return queryData(`/api/admin/user/count`)
-}
-
 export function queryLogs(): Promise<any> {
   return queryData(`/api/admin/log`)
 }

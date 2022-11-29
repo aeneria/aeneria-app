@@ -323,4 +323,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
             'lastLogin' => $this->lastLogin,
         ];
     }
+
+    /**
+     * @param iterable<User>
+     *
+     * @return [int, string]
+     */
+    static public function toOptionList(?iterable $userList): iterable
+    {
+        $userList = \is_array($userList) ? $userList : \iterator_to_array($userList);
+
+        return $userList ? \array_map(
+            function (User $user) {
+                return  ['id' => $user->getId(), 'username' => $user->getUsername()];
+            },
+            $userList
+        ) : [];
+    }
 }

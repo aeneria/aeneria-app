@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Repository\FeedRepository;
+use App\Repository\UserRepository;
 use App\Services\DataExporter;
 use App\Services\FeedDataProvider\MeteoFranceDataProvider;
 use App\Services\PendingActionService;
@@ -62,21 +63,46 @@ class ApiPlaceController extends AbstractAppController
         return new JsonResponse($place->jsonSerialize(), 200);
     }
 
-    public function updateName(
+    public function update(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository
     ): JsonResponse {
         $data = \json_decode($request->getContent());
 
         if (!$data->placeId) {
             return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
-        if (!$data->newName) {
-            return $this->dataValidationErrorResponse('newName', "Vous devez fournir un nouveau nom 'newName'.");
+        if (!$data->name) {
+            return $this->dataValidationErrorResponse('name', "Vous devez fournir un nouveau nom 'name'.");
+        }
+        if ($this->userCanSharePlace && !($data->allowedUsers === null || \is_array($data->allowedUsers))) {
+            return $this->dataValidationErrorResponse('sharedWith', "Vous devez fournir un attribut 'sharedWith' de type array.");
+        }
+        if ($this->placeCanBePublic && $data->public === null && !\is_bool($data->public)) {
+            return $this->dataValidationErrorResponse('isPublic', "Vous devez fournir un attribut 'isPublic' de type booleen.");
         }
 
         $place = $this->checkPlace($data->placeId);
-        $place->setName($data->newName);
+        $place->setName($data->name);
+
+        if ($this->userCanSharePlace && \count($data->allowedUsers)) {
+            $users = $userRepository->findBy(['id' => \array_map(
+                function ($user) {
+                    return $user->id;
+                },
+                $data->allowedUsers
+            )]);
+            $place->setAllowedUsers($users);
+        } else {
+            $place->setAllowedUsers([]);
+        }
+
+        if ($this->placeCanBePublic) {
+            $place->setPublic($data->public);
+        } else {
+            $place->setPublic(false);
+        }
 
         $entityManager->persist($place);
         $entityManager->flush();

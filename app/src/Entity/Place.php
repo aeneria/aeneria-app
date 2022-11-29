@@ -225,6 +225,9 @@ class Place implements \JsonSerializable
         return $this->allowedUsers;
     }
 
+    /**
+     * @param User[] $allowedUsers
+     */
     public function setAllowedUsers(array $allowedUsers): self
     {
         $this->allowedUsers = $allowedUsers;
@@ -283,6 +286,8 @@ class Place implements \JsonSerializable
                 },
                 $feedList
             ),
+            'allowedUsers' => User::toOptionList($this->allowedUsers),
+            'public' => $this->isPublic(),
             'periodeMin' => $this->periodeMin,
             'periodeMax' => $this->periodeMax,
             'createdAt' => $this->createdAt,

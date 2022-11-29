@@ -3,8 +3,8 @@ api.place.create:
   controller: App\Controller\ApiPlaceController::create
 
 api.place.edit.name:
-  path: /edit-name
-  controller: App\Controller\ApiPlaceController::updateName
+  path: /edit
+  controller: App\Controller\ApiPlaceController::update
 
 api.place.delete:
   path: /delete

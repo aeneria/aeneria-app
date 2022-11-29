@@ -5,6 +5,8 @@ export interface Place {
   name: string
   icon: string
   feedList: Feed[]
+  public: boolean
+  allowedUsers: Array<{id: number, username: string}>
   periodeMin: Date|null
   periodeMax: Date|null
   createdAt: Date

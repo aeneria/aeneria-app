@@ -14,12 +14,14 @@ export function postPlaceCreate(name: string, meteo: string): Promise<Place> {
   )
 }
 
-export function postPlaceName(placeId: string, newName: string): Promise<any> {
+export function postPlaceEdit(placeId: string, name: string, isPublic: null|boolean, allowedUsers: null|Array<string>): Promise<any> {
   return postData(
-    `/api/place/edit-name`,
+    `/api/place/edit`,
     {
       placeId: placeId,
-      newName: newName,
+      name: name,
+      public: isPublic,
+      allowedUsers: allowedUsers,
     },
     'POST',
     []

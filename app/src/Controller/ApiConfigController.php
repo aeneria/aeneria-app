@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Place;
+use App\Entity\User;
 use App\Repository\DataValueRepository;
 use App\Repository\UserRepository;
 use App\Services\NotificationService;
@@ -118,6 +119,16 @@ class ApiConfigController extends AbstractAppController
         $userRepository->purge($user);
 
         return $this->redirectToRoute('security.login');
+    }
+
+    /**
+     * Obtenir la liste des utilisateurs.
+     */
+    public function getUsers(UserRepository $userRepository): JsonResponse
+    {
+        return new JsonResponse(\json_encode(
+            User::toOptionList($userRepository->list(0, -1))
+        ), 200);
     }
 
     /**
