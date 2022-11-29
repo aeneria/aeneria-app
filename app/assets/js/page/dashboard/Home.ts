@@ -15,6 +15,7 @@ export default defineComponent({
   data() {
     const now = new Date()
     now.setDate(1)
+    now.setHours(0,0,0,0)
 
     const previousMonth = new Date(now)
     previousMonth.setMonth(previousMonth.getMonth() - 1)

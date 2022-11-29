@@ -3,6 +3,12 @@
     <div class="p-col-12">
       <h1>Administration</h1>
       <TabView>
+        <TabPanel header="Liste des utilisateurs">
+          <Users />
+        </TabPanel>
+        <TabPanel header="Logs">
+          <Logs />
+        </TabPanel>
         <TabPanel header="Configuration courante">
           <DataTable :value="configs" stripedRows responsiveLayout="scroll">
             <Column field="libelle" header="Configuration"></Column>
@@ -11,12 +17,6 @@
           <Message severity="info" :closable="false">
             Ces paramètres peuvent être changés en surchargeant le fichier <code>.env</code>.
           </Message>
-        </TabPanel>
-        <TabPanel header="Liste des utilisateurs">
-          <Users />
-        </TabPanel>
-        <TabPanel header="Logs">
-          <Logs />
         </TabPanel>
       </TabView>
     </div>

@@ -28,7 +28,7 @@ export default defineComponent({
   data() {
     const monthEnd = new Date(this.month)
     monthEnd.setMonth(monthEnd.getMonth() + 1)
-    monthEnd.setDate(- 1)
+    monthEnd.setDate(monthEnd.getDate() - 1)
 
     return {
       indexDju: '-' as number|string,
