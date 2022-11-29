@@ -15,7 +15,8 @@ export const d3LocaleDef = {
 
 const d3LocaleObject = d3.timeFormatDefaultLocale(d3LocaleDef)
 
-export const weekDayFormat = (i: number) => shortWeekDayList[(i + 1)%7]
+export const shortWeekDayFormat = (i: number) => shortWeekDayList[(i + 1)%7]
+export const weekDayFormat = (i: number) => weekDayList[(i + 1)%7]
 export const monthFormat = (d: Date) => [d.getFullYear(), 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'][d.getMonth()]
 export const hourFormat = (i: number) => ('00' + i % 24).slice(-2) + 'h'
 

@@ -2,7 +2,7 @@ import { DataPoint } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Frequence } from '@/type/Granularite';
-import { monthFormat, weekDayFormat } from './d3-helpers';
+import { monthFormat, shortWeekDayFormat } from './d3-helpers';
 import { queryDataPoint } from '@/api/data';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
@@ -179,7 +179,7 @@ export default defineComponent({
         .selectAll('text')
         .data(d3.range(7))
         .join('text')
-        .text(weekDayFormat)
+        .text(shortWeekDayFormat)
           .style('fill', this.axeColor)
           .attr('transform', (d, i) => {
             return 'rotate(-90)translate(-30,' + (i * this.daySize + this.marginTop + 12) + ')'

@@ -1,9 +1,9 @@
-import { DataRepartition, weekDayList } from '@/type/DataValue';
+import { DataRepartition } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Frequence, RepartitionColonne } from '@/type/Granularite';
 import { queryRepartition } from '@/api/data';
-import { weekDayFormat } from './d3-helpers';
+import { shortWeekDayFormat, weekDayFormat } from './d3-helpers';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
 import Legende from './Legende';
@@ -171,7 +171,7 @@ export default defineComponent({
         .attr('height', this.barWidth)
         .each((d, i, element) => {
           tippy(element[i] as SVGRectElement, {
-            content: 'Le ' + weekDayList[d.groupBy].toLowerCase() + '</br>en moyenne, ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
+            content: 'Le ' + weekDayFormat(d.groupBy).toLowerCase() + '</br>en moyenne, ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
             allowHTML: true,
             placement: 'right',
           })
@@ -192,7 +192,7 @@ export default defineComponent({
         .selectAll('text')
         .data(d3.range(7))
         .join('text')
-        .text(weekDayFormat)
+        .text(shortWeekDayFormat)
           .style('fill', this.axeColor)
           .attr('transform', (d, i) => {
             return 'translate(30,' + (i * this.barWithMarge + 16) + ')'

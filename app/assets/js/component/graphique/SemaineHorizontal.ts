@@ -1,8 +1,8 @@
-import { DataDoubleRepartition, weekDayList } from '@/type/DataValue';
+import { DataDoubleRepartition } from '@/type/DataValue';
 import { defineComponent, PropType } from 'vue';
 import { FeedDataType } from '@/type/FeedData';
 import { Frequence, RepartitionColonne } from '@/type/Granularite';
-import { hourFormat, weekDayFormat } from './d3-helpers';
+import { hourFormat, shortWeekDayFormat, weekDayFormat } from './d3-helpers';
 import { queryDoubleRepartition } from '@/api/data';
 import * as d3 from 'd3';
 import Erreur from './Erreur';
@@ -175,7 +175,7 @@ export default defineComponent({
         .selectAll('text')
         .data(d3.range(7))
         .join('text')
-        .text(weekDayFormat)
+        .text(shortWeekDayFormat)
           .style('fill', this.axeColor)
           .attr('transform', (d, i) => {
             return 'translate(30,' + (i * this.daySize + this.marginTop + 12) + ')'
@@ -224,7 +224,7 @@ export default defineComponent({
         .attr('fill', (d) => d.value ? this.feedDataType.colors[this.range(d.value)] : '#eaebec')
         .each((d, i, element) => {
           tippy(element[i] as SVGRectElement, {
-            content: 'Le ' + weekDayList[d.axeX].toLowerCase() + ' de ' + hourFormat(d.axeY) + ' à ' + hourFormat(d.axeY + 1) + '</br> ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
+            content: 'Le ' + weekDayFormat(d.axeX).toLowerCase() + ' de ' + hourFormat(d.axeY) + ' à ' + hourFormat(d.axeY + 1) + '</br> ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
             allowHTML: true,
             placement: 'right',
           })
@@ -295,7 +295,7 @@ export default defineComponent({
         .attr('stroke-width', 0)
         .each((d, i, element) => {
           tippy(element[i] as SVGRectElement, {
-            content: 'Le ' + weekDayList[d.axeX].toLowerCase() + '</br>en moyenne, ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
+            content: 'Le ' + weekDayFormat(d.axeX).toLowerCase() + '</br>en moyenne, ' + d.value.toFixed(this.feedDataType.precision) + ' ' + this.feedDataType.unite,
             allowHTML: true,
             placement: 'right',
           })
