@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:aeneria/grdf-adict.git",
-                "reference": "f0505dd7e779ec130617f43edf66be8d27c1e0f2"
+                "reference": "e2ac29444f60c43368eb4197ec6aa21809d59d89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=f0505dd7e779ec130617f43edf66be8d27c1e0f2",
-                "reference": "f0505dd7e779ec130617f43edf66be8d27c1e0f2",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=e2ac29444f60c43368eb4197ec6aa21809d59d89",
+                "reference": "e2ac29444f60c43368eb4197ec6aa21809d59d89",
                 "shasum": ""
             },
             "require": {
@@ -92,7 +92,7 @@
                 }
             ],
             "description": "A small library to use a part of GRDF ADICT API with PHP : https://site.grdf.fr/web/grdf-adict/",
-            "time": "2022-10-16T17:02:43+00:00"
+            "time": "2022-12-19T14:56:30+00:00"
         },
         {
             "name": "box/spout",
