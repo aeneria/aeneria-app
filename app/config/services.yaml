@@ -36,7 +36,6 @@ parameters:
     aeneria.grdf.client_secret: "%env(GRDF_CLIENT_SECRET)%"
     aeneria.grdf.redirect_uri: "%env(GRDF_REDIRECT_URI)%"
     aeneria.grdf.endpoint_auth: "%env(GRDF_ENDPOINT_AUTH)%"
-    aeneria.grdf.endpoint_token: "%env(GRDF_ENDPOINT_TOKEN)%"
     aeneria.grdf.endpoint_data: "%env(GRDF_ENDPOINT_DATA)%"
 
     # Matomo
@@ -95,7 +94,6 @@ services:
         arguments:
             $httpClient: "@http_client"
             $authEndpoint: "%aeneria.grdf.endpoint_auth%"
-            $tokenEndpoint: "%aeneria.grdf.endpoint_token%"
             $dataEndpoint: "%aeneria.grdf.endpoint_data%"
             $clientId: "%aeneria.grdf.client_id%"
             $clientSecret: "%aeneria.grdf.client_secret%"
