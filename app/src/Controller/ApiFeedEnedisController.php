@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
-use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
+use Aeneria\EnedisDataConnectApi\Model\Address;
+use Aeneria\EnedisDataConnectApi\Model\Token;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Repository\FeedRepository;
@@ -15,13 +16,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiFeedEnedisController extends AbstractAppController
 {
-    /** @var RouterInterface */
-    private $router;
     /** @var PendingActionService */
     private $actionService;
     /** @var JwtService */
@@ -30,8 +28,8 @@ class ApiFeedEnedisController extends AbstractAppController
     private $entityManager;
     /** @var FeedRepository */
     private $feedRepository;
-    /** @var DataConnectServiceInterface */
-    private $dataConnectService;
+    /** @var EnedisDataConnectProvider */
+    private $enedisDataConnectProvider;
 
     public function __construct(
         bool $userCanSharePlace,
@@ -39,11 +37,10 @@ class ApiFeedEnedisController extends AbstractAppController
         bool $isDemoMode,
         PlaceRepository $placeRepository,
         FeedRepository $feedRepository,
-        RouterInterface $router,
         PendingActionService $actionService,
         JwtService $jwtService,
         EntityManagerInterface $entityManager,
-        DataConnectServiceInterface $dataConnectService
+        EnedisDataConnectProvider $enedisDataConnectProvider
     ) {
         parent::__construct(
             $userCanSharePlace,
@@ -52,12 +49,11 @@ class ApiFeedEnedisController extends AbstractAppController
             $placeRepository
         );
 
-        $this->router = $router;
         $this->actionService = $actionService;
         $this->jwtService = $jwtService;
         $this->entityManager = $entityManager;
         $this->feedRepository = $feedRepository;
-        $this->dataConnectService = $dataConnectService;
+        $this->enedisDataConnectProvider = $enedisDataConnectProvider;
     }
 
     public function consent(string $placeId): JsonResponse
@@ -68,39 +64,9 @@ class ApiFeedEnedisController extends AbstractAppController
         $action = $this->actionService->createDataConnectCallbackAction($user, $place);
         $state = $this->jwtService->encode($action->getToken());
 
-        $enedisUrl = $this->dataConnectService
-            ->getAuthorizeV1Service()
-            ->getConsentPageUrl(
-                'P12M',
-                $state
-            )
-        ;
-
-        // Adding callback url for aeneria proxy
-        $enedisUrl .= '&callback=';
-        $enedisUrl .= \urlencode(
-            $this->router->generate('api.feed.enedis.consent.callback', [], RouterInterface::ABSOLUTE_URL)
-        );
+        $enedisUrl = $this->enedisDataConnectProvider->getConsentUrl($state);
 
         return new JsonResponse($enedisUrl, 200);
-    }
-
-    public function consentCheck(
-        string $placeId,
-        EnedisDataConnectProvider $enedisDataConnectProvider
-    ): JsonResponse {
-        $place = $this->checkPlace($placeId);
-
-        $enedisFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
-        if (!$enedisFeed or Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $enedisFeed->getFeedDataProviderType()) {
-            return $this->dataValidationErrorResponse('feed', "Aucun compteur Linky n'est associé à cette adresse.");
-        }
-
-        if (!$address = $enedisDataConnectProvider->consentCheck($enedisFeed)) {
-            return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
-        }
-
-        return new JsonResponse(\json_encode($address), 200);
     }
 
     public function consentCallback(Request $request, SerializerInterface $serializer): RedirectResponse
@@ -120,18 +86,10 @@ class ApiFeedEnedisController extends AbstractAppController
         $place = $this->checkPlace($pendingAction->getSingleParam('place'));
 
         try {
-            $token = $this->dataConnectService
-                ->getAuthorizeV1Service()
-                ->requestTokenFromCode($code)
-            ;
+            [$accessToken, $address] = $this->enedisDataConnectProvider->consentCheckFromCode($code);
 
-            $address = $this->dataConnectService
-                ->getCustomersService()
-                ->requestUsagePointAdresse(
-                    $token->getAccessToken(),
-                    $token->getUsagePointsId()
-                )
-            ;
+            \assert($accessToken instanceof Token);
+            \assert($address instanceof Address);
         } catch (DataConnectException $e) {
             // Sur une erreur au retour d'enedis data-connect, sur une erreur
             // on renvoit sur une page d'erreur du front
@@ -146,7 +104,7 @@ class ApiFeedEnedisController extends AbstractAppController
         }
 
         $feed->setName((string) $address);
-        $feed->setSingleParam('TOKEN', $serializer->serialize($token, 'json'));
+        $feed->setSingleParam('TOKEN', $serializer->serialize($accessToken, 'json'));
         $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
         $feed->setSingleParam('FETCH_ERROR', 0);
 
@@ -161,5 +119,21 @@ class ApiFeedEnedisController extends AbstractAppController
         $this->actionService->delete($pendingAction);
 
         return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/enedis/' . $place->getId()]);
+    }
+
+    public function consentCheck(string $placeId): JsonResponse
+    {
+        $place = $this->checkPlace($placeId);
+
+        $enedisFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
+        if (!$enedisFeed or Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $enedisFeed->getFeedDataProviderType()) {
+            return $this->dataValidationErrorResponse('feed', "Aucun compteur Linky n'est associé à cette adresse.");
+        }
+
+        if (!$address = $this->enedisDataConnectProvider->consentCheck($enedisFeed)) {
+            return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
+        }
+
+        return new JsonResponse(\json_encode($address), 200);
     }
 }

@@ -17,10 +17,11 @@ parameters:
     aeneria.demo_mode: "%env(AENERIA_DEMO_MODE)%"
     aeneria.welcome_message: "%env(AENERIA_WELCOME_MESSAGE)%"
 
+    aeneria.proxy_url: "%env(AENERIA_PROXY_URL)%"
+    aeneria.proxy_for_enedis: "%env(AENERIA_PROXY_FOR_ENEDIS)%"
+    aeneria.proxy_for_grdf: "%env(AENERIA_PROXY_FOR_GRDF)%"
+
     # Enedis Data Connect
-    env(ENEDIS_CLIENT_ID): ""
-    env(ENEDIS_CLIENT_SECRET): ""
-    env(ENEDIS_REDIRECT_URI): ""
     aeneria.enedis.client_id: "%env(ENEDIS_CLIENT_ID)%"
     aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"
     aeneria.enedis.redirect_uri: "%env(ENEDIS_REDIRECT_URI)%"
@@ -29,9 +30,6 @@ parameters:
     aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
 
     # Grdf Adict
-    env(GRDF_CLIENT_ID): ""
-    env(GRDF_CLIENT_SECRET): ""
-    env(GRDF_REDIRECT_URI): ""
     aeneria.grdf.client_id: "%env(GRDF_CLIENT_ID)%"
     aeneria.grdf.client_secret: "%env(GRDF_CLIENT_SECRET)%"
     aeneria.grdf.redirect_uri: "%env(GRDF_REDIRECT_URI)%"
@@ -58,6 +56,9 @@ services:
             $userCanImport: '%aeneria.user.can_import%'
             $isDemoMode: '%aeneria.demo_mode%'
             $placeCanBePublic: '%aeneria.place_can_be_public%'
+            $proxyUrl: '%aeneria.proxy_url%'
+            $useProxyForEnedis: '%aeneria.proxy_for_enedis%'
+            $useProxyForGrdf: '%aeneria.proxy_for_grdf%'
 
     App\:
         resource: '../src/*'
@@ -83,12 +84,15 @@ services:
     Aeneria\EnedisDataConnectApi\Service\DataConnectService:
         arguments:
             $httpClient: "@http_client"
-            $authEndpoint: "%aeneria.enedis.endpoint_auth%"
-            $tokenEndpoint: "%aeneria.enedis.endpoint_token%"
+            $authEndpoint: "@=parameter('aeneria.proxy_for_enedis') ? parameter('aeneria.proxy_url') ~ '/enedis-data-connect' : parameter('aeneria.enedis.endpoint_auth')"
+            $tokenEndpoint: "@=parameter('aeneria.proxy_for_enedis') ? parameter('aeneria.proxy_url') ~ '/enedis-data-connect' : parameter('aeneria.enedis.endpoint_token')"
             $dataEndpoint: "%aeneria.enedis.endpoint_data%"
             $clientId: "%aeneria.enedis.client_id%"
             $clientSecret: "%aeneria.enedis.client_secret%"
             $redirectUri: "%aeneria.enedis.redirect_uri%"
+
+    Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface:
+        alias: Aeneria\EnedisDataConnectApi\Service\DataConnectService
 
     Aeneria\GrdfAdictApi\Service\GrdfAdictService:
         arguments:
@@ -101,6 +105,3 @@ services:
 
     Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface:
         alias: Aeneria\GrdfAdictApi\Service\GrdfAdictService
-
-    Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface:
-        alias: Aeneria\EnedisDataConnectApi\Service\DataConnectService
