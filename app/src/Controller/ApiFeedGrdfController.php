@@ -98,11 +98,9 @@ class ApiFeedGrdfController extends AbstractAppController
         }
 
         $feed->setName($info ? (string) $info : '');
-        $feed->setSingleParam('FETCH_ERROR', 0);
+        $feed->setFetchError(0);
         $feed->setSingleParam('PCE', $info->pce);
-        if ($info) {
-            $feed->setSingleParam('INFO', $serializer->serialize($info, 'json'));
-        }
+        $feed->setSingleParam('INFO', $serializer->serialize($info, 'json'));
 
         $this->entityManager->persist($feed);
         $this->entityManager->persist($place);

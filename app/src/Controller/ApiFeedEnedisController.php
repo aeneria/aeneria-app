@@ -106,7 +106,7 @@ class ApiFeedEnedisController extends AbstractAppController
         $feed->setName((string) $address);
         $feed->setSingleParam('TOKEN', $serializer->serialize($accessToken, 'json'));
         $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
-        $feed->setSingleParam('FETCH_ERROR', 0);
+        $feed->setFetchError(0);
 
         $this->entityManager->persist($feed);
         $this->entityManager->persist($place);

@@ -11,7 +11,9 @@ use Symfony\Component\Filesystem\Exception\IOException;
 class JwtService
 {
     private $privateDir;
+    private $privateKeyFilename;
     private $privateKey;
+    private $publicKeyFilename;
     private $publicKey;
 
     public function __construct(string $projectDir)
@@ -20,11 +22,11 @@ class JwtService
             '%s/private',
             $projectDir
         );
-        $this->privateKey = \sprintf(
+        $this->privateKeyFilename = \sprintf(
             '%s/id_rsa',
             $this->privateDir
         );
-        $this->publicKey = \sprintf(
+        $this->publicKeyFilename = \sprintf(
             '%s/id_rsa.pub',
             $this->privateDir
         );
@@ -65,13 +67,31 @@ class JwtService
         }
     }
 
+    public function getPrivateKey(): string
+    {
+        if ($this->privateKey) {
+            return $this->privateKey;
+        }
+
+        return $this->privateKey = \file_get_contents($this->privateKeyFilename);
+    }
+
+    public function getPublicKey(): string
+    {
+        if ($this->publicKey) {
+            return $this->publicKey;
+        }
+
+        return $this->publicKey = \file_get_contents($this->publicKeyFilename);
+    }
+
     public function encode($payload): string
     {
-        return JWT::encode($payload, \file_get_contents($this->privateKey));
+        return JWT::encode($payload, $this->getPrivateKey());
     }
 
     public function decode($jwt)
     {
-        return JWT::decode($jwt, \file_get_contents($this->privateKey), ['HS256']);
+        return JWT::decode($jwt, $this->getPrivateKey(), ['HS256']);
     }
 }

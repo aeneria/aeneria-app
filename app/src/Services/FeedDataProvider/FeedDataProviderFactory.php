@@ -18,6 +18,9 @@ class FeedDataProviderFactory
     /** @var GrdfAdictProvider */
     private $grdfAdictProvider;
 
+    /** @var ProxifiedGrdfAdictProvider */
+    private $proxifiedGrdfAdictProvider;
+
     /** @var FakeDataProvider */
     private $fakeDataProvider;
 
@@ -26,12 +29,14 @@ class FeedDataProviderFactory
         LinkyDataProvider $linkyDataProvider,
         MeteoFranceDataProvider $meteoFranceDataProvider,
         GrdfAdictProvider $grdfAdictProvider,
+        ProxifiedGrdfAdictProvider $proxifiedGrdfAdictProvider,
         FakeDataProvider $fakeDataProvider
     ) {
         $this->enedisDataConnectProvider = $enedisDataConnectProvider;
         $this->linkyDataProvider = $linkyDataProvider;
         $this->meteoFranceDataProvider = $meteoFranceDataProvider;
         $this->grdfAdictProvider = $grdfAdictProvider;
+        $this->proxifiedGrdfAdictProvider = $proxifiedGrdfAdictProvider;
         $this->fakeDataProvider = $fakeDataProvider;
     }
 
@@ -70,10 +75,29 @@ class FeedDataProviderFactory
                 return $this->meteoFranceDataProvider;
             case Feed::FEED_DATA_PROVIDER_GRDF_ADICT:
                 return $this->grdfAdictProvider;
+            case Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED:
+                return $this->proxifiedGrdfAdictProvider;
             case Feed::FEED_DATA_PROVIDER_FAKE:
                 return $this->fakeDataProvider;
             default:
                 throw new \InvalidArgumentException("There's no data provider of type : " . $feedDataProviderType);
         }
+    }
+
+    /**
+     * List all available providers
+     */
+    public static function listProviders(): array {
+        return [
+            Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
+            Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT,
+            Feed::FEED_DATA_PROVIDER_GRDF_ADICT,
+            Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED,
+            // This one should not be present in prod
+            // so we don't put it here
+            // Feed::FEED_DATA_PROVIDER_FAKE,
+            // This one is depracted
+            // Feed::FEED_DATA_PROVIDER_LINKY,
+        ];
     }
 }
