@@ -135,11 +135,46 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
             \sleep(1);
         }
 
-        return $this->accessToken->getAccessToken();
+        return $this->accessToken->accessToken;
     }
 
     /**
-     * Check enedis consent for a feed by trying
+     * Get a URL to DataConnect consent page.
+     */
+    public function getConsentUrl(string $state): string
+    {
+        return $this->grdfAdictService
+            ->getAuthentificationService()
+            ->getConsentPageUrl(
+                $state,
+                'aeneria'
+            )
+        ;
+    }
+
+    /**
+     * Check grdf consent from code.
+     *
+     * (Used in consentement process only)
+     */
+    public function consentCheckFromCode(string $code): ?InfoTechnique
+    {
+        $consentement = $this->grdfAdict
+            ->getAuthentificationService()
+            ->requestConsentementDetail($code)
+        ;
+
+        return $this->grdfAdictService
+            ->getContratService()
+            ->requestInfoTechnique(
+                $this->getAccessToken(),
+                $consentement->pce
+            )
+        ;
+    }
+
+    /**
+     * Check Grdf consent for a feed by trying
      * to get address informations.
      */
     public function consentCheck(Feed $feed): ?InfoTechnique
@@ -196,9 +231,9 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
             return $data;
         }
 
-        $key = $meteringData->getDate()->format('Y-m-d');
+        $key = $meteringData->date->format('Y-m-d');
 
-        $data[$key] = $meteringData->getValue();
+        $data[$key] = $meteringData->value;
 
         return $data;
     }

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Aeneria\GrdfAdictApi\Exception\GrdfAdictConsentException;
-use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Repository\FeedRepository;
@@ -15,13 +14,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiFeedGrdfController extends AbstractAppController
 {
-    /** @var RouterInterface */
-    private $router;
     /** @var PendingActionService */
     private $actionService;
     /** @var JwtService */
@@ -30,8 +26,8 @@ class ApiFeedGrdfController extends AbstractAppController
     private $entityManager;
     /** @var FeedRepository */
     private $feedRepository;
-    /** @var GrdfAdictServiceInterface */
-    private $grdfAdictService;
+    /** @var GrdfAdictProvider */
+    private $grdfAdictProvider;
 
     public function __construct(
         bool $userCanSharePlace,
@@ -39,11 +35,10 @@ class ApiFeedGrdfController extends AbstractAppController
         bool $isDemoMode,
         PlaceRepository $placeRepository,
         FeedRepository $feedRepository,
-        RouterInterface $router,
         PendingActionService $actionService,
         JwtService $jwtService,
         EntityManagerInterface $entityManager,
-        GrdfAdictServiceInterface $grdfAdictService
+        GrdfAdictProvider $grdfAdictProvider
     ) {
         parent::__construct(
             $userCanSharePlace,
@@ -52,12 +47,11 @@ class ApiFeedGrdfController extends AbstractAppController
             $placeRepository
         );
 
-        $this->router = $router;
         $this->actionService = $actionService;
         $this->jwtService = $jwtService;
         $this->entityManager = $entityManager;
         $this->feedRepository = $feedRepository;
-        $this->grdfAdictService = $grdfAdictService;
+        $this->grdfAdictProvider = $grdfAdictProvider;
     }
 
     public function consent(string $placeId): JsonResponse {
@@ -67,37 +61,9 @@ class ApiFeedGrdfController extends AbstractAppController
         $action = $this->actionService->createGrdfAdictCallbackAction($user, $place);
         $state = $this->jwtService->encode($action->getToken());
 
-        $grdfUrl = $this->grdfAdictService
-            ->getAuthentificationService()
-            ->getConsentPageUrl(
-                $state,
-                'aeneria'
-            )
-        ;
-
-        // Adding callback url for aeneria proxy
-        $grdfUrl .= '&callback=';
-        $grdfUrl .= \urlencode(
-            $this->router->generate('api.feed.grdf.consent.callback', [], RouterInterface::ABSOLUTE_URL)
-        );
+        $grdfUrl = $this->grdfAdictProvider->getConsentUrl($state);
 
         return new JsonResponse($grdfUrl, 200);
-    }
-
-    public function consentCheck(string $placeId, GrdfAdictProvider $grdfAdictProvider): JsonResponse
-    {
-        $place = $this->checkPlace($placeId);
-
-        $grdfFeed = $place->getFeed(Feed::FEED_TYPE_GAZ);
-        if (!$grdfFeed or Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $grdfFeed->getFeedDataProviderType()) {
-            return $this->dataValidationErrorResponse('feed', "Aucun compteur Gazpar n'est associé à cette adresse.");
-        }
-
-        if (!$info = $grdfAdictProvider->consentCheck($grdfFeed)) {
-            return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
-        }
-
-        return new JsonResponse(\json_encode($info), 200);
     }
 
     public function consentCallback(Request $request, SerializerInterface $serializer): RedirectResponse
@@ -117,28 +83,7 @@ class ApiFeedGrdfController extends AbstractAppController
         $place = $this->checkPlace($pendingAction->getSingleParam('place'));
 
         try {
-            $consentement = $this->grdfAdictService
-                ->getAuthentificationService()
-                ->requestConsentementDetail($code)
-            ;
-
-            $authorisationToken = $this->grdfAdictService
-                ->getAuthentificationService()
-                ->requestAuthorizationToken()
-            ;
-
-            $info = null;
-            try {
-                $info = $this->grdfAdictService
-                    ->getContratService()
-                    ->requestInfoTechnique(
-                        $authorisationToken->getAccessToken(),
-                        $consentement->getPce()
-                    )
-                ;
-            } catch (GrdfAdictConsentException $e) {
-                // @todo : pourquoi j'avais fait ça ? à revoir
-            }
+            $info = $this->grdfAdictProvider->consentCheckFromCode($code);
         } catch (GrdfAdictConsentException $e) {
             // Sur une erreur au retour d'grdf, sur une erreur
             // on renvoit sur une page d'erreur du front
@@ -154,7 +99,7 @@ class ApiFeedGrdfController extends AbstractAppController
 
         $feed->setName($info ? (string) $info : '');
         $feed->setSingleParam('FETCH_ERROR', 0);
-        $feed->setSingleParam('PCE', $consentement->getPce());
+        $feed->setSingleParam('PCE', $info->pce);
         if ($info) {
             $feed->setSingleParam('INFO', $serializer->serialize($info, 'json'));
         }
@@ -170,5 +115,21 @@ class ApiFeedGrdfController extends AbstractAppController
         $this->actionService->delete($pendingAction);
 
         return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/grdf/' . $place->getId()]);
+    }
+
+    public function consentCheck(string $placeId): JsonResponse
+    {
+        $place = $this->checkPlace($placeId);
+
+        $grdfFeed = $place->getFeed(Feed::FEED_TYPE_GAZ);
+        if (!$grdfFeed or Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $grdfFeed->getFeedDataProviderType()) {
+            return $this->dataValidationErrorResponse('feed', "Aucun compteur Gazpar n'est associé à cette adresse.");
+        }
+
+        if (!$info = $this->grdfAdictProvider->consentCheck($grdfFeed)) {
+            return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
+        }
+
+        return new JsonResponse(\json_encode($info), 200);
     }
 }
