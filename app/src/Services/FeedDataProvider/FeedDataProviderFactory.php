@@ -87,7 +87,8 @@ class FeedDataProviderFactory
     /**
      * List all available providers
      */
-    public static function listProviders(): array {
+    public static function listProviders(): array
+    {
         return [
             Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
             Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT,

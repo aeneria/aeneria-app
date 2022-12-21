@@ -329,13 +329,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
      *
      * @return [int, string]
      */
-    static public function toOptionList(?iterable $userList): iterable
+    public static function toOptionList(?iterable $userList): iterable
     {
         $userList = \is_array($userList) ? $userList : \iterator_to_array($userList);
 
         return $userList ? \array_map(
             function (User $user) {
-                return  ['id' => $user->getId(), 'username' => $user->getUsername()];
+                return ['id' => $user->getId(), 'username' => $user->getUsername()];
             },
             $userList
         ) : [];

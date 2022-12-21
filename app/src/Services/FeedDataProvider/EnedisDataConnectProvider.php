@@ -149,7 +149,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         ;
 
         // Adding callback url for aeneria proxy
-        if($this->useProxyForEnedis) {
+        if ($this->useProxyForEnedis) {
             $url .= '&callback=';
             $url .= \urlencode(
                 $this->router->generate('api.feed.enedis.consent.callback', [], RouterInterface::ABSOLUTE_URL)

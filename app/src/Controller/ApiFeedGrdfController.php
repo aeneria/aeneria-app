@@ -54,7 +54,8 @@ class ApiFeedGrdfController extends AbstractAppController
         $this->grdfAdictProvider = $grdfAdictProvider;
     }
 
-    public function consent(string $placeId): JsonResponse {
+    public function consent(string $placeId): JsonResponse
+    {
         $user = $this->getUser();
         $place = $this->checkPlace($placeId);
 
