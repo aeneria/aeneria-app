@@ -34,7 +34,7 @@ class JwtService
 
     public function keyExists(): bool
     {
-        return \file_exists($this->privateKey) && \file_exists($this->publicKey);
+        return \file_exists($this->privateKeyFilename) && \file_exists($this->publicKeyFilename);
     }
 
     public function generateRsaKey(): void
@@ -51,18 +51,18 @@ class JwtService
         ]);
 
         \openssl_pkey_export($res, $privKey);
-        if (false === \file_put_contents($this->privateKey, $privKey)) {
+        if (false === \file_put_contents($this->publicKeyFilename, $privKey)) {
             throw new IOException(\sprintf(
                 "Error while writting %s",
-                $this->privateKey
+                $this->publicKeyFilename
             ));
         }
 
         $pubKey = \openssl_pkey_get_details($res);
-        if (false === \file_put_contents($this->publicKey, $pubKey["key"])) {
+        if (false === \file_put_contents($this->publicKeyFilename, $pubKey["key"])) {
             throw new IOException(\sprintf(
                 "Error while writting %s",
-                $this->publicKey
+                $this->publicKeyFilename
             ));
         }
     }

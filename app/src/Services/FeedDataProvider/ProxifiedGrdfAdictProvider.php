@@ -171,7 +171,8 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
                     $this->getEncodedPce($feed),
                     $startDate,
                     $endDate
-            );
+                )
+            ;
         } catch (GrdfAdictException $e) {
             $this->logger->error("GrdfAdictProxified - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);

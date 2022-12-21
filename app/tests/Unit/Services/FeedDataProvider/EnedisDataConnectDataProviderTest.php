@@ -11,18 +11,23 @@ use App\Entity\Feed;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Services\NotificationService;
 use App\Tests\AppTestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class EnedisDataConnectDataProviderTest extends AppTestCase
 {
-    private function createEnedisDataConnectDataProvider(?SerializerInterface $serializer = null): EnedisDataConnectProvider
-    {
+    private function createEnedisDataConnectDataProvider(
+        SerializerInterface $serializer = null,
+        RouterInterface $router = null
+    ): EnedisDataConnectProvider {
         return new EnedisDataConnectProvider(
+            false,
             $this->getEntityManager(),
             $this->getFeedRepository(),
             $this->getFeedDataRepository(),
             $this->getDataValueRepository(),
             new MockDataConnectService(),
+            $router ?? $this->createMock(RouterInterface::class),
             $serializer ?? $this->createMock(SerializerInterface::class),
             $this->createMock(NotificationService::class),
             $this->getLogger()

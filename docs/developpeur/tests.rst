@@ -23,7 +23,7 @@ Pour lancer les tests PHPUNIT, il faut préalablement avoir créé un minimum de
   docker-compose exec php-fpm bin/console aeneria:user:ungrant user-test@example.com
 
   # On peut maintenant lancer les tests l'esprit tranquille:
-  docker-compose exec php-fpm  bin/phpunit
+  docker-compose exec php-fpm bin/phpunit
 
 CS Fixer
 -------------
