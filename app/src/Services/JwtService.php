@@ -51,10 +51,10 @@ class JwtService
         ]);
 
         \openssl_pkey_export($res, $privKey);
-        if (false === \file_put_contents($this->publicKeyFilename, $privKey)) {
+        if (false === \file_put_contents($this->privateKeyFilename, $privKey)) {
             throw new IOException(\sprintf(
                 "Error while writting %s",
-                $this->publicKeyFilename
+                $this->privateKeyFilename
             ));
         }
 
