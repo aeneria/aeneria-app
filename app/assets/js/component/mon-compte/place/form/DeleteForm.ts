@@ -1,14 +1,14 @@
 import { defineComponent, PropType } from 'vue';
+import { Place } from '@/type/Place';
+import { PLACE_DELETE } from '@/store/actions';
+import { required } from "@vuelidate/validators";
+import { useConfirm } from "primevue/useconfirm";
+import { useVuelidate } from "@vuelidate/core";
 import Button from 'primevue/button';
+import ConfirmDialog from 'primevue/confirmdialog';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
-import ConfirmDialog from 'primevue/confirmdialog';
-import { useConfirm } from "primevue/useconfirm";
-import { INIT_CONFIGURATION, PLACE_DELETE } from '@/store/actions';
-import { required } from "@vuelidate/validators";
-import { useVuelidate } from "@vuelidate/core";
-import { Place } from '@/type/Place';
 
 
 export default defineComponent({
@@ -60,7 +60,6 @@ export default defineComponent({
       if (!isValid) {
         return
       }
-      this.closeBasic()
       this.confirmService.require({
         message: 'Êtes-vous sûr·e de vouloir supprimer l\'adresse \'' + this.place.name + '\' ?',
         header: 'Confirmation',
@@ -77,8 +76,8 @@ export default defineComponent({
       this.$store.dispatch(PLACE_DELETE, {
         placeId: this.place.id,
       }).then(() => {
-        this.confirmService.close();
-        this.$store.dispatch(INIT_CONFIGURATION)
+        this.confirmService.close()
+        this.closeBasic()
       })
     },
   },
