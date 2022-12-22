@@ -13,6 +13,7 @@ On va ici partir du principe :
 Pour créer votre environnement de développement, suivez ces étapes :
 
 .. code-block:: sh
+
     # Récupérez le dépot git du projet
     git clone git@gitlab.com:aeneria/aeneria-app.git
 

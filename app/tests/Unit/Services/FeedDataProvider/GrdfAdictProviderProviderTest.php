@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\FeedDataProvider;
 
-use Aeneria\EnedisDataConnectApi\Model\Address;
-use Aeneria\EnedisDataConnectApi\Model\Token;
 use Aeneria\GrdfAdictApi\Service\MockGrdfAdictService;
-use App\Entity\Feed;
 use App\Services\FeedDataProvider\GrdfAdictProvider;
 use App\Services\NotificationService;
 use App\Tests\AppTestCase;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class GrdfAdictProviderProviderTest extends AppTestCase
 {
@@ -23,6 +21,7 @@ class GrdfAdictProviderProviderTest extends AppTestCase
             $this->getDataValueRepository(),
             new MockGrdfAdictService(),
             $this->createMock(NotificationService::class),
+            $this->createMock(SerializerInterface::class),
             $this->getLogger()
         );
     }

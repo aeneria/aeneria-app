@@ -1,15 +1,15 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
+import { postDeleteAccount } from '@/api/configuration';
 import { required, sameAs } from "@vuelidate/validators";
+import { useConfirm } from 'primevue/useconfirm';
 import { useVuelidate } from "@vuelidate/core";
 import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
 import Checkbox from 'primevue/checkbox';
 import ConfirmDialog from 'primevue/confirmdialog';
+import Dialog from 'primevue/dialog';
 import Message from 'primevue/message';
 import Password from 'primevue/password';
-import { useConfirm } from 'primevue/useconfirm';
-import { postDeleteAccount } from '@/api/configuration';
 
 export default defineComponent({
   name: 'DeleteAccountForm',

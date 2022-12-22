@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Feed;
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\FeedDataProviderFactory;
@@ -94,13 +93,7 @@ class FetchDataCommand extends Command
                 $this->feedDataProviderFactory->fromFeed($feed)
             );
         } else {
-            $feedDataProviderTypes = [
-                Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
-                Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT,
-                Feed::FEED_DATA_PROVIDER_GRDF_ADICT,
-            ];
-
-            foreach ($feedDataProviderTypes as $feedDataProviderType) {
+            foreach ($this->feedDataProviderFactory::listProviders() as $feedDataProviderType) {
                 // We fetch all Feeds data.
                 if ($feeds = $this->feedRepository->findAllActive($feedDataProviderType)) {
                     $this->fetchFor(

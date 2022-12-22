@@ -76,10 +76,10 @@ class ApiPlaceController extends AbstractAppController
         if (!$data->name) {
             return $this->dataValidationErrorResponse('name', "Vous devez fournir un nouveau nom 'name'.");
         }
-        if ($this->userCanSharePlace && !($data->allowedUsers === null || \is_array($data->allowedUsers))) {
+        if ($this->userCanSharePlace && !(null === $data->allowedUsers || \is_array($data->allowedUsers))) {
             return $this->dataValidationErrorResponse('sharedWith', "Vous devez fournir un attribut 'sharedWith' de type array.");
         }
-        if ($this->placeCanBePublic && $data->public === null && !\is_bool($data->public)) {
+        if ($this->placeCanBePublic && null === $data->public && !\is_bool($data->public)) {
             return $this->dataValidationErrorResponse('isPublic', "Vous devez fournir un attribut 'isPublic' de type booleen.");
         }
 

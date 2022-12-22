@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88b826e2905947fb6f9839384d72deb5",
+    "content-hash": "ca46685d7571fc25e6e988e29fc7af5e",
     "packages": [
         {
             "name": "aeneria/enedis-data-connect",
@@ -53,16 +53,16 @@
         },
         {
             "name": "aeneria/grdf-adict",
-            "version": "dev-master",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:aeneria/grdf-adict.git",
-                "reference": "e2ac29444f60c43368eb4197ec6aa21809d59d89"
+                "reference": "de937dc042a05c16165545f04adcee5597df477a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=e2ac29444f60c43368eb4197ec6aa21809d59d89",
-                "reference": "e2ac29444f60c43368eb4197ec6aa21809d59d89",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=de937dc042a05c16165545f04adcee5597df477a",
+                "reference": "de937dc042a05c16165545f04adcee5597df477a",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +74,6 @@
                 "phpunit/phpunit": "^8.5",
                 "symfony/serializer-pack": "^1.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -92,7 +91,7 @@
                 }
             ],
             "description": "A small library to use a part of GRDF ADICT API with PHP : https://site.grdf.fr/web/grdf-adict/",
-            "time": "2022-12-19T14:56:30+00:00"
+            "time": "2022-12-22T16:44:53+00:00"
         },
         {
             "name": "box/spout",
@@ -8813,9 +8812,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "aeneria/grdf-adict": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

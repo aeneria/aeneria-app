@@ -10,6 +10,7 @@ use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
 use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
@@ -18,6 +19,7 @@ use App\Services\NotificationService;
 use Doctrine\Migrations\Query\Exception\InvalidArguments;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -27,22 +29,31 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
+    /** @var bool */
+    private $useProxyForEnedis;
+
+    /** @var RouterInterface */
+    private $router;
     /** @var DataConnectServiceInterface */
     private $dataConnect;
-
     /** @var SerializerInterface */
     private $serializer;
 
     public function __construct(
+        bool $useProxyForEnedis,
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
         DataConnectServiceInterface $dataConnect,
+        RouterInterface $router,
         SerializerInterface $serializer,
         NotificationService $notificationService,
         LoggerInterface $logger
     ) {
+        $this->useProxyForEnedis = $useProxyForEnedis;
+
+        $this->router = $router;
         $this->dataConnect = $dataConnect;
         $this->serializer = $serializer;
 
@@ -123,6 +134,95 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         }
 
         return $errors;
+    }
+
+    /**
+     * Get a URL to DataConnect consent page.
+     */
+    public function getConsentUrl(string $state): string
+    {
+        $url = $this->dataConnect
+            ->getAuthorizeV1Service()
+            ->getConsentPageUrl(
+                'P12M',
+                $state
+            )
+        ;
+
+        // Adding callback url for aeneria proxy
+        if ($this->useProxyForEnedis) {
+            $url .= '&callback=';
+            $url .= \urlencode(
+                $this->router->generate('api.feed.enedis.consent.callback', [], RouterInterface::ABSOLUTE_URL)
+            );
+        }
+
+        return $url;
+    }
+
+    /**
+     * Check enedis consent from code.
+     *
+     * (Used in consentement process only)
+     *
+     * @return Array<Token|Address> [$token, $address]
+     */
+    public function consentCheckFromCode(string $code): array
+    {
+        $accessToken = $this->dataConnect
+            ->getAuthorizeV1Service()
+            ->requestTokenFromCode($code)
+        ;
+
+        $address = $this->dataConnect
+            ->getCustomersService()
+            ->requestUsagePointAdresse(
+                $accessToken->getAccessToken(),
+                $accessToken->getUsagePointsId()
+            )
+        ;
+
+        return [$accessToken, $address];
+    }
+
+    /**
+     * Check enedis consent from code. And update/create
+     * related feed.
+     */
+    public function handleConsentCallback(string $code, Place $place): void
+    {
+        $accessToken = $this->dataConnect
+            ->getAuthorizeV1Service()
+            ->requestTokenFromCode($code)
+        ;
+
+        $address = $this->dataConnect
+            ->getCustomersService()
+            ->requestUsagePointAdresse(
+                $accessToken->getAccessToken(),
+                $accessToken->getUsagePointsId()
+            )
+        ;
+
+        if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
+            $feed = new Feed();
+            $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
+            $place->addFeed($feed);
+        }
+
+        $feed->setName((string) $address);
+        $feed->setSingleParam('TOKEN', $this->serializer->serialize($accessToken, 'json'));
+        $feed->setSingleParam('ADDRESS', $this->serializer->serialize($address, 'json'));
+        $feed->setFetchError(0);
+
+        $this->entityManager->persist($feed);
+        $this->entityManager->persist($place);
+        $this->entityManager->flush();
+
+        // Ensure all dependant FeedData are already existing
+        $this->feedRepository->createDependentFeedData($feed);
+        $this->entityManager->flush();
     }
 
     /**

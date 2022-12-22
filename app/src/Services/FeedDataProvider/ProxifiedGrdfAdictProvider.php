@@ -5,7 +5,6 @@ namespace App\Services\FeedDataProvider;
 use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
 use Aeneria\GrdfAdictApi\Model\InfoTechnique;
 use Aeneria\GrdfAdictApi\Model\Token;
-use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -14,6 +13,7 @@ use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
+use App\Services\AeneriaProxyClient\GrdfAdictProxyClient;
 use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -22,27 +22,24 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Grdf Adict Provider
  */
-class GrdfAdictProvider extends AbstractFeedDataProvider
+class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
 {
-    /** @var GrdfAdictServiceInterface */
-    private $grdfAdict;
+    /** @var GrdfAdictProxyClient */
+    private $grdfAdictProxy;
     /** @var SerializerInterface */
     private $serializer;
-
-    /** @var Token */
-    private $accessToken = null;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        GrdfAdictServiceInterface $grdfAdict,
+        GrdfAdictProxyClient $grdfAdictProxy,
         NotificationService $notificationService,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
-        $this->grdfAdict = $grdfAdict;
+        $this->grdfAdictProxy = $grdfAdictProxy;
         $this->serializer = $serializer;
 
         parent::__construct(
@@ -70,6 +67,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
     {
         return [
             'PCE' => 'PCE du compteur Gazpar',
+            'ENCODED_PCE' => 'PCE encodé, envoyé par le proxy au consentement',
         ];
     }
 
@@ -93,11 +91,11 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         $errors = [];
 
         foreach ($feeds as $feed) {
-            if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
-                throw new \InvalidArgumentException("Should be an array of GrdfAdict Feeds overhere !");
+            if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+                throw new \InvalidArgumentException("Should be an array of Proxified GrdfAdict Feeds overhere !");
             }
 
-            // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
+            // In order to avoid to flood grdf API, if for some reason, a feed gets too many errors
             // while fetching data, we stop asking for data for it.
             // We also display a notification to warn user about this situation.
             if ($feed->hasToManyFetchError()) {
@@ -107,7 +105,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
             }
 
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
-                $this->logger->debug("GrdfAdict - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+                $this->logger->debug("GrdfAdictProxified - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
 
                 if ($data = $this->fetchDataForFeed($date, $feed, $errors)) {
                     $this->persistData($date, $feed, $data);
@@ -116,7 +114,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
                     $this->entityManager->persist($feed);
                     $this->entityManager->flush();
 
-                    $this->logger->info("GrdfAdict - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+                    $this->logger->info("GrdfAdictProxified - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
             }
         }
@@ -125,70 +123,32 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
     }
 
     /**
-     * Get a valid Access Token
-     */
-    private function getAccessToken(): string
-    {
-        if (!$this->accessToken || !$this->accessToken->isAccessTokenStillValid()) {
-            $this->accessToken = $this
-                ->grdfAdict
-                ->getAuthentificationService()
-                ->requestAuthorizationToken()
-            ;
-
-            // On évite de dépasser les quotas de GRDF,
-            // on attends 1 seconde entre chaque requête
-            \sleep(1);
-        }
-
-        return $this->accessToken->accessToken;
-    }
-
-    /**
      * Get a URL to DataConnect consent page.
      */
     public function getConsentUrl(string $state): string
     {
-        return $this->grdfAdictService
-            ->getAuthentificationService()
-            ->getConsentPageUrl(
-                $state,
-                'aeneria'
-            )
-        ;
+        return $this->grdfAdictProxy->getConsentPageUrl($state);
     }
 
     /**
-     * Check grdf consent from code. And update/create
-     * related feed
+     * Check grdf consent from encodedPce. And update/create
+     * related feed.
      */
-    public function handleConsentCallback(string $code, Place $place): void
+    public function handleConsentCallback(string $encodedPce, Place $place): void
     {
-        $consentement = $this->grdfAdict
-            ->getAuthentificationService()
-            ->requestConsentementDetail($code)
-        ;
-
-        $info = $this->grdfAdictService
-            ->getContratService()
-            ->requestInfoTechnique(
-                $this->getAccessToken(),
-                $consentement->pce
-            )
-        ;
-
-        $info = $this->grdfAdictProvider->consentCheckFromCode($code);
+        $info = $this->grdfAdictProxy->requestInfoTechnique($encodedPce);
 
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
             $feed = new Feed();
             $feed->setFeedType(Feed::FEED_TYPE_GAZ);
-            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED);
             $place->addFeed($feed);
         }
 
         $feed->setName((string) $info);
         $feed->setFetchError(0);
         $feed->setSingleParam('PCE', $info->pce);
+        $feed->setSingleParam('ENCODED_PCE', $encodedPce);
         $feed->setSingleParam('INFO', $this->serializer->serialize($info, 'json'));
 
         $this->entityManager->persist($feed);
@@ -206,25 +166,16 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
      */
     public function consentCheck(Feed $feed): ?InfoTechnique
     {
-        if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
+        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED !== $feed->getFeedDataProviderType()) {
             throw new \InvalidArgumentException("Should be an array of GrdfAdict Feeds overhere !");
         }
 
         try {
-            $accessToken = $this->getAccessToken();
-        } catch (GrdfAdictException $e) {
-            return null;
-        }
-
-        try {
-            return $this->grdfAdict
-                ->getContratService()
-                ->requestInfoTechnique(
-                    $accessToken,
-                    $this->getPce($feed)
-                )
+            return $this
+                ->grdfAdictProxy
+                ->requestInfoTechnique($this->getEncodedPce($feed))
             ;
-        } catch (GrdfAdictException $e) {
+        } catch (\Exception $e) {
             return null;
         }
     }
@@ -238,21 +189,15 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
         try {
             $meteringData = $this
-                ->grdfAdict
-                ->getConsommationService()
+                ->grdfAdictProxy
                 ->requestConsoInformative(
-                    $this->getAccessToken(),
-                    $this->getPce($feed),
+                    $this->getEncodedPce($feed),
                     $startDate,
                     $endDate
                 )
             ;
-
-            // On évite de dépasser les quotas de GRDF,
-            // on attends 1 seconde entre chaque requête
-            \sleep(1);
         } catch (GrdfAdictException $e) {
-            $this->logger->error("GrdfAdict - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+            $this->logger->error("GrdfAdictProxified - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
 
             return $data;
@@ -314,10 +259,19 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
     public function getPce(Feed $feed): ?string
     {
-        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Given feed is not a grdfAdict feed.");
+        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a Proxfied GrdfAdict feed.");
         }
 
         return $feed->getParam()['PCE'] ?? null;
+    }
+
+    public function getEncodedPce(Feed $feed): ?string
+    {
+        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a Proxfied GrdfAdict feed.");
+        }
+
+        return $feed->getParam()['ENCODED_PCE'] ?? null;
     }
 }
