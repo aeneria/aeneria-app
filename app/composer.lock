@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "817f5abaeeeabe05fa260b1be8de6417",
+    "content-hash": "ca46685d7571fc25e6e988e29fc7af5e",
     "packages": [
         {
             "name": "aeneria/enedis-data-connect",
@@ -53,16 +53,16 @@
         },
         {
             "name": "aeneria/grdf-adict",
-            "version": "0.5",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:aeneria/grdf-adict.git",
-                "reference": "253b96f26ed6b46b05d2e1600a25fa34a85554cd"
+                "reference": "de937dc042a05c16165545f04adcee5597df477a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=253b96f26ed6b46b05d2e1600a25fa34a85554cd",
-                "reference": "253b96f26ed6b46b05d2e1600a25fa34a85554cd",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fgrdf-adict/repository/archive.zip?sha=de937dc042a05c16165545f04adcee5597df477a",
+                "reference": "de937dc042a05c16165545f04adcee5597df477a",
                 "shasum": ""
             },
             "require": {
@@ -91,7 +91,7 @@
                 }
             ],
             "description": "A small library to use a part of GRDF ADICT API with PHP : https://site.grdf.fr/web/grdf-adict/",
-            "time": "2022-12-20T15:18:23+00:00"
+            "time": "2022-12-22T16:44:53+00:00"
         },
         {
             "name": "box/spout",

@@ -8,7 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "aeneria/enedis-data-connect": "^1.2",
-        "aeneria/grdf-adict": "^0.5.0",
+        "aeneria/grdf-adict": "^0.9",
         "box/spout": "^3.1",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.7",
