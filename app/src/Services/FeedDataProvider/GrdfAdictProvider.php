@@ -9,6 +9,7 @@ use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
 use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
@@ -16,6 +17,7 @@ use App\Repository\FeedRepository;
 use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Grdf Adict Provider
@@ -24,6 +26,8 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 {
     /** @var GrdfAdictServiceInterface */
     private $grdfAdict;
+    /** @var SerializerInterface */
+    private $serializer;
 
     /** @var Token */
     private $accessToken = null;
@@ -35,9 +39,11 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         DataValueRepository $dataValueRepository,
         GrdfAdictServiceInterface $grdfAdict,
         NotificationService $notificationService,
+        SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->grdfAdict = $grdfAdict;
+        $this->serializer = $serializer;
 
         parent::__construct(
             $entityManager,
@@ -153,24 +159,45 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
     }
 
     /**
-     * Check grdf consent from code.
-     *
-     * (Used in consentement process only)
+     * Check grdf consent from code. And update/create
+     * related feed
      */
-    public function consentCheckFromCode(string $code): ?InfoTechnique
+    public function handleConsentCallback(string $code, Place $place): void
     {
         $consentement = $this->grdfAdict
             ->getAuthentificationService()
             ->requestConsentementDetail($code)
         ;
 
-        return $this->grdfAdictService
+        $info = $this->grdfAdictService
             ->getContratService()
             ->requestInfoTechnique(
                 $this->getAccessToken(),
                 $consentement->pce
             )
         ;
+
+        $info = $this->grdfAdictProvider->consentCheckFromCode($code);
+
+        if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
+            $feed = new Feed();
+            $feed->setFeedType(Feed::FEED_TYPE_GAZ);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT);
+            $place->addFeed($feed);
+        }
+
+        $feed->setName((string) $info);
+        $feed->setFetchError(0);
+        $feed->setSingleParam('PCE', $info->pce);
+        $feed->setSingleParam('INFO', $this->serializer->serialize($info, 'json'));
+
+        $this->entityManager->persist($feed);
+        $this->entityManager->persist($place);
+        $this->entityManager->flush();
+
+        // Ensure all dependant FeedData are already existing
+        $this->feedRepository->createDependentFeedData($feed);
+        $this->entityManager->flush();
     }
 
     /**

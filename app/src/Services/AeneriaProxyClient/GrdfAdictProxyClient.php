@@ -63,7 +63,7 @@ class GrdfAdictProxyClient
 
         $this->checkResponse($response);
 
-        return $response->getContent();
+        return \json_decode($response->getContent());
     }
 
     public function requestInfoTechnique(string $encodedPce): InfoTechnique
@@ -71,7 +71,7 @@ class GrdfAdictProxyClient
         $response = $this->httpClient->request(
             'GET',
             \sprintf(
-                '%s/grdf-adict/adict/v1/pce/%s/info-technique',
+                '%s/grdf-adict/adict/v2/pce/%s/info-technique',
                 $this->proxyUrl,
                 $encodedPce
             )
@@ -96,7 +96,7 @@ class GrdfAdictProxyClient
         $response = $this->httpClient->request(
             'GET',
             \sprintf(
-                '%s/grdf-adict/adict/v1/pce/%s/conso-informative/%s/%s',
+                '%s/grdf-adict/adict/v2/pce/%s/conso-informative/%s/%s',
                 $this->proxyUrl,
                 $encodedPce,
                 $dateDebut->format('Y-m-d'),

@@ -3,16 +3,12 @@
 namespace App\Controller;
 
 use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
-use Aeneria\EnedisDataConnectApi\Model\Address;
-use Aeneria\EnedisDataConnectApi\Model\Token;
 use App\Entity\Feed;
 use App\Entity\User;
-use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Services\JwtService;
 use App\Services\PendingActionService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +20,6 @@ class ApiFeedEnedisController extends AbstractAppController
     private $actionService;
     /** @var JwtService */
     private $jwtService;
-    /** @var EntityManagerInterface */
-    private $entityManager;
-    /** @var FeedRepository */
-    private $feedRepository;
     /** @var EnedisDataConnectProvider */
     private $enedisDataConnectProvider;
 
@@ -36,10 +28,8 @@ class ApiFeedEnedisController extends AbstractAppController
         bool $placeCanBePublic,
         bool $isDemoMode,
         PlaceRepository $placeRepository,
-        FeedRepository $feedRepository,
         PendingActionService $actionService,
         JwtService $jwtService,
-        EntityManagerInterface $entityManager,
         EnedisDataConnectProvider $enedisDataConnectProvider
     ) {
         parent::__construct(
@@ -51,8 +41,6 @@ class ApiFeedEnedisController extends AbstractAppController
 
         $this->actionService = $actionService;
         $this->jwtService = $jwtService;
-        $this->entityManager = $entityManager;
-        $this->feedRepository = $feedRepository;
         $this->enedisDataConnectProvider = $enedisDataConnectProvider;
     }
 
@@ -86,35 +74,12 @@ class ApiFeedEnedisController extends AbstractAppController
         $place = $this->checkPlace($pendingAction->getSingleParam('place'));
 
         try {
-            [$accessToken, $address] = $this->enedisDataConnectProvider->consentCheckFromCode($code);
-
-            \assert($accessToken instanceof Token);
-            \assert($address instanceof Address);
+            $this->enedisDataConnectProvider->handleConsentCallback($code, $place);
         } catch (DataConnectException $e) {
             // Sur une erreur au retour d'enedis data-connect, sur une erreur
             // on renvoit sur une page d'erreur du front
             return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/error/' . $place->getId()]);
         }
-
-        if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
-            $feed = new Feed();
-            $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
-            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
-            $place->addFeed($feed);
-        }
-
-        $feed->setName((string) $address);
-        $feed->setSingleParam('TOKEN', $serializer->serialize($accessToken, 'json'));
-        $feed->setSingleParam('ADDRESS', $serializer->serialize($address, 'json'));
-        $feed->setFetchError(0);
-
-        $this->entityManager->persist($feed);
-        $this->entityManager->persist($place);
-        $this->entityManager->flush();
-
-        // Ensure all dependant FeedData are already existing
-        $this->feedRepository->createDependentFeedData($feed);
-        $this->entityManager->flush();
 
         $this->actionService->delete($pendingAction);
 

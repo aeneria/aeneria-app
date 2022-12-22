@@ -10,6 +10,7 @@ use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
 use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
@@ -182,6 +183,46 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         ;
 
         return [$accessToken, $address];
+    }
+
+    /**
+     * Check enedis consent from code. And update/create
+     * related feed.
+     */
+    public function handleConsentCallback(string $code, Place $place): void
+    {
+        $accessToken = $this->dataConnect
+            ->getAuthorizeV1Service()
+            ->requestTokenFromCode($code)
+        ;
+
+        $address = $this->dataConnect
+            ->getCustomersService()
+            ->requestUsagePointAdresse(
+                $accessToken->getAccessToken(),
+                $accessToken->getUsagePointsId()
+            )
+        ;
+
+        if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
+            $feed = new Feed();
+            $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
+            $place->addFeed($feed);
+        }
+
+        $feed->setName((string) $address);
+        $feed->setSingleParam('TOKEN', $this->serializer->serialize($accessToken, 'json'));
+        $feed->setSingleParam('ADDRESS', $this->serializer->serialize($address, 'json'));
+        $feed->setFetchError(0);
+
+        $this->entityManager->persist($feed);
+        $this->entityManager->persist($place);
+        $this->entityManager->flush();
+
+        // Ensure all dependant FeedData are already existing
+        $this->feedRepository->createDependentFeedData($feed);
+        $this->entityManager->flush();
     }
 
     /**

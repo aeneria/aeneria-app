@@ -8,6 +8,7 @@ use Aeneria\GrdfAdictApi\Model\Token;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
 use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
@@ -16,6 +17,7 @@ use App\Services\AeneriaProxyClient\GrdfAdictProxyClient;
 use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Grdf Adict Provider
@@ -24,9 +26,8 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
 {
     /** @var GrdfAdictProxyClient */
     private $grdfAdictProxy;
-
-    /** @var Token */
-    private $accessToken = null;
+    /** @var SerializerInterface */
+    private $serializer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -35,9 +36,11 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
         DataValueRepository $dataValueRepository,
         GrdfAdictProxyClient $grdfAdictProxy,
         NotificationService $notificationService,
+        SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->grdfAdictProxy = $grdfAdictProxy;
+        $this->serializer = $serializer;
 
         parent::__construct(
             $entityManager,
@@ -128,13 +131,33 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
     }
 
     /**
-     * Check grdf consent from code.
-     *
-     * (Used in consentement process only)
+     * Check grdf consent from encodedPce. And update/create
+     * related feed.
      */
-    public function consentCheckFromPce(string $encodedPce): ?InfoTechnique
+    public function handleConsentCallback(string $encodedPce, Place $place): void
     {
-        return $this->grdfAdictProxy->requestInfoTechnique($encodedPce);
+        $info = $this->grdfAdictProxy->requestInfoTechnique($encodedPce);
+
+        if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
+            $feed = new Feed();
+            $feed->setFeedType(Feed::FEED_TYPE_GAZ);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED);
+            $place->addFeed($feed);
+        }
+
+        $feed->setName((string) $info);
+        $feed->setFetchError(0);
+        $feed->setSingleParam('PCE', $info->pce);
+        $feed->setSingleParam('ENCODED_PCE', $encodedPce);
+        $feed->setSingleParam('INFO', $this->serializer->serialize($info, 'json'));
+
+        $this->entityManager->persist($feed);
+        $this->entityManager->persist($place);
+        $this->entityManager->flush();
+
+        // Ensure all dependant FeedData are already existing
+        $this->feedRepository->createDependentFeedData($feed);
+        $this->entityManager->flush();
     }
 
     /**
@@ -143,7 +166,7 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
      */
     public function consentCheck(Feed $feed): ?InfoTechnique
     {
-        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT !== $feed->getFeedDataProviderType()) {
+        if (Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED !== $feed->getFeedDataProviderType()) {
             throw new \InvalidArgumentException("Should be an array of GrdfAdict Feeds overhere !");
         }
 
