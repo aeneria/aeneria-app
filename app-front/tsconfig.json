@@ -2,7 +2,7 @@
     "compilerOptions": {
         "allowJs": true,
         "alwaysStrict": true,
-        "baseUrl": "./assets",
+        "baseUrl": "./",
         "checkJs": false,
         "declaration": false,
         "inlineSources": true,
@@ -24,8 +24,8 @@
         "target": "es2015"
     },
     "include": [
-        "assets/js/**/*.ts",
-        "assets/js/**/*.tsx",
-        "assets/js/**/*.vue"
+        "js/**/*.ts",
+        "js/**/*.tsx",
+        "js/**/*.vue"
     ],
 }

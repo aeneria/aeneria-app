@@ -16,13 +16,6 @@
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-###> symfony/webpack-encore-bundle ###
-/node_modules/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-bundle ###
-
-/.vs_code/
 
 ###> friendsofphp/php-cs-fixer ###
 /.php_cs

@@ -34,7 +34,7 @@ build:assets:
   image: node:16.16-alpine
   script:
     - apk add --no-cache jq python3 gcc g++ make
-    - cd app
+    - cd app-front
     - yarn install
     - yarn build
     - cd ..

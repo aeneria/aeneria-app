@@ -8,14 +8,14 @@ const webpack = require('webpack')
 
 // @see https://symfony.com/doc/current/frontend.html
 Encore
-    .setOutputPath('public/build/')
+    .setOutputPath('../app/public/build/')
     .setPublicPath('/build/')
     // .configureLoaderRule('fonts', loaderRule => {
     //     loaderRule.options.publicPath = './';
     // })
     // only needed for CDN's or sub-directory deploy
     // .setManifestKeyPrefix('build/')
-    .addEntry('app', './assets/js/main.ts')
+    .addEntry('app', './js/main.ts')
 
     .enableSingleRuntimeChunk()
 

@@ -1,11 +1,13 @@
 Générer les assets
 *************************
 
+Les sources de l'application front se situent dans le dossier `app-front`.
+
 Les assets sont gérer avec `Webpack Encore <https://symfony.com/doc/current/frontend.html>`_.
 
 .. code-block:: bash
 
-    cd app
+    cd app-front
 
     nvm use
 
