@@ -38,7 +38,7 @@ Pour créer votre environnement de développement, suivez ces étapes :
     docker-compose exec php-fpm bin/console aeneria:dev:generate-fake-data --from="7 days ago" --user-name=user-test@example.com --user-password=password
 
     # Générer les assests une première fois :
-    cd app
+    cd app-front
     nvm use # Sélectionner la bonne version de node
     yarn install # Installer les dépendances javascript
     yarn dev # Générer les assets en mode dev
