@@ -61,7 +61,10 @@ class Feed implements \JsonSerializable
             self::FEED_TYPE_GAZ => [
                 'NAME' => 'Gaz',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_GAZ],
-                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_GRDF_ADICT],
+                'DATA_PROVIDER_TYPE' => [
+                    self::FEED_DATA_PROVIDER_GRDF_ADICT,
+                    self::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED
+                ],
                 'FREQUENCIES' => [
                     'DAY' => DataValue::FREQUENCY_DAY,
                     'WEEK' => DataValue::FREQUENCY_WEEK,
@@ -117,6 +120,7 @@ class Feed implements \JsonSerializable
             case self::FEED_DATA_PROVIDER_LINKY:
                 return 'Compteur Linky';
             case self::FEED_DATA_PROVIDER_GRDF_ADICT:
+            case self::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED:
                 return 'Compteur Gazpar';
             case self::FEED_DATA_PROVIDER_METEO_FRANCE:
                 return 'Météo France';
