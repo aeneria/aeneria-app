@@ -4,6 +4,7 @@ export enum DataProvider {
   linky = 'LINKY',
   enedisDataConnect = 'ENEDIS_DATA_CONNECT',
   grdfAdict = 'GRDF_ADICT',
+  grdfAdictProxified = 'GRDF_ADICT_PROXIFIED',
   meteoFrance = 'METEO_FRANCE',
   fake = 'FAKE',
 }
@@ -34,6 +35,7 @@ export function feedLabelLong(feed: Feed): string {
     case DataProvider.enedisDataConnect :
       return 'Linky&nbsp;: PDL&nbsp;-&nbsp;'+ JSON.parse(feed.param['ADDRESS'])?.usagePointId
     case DataProvider.grdfAdict :
+    case DataProvider.grdfAdictProxified :
       return 'Gazpar&nbsp;: PCE&nbsp;-&nbsp;'+ feed.param['PCE']
     case DataProvider.meteoFrance :
       return ''+ feed.param['CITY']
@@ -54,8 +56,11 @@ export function feedLabelShort(feed: Feed): string {
       return 'Météo France'
     case DataProvider.fake :
       return 'FakeProvider'
+    default :
+      return ''
   }
 }
+
 export function feedTechnicalId(feed: Feed): string {
   switch(feed.dataProvider) {
     case DataProvider.linky :
@@ -63,11 +68,14 @@ export function feedTechnicalId(feed: Feed): string {
     case DataProvider.enedisDataConnect :
       return JSON.parse(feed.param['ADDRESS'])?.usagePointId
     case DataProvider.grdfAdict :
+    case DataProvider.grdfAdictProxified :
       return feed.param['PCE']
     case DataProvider.meteoFrance :
       return 'N/A'+ feed.param['CITY']
     case DataProvider.fake :
       return 'N/A'
+    default :
+      return ''
   }
 }
 
@@ -78,11 +86,14 @@ export function feedIcon(feed: Feed): string {
     case DataProvider.enedisDataConnect :
       return 'fa-solid fa-plug'
     case DataProvider.grdfAdict :
+    case DataProvider.grdfAdictProxified :
       return 'fa-solid fa-fire'
     case DataProvider.meteoFrance :
       return 'fa-solid fa-cloud-sun'
     case DataProvider.fake :
       return 'fa-solid fa-code'
+    default :
+      return ''
   }
 }
 
@@ -93,10 +104,13 @@ export function feedDescription(feed: Feed): string {
     case DataProvider.enedisDataConnect :
       return 'Compteur Linky associé'
     case DataProvider.grdfAdict :
+    case DataProvider.grdfAdictProxified :
       return 'Compteur Gazpar associé'
     case DataProvider.meteoFrance :
       return 'Station météo associée'
     case DataProvider.fake :
       return 'Fake'
+    default :
+      return ''
   }
 }
