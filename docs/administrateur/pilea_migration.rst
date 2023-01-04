@@ -49,16 +49,10 @@ Voici donc la marche à suivre :
 * Pour chaque utilisateur
     * Connectez-vous à Pilea
     * Allez sur la page de configuration
-    * Pour chaque adresse, exportez l'ensemble des données en cliquant sur le bouton |btn_export|
+    * Pour chaque adresse, exportez l'ensemble des données en cliquant sur le bouton export
     * Connectez-vous à æneria
     * Allez sur la page de configuration
     * Créez chacune des adresses
-    * Pour chaque adresse, importez les données précédemment exportées en cliquant sur le bouton |btn_import|
+    * Pour chaque adresse, importez les données précédemment exportées en cliquant sur le bouton import
 * Vérifiez que chaque utilisateurs a bien importé ses données
 * Désinstallez Pilea
-
-.. |btn_export| image:: ../img/btn_export.png
-             :alt: Bouton d'export
-
-.. |btn_import| image:: ../img/btn_import.png
-             :alt: Bouton d'import

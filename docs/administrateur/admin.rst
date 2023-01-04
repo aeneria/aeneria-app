@@ -20,7 +20,7 @@ Plusieurs éléments sont visibles sur cette page:
 Configurations
 ------------------------------
 
-.. image:: img/admin-1.png
+.. image:: ../img/admin-1.png
    :align: center
 
 Plusieurs fonctionnalités sont paramètrables dans æneria :
@@ -74,7 +74,7 @@ Ci-dessous, un exemple de paramètrage de ce fichier :
 Gestion des utilisateurs
 ------------------------------
 
-.. image:: img/admin-2.png
+.. image:: ../img/admin-2.png
    :align: center
 
 Sur cette page se trouve un tableau listant l'ensemble des utilisateurs d'æneria.
@@ -94,7 +94,7 @@ Il est aussi possible de "déplier" une ligne pour voir les différentes adresse
 Les logs
 ----------
 
-.. image:: img/admin-3.png
+.. image:: ../img/admin-3.png
    :align: center
 
 L'interface web permet de visualiser les derniers logs d'æneria.

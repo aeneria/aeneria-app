@@ -9,6 +9,7 @@ souhaitent installer et maintenir une instance d'æneria.
    :caption: Contenu :
 
    administrateur/install
+   administrateur/proxy
    administrateur/update
    administrateur/admin
    administrateur/pilea_migration

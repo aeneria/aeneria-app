@@ -5,7 +5,7 @@ Cette partie de la documentation est destinée aux personnes qui
 contribuer à æneria.
 
 Elle vous permettra de facilement monter un environnement de
-devéloppement sous docker et vous donnera quelques notions pour
+développement sous docker et vous donnera quelques notions pour
 commencer à developper sur æneria.
 
 .. toctree::

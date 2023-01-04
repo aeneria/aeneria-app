@@ -1,7 +1,7 @@
 æneria : Analyser votre consommation d'énergie
 ################################################
 
-.. image:: img/favicon.png
+.. image:: img/logo.png
    :align: center
 
 `æneria <https://aeneria.com>`_ est un petit tableau de bord permettant d'analyser sa
@@ -12,7 +12,7 @@ L'idée derrière æneria est de permettre à l'utilsateur de pouvoir, au traver
 * Mieux comprendre sa consommation d'énergie
 * Analyser sa consommation en fonction de données météorologiques
 
-.. image:: img/dash_accueil.png
+.. image:: img/preview-1.png
    :align: center
 
 

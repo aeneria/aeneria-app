@@ -97,51 +97,10 @@ Lancez le commande d'installation d'aeneria :
 4. Configurer Enedis Data-connect et GRDF ADICT
 ------------------------------------------------
 
-æneria utilise les API Enedis Data Connect et Grdf Adict pour obtenir les données de consommation
-d'électricité et de gaz. Mais pour utiliser ces APIs il est nécessaire d'avoir un compte.
-Seulement, pour ouvrir un compte sur chacune de ces plateformes, il faut être une entreprise,
-une association ou une collectivité locale.
+.. note::
 
-Pour permettre à tout le monde d'utiliser æneria, un proxy a été développé pour qu'une
-instance d'æneria puisse bénéficier des clés d'API d'aeneria.com.
-
-Au lieu d'utiliser le comportement classique pour se connecter à Enedis et Grdf:
-
-.. code-block::
-
-      Mode 1 - Connexion directe à Enedis et GRDF                   ┌──────────────┐
-                                                                    │              │
-                    ┌─────────────────────────────────────────┐     │ API Enedis   │
-                 ┌──┤via vos identifiants Enedis Data Connect ├────►│ Data Connect │
-                 │  └─────────────────────────────────────────┘     │              │
-     ┌─────────┐ │                                                  └──────────────┘
-     │Instance ├─┤
-     │aeneria  │ │                                                   ┌────────────┐
-     └─────────┘ │  ┌─────────────────────────────────────────┐      │            │
-                 └──┤via vos identifiants Grdf Adict          ├─────►│  API Grdf  │
-                    └─────────────────────────────────────────┘      │  Adict     │
-                                                                     │            │
-                                                                     └────────────┘
-
-
-
-Vous pouvez configurez votre instance comme ça :
-
-.. code-block::
-
-   Mode 2 - Connexion à Enedis et GRDF                ┌──────────────┐
-   via le proxy æneria                                │              │
-                                                      │ API Enedis   │
-                                                ┌────►│ Data Connect │
-                         ┌────────────┐         │     │              │
-      ┌─────────┐        │            ├─────────┘     └──────────────┘
-      │Instance ├────────┤  proxy     │
-      │aeneria  │        │  aeneria   ├─────────┐     ┌────────────┐
-      └─────────┘        │            │         │     │            │
-                         └────────────┘         └────►│  API Grdf  │
-                                                      │  Adict     │
-                                                      │            │
-                                                      └────────────┘
+    Avant d'aller plus loin, lisez :ref:`la page sur notre proxy communautaire <proxy>` pour savoir
+    dans quel mode vous souhaitez utiliser æneria.
 
 Mode 1 - Connexion directe à Enedis et GRDF
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -224,30 +183,6 @@ Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
     GRDF_ENDPOINT_DATA=https://api.grdf.fr
 
     ...
-
-.. warning::
-
-    proxy.aeneria.com est un serveur communautaire fourni à titre gracieux.
-
-    **Merci de l'utiliser raisonnablement et dans un cadre privé non-commercial.**
-
-    Nous nous réservons le droit de bannir de ce serveur les instances qui en feront
-    un usage trop intensif, et ce **sans explications et sans avertissement**.
-
-.. danger::
-
-    Ayez conscience qu'en passant par le proxy d'æneria, lorsque vous donnez
-    votre consentement pour accéder aux données, vous donnez votre consentement
-    pour le serveur proxy et non *votre* instance æneria.
-
-    Cela signifie que, techniquement, le serveur proxy peut avoir accès à toutes
-    vos données. Nous sommes de bonne fois (ou du moins nous essayons de l'être
-    le plus possible) et nous vous promettons que nous n'irons pas voir vos données.
-
-    Mais nous nous pouvons pas vous le prouver. C'est à vous de voir si vous souhaitez
-    nous faire confiance ou non.
-
-    **Ayez ceci en tête en utilisant ce serveur proxy**
 
 
 5. Créer un administrateur
