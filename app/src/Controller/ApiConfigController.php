@@ -152,8 +152,8 @@ class ApiConfigController extends AbstractAppController
 
                 if ($periode = $dataValueRepository->getPeriodDataAmplitude($place)) {
                     $place->setPeriodeAmplitude(
-                        new \DateTimeImmutable($periode[1]),
-                        new \DateTimeImmutable($periode[2])
+                        $periode[1] ? new \DateTimeImmutable($periode[1]) : null,
+                        $periode[2] ? new \DateTimeImmutable($periode[2]) : null
                     );
                 }
                 $ret[] = $place;

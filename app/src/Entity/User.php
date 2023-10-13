@@ -29,9 +29,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     private Collection $places;
     /** @var Collection<int, Place> */
     private Collection $sharedPlaces;
-    private ?\DateTimeInterface $createdAt;
-    private ?\DateTimeInterface $updatedAt;
-    private ?\DateTimeInterface $lastLogin;
+    private ?\DateTimeInterface $createdAt = null;
+    private ?\DateTimeInterface $updatedAt = null;
+    private ?\DateTimeInterface $lastLogin = null;
 
     public function __construct()
     {
@@ -270,36 +270,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     public function serialize()
     {
         return \json_encode([
-            $this->id,
-            $this->active,
-            $this->username,
-            $this->password,
-            $this->places,
-            $this->roles,
-            $this->sharedPlaces,
-            $this->createdAt,
-            $this->updatedAt,
-            $this->lastLogin,
+            'id' => $this->id,
+            'active' => $this->active,
+            'username' => $this->username,
+            'password' => $this->password,
+            'places' => $this->places,
+            'roles' => $this->roles,
+            'sharedPlaces' => $this->sharedPlaces,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'lastLogin' => $this->lastLogin,
         ]);
     }
 
     /**
      * Unserializes the given string in the current User object
      */
-    public function unserialize($serialized): mixed
+    public function unserialize($serialized)
     {
-        list(
-            $this->id,
-            $this->active,
-            $this->username,
-            $this->password,
-            $this->places,
-            $this->roles,
-            $this->sharedPlaces,
-            $this->createdAt,
-            $this->updatedAt,
-            $this->lastLogin
-        ) = \json_decode($serialized);
+        $decoded = \json_decode($serialized);
+
+        $this->id = $decoded->id;
+        $this->active = $decoded->active;
+        $this->username = $decoded->username;
+        $this->password = $decoded->password;
+        $this->roles = $decoded->roles;
     }
 
     public function jsonSerialize(): mixed

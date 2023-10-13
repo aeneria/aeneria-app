@@ -106,4 +106,12 @@ final class UserTest extends AppTestCase
 
         self::assertTrue(!$user->canSee($place));
     }
+
+    public function testSerializeUnserialize()
+    {
+        $user = $this->createUser();
+
+        $serialized = $user->serialize();
+        $unserialized = (new User())->unserialize($serialized);
+    }
 }

@@ -34,9 +34,9 @@ abstract class AbstractAppController extends AbstractController
         $this->isDemoMode = $isDemoMode;
     }
 
-    final protected function checkPlace(string $placeId): Place
+    final protected function checkPlace(int|string $placeId): Place
     {
-        if (!$place = $this->placeRepository->find($placeId)) {
+        if (!$place = $this->placeRepository->find((int) $placeId)) {
             throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
         }
 
