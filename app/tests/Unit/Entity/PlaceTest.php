@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\Feed;
@@ -39,8 +41,8 @@ final class PlaceTest extends AppTestCase
             ->addFeed($feed2)
         ;
 
-        self::assertTrue(\in_array($feed, $place->getFeeds()));
-        self::assertTrue(\in_array($feed2, $place->getFeeds()));
+        self::assertTrue($place->getFeeds()->contains($feed));
+        self::assertTrue($place->getFeeds()->contains($feed2));
 
         self::assertNotNull($place->getFeed(Feed::FEED_TYPE_ELECTRICITY));
 
@@ -48,10 +50,10 @@ final class PlaceTest extends AppTestCase
         self::assertNull($place->getFeedData(FeedData::FEED_DATA_CONSO_ELEC));
 
         $place->removeFeed($feed2);
-        self::assertFalse(\in_array($feed2, $place->getFeeds()));
+        self::assertFalse($place->getFeeds()->contains($feed2));
 
         $place->addFeed($feed2);
-        self::assertTrue(\in_array($feed2, $place->getFeeds()));
+        self::assertTrue($place->getFeeds()->contains($feed));
     }
 
     public function testPlaceSetAllowedUsers()
@@ -64,7 +66,7 @@ final class PlaceTest extends AppTestCase
             ->setAllowedUsers([$user, $user2])
         ;
 
-        self::assertTrue(\in_array($user, $place->getAllowedUsers()));
-        self::assertTrue(\in_array($user2, $place->getAllowedUsers()));
+        self::assertTrue($place->getAllowedUsers()->contains($user));
+        self::assertTrue($place->getAllowedUsers()->contains($user2));
     }
 }

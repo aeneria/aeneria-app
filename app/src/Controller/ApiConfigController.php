@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Place;
@@ -10,7 +12,7 @@ use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -39,7 +41,10 @@ class ApiConfigController extends AbstractAppController
      */
     public function getUserData(): JsonResponse
     {
-        return new JsonResponse($this->getUser()->jsonSerialize(), 200);
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        return new JsonResponse($user->jsonSerialize(), 200);
     }
 
     public function updatePassword(
@@ -96,7 +101,7 @@ class ApiConfigController extends AbstractAppController
         Request $request,
         UserRepository $userRepository,
         UserPasswordHasherInterface $passwordHasher
-    ): RedirectResponse {
+    ): Response {
         $user = $this->checkUser();
 
         $data = $request->request->all();
@@ -138,14 +143,17 @@ class ApiConfigController extends AbstractAppController
     {
         $ret = [];
 
-        if ($result = $this->placeRepository->getAllowedPlaces($this->getUser())) {
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        if ($result = $this->placeRepository->getAllowedPlaces($user)) {
             foreach ($result as $place) {
                 \assert($place instanceof Place);
 
                 if ($periode = $dataValueRepository->getPeriodDataAmplitude($place)) {
                     $place->setPeriodeAmplitude(
-                        new \DateTimeImmutable($periode[1]) ?? null,
-                        new \DateTimeImmutable($periode[2]) ?? null
+                        new \DateTimeImmutable($periode[1]),
+                        new \DateTimeImmutable($periode[2])
                     );
                 }
                 $ret[] = $place;
@@ -160,7 +168,10 @@ class ApiConfigController extends AbstractAppController
      */
     public function getNotifications(NotificationService $notificationService): JsonResponse
     {
-        $result = $notificationService->getAndDeleteNotificationFor($this->getUser());
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        $result = $notificationService->getAndDeleteNotificationFor($user);
 
         return new JsonResponse($result, 200);
     }

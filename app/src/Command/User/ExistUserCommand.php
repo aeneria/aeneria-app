@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\User;
 
 use App\Repository\UserRepository;
@@ -14,14 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class ExistUserCommand extends Command
 {
-    /** @var InputInterface */
-    protected $defaultInput;
+    protected SymfonyStyle $io;
 
-    /** @var SymfonyStyle */
-    protected $io;
-
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
     public function __construct(UserRepository $userRepository)
     {
@@ -40,10 +37,8 @@ class ExistUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->defaultInput = $input;
-
         $output->write(
-            $this->userRepository->findOneByUsername($input->getArgument('username')) ? 1 : 0
+            (string) (!!$this->userRepository->findOneByUsername($input->getArgument('username')) ? 1 : 0)
         );
 
         return 0;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JsonSerializable;
 use Serializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -17,40 +19,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_USER = 'ROLE_USER';
 
-    /** @var int */
-    private $id;
+    private int $id;
+    private bool $active;
+    private string $username;
+    private array $roles = [];
+    /** The hashed password */
+    private string $password;
+    /** @var Collection<int, Place> */
+    private Collection $places;
+    /** @var Collection<int, Place> */
+    private Collection $sharedPlaces;
+    private ?\DateTimeInterface $createdAt;
+    private ?\DateTimeInterface $updatedAt;
+    private ?\DateTimeInterface $lastLogin;
 
-    /** @var bool */
-    private $active;
-
-    /**
-     * @var string
-     * Good to know: username is an email
-     */
-    private $username;
-
-    /** @var array */
-    private $roles = [];
-
-    /** @var string The hashed password */
-    private $password;
-
-    /** @var Place[] */
-    private $places = [];
-
-    /** @var Place[] */
-    private $sharedPlaces;
-
-    /** @var ?\DateTimeInterface */
-    private $createdAt;
-    /** @var ?\DateTimeInterface */
-    private $updatedAt;
-    /** @var ?\DateTimeInterface */
-    private $lastLogin;
+    public function __construct()
+    {
+        $this->places = new ArrayCollection();
+        $this->sharedPlaces = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getUserIdentifier(): string
@@ -138,6 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     public function getSalt()
     {
         // not needed when using the "bcrypt" algorithm in security.yaml
+        return 'bcrypt';
     }
 
     /**
@@ -148,33 +148,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
         // Nothing to do there
     }
 
-    public function getPlaces(): iterable
+    public function getPlaces(): Collection
     {
         return $this->places;
     }
 
     public function setPlaces(array $places): self
     {
-        $this->places = $places;
+        $this->places = new ArrayCollection($places);
 
         return $this;
     }
 
-    public function getSharedPlaces(): ?iterable
+    public function getSharedPlaces(): Collection
     {
         return $this->sharedPlaces;
     }
 
     public function addSharedPlace(Place $place): self
     {
-        $this->sharedPlaces[] = $place;
+        if (!$this->sharedPlaces->contains($place)) {
+            $this->sharedPlaces->add($place);
+        }
 
         return $this;
     }
 
     public function setSharedPlaces(array $places): self
     {
-        $this->sharedPlaces = $places;
+        $this->sharedPlaces = new ArrayCollection($places);
 
         return $this;
     }
@@ -283,9 +285,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
 
     /**
      * Unserializes the given string in the current User object
-     * @param serialized
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): mixed
     {
         list(
             $this->id,
@@ -301,11 +302,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
         ) = \json_decode($serialized);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
-        if (!\is_array($places = $this->getPlaces())) {
-            $places = \iterator_to_array($places);
-        }
+        $places = \iterator_to_array($this->getPlaces());
 
         return [
             'id' => $this->id,
@@ -325,11 +324,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     }
 
     /**
-     * @param iterable<User>
-     *
-     * @return [int, string]
+     * @param iterable<User> $userList
      */
-    public static function toOptionList(?iterable $userList): iterable
+    public static function toOptionList(?iterable $userList): array
     {
         $userList = \is_array($userList) ? $userList : \iterator_to_array($userList);
 

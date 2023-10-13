@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Place;
@@ -13,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -79,7 +82,7 @@ class ApiPlaceController extends AbstractAppController
         if ($this->userCanSharePlace && !(null === $data->allowedUsers || \is_array($data->allowedUsers))) {
             return $this->dataValidationErrorResponse('sharedWith', "Vous devez fournir un attribut 'sharedWith' de type array.");
         }
-        if ($this->placeCanBePublic && null === $data->public && !\is_bool($data->public)) {
+        if ($this->placeCanBePublic && !\is_bool($data->public) && null === $data->public) {
             return $this->dataValidationErrorResponse('isPublic', "Vous devez fournir un attribut 'isPublic' de type booleen.");
         }
 
@@ -128,7 +131,7 @@ class ApiPlaceController extends AbstractAppController
         bool $userCanExport,
         Request $request,
         DataExporter $dataExporter
-    ): BinaryFileResponse {
+    ): Response {
         if (!$userCanExport) {
             throw new AccessDeniedHttpException();
         }
@@ -163,6 +166,9 @@ class ApiPlaceController extends AbstractAppController
             throw new AccessDeniedHttpException();
         }
 
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
         if (!$request->request->has('placeId')) {
             return $this->dataValidationErrorResponse('placeId', "Vous devez fournir un id d'adresse 'placeId'.");
         }
@@ -180,7 +186,7 @@ class ApiPlaceController extends AbstractAppController
         );
 
         $pendingActionService->createDataImportAction(
-            $this->getUser(),
+            $user,
             $place,
             \sprintf('%s/%s', $directory, $filename)
         );
@@ -196,6 +202,9 @@ class ApiPlaceController extends AbstractAppController
         if (!$userCanFetch) {
             throw new AccessDeniedHttpException();
         }
+
+        $user = $this->getUser();
+        \assert($user instanceof User);
 
         $data = \json_decode($request->getContent());
 
@@ -222,7 +231,7 @@ class ApiPlaceController extends AbstractAppController
         }
 
         $pendingActionService->createDataFetchAction(
-            $this->getUser(),
+            $user,
             $feed,
             $startDate,
             $endDate,

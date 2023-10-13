@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Repository\FeedRepository;
 use App\Repository\PlaceRepository;
 use App\Services\FeedDataProvider\FeedDataProviderFactory;
 use App\Services\FeedDataProvider\FeedDataProviderInterface;
-use App\Services\NotificationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,19 +24,15 @@ class FetchDataCommand extends Command
     private $feedRepository;
     /** @var FeedDataProviderFactory */
     private $feedDataProviderFactory;
-    /** @var NotificationService */
-    private $notificationService;
 
     public function __construct(
         PlaceRepository $placeRepository,
         FeedRepository $feedRepository,
-        FeedDataProviderFactory $feedDataProviderFactory,
-        NotificationService $notificationService
+        FeedDataProviderFactory $feedDataProviderFactory
     ) {
         $this->placeRepository = $placeRepository;
         $this->feedRepository = $feedRepository;
         $this->feedDataProviderFactory = $feedDataProviderFactory;
-        $this->notificationService = $notificationService;
 
         parent::__construct();
     }

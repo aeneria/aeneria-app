@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Place;
@@ -38,7 +40,10 @@ abstract class AbstractAppController extends AbstractController
             throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
         }
 
-        if (!$this->getUser()->canEdit($place) || $this->isDemoMode) {
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        if (!$user->canEdit($place) || $this->isDemoMode) {
             throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à modifier cette adresse.");
         }
 
@@ -51,7 +56,10 @@ abstract class AbstractAppController extends AbstractController
             throw new NotFoundHttpException("L'adresse cherchée n'existe pas !");
         }
 
-        if (!$this->getUser()->canSee($place, $this->userCanSharePlace, $this->placeCanBePublic)) {
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
+        if (!$user->canSee($place, $this->userCanSharePlace, $this->placeCanBePublic)) {
             throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à voir les données de cette adresse.");
         }
 
@@ -64,6 +72,7 @@ abstract class AbstractAppController extends AbstractController
             throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à modifier le compte utilisateur.");
         }
 
+        \assert($user instanceof User);
         return $user;
     }
 

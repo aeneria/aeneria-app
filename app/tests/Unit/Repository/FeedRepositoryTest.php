@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Repository;
 
 use App\Entity\Feed;
@@ -112,7 +114,9 @@ final class FeedRepositoryTest extends AppTestCase
         $entityManager = $this->getEntityManager();
         $feedRepository = $this->getFeedRepository();
 
-        $feed = $this->createPersistedFeed(['place' => new Place()]);
+        $feed = $this->createPersistedFeed();
+        $feed->setPlaces([]);
+        $entityManager->persist($feed);
 
         $entityManager->flush();
         $entityManager->clear();

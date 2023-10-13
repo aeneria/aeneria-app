@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
-use Aeneria\EnedisDataConnectApi\Model\Address;
-use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
-use Aeneria\EnedisDataConnectApi\Model\Token;
-use Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface;
+use App\EnedisDataConnect\Exception\DataConnectException;
+use App\EnedisDataConnect\Model\Address;
+use App\EnedisDataConnect\Model\MeteringValue;
+use App\EnedisDataConnect\Model\Token;
+use App\EnedisDataConnect\Client\DataConnectClientInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -34,7 +36,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
     /** @var RouterInterface */
     private $router;
-    /** @var DataConnectServiceInterface */
+    /** @var DataConnectClientInterface */
     private $dataConnect;
     /** @var SerializerInterface */
     private $serializer;
@@ -45,7 +47,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        DataConnectServiceInterface $dataConnect,
+        DataConnectClientInterface $dataConnect,
         RouterInterface $router,
         SerializerInterface $serializer,
         NotificationService $notificationService,
@@ -142,7 +144,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     public function getConsentUrl(string $state): string
     {
         $url = $this->dataConnect
-            ->getAuthorizeV1Service()
+            ->getAuthorizeV1Client()
             ->getConsentPageUrl(
                 'P12M',
                 $state
@@ -170,12 +172,12 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     public function consentCheckFromCode(string $code): array
     {
         $accessToken = $this->dataConnect
-            ->getAuthorizeV1Service()
+            ->getAuthorizeV1Client()
             ->requestTokenFromCode($code)
         ;
 
         $address = $this->dataConnect
-            ->getCustomersService()
+            ->getCustomersClient()
             ->requestUsagePointAdresse(
                 $accessToken->getAccessToken(),
                 $accessToken->getUsagePointsId()
@@ -192,12 +194,12 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     public function handleConsentCallback(string $code, Place $place): void
     {
         $accessToken = $this->dataConnect
-            ->getAuthorizeV1Service()
+            ->getAuthorizeV1Client()
             ->requestTokenFromCode($code)
         ;
 
         $address = $this->dataConnect
-            ->getCustomersService()
+            ->getCustomersClient()
             ->requestUsagePointAdresse(
                 $accessToken->getAccessToken(),
                 $accessToken->getUsagePointsId()
@@ -247,7 +249,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         try {
             return $this->dataConnect
-                ->getCustomersService()
+                ->getCustomersClient()
                 ->requestUsagePointAdresse(
                     $token->getAccessToken(),
                     $token->getUsagePointsId()
@@ -300,7 +302,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         if (!$token->isAccessTokenStillValid()) {
             $renewedToken = $this
                 ->dataConnect
-                ->getAuthorizeV1Service()
+                ->getAuthorizeV1Client()
                 ->requestTokenFromRefreshToken($token->getRefreshToken())
             ;
             $feed->setSingleParam('TOKEN', $this->serializer->serialize($renewedToken, 'json'));
@@ -319,7 +321,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         $meteringData = $this
             ->dataConnect
-            ->getMeteringDataV4Service()
+            ->getMeteringDataV4Client()
             ->requestConsumptionLoadCurve(
                 $token->getAccessToken(),
                 $token->getUsagePointsId(),
@@ -355,7 +357,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
         $meteringData = $this
             ->dataConnect
-            ->getMeteringDataV4Service()
+            ->getMeteringDataV4Client()
             ->requestDailyConsumption(
                 $token->getAccessToken(),
                 $token->getUsagePointsId(),
@@ -403,7 +405,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d H:i', $currentDate),
                     DataValue::FREQUENCY_HOUR,
-                    $value
+                    (string) $value
                 );
             }
         }
@@ -415,7 +417,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),
                     DataValue::FREQUENCY_DAY,
-                    $value
+                    (string) $value
                 );
             }
         }

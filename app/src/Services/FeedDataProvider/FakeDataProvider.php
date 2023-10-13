@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\DataValue;
@@ -28,7 +30,7 @@ class FakeDataProvider extends AbstractFeedDataProvider
     public static function isAvailableDataDate(\DateTimeImmutable $date): bool
     {
         // Get yesterday datetime.
-        $reference = new \DateTimeImmutable();
+        $reference = new \DateTime();
         $reference->sub(new \DateInterval('P1D'));
 
         return new \DateTimeImmutable($reference->format("Y-m-d 00:00:00")) < $date;
@@ -105,7 +107,7 @@ class FakeDataProvider extends AbstractFeedDataProvider
                 $feedData,
                 $date,
                 DataValue::FREQUENCY_DAY,
-                \rand($min * 10, $max * 10) / 10
+                (string) (\rand($min * 10, $max * 10) / 10)
             );
             $this->entityManager->flush();
         }
@@ -140,7 +142,7 @@ class FakeDataProvider extends AbstractFeedDataProvider
                     } else {
                         $value = \rand(0, 50) / 100;
                     }
-                break;
+                    break;
                 default:
                     // weekday
                     if (\in_array($hour, [7, 8, 9, 17, 18, 19, 20, 21, 22, 23])) {
@@ -154,7 +156,7 @@ class FakeDataProvider extends AbstractFeedDataProvider
                 $feedData,
                 new \DateTimeImmutable($date->format("Y-m-d") . $hour . ':00'),
                 DataValue::FREQUENCY_HOUR,
-                $value
+                (string) $value
             );
         }
         $this->entityManager->flush();
@@ -193,7 +195,7 @@ class FakeDataProvider extends AbstractFeedDataProvider
             $feedData,
             $date,
             DataValue::FREQUENCY_DAY,
-            $value
+            (string) $value
         );
         $this->entityManager->flush();
 

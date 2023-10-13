@@ -1,18 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\DataValue;
+use App\Entity\Feed;
 use App\Entity\FeedData;
 use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<FeedData>
+ *
  * @method FeedData|null find($id, $lockMode = null, $lockVersion = null)
  * @method FeedData|null findOneBy(array $criteria, array $orderBy = null)
  * @method FeedData[]    findAll()
  * @method FeedData[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method FeedData[]    findByFeed(Feed|Feed[] $feed)
+ * @method FeedData    findOneByFeed(Feed $feed)
  */
 class FeedDataRepository extends ServiceEntityRepository
 {
@@ -100,15 +107,11 @@ class FeedDataRepository extends ServiceEntityRepository
 
     /**
      * Get Date of last up to date data.
-     * @param EntityManager $entityManager
-     * @param $frequencies array of int from DataValue frequencies
-     *
-     * @return \Datetime
      */
-    public function getLastUpToDate(FeedData $feedData)
+    public function getLastUpToDate(FeedData $feedData): ?\DateTime
     {
         // Try to get the corresponding DataValue.
-        $result = $this->dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY['DAY']);
+        $result = $this->dataValueRepository->getLastValue($feedData, DataValue::FREQUENCY_DAY);
 
         if (!empty($result[0]['date'])) {
             return new \DateTime($result[0]['date']);
@@ -119,11 +122,9 @@ class FeedDataRepository extends ServiceEntityRepository
 
     /**
      * Check if there's data in DB for $date for all $frequencies.
-     * @param EntityManager $entityManager
-     * @param \DateTime $date
-     * @param $frequencies array of int from DataValue frequencies
+     * @param int[] $frequencies array of int from DataValue frequencies
      */
-    public function isUpToDate(FeedData $feedData, \DateTimeImmutable $date, array $frequencies)
+    public function isUpToDate(FeedData $feedData, \DateTimeImmutable $date, array $frequencies): bool
     {
         $isUpToDate = true;
 

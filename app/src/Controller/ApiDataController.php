@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
+use App\Entity\Place;
+use App\Entity\User;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\PlaceRepository;
@@ -135,6 +139,9 @@ class ApiDataController extends AbstractAppController
 
     private function canSeeFeedData(string $feedDataId): FeedData
     {
+        $user = $this->getUser();
+        \assert($user instanceof User);
+
         if (!$feedData = $this->feedDataRepository->find($feedDataId)) {
             throw new NotFoundHttpException("Le flux de données cherché n'existe pas !");
         }
@@ -145,7 +152,7 @@ class ApiDataController extends AbstractAppController
             return $feedData;
         }
 
-        if (!$placeList = $feedData->getFeed()->getPlaces()) {
+        if (!\count($placeList = $feedData->getFeed()->getPlaces())) {
             throw new NotFoundHttpException("Le flux de données cherché n'existe pas !");
         }
 
@@ -153,7 +160,8 @@ class ApiDataController extends AbstractAppController
         // est de type électricité ou gaz et ces types de flux ne peuvent théoriquement être reliés
         // qu'à une seule Place.
         foreach ($placeList as $place) {
-            if (!$this->getUser()->canSee($place, $this->userCanSharePlace, $this->placeCanBePublic)) {
+            \assert($place instanceof Place);
+            if (!$user->canSee($place, $this->userCanSharePlace, $this->placeCanBePublic)) {
                 throw new AccessDeniedHttpException("Vous n'êtes pas authorisé à voir les données de cette adresse.");
             }
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Entity\Feed;
@@ -21,10 +23,10 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  */
 class PendingActionService
 {
-    const ACTION_DATA_CONNECT_CALLBACK = 'data_connect_callback';
-    const ACTION_GRDF_ADICT_CALLBACK = 'grdf_adict_callback';
-    const ACTION_IMPORT_DATA = 'import_data';
-    const ACTION_FETCH_DATA = 'fetch_data';
+    public const ACTION_DATA_CONNECT_CALLBACK = 'data_connect_callback';
+    public const ACTION_GRDF_ADICT_CALLBACK = 'grdf_adict_callback';
+    public const ACTION_IMPORT_DATA = 'import_data';
+    public const ACTION_FETCH_DATA = 'fetch_data';
 
     /** @var EntityManagerInterface */
     private $entityManager;

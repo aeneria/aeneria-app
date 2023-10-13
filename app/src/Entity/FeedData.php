@@ -9,25 +9,20 @@ namespace App\Entity;
  */
 class FeedData implements \JsonSerializable
 {
-    const FEED_DATA_CONSO_ELEC = 'CONSO_ELEC';
-    const FEED_DATA_CONSO_GAZ = 'CONSO_GAZ';
-    const FEED_DATA_TEMPERATURE = 'TEMPERATURE';
-    const FEED_DATA_TEMPERATURE_MIN = 'TEMPERATURE_MIN';
-    const FEED_DATA_TEMPERATURE_MAX = 'TEMPERATURE_MAX';
-    const FEED_DATA_DJU = 'DJU';
-    const FEED_DATA_PRESSURE = 'PRESSURE';
-    const FEED_DATA_HUMIDITY = 'HUMIDITY';
-    const FEED_DATA_NEBULOSITY = 'NEBULOSITY';
-    const FEED_DATA_RAIN = 'RAIN';
+    public const FEED_DATA_CONSO_ELEC = 'CONSO_ELEC';
+    public const FEED_DATA_CONSO_GAZ = 'CONSO_GAZ';
+    public const FEED_DATA_TEMPERATURE = 'TEMPERATURE';
+    public const FEED_DATA_TEMPERATURE_MIN = 'TEMPERATURE_MIN';
+    public const FEED_DATA_TEMPERATURE_MAX = 'TEMPERATURE_MAX';
+    public const FEED_DATA_DJU = 'DJU';
+    public const FEED_DATA_PRESSURE = 'PRESSURE';
+    public const FEED_DATA_HUMIDITY = 'HUMIDITY';
+    public const FEED_DATA_NEBULOSITY = 'NEBULOSITY';
+    public const FEED_DATA_RAIN = 'RAIN';
 
-    /** @var int */
-    private $id;
-
-    /** @var Feed */
-    private $feed;
-
-    /** @var string */
-    private $dataType;
+    private int $id;
+    private Feed $feed;
+    private string $dataType;
 
     /**
      * Get unit for a type of data.
@@ -150,7 +145,7 @@ class FeedData implements \JsonSerializable
         return $this->feed;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,

@@ -12,7 +12,7 @@ use InvalidArgumentException;
 class DataValue implements \JsonSerializable
 {
     /** @deprecated use DataValue::getAllFrequencies() instead */
-    const FREQUENCY = [
+    public const FREQUENCY = [
         'HOUR' => 1,
         'DAY' => 2,
         'WEEK' => 3,
@@ -20,41 +20,22 @@ class DataValue implements \JsonSerializable
         'YEAR' => 5,
     ];
 
-    const FREQUENCY_HOUR = 1;
-    const FREQUENCY_DAY = 2;
-    const FREQUENCY_WEEK = 3;
-    const FREQUENCY_MONTH = 4;
-    const FREQUENCY_YEAR = 5;
+    public const FREQUENCY_HOUR = 1;
+    public const FREQUENCY_DAY = 2;
+    public const FREQUENCY_WEEK = 3;
+    public const FREQUENCY_MONTH = 4;
+    public const FREQUENCY_YEAR = 5;
 
-    /** @var int */
-    private $id;
-
-    /** @var float */
-    private $value;
-
-    /** @var \DateTimeInterface */
-    private $date;
-
-    /** @var int */
-    private $hour;
-
-    /** @var int */
-    private $weekDay;
-
-    /** @var int */
-    private $week;
-
-    /** @var int */
-    private $month;
-
-    /** @var int */
-    private $year;
-
-    /** @var FeedData */
-    private $feedData;
-
-    /** @var int */
-    private $frequency;
+    private int $id;
+    private float $value;
+    private \DateTimeInterface $date;
+    private int $hour;
+    private int $weekDay;
+    private int $week;
+    private int $month;
+    private int $year;
+    private FeedData $feedData;
+    private int $frequency;
 
     public static function getAllFrequencies(): array
     {
@@ -297,7 +278,7 @@ class DataValue implements \JsonSerializable
         return $this->feedData;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,

@@ -4,50 +4,43 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Feed
  */
 class Feed implements \JsonSerializable
 {
-    const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
-    const FEED_TYPE_GAZ = 'GAZ';
-    const FEED_TYPE_METEO = 'METEO';
+    public const FEED_TYPE_ELECTRICITY = 'ELECTRICITY';
+    public const FEED_TYPE_GAZ = 'GAZ';
+    public const FEED_TYPE_METEO = 'METEO';
 
-    const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT = 'ENEDIS_DATA_CONNECT';
-    const FEED_DATA_PROVIDER_GRDF_ADICT = 'GRDF_ADICT';
-    const FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED = 'GRDF_ADICT_PROXIFIED';
-    const FEED_DATA_PROVIDER_LINKY = 'LINKY';
-    const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
-    const FEED_DATA_PROVIDER_FAKE = 'FAKE';
+    public const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT = 'ENEDIS_DATA_CONNECT';
+    public const FEED_DATA_PROVIDER_GRDF_ADICT = 'GRDF_ADICT';
+    public const FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED = 'GRDF_ADICT_PROXIFIED';
+    public const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
+    public const FEED_DATA_PROVIDER_FAKE = 'FAKE';
 
-    /** @var int */
-    private $id;
+    private int $id;
+    private string $name;
+    private string $feedType;
+    private string $feedDataProviderType;
+    private int $fetchError = 0;
+    private array $param = [];
+    /** @var Collection<int, FeedData> */
+    private Collection $feedDatas;
+    /** @var Collection<int, Place> */
+    private Collection $places;
 
-    /** @var string */
-    private $name;
+    private ?\DateTimeInterface $createdAt;
+    private ?\DateTimeInterface $updatedAt;
 
-    /** @var string */
-    private $feedType;
-
-    /** @var string */
-    private $feedDataProviderType;
-
-    /** @var int */
-    private $fetchError = 0;
-
-    /** @var array */
-    private $param = [];
-
-    /** @var FeedData[] */
-    private $feedDatas = [];
-
-    /** @var Place[] */
-    private $places = [];
-
-    /** @var ?\DateTimeInterface */
-    private $createdAt;
-    /** @var ?\DateTimeInterface */
-    private $updatedAt;
+    public function __construct()
+    {
+        $this->feedDatas = new ArrayCollection();
+        $this->places = new ArrayCollection();
+    }
 
     public static function getAllFeedTypes(): array
     {
@@ -117,7 +110,6 @@ class Feed implements \JsonSerializable
     {
         switch ($feedDataProviderType) {
             case self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
-            case self::FEED_DATA_PROVIDER_LINKY:
                 return 'Compteur Linky';
             case self::FEED_DATA_PROVIDER_GRDF_ADICT:
             case self::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED:
@@ -226,7 +218,7 @@ class Feed implements \JsonSerializable
 
     public function getParam(): array
     {
-        return $this->param ?? [];
+        return $this->param;
     }
 
     public function getSingleParam(string $name, $default = null)
@@ -268,38 +260,28 @@ class Feed implements \JsonSerializable
         return self::getFrequenciesFor($this->getFeedType());
     }
 
-    /**
-     * @return iterable<PLace>
-     */
-    public function getPlaces(): ?iterable
+    public function getPlaces(): Collection
     {
         return $this->places;
     }
 
     public function getFirstPlace(): ?Place
     {
-        if (0 < \count($this->places)) {
-            return $this->places[0];
-        }
+        return $this->places->first();
     }
 
     public function addPlace(Place $place): self
     {
-        // If the place we try to add is already there, we delete it
-        $this->removePlace($place);
-
-        $this->places[] = $place;
+        if (!$this->places->contains($place)) {
+            $this->places->add($place);
+        }
 
         return $this;
     }
 
     public function removePlace(Place $place): self
     {
-        foreach ($this->places as $key => $currentPlace) {
-            if ($currentPlace->getId() && $currentPlace->getId() === $place->getId()) {
-                unset($this->places[$key]);
-            }
-        }
+        $this->places->removeElement($place);
 
         return $this;
     }
@@ -309,15 +291,12 @@ class Feed implements \JsonSerializable
      */
     public function setPlaces(array $places): self
     {
-        $this->places = $places;
+        $this->places = new ArrayCollection($places);
 
         return $this;
     }
 
-    /**
-     * @return \Iterable<FeedData>
-     */
-    public function getFeedDatas(): ?iterable
+    public function getFeedDatas(): Collection
     {
         return $this->feedDatas;
     }
@@ -331,15 +310,12 @@ class Feed implements \JsonSerializable
             ));
         }
 
-        if ($this->feedDatas) {
-            foreach ($this->feedDatas as $feedData) {
-                if ($feedDataType === $feedData->getDataType()) {
-                    return $feedData;
-                }
-            }
-        }
-
-        return null;
+        return $this
+            ->feedDatas
+            ->findFirst(
+                fn (int $key, FeedData $feedData) => $feedDataType === $feedData->getDataType()
+            )
+        ;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -366,7 +342,7 @@ class Feed implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $feedDataList = \iterator_to_array($this->getFeedDatas());
 

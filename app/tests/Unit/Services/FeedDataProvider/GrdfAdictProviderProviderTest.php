@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\FeedDataProvider;
 
-use Aeneria\GrdfAdictApi\Service\MockGrdfAdictService;
+use App\GrdfAdict\Client\MockGrdfAdictClient;
 use App\Services\FeedDataProvider\GrdfAdictProvider;
 use App\Services\NotificationService;
 use App\Tests\AppTestCase;
@@ -19,7 +19,7 @@ class GrdfAdictProviderProviderTest extends AppTestCase
             $this->getFeedRepository(),
             $this->getFeedDataRepository(),
             $this->getDataValueRepository(),
-            new MockGrdfAdictService(),
+            new MockGrdfAdictClient(),
             $this->createMock(NotificationService::class),
             $this->createMock(SerializerInterface::class),
             $this->getLogger()

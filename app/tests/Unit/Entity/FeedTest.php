@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\DataValue;
@@ -26,7 +28,7 @@ final class FeedTest extends AppTestCase
         self::assertSame($feed->getFeedDataProviderType(), Feed::FEED_DATA_PROVIDER_FAKE);
         self::assertSame($feed->getParam(), ['toto' => 'toto']);
         self::assertSame($feed->getFrequencies(), DataValue::getAllFrequencies());
-        self::assertTrue(\in_array($place, $feed->getPlaces()));
+        self::assertTrue($feed->getPlaces()->contains($place));
 
         $feed->removePlace($place);
         self::assertCount(0, $feed->getPlaces());
@@ -60,8 +62,10 @@ final class FeedTest extends AppTestCase
 
     public function testFrequenciesFor()
     {
-        self::assertSame(Feed::getFrequenciesFor(
-            Feed::FEED_TYPE_ELECTRICITY),
+        self::assertSame(
+            Feed::getFrequenciesFor(
+                Feed::FEED_TYPE_ELECTRICITY
+            ),
             DataValue::getAllFrequencies()
         );
 
@@ -91,12 +95,16 @@ final class FeedTest extends AppTestCase
 
     public function testDataTypeFor()
     {
-        self::assertSame(Feed::getDataTypeFor(
-            Feed::FEED_TYPE_ELECTRICITY),
+        self::assertSame(
+            Feed::getDataTypeFor(
+                Feed::FEED_TYPE_ELECTRICITY
+            ),
             [FeedData::FEED_DATA_CONSO_ELEC]
         );
-        self::assertSame(Feed::getDataTypeFor(
-            Feed::FEED_TYPE_GAZ),
+        self::assertSame(
+            Feed::getDataTypeFor(
+                Feed::FEED_TYPE_GAZ
+            ),
             [FeedData::FEED_DATA_CONSO_GAZ]
         );
 

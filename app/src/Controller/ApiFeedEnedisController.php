@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
+use App\EnedisDataConnect\Exception\DataConnectException;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Repository\PlaceRepository;
@@ -10,9 +12,8 @@ use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Services\JwtService;
 use App\Services\PendingActionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiFeedEnedisController extends AbstractAppController
 {
@@ -47,6 +48,8 @@ class ApiFeedEnedisController extends AbstractAppController
     public function consent(string $placeId): JsonResponse
     {
         $user = $this->getUser();
+        \assert($user instanceof User);
+
         $place = $this->checkPlace($placeId);
 
         $action = $this->actionService->createDataConnectCallbackAction($user, $place);
@@ -57,7 +60,7 @@ class ApiFeedEnedisController extends AbstractAppController
         return new JsonResponse($enedisUrl, 200);
     }
 
-    public function consentCallback(Request $request, SerializerInterface $serializer): RedirectResponse
+    public function consentCallback(Request $request): Response
     {
         $user = $this->getUser();
         \assert($user instanceof User);

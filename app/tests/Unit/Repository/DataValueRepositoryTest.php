@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Repository;
 
 use App\Entity\DataValue;
@@ -36,7 +38,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $feedData,
             new \DateTimeImmutable('2020-02-05 00:00'),
             DataValue::FREQUENCY_HOUR,
-            42.0
+            '42.0'
         );
 
         $entityManager->flush();
@@ -54,7 +56,7 @@ final class DataValueRepositoryTest extends AppTestCase
             $feedData,
             new \DateTimeImmutable('2020-02-05 00:00'),
             DataValue::FREQUENCY_HOUR,
-            72.0
+            '72.0'
         );
 
         $dataValueNew = $dataValueRepository->findOneBy([
@@ -82,13 +84,13 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
 
         $data = [
-            '2020-04-03 23:00' => 42,
-            '2020-04-04 00:00' => 42,
-            '2020-04-04 01:00' => 42,
-            '2020-04-04 02:00' => 42,
-            '2020-04-04 03:00' => 42,
-            '2020-04-04 04:00' => 42,
-            '2020-04-05 00:00' => 42,
+            '2020-04-03 23:00' => '42',
+            '2020-04-04 00:00' => '42',
+            '2020-04-04 01:00' => '42',
+            '2020-04-04 02:00' => '42',
+            '2020-04-04 03:00' => '42',
+            '2020-04-04 04:00' => '42',
+            '2020-04-05 00:00' => '42',
         ];
 
         foreach ($data as $date => $value) {
@@ -134,10 +136,10 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
 
         $data = [
-            '2020-03-29 00:00' => 42,
-            '2020-04-04 00:00' => 42,
-            '2020-04-05 00:00' => 42,
-            '2020-04-06 00:00' => 42,
+            '2020-03-29 00:00' => '42',
+            '2020-04-04 00:00' => '42',
+            '2020-04-05 00:00' => '42',
+            '2020-04-06 00:00' => '42',
         ];
 
         foreach ($data as $date => $value) {
@@ -183,10 +185,10 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
 
         $data = [
-            '2020-03-30 00:00' => 42,
-            '2020-04-04 00:00' => 42,
-            '2020-04-05 00:00' => 42,
-            '2020-05-01 00:00' => 42,
+            '2020-03-30 00:00' => '42',
+            '2020-04-04 00:00' => '42',
+            '2020-04-05 00:00' => '42',
+            '2020-05-01 00:00' => '42',
         ];
 
         foreach ($data as $date => $value) {
@@ -232,10 +234,10 @@ final class DataValueRepositoryTest extends AppTestCase
         $entityManager->flush();
 
         $data = [
-            '2019-12-00 00:00' => 42,
-            '2020-01-01 00:00' => 42,
-            '2020-02-01 00:00' => 42,
-            '2021-01-01 00:00' => 42,
+            '2019-12-00 00:00' => '42',
+            '2020-01-01 00:00' => '42',
+            '2020-02-01 00:00' => '42',
+            '2021-01-01 00:00' => '42',
         ];
 
         foreach ($data as $date => $value) {
@@ -326,7 +328,7 @@ final class DataValueRepositoryTest extends AppTestCase
                 $feedData,
                 new \DateTimeImmutable($date),
                 DataValue::FREQUENCY_DAY,
-                $value
+                (string) $value
             );
         }
 

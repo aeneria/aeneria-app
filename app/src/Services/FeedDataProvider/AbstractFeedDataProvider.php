@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\Feed;
@@ -13,11 +15,11 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
 {
-    const FETCH_STRATEGY_GROUPED = 'grouped';
-    const FETCH_STRATEGY_ONE_BY_ONE = 'one_by_one';
+    public const FETCH_STRATEGY_GROUPED = 'grouped';
+    public const FETCH_STRATEGY_ONE_BY_ONE = 'one_by_one';
 
-    const ERROR_FETCH = 'FETCH_ERROR';
-    const ERROR_CONSENT = 'CONSENT_ERROR';
+    public const ERROR_FETCH = 'FETCH_ERROR';
+    public const ERROR_CONSENT = 'CONSENT_ERROR';
 
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -32,7 +34,7 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     protected $dataValueRepository;
 
     /** @var NotificationService */
-    private $notificationService;
+    protected $notificationService;
 
     /** @var LoggerInterface */
     protected $logger;
@@ -76,8 +78,6 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
     public static function getParametersName(Feed $feed): array
     {
         throw new \Exception("Your custom feedDataProvider should implement this method !");
-
-        return [];
     }
 
     /**
@@ -96,9 +96,9 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
 
         if (self::FETCH_STRATEGY_GROUPED === $this->getFetchStrategy()) {
             $lastUpToDate = $this->feedRepository->getLastUpToDate($feeds);
-            $lastUpToDate = new \DateTimeImmutable($lastUpToDate->format("Y-m-d"));
+            $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d"));
 
-            while ($this->isAvailableDataDate($lastUpToDate)) {
+            while ($this->isAvailableDataDate(\DateTimeImmutable::createFromMutable($lastUpToDate))) {
                 $errors = \array_merge(
                     $errors,
                     $this->fetchData(\DateTimeImmutable::createFromInterface($lastUpToDate), $feeds)
@@ -109,9 +109,9 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
         } elseif (self::FETCH_STRATEGY_ONE_BY_ONE === $this->getFetchStrategy()) {
             foreach ($feeds as $feed) {
                 $lastUpToDate = $this->feedRepository->getLastUpToDate([$feed]);
-                $lastUpToDate = new \DateTimeImmutable($lastUpToDate->format("Y-m-d"));
+                $lastUpToDate = new \DateTime($lastUpToDate->format("Y-m-d"));
 
-                while ($this->isAvailableDataDate($lastUpToDate)) {
+                while ($this->isAvailableDataDate(\DateTimeImmutable::createFromMutable($lastUpToDate))) {
                     $errors = \array_merge(
                         $errors,
                         $this->fetchData(\DateTimeImmutable::createFromInterface($lastUpToDate), [$feed])

@@ -9,34 +9,21 @@ namespace App\Entity;
  */
 class Notification implements \JsonSerializable
 {
-    const LEVEL_ERROR = 'danger';
-    const LEVEL_SUCCESS = 'success';
-    const LEVEL_INFO = 'information';
+    public const LEVEL_ERROR = 'danger';
+    public const LEVEL_SUCCESS = 'success';
+    public const LEVEL_INFO = 'information';
 
-    const TYPE_DATA_IMPORT = 'data_import';
-    const TYPE_DATA_FETCH = 'data_fetch';
-    const TYPE_TOO_MANY_FETCH_ERROR = 'too_many_fetch_error';
+    public const TYPE_DATA_IMPORT = 'data_import';
+    public const TYPE_DATA_FETCH = 'data_fetch';
+    public const TYPE_TOO_MANY_FETCH_ERROR = 'too_many_fetch_error';
 
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $type;
-
-    /** @var string */
-    private $level;
-
-    /** @var User|null */
-    private $user;
-
-    /** @var Place|null */
-    private $place;
-
-    /** @var \DateTimeInterface */
-    private $date;
-
-    /** @var string */
-    private $message;
+    private int $id;
+    private string $type;
+    private string $level;
+    private ?User $user;
+    private ?Place $place;
+    private \DateTimeInterface $date;
+    private string $message;
 
     public function getId(): ?int
     {
@@ -122,7 +109,7 @@ class Notification implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,

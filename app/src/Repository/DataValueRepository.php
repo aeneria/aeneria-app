@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\DataValue;
@@ -12,6 +14,8 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<DataValue>
+ *
  * @method DataValue|null find($id, $lockMode = null, $lockVersion = null)
  * @method DataValue|null findOneBy(array $criteria, array $orderBy = null)
  * @method DataValue[]    findAll()
@@ -51,7 +55,7 @@ class DataValueRepository extends ServiceEntityRepository
             ;
         }
 
-        $dataValue->setValue($value);
+        $dataValue->setValue((float) $value);
 
         // Persit the dataValue.
         $this->getEntityManager()->persist($dataValue);
@@ -64,63 +68,63 @@ class DataValueRepository extends ServiceEntityRepository
     {
         list('from' => $firstDay, 'to' => $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
 
-        if ($feedDatas = $feed->getFeedDatas()) {
-            foreach ($feedDatas as $feedData) {
-                switch ($feedData->getDataType()) {
-                    case FeedData::FEED_DATA_DJU:
-                    case FeedData::FEED_DATA_RAIN:
-                    case FeedData::FEED_DATA_CONSO_ELEC:
-                    case FeedData::FEED_DATA_CONSO_GAZ:
-                        $agregateData = $this
-                            ->getSumValue(
-                                $firstDay,
-                                $lastDay,
-                                $feedData,
-                                $previousFrequency
-                            )
-                        ;
-                        break;
-                    case FeedData::FEED_DATA_TEMPERATURE_MAX:
-                        $agregateData = $this
-                            ->getMaxValue(
-                                $firstDay,
-                                $lastDay,
-                                $feedData,
-                                $previousFrequency
-                            )
-                        ;
-                        break;
-                    case FeedData::FEED_DATA_TEMPERATURE_MIN:
-                        $agregateData = $this
-                            ->getMinValue(
-                                $firstDay,
-                                $lastDay,
-                                $feedData,
-                                $previousFrequency
-                            )
-                        ;
-                        break;
-                    default:
-                        $agregateData = $this
-                            ->getAverageValue(
-                                $firstDay,
-                                $lastDay,
-                                $feedData,
-                                $previousFrequency
-                            )
-                        ;
-                        break;
-                }
-
-                if (isset($agregateData[0]['value'])) {
-                    $this->updateOrCreateValue(
-                        $feedData,
-                        $firstDay,
-                        $frequency,
-                        \round($agregateData[0]['value'], 1)
-                    );
-                }
+        $feedDatas = $feed->getFeedDatas();
+        foreach ($feedDatas as $feedData) {
+            switch ($feedData->getDataType()) {
+                case FeedData::FEED_DATA_DJU:
+                case FeedData::FEED_DATA_RAIN:
+                case FeedData::FEED_DATA_CONSO_ELEC:
+                case FeedData::FEED_DATA_CONSO_GAZ:
+                    $agregateData = $this
+                        ->getSumValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+                case FeedData::FEED_DATA_TEMPERATURE_MAX:
+                    $agregateData = $this
+                        ->getMaxValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+                case FeedData::FEED_DATA_TEMPERATURE_MIN:
+                    $agregateData = $this
+                        ->getMinValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
+                default:
+                    $agregateData = $this
+                        ->getAverageValue(
+                            $firstDay,
+                            $lastDay,
+                            $feedData,
+                            $previousFrequency
+                        )
+                    ;
+                    break;
             }
+
+            if (isset($agregateData[0]['value'])) {
+                $this->updateOrCreateValue(
+                    $feedData,
+                    $firstDay,
+                    $frequency,
+                    (string) \round((float) $agregateData[0]['value'], 1)
+                );
+            }
+
         }
     }
 
@@ -129,7 +133,7 @@ class DataValueRepository extends ServiceEntityRepository
      *
      * Warning : Existing values with given criteria will be deleted in process !
      *
-     * @param DataValue[] $dataValue
+     * @param DataValue[] $dataValues
      */
     public function massImport(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $feedDatas, int $frequency, array $dataValues)
     {
@@ -306,11 +310,9 @@ class DataValueRepository extends ServiceEntityRepository
     /**
      * Get last date value
      *
-     * @param FeedData $feedData
-     * @param string $frequency
      * @return array|mixed|\Doctrine\DBAL\Driver\Statement|null
      */
-    public function getLastValue(FeedData $feedData, $frequency)
+    public function getLastValue(FeedData $feedData, int $frequency)
     {
         return $this
             ->createQueryBuilder('d')
@@ -400,7 +402,8 @@ class DataValueRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('d');
 
         $queryBuilder->select(
-            'AVG(d.value) AS value, d.' . $groupBy . ' AS groupBy');
+            'AVG(d.value) AS value, d.' . $groupBy . ' AS groupBy'
+        );
         $this->betweenDateWithFeedDataAndFrequency($startDate, $endDate, $feedData, $frequency, $queryBuilder);
         $queryBuilder->addGroupBy('d.' . $groupBy);
 
@@ -438,7 +441,7 @@ class DataValueRepository extends ServiceEntityRepository
      *    - feedData
      *    - frequency
      *
-     * @param FeedData|FeedData[] $feedData
+     * @param FeedData|FeedData[] $feedDatas
      */
     public function betweenDateWithFeedDataAndFrequency(?\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate, $feedDatas, int $frequency, QueryBuilder &$queryBuilder)
     {

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
+use App\GrdfAdict\Exception\GrdfAdictException;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Repository\PlaceRepository;
@@ -11,12 +13,11 @@ use App\Services\FeedDataProvider\ProxifiedGrdfAdictProvider;
 use App\Services\JwtService;
 use App\Services\PendingActionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 class ApiFeedGrdfController extends AbstractAppController
 {
-
     /** @var bool */
     private $useProxyForGrdf;
 
@@ -58,6 +59,8 @@ class ApiFeedGrdfController extends AbstractAppController
     public function consent(string $placeId): JsonResponse
     {
         $user = $this->getUser();
+        \assert($user instanceof User);
+
         $place = $this->checkPlace($placeId);
 
         $action = $this->actionService->createGrdfAdictCallbackAction($user, $place);
@@ -76,10 +79,11 @@ class ApiFeedGrdfController extends AbstractAppController
         return new JsonResponse($grdfUrl, 200);
     }
 
-    public function consentCallback(Request $request): RedirectResponse
+    public function consentCallback(Request $request): Response
     {
         $user = $this->getUser();
         \assert($user instanceof User);
+
         if (!$state = $request->get("state")) {
             return $this->dataValidationErrorResponse('state', "Un argument 'state' doit être fourni.");
         }

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
-use Aeneria\GrdfAdictApi\Model\InfoTechnique;
-use Aeneria\GrdfAdictApi\Model\Token;
-use Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface;
+use App\GrdfAdict\Exception\GrdfAdictException;
+use App\GrdfAdict\Model\InfoTechnique;
+use App\GrdfAdict\Model\Token;
+use App\GrdfAdict\Client\GrdfAdictClientInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -24,7 +26,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class GrdfAdictProvider extends AbstractFeedDataProvider
 {
-    /** @var GrdfAdictServiceInterface */
+    /** @var GrdfAdictClientInterface */
     private $grdfAdict;
     /** @var SerializerInterface */
     private $serializer;
@@ -37,7 +39,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        GrdfAdictServiceInterface $grdfAdict,
+        GrdfAdictClientInterface $grdfAdict,
         NotificationService $notificationService,
         SerializerInterface $serializer,
         LoggerInterface $logger
@@ -129,10 +131,10 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
      */
     private function getAccessToken(): string
     {
-        if (!$this->accessToken || !$this->accessToken->isAccessTokenStillValid()) {
+        if (!$this->accessToken->isAccessTokenStillValid()) {
             $this->accessToken = $this
                 ->grdfAdict
-                ->getAuthentificationService()
+                ->getAuthentificationClient()
                 ->requestAuthorizationToken()
             ;
 
@@ -149,8 +151,8 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
      */
     public function getConsentUrl(string $state): string
     {
-        return $this->grdfAdictService
-            ->getAuthentificationService()
+        return $this->grdfAdict
+            ->getAuthentificationClient()
             ->getConsentPageUrl(
                 $state,
                 'aeneria'
@@ -165,19 +167,17 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
     public function handleConsentCallback(string $code, Place $place): void
     {
         $consentement = $this->grdfAdict
-            ->getAuthentificationService()
+            ->getAuthentificationClient()
             ->requestConsentementDetail($code)
         ;
 
-        $info = $this->grdfAdictService
-            ->getContratService()
+        $info = $this->grdfAdict
+            ->getContratClient()
             ->requestInfoTechnique(
                 $this->getAccessToken(),
                 $consentement->pce
             )
         ;
-
-        $info = $this->grdfAdictProvider->consentCheckFromCode($code);
 
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
             $feed = new Feed();
@@ -218,7 +218,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
         try {
             return $this->grdfAdict
-                ->getContratService()
+                ->getContratClient()
                 ->requestInfoTechnique(
                     $accessToken,
                     $this->getPce($feed)
@@ -239,7 +239,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
         try {
             $meteringData = $this
                 ->grdfAdict
-                ->getConsommationService()
+                ->getConsommationClient()
                 ->requestConsoInformative(
                     $this->getAccessToken(),
                     $this->getPce($feed),
@@ -291,7 +291,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),
                     DataValue::FREQUENCY_DAY,
-                    $value
+                    (string) $value
                 );
             }
         }

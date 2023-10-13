@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\FeedDataProvider;
 
-use Aeneria\EnedisDataConnectApi\Model\Address;
-use Aeneria\EnedisDataConnectApi\Model\Token;
-use Aeneria\EnedisDataConnectApi\Service\MockDataConnectService;
+use App\EnedisDataConnect\Client\MockDataConnectClient;
+use App\EnedisDataConnect\Model\Address;
+use App\EnedisDataConnect\Model\Token;
 use App\Entity\Feed;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Services\NotificationService;
@@ -26,7 +26,7 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
             $this->getFeedRepository(),
             $this->getFeedDataRepository(),
             $this->getDataValueRepository(),
-            new MockDataConnectService(),
+            new MockDataConnectClient(),
             $router ?? $this->createMock(RouterInterface::class),
             $serializer ?? $this->createMock(SerializerInterface::class),
             $this->createMock(NotificationService::class),

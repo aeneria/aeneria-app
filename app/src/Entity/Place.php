@@ -4,48 +4,42 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Place
  */
 class Place implements \JsonSerializable
 {
-    /** @var int */
-    private $id;
+    private int $id;
+    private string $name;
+    private string $icon = 'home';
+    private bool $public = false;
+    private ?User $user;
+    /** @var Collection<int, User> */
+    private Collection $allowedUsers;
+    /** @var Collection<int, Feed> */
+    private Collection $feeds;
 
-    /** @var string */
-    private $name;
+    private ?\DateTimeInterface $createdAt;
+    private ?\DateTimeInterface $updatedAt;
 
-    /** @var string */
-    private $icon = 'home';
-
-    /** @var bool */
-    private $public = false;
-
-    /** @var User|null */
-    private $user;
-
-    /** @var User[]|null */
-    private $allowedUsers = [];
-
-    /** @var Feed[]|null */
-    private $feeds = [];
-
-    /** @var ?\DateTimeInterface */
-    private $createdAt;
-    /** @var ?\DateTimeInterface */
-    private $updatedAt;
-
-    /** @var \DateTimeImmutable|null
-     *
+    /**
      * N'est pas hydraté automatiquement. à setter à la main si nécessaire
      */
-    private $periodeMin = null;
+    private ?\DateTimeImmutable $periodeMin = null;
 
-    /** @var \DateTimeImmutable|null
-     *
+    /**
      * N'est pas hydraté automatiquement. à setter à la main si nécessaire
      */
-    private $periodeMax = null;
+    private ?\DateTimeImmutable $periodeMax = null;
+
+    public function __construct()
+    {
+        $this->allowedUsers = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -109,22 +103,18 @@ class Place implements \JsonSerializable
 
     public function addFeed(Feed $feed): self
     {
-        // If the feed we try to add is already there, we delete it
-        $this->removeFeed($feed);
-
-        $this->feeds[] = $feed;
-        $feed->addPlace($this);
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds->add($feed);
+            $feed->addPlace($this);
+        }
 
         return $this;
     }
 
     public function removeFeed(Feed $feed): self
     {
-        foreach ($this->feeds as $key => $currentFeed) {
-            if ($currentFeed->getId() && $currentFeed->getId() === $feed->getId()) {
-                unset($this->feeds[$key]);
-                $feed->removePlace($this);
-            }
+        if ($this->feeds->removeElement($feed)) {
+            $feed->removePlace($this);
         }
 
         return $this;
@@ -135,7 +125,7 @@ class Place implements \JsonSerializable
      */
     public function setFeeds(array $feeds): self
     {
-        $this->feeds = $feeds;
+        $this->feeds = new ArrayCollection($feeds);
 
         foreach ($feeds as $feed) {
             $feed->addPlace($this);
@@ -144,10 +134,7 @@ class Place implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return \Iterable<Feed>
-     */
-    public function getFeeds(): iterable
+    public function getFeeds(): Collection
     {
         return $this->feeds;
     }
@@ -161,24 +148,22 @@ class Place implements \JsonSerializable
             ));
         }
 
-        if ($this->feeds) {
-            foreach ($this->feeds as $feed) {
-                if ($feedType === $feed->getFeedType()) {
-                    return $feed;
-                }
-            }
-        }
-
-        return null;
+        return $this
+            ->feeds
+            ->findFirst(
+                fn (int $key, Feed $feed) => $feedType === $feed->getFeedType()
+            )
+        ;
     }
 
     public function findFeed(int $feedId): ?Feed
     {
-        foreach ($this->feeds as $feed) {
-            if ($feedId === $feed->getId()) {
-                return $feed;
-            }
-        }
+        return $this
+            ->feeds
+            ->findFirst(
+                fn (int $key, Feed $feed) => $feedId === $feed->getId()
+            )
+        ;
     }
 
     /**
@@ -206,21 +191,16 @@ class Place implements \JsonSerializable
             ));
         }
 
-        if ($this->feeds) {
-            foreach ($this->feeds as $feed) {
-                if ($feedData = $feed->getFeedData($feedDataType)) {
-                    return $feedData;
-                }
+        foreach ($this->feeds as $feed) {
+            if ($feedData = $feed->getFeedData($feedDataType)) {
+                return $feedData;
             }
         }
 
         return null;
     }
 
-    /**
-     * @return \Iterable<User>
-     */
-    public function getAllowedUsers(): ?iterable
+    public function getAllowedUsers(): Collection
     {
         return $this->allowedUsers;
     }
@@ -230,7 +210,7 @@ class Place implements \JsonSerializable
      */
     public function setAllowedUsers(array $allowedUsers): self
     {
-        $this->allowedUsers = $allowedUsers;
+        $this->allowedUsers = new ArrayCollection($allowedUsers);
 
         return $this;
     }
@@ -272,7 +252,7 @@ class Place implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $feedList = \iterator_to_array($this->getFeeds());
 

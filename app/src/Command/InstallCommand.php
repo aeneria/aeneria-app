@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Services\JwtService;
@@ -7,6 +9,7 @@ use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -18,15 +21,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class InstallCommand extends Command
 {
-    /** @var InputInterface */
-    protected $defaultInput;
-    /** @var SymfonyStyle */
-    protected $io;
+    private EntityManagerInterface $entityManager;
+    private JwtService $jwtService;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
-    /** @var JwtService */
-    private $jwtService;
+    protected InputInterface $defaultInput;
+    protected SymfonyStyle $io;
 
     public function __construct(EntityManagerInterface $entityManager, JwtService $jwtService)
     {
@@ -40,7 +39,7 @@ class InstallCommand extends Command
         $this
             ->setName('aeneria:install')
             ->setDescription('aeneria installer.')
-            ->addArgument('user', null, InputOption::VALUE_OPTIONAL, 'Linux user who will run aeneria cron')
+            ->addArgument('user', InputArgument::OPTIONAL, 'Linux user who will run aeneria cron')
             ->addOption('reset', null, InputOption::VALUE_NONE, 'Reset current database')
         ;
     }
@@ -110,7 +109,7 @@ class InstallCommand extends Command
 
         if ($fulfilled) {
             // return version should be like "PostgreSQL 9.5.4 on x86_64-apple-darwin15.6.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.38), 64-bit"
-            $version = (string) $doctrineManager->getConnection()->executeQuery('SELECT version();')->fetchFirstColumn();
+            $version = (string) $doctrineManager->getConnection()->executeQuery('SELECT version();')->fetchFirstColumn()[0];
 
             \preg_match('/PostgreSQL ([0-9\.]+)/i', $version, $matches);
 
@@ -234,7 +233,7 @@ class InstallCommand extends Command
                 '--no-debug' => true,
                 '--env' => $this->defaultInput->getOption('env') ?: 'dev',
             ]
-            );
+        );
 
         if ($this->defaultInput->getOption('no-interaction')) {
             $parameters = \array_merge($parameters, ['--no-interaction' => true]);
@@ -254,7 +253,8 @@ class InstallCommand extends Command
 
             throw new \RuntimeException(
                 'The command "' . $command . "\" generates some errors: \n\n"
-                . $output->fetch());
+                . $output->fetch()
+            );
         }
 
         return $this;

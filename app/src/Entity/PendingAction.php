@@ -9,25 +9,14 @@ namespace App\Entity;
  */
 class PendingAction
 {
-    const TOKEN_LENGTH = 10;
+    public const TOKEN_LENGTH = 10;
 
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $token;
-
-    /** @var User|null */
-    private $user;
-
-    /** @var string */
-    private $action;
-
-    /** @var \DateTimeInterface */
-    private $expirationDate;
-
-    /** @var array */
-    private $param = [];
+    private int $id;
+    private string $token;
+    private ?User $user;
+    private string $action;
+    private \DateTimeInterface $expirationDate;
+    private array $param = [];
 
     public function getId(): ?int
     {

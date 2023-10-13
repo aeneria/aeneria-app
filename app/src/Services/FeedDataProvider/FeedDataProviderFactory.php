@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\Feed;
@@ -8,9 +10,6 @@ class FeedDataProviderFactory
 {
     /** @var EnedisDataConnectProvider */
     private $enedisDataConnectProvider;
-
-    /** @deprecated @var LinkyDataProvider */
-    private $linkyDataProvider;
 
     /** @var MeteoFranceDataProvider */
     private $meteoFranceDataProvider;
@@ -26,14 +25,12 @@ class FeedDataProviderFactory
 
     public function __construct(
         EnedisDataConnectProvider $enedisDataConnectProvider,
-        LinkyDataProvider $linkyDataProvider,
         MeteoFranceDataProvider $meteoFranceDataProvider,
         GrdfAdictProvider $grdfAdictProvider,
         ProxifiedGrdfAdictProvider $proxifiedGrdfAdictProvider,
         FakeDataProvider $fakeDataProvider
     ) {
         $this->enedisDataConnectProvider = $enedisDataConnectProvider;
-        $this->linkyDataProvider = $linkyDataProvider;
         $this->meteoFranceDataProvider = $meteoFranceDataProvider;
         $this->grdfAdictProvider = $grdfAdictProvider;
         $this->proxifiedGrdfAdictProvider = $proxifiedGrdfAdictProvider;
@@ -69,8 +66,6 @@ class FeedDataProviderFactory
         switch ($feedDataProviderType) {
             case Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
                 return $this->enedisDataConnectProvider;
-            case Feed::FEED_DATA_PROVIDER_LINKY:
-                return $this->linkyDataProvider;
             case Feed::FEED_DATA_PROVIDER_METEO_FRANCE:
                 return $this->meteoFranceDataProvider;
             case Feed::FEED_DATA_PROVIDER_GRDF_ADICT:
@@ -97,8 +92,6 @@ class FeedDataProviderFactory
             // This one should not be present in prod
             // so we don't put it here
             // Feed::FEED_DATA_PROVIDER_FAKE,
-            // This one is depracted
-            // Feed::FEED_DATA_PROVIDER_LINKY,
         ];
     }
 }

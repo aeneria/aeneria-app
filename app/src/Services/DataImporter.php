@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Entity\DataValue;
@@ -31,8 +33,6 @@ class DataImporter
 
     /**
      * Import data for a place from a .ods file
-     *
-     * @return string filename should be an ODS file
      */
     public function importPlace(Place $place, string $filename): array
     {
@@ -115,7 +115,8 @@ class DataImporter
                             "Feuille %s - ligne %s - La colone %s n'est pas valide.",
                             $frequencyMachineName,
                             $number,
-                            $feedData->getDataType())
+                            $feedData->getDataType()
+                        )
                         ;
 
                         $this->logger->error("Import Data - " . $message, ['place' => $place->getId()]);
@@ -135,7 +136,13 @@ class DataImporter
 
         if (\count($dataValues)) {
             $to = \end($dataValues)->getDate();
-            $this->dataValueRepository->massImport($from, $to, $firstRow, $frequency, $dataValues);
+            $this->dataValueRepository->massImport(
+                $from,
+                \DateTimeImmutable::createFromInterface($to),
+                $firstRow,
+                $frequency,
+                $dataValues
+            );
         }
 
         return $errors;

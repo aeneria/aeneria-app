@@ -81,7 +81,7 @@ services:
         tags:
             - name: 'doctrine.event_subscriber'
 
-    Aeneria\EnedisDataConnectApi\Service\DataConnectService:
+    App\EnedisDataConnect\Client\DataConnectClient:
         arguments:
             $httpClient: "@http_client"
             $authEndpoint: "@=parameter('aeneria.proxy_for_enedis') ? parameter('aeneria.proxy_url') ~ '/enedis-data-connect' : parameter('aeneria.enedis.endpoint_auth')"
@@ -91,10 +91,12 @@ services:
             $clientSecret: "%aeneria.enedis.client_secret%"
             $redirectUri: "%aeneria.enedis.redirect_uri%"
 
-    Aeneria\EnedisDataConnectApi\Service\DataConnectServiceInterface:
-        alias: Aeneria\EnedisDataConnectApi\Service\DataConnectService
+    App\EnedisDataConnect\Client\DataConnectClientInterface:
+        alias: App\EnedisDataConnect\Client\DataConnectClient
 
-    Aeneria\GrdfAdictApi\Service\GrdfAdictService:
+    App\GrdfAdict\ClientGrdfAdictProxyClient: ~
+
+    App\GrdfAdict\Client\GrdfAdictClient:
         arguments:
             $httpClient: "@http_client"
             $authEndpoint: "%aeneria.grdf.endpoint_auth%"
@@ -103,5 +105,5 @@ services:
             $clientSecret: "%aeneria.grdf.client_secret%"
             $redirectUri: "%aeneria.grdf.redirect_uri%"
 
-    Aeneria\GrdfAdictApi\Service\GrdfAdictServiceInterface:
-        alias: Aeneria\GrdfAdictApi\Service\GrdfAdictService
+    App\GrdfAdict\Client\GrdfAdictClientInterface:
+        alias: App\GrdfAdict\Client\GrdfAdictClient

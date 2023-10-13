@@ -4,11 +4,9 @@
     "type": "project",
     "license": "AGPL-3.0-or-later",
     "require": {
-        "php": "^7.3",
+        "php": "^8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "aeneria/enedis-data-connect": "^1.2",
-        "aeneria/grdf-adict": "^0.10",
         "box/spout": "^3.1",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.7",
@@ -44,7 +42,8 @@
         "symfony/yaml": "5.4.*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "^3.34",
+        "phpstan/phpstan": "^1.10",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
         "symfony/debug-bundle": "5.4.*",
@@ -90,6 +89,16 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "phpcs": "./vendor/bin/php-cs-fixer fix --verbose --allow-risky=yes",
+        "phpstan": "./vendor/bin/phpstan --memory-limit=1G",
+        "checks": [
+            "@phpcs",
+            "@phpstan"
+        ],
+        "dry-checks": [
+            "@phpcs --dry-run",
+            "@phpstan"
         ]
     },
     "conflict": {

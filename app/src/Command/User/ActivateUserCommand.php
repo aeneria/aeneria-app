@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\User;
 
 use App\Repository\UserRepository;
@@ -15,16 +17,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class ActivateUserCommand extends Command
 {
-    /** @var InputInterface */
-    protected $defaultInput;
+    private EntityManagerInterface $entityManager;
+    private UserRepository $userRepository;
 
-    /** @var SymfonyStyle */
-    protected $io;
-
-    /** @var EntityManagerInterface */
-    private $entityManager;
-    /** @var UserRepository */
-    private $userRepository;
+    protected SymfonyStyle $io;
 
     public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
@@ -44,10 +40,7 @@ class ActivateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->defaultInput = $input;
-
         $this->io = new SymfonyStyle($input, $output);
-        $this->defaultInput = $input;
 
         if (!$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {
             $this->io->error("User can't be found.");

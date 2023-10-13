@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
 use App\Entity\DataValue;
@@ -22,24 +24,24 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
     /**
      * Different usefull URIs.
      */
-    const SYNOP_BASE_PATH = 'https://donneespubliques.meteofrance.fr/';
-    const SYNOP_DATA = 'donnees_libres/Txt/Synop/synop.'; // exemple synop.2018040800.csv
-    const SYNOP_POSTES = '/postesSynop.csv';
+    public const SYNOP_BASE_PATH = 'https://donneespubliques.meteofrance.fr/';
+    public const SYNOP_DATA = 'donnees_libres/Txt/Synop/synop.'; // exemple synop.2018040800.csv
+    public const SYNOP_POSTES = '/postesSynop.csv';
 
     /**
      * Reference Temperature for DJU calculation.
      */
-    const BASE_DJU = 18;
+    public const BASE_DJU = 18;
 
     /**
      * Convert degree Kelvin to Celsius.
      */
-    const KELVIN_TO_CELSIUS = 273.15;
+    public const KELVIN_TO_CELSIUS = 273.15;
 
     /**
      * Correspondance between synop variable name and our variable name.
      */
-    const SYNOP_DATA_NAME = [
+    public const SYNOP_DATA_NAME = [
         'STATION_ID' => 'numer_sta',
         'TEMPERATURE' => 't',
         'PRESSURE' => 'pres',
@@ -121,16 +123,16 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
                 $stations[] = new StationSynop(
                     (int) $row['ID'],
                     \ucwords(\strtolower($row['Nom'])),
-                    (float) $row['Latitude'],
-                    (float) $row['Longitude'],
-                    (float) $row['Altitude']
+                    $row['Latitude'],
+                    $row['Longitude'],
+                    $row['Altitude']
                 );
             }
         }
 
         // Sort stations.
-        \usort($stations, function (StationSynop $station) {
-            return $station->label;
+        \usort($stations, function (StationSynop $stationA, StationSynop $stationB) {
+            return $stationA->label >= $stationB->label ? 1 : -1;
         });
 
         return $this->availableStations = $stations;
@@ -271,7 +273,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
                         $feedData,
                         $date,
                         DataValue::FREQUENCY_DAY,
-                        $fastenData[$dataType]
+                        (string) $fastenData[$dataType]
                     );
                 }
             }
@@ -383,7 +385,7 @@ class MeteoFranceDataProvider extends AbstractFeedDataProvider
 
         // Calculate DJU with temperature max and min of the day.
         if (!empty($fastenData['TEMPERATURE_MAX']) && !empty($fastenData['TEMPERATURE_MIN'])) {
-            $fastenData['DJU'] = \round($this->calculateDju($fastenData['TEMPERATURE_MIN'], $fastenData['TEMPERATURE_MAX'], 1));
+            $fastenData['DJU'] = \round($this->calculateDju($fastenData['TEMPERATURE_MIN'], $fastenData['TEMPERATURE_MAX']));
         }
 
         return $fastenData;

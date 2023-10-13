@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
 use App\Entity\Feed;
@@ -22,19 +24,16 @@ class FetchingError
         $this->exception = $exception;
     }
 
-    /** @var Feed */
     public function getFeed(): Feed
     {
         return $this->feed;
     }
 
-    /** @var \DateTimeInterface */
     public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
 
-    /** @var \Exception */
     public function getException(): \Exception
     {
         return $this->exception;

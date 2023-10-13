@@ -20,7 +20,7 @@ final class PendingActionServiceTest extends AppTestCase
 {
     public function testCreateDataConnectCallbackAction()
     {
-        $user = $this->createUser();
+        $user = $this->createUser(['id' => 0]);
         $place = $this->createPlace(['user' => $user]);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
@@ -61,7 +61,7 @@ final class PendingActionServiceTest extends AppTestCase
 
     public function testCreateDataFetchAction()
     {
-        $user = $this->createUser();
+        $user = $this->createUser(['id' => 0]);
         $feed = $this->createFeed();
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
@@ -108,7 +108,7 @@ final class PendingActionServiceTest extends AppTestCase
 
     public function testCreateDataImportAction()
     {
-        $user = $this->createUser();
+        $user = $this->createUser(['id' => 0]);
         $place = $this->createPlace(['user' => $user]);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
@@ -145,7 +145,7 @@ final class PendingActionServiceTest extends AppTestCase
 
     public function testFindActionByToken()
     {
-        $user = $this->createUser();
+        $user = $this->createUser(['id' => 0]);
         $place = $this->createPlace(['user' => $user]);
 
         $repository = $this->createMock(PendingActionRepository::class);
@@ -176,8 +176,8 @@ final class PendingActionServiceTest extends AppTestCase
 
     public function testFindActionByTokenDeniedWrongUser()
     {
-        $user = $this->createUser();
-        $user2 = $this->createUser();
+        $user = $this->createUser(['id' => 0]);
+        $user2 = $this->createUser(['id' => 0]);
         $place = $this->createPlace(['user' => $user]);
 
         $repository = $this->createMock(PendingActionRepository::class);
@@ -233,8 +233,9 @@ final class PendingActionServiceTest extends AppTestCase
 
     public function testProcessDataConnectCallback()
     {
-        $user = $this->createUser();
+        $user = $this->createUser(['id' => 1]);
         $action = new PendingAction();
+        $action->setId(12);
         $action->setAction(PendingActionService::ACTION_DATA_CONNECT_CALLBACK);
         $action->setUser($user);
 
@@ -273,6 +274,7 @@ final class PendingActionServiceTest extends AppTestCase
     {
         $user = $this->createUser();
         $action = new PendingAction();
+        $action->setId(12);
         $action->setAction(PendingActionService::ACTION_IMPORT_DATA);
         $action->setUser($user);
         $action->setSingleParam('place', 'userid');
@@ -334,6 +336,7 @@ final class PendingActionServiceTest extends AppTestCase
     {
         $user = $this->createUser();
         $action = new PendingAction();
+        $action->setId(12);
         $action->setAction(PendingActionService::ACTION_FETCH_DATA);
         $action->setUser($user);
         $action->setSingleParam('feed', 'feedID');

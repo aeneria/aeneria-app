@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Services\AeneriaProxyClient;
+declare(strict_types=1);
 
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictConsentException;
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictDataNotFoundException;
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictQuotaExceededException;
-use Aeneria\GrdfAdictApi\Model\InfoTechnique;
-use Aeneria\GrdfAdictApi\Model\MeteringData;
+namespace App\GrdfAdict\Client;
+
+use App\GrdfAdict\Exception\GrdfAdictConsentException;
+use App\GrdfAdict\Exception\GrdfAdictDataNotFoundException;
+use App\GrdfAdict\Exception\GrdfAdictException;
+use App\GrdfAdict\Exception\GrdfAdictQuotaExceededException;
+use App\GrdfAdict\Model\InfoTechnique;
+use App\GrdfAdict\Model\MeteringData;
 use App\Services\JwtService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -18,7 +20,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  *
  * @see https://gitlab.com/aeneria/aeneria-proxy
  */
-class GrdfAdictProxyClient
+class GrdfAdictAeneriaProxyClient
 {
     /** @var string */
     private $proxyUrl;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Feed;
 
 use App\Entity\Place;
@@ -18,12 +20,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class GenerateAllMeteoFeedCommand extends Command
 {
-    /** @var FeedRepository */
-    private $feedRepository;
-    /** @var MeteoFranceDataProvider */
-    private $meteoFranceDataProvider;
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private UserRepository $userRepository;
+    private FeedRepository $feedRepository;
+    private MeteoFranceDataProvider $meteoFranceDataProvider;
+    private EntityManagerInterface $entityManager;
+
+    private SymfonyStyle $io;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -50,8 +52,6 @@ class GenerateAllMeteoFeedCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->defaultInput = $input;
-
         $this->io = new SymfonyStyle($input, $output);
 
         if (!$user = $this->userRepository->findOneByUsername($input->getArgument('username'))) {

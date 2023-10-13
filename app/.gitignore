@@ -20,9 +20,14 @@
 ###> friendsofphp/php-cs-fixer ###
 /.php_cs
 /.php_cs.cache
+.php-cs-fixer.cach
 ###< friendsofphp/php-cs-fixer ###
 
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

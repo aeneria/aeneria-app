@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:8.1-fpm
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends iproute2 zip zlib1g-dev libzip-dev libxml2-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev postgresql postgresql-client libpq-dev -yqq && \

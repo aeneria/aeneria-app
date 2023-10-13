@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Feed;
 
 use App\Repository\FeedRepository;
@@ -14,8 +16,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class CleanOprhanFeedsCommand extends Command
 {
-    /** @var FeedRepository */
-    private $feedRepository;
+    private FeedRepository $feedRepository;
+    private SymfonyStyle $io;
 
     public function __construct(FeedRepository $feedRepository)
     {
@@ -34,8 +36,6 @@ class CleanOprhanFeedsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->defaultInput = $input;
-
         $this->io = new SymfonyStyle($input, $output);
 
         $feeds = $this->feedRepository->findOrphans();

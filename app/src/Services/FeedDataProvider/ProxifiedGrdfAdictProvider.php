@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\FeedDataProvider;
 
-use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
-use Aeneria\GrdfAdictApi\Model\InfoTechnique;
-use Aeneria\GrdfAdictApi\Model\Token;
+use App\GrdfAdict\Exception\GrdfAdictException;
+use App\GrdfAdict\Model\InfoTechnique;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
 use App\Entity\Place;
+use App\GrdfAdict\Client\GrdfAdictAeneriaProxyClient;
 use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
-use App\Services\AeneriaProxyClient\GrdfAdictProxyClient;
 use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -24,7 +25,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
 {
-    /** @var GrdfAdictProxyClient */
+    /** @var GrdfAdictAeneriaProxyClient */
     private $grdfAdictProxy;
     /** @var SerializerInterface */
     private $serializer;
@@ -34,7 +35,7 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        GrdfAdictProxyClient $grdfAdictProxy,
+        GrdfAdictAeneriaProxyClient $grdfAdictProxy,
         NotificationService $notificationService,
         SerializerInterface $serializer,
         LoggerInterface $logger
@@ -236,7 +237,7 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
                     $feedData,
                     \DateTimeImmutable::createFromFormat('!Y-m-d', $currentDate),
                     DataValue::FREQUENCY_DAY,
-                    $value
+                    (string) $value
                 );
             }
         }
