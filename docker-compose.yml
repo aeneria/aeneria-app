@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: db
+        POSTGRES_USER: db
+    ports:
+        - 5439:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+        - site
+
+  php-fpm:
+      container_name: php-fpm
+      build: ./docker/php-fpm
+      depends_on:
+        - postgres
+      volumes:
+        - ./app/:/var/www
+      networks:
+        - site
+
+  nginx:
+      container_name: nginx
+      build: ./docker/nginx
+      volumes:
+        - ./app/:/var/www
+        - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./docker/nginx/sites/:/etc/nginx/sites-available
+        - ./docker/nginx/conf.d/:/etc/nginx/conf.d
+      depends_on:
+        - php-fpm
+      ports:
+        - "8066:80"
+        - "44366:443"
+      networks:
+        - site
+
+networks:
+  site:
+
+volumes:
+  pgdata:

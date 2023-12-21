@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "alwaysStrict": true,
+        "baseUrl": "./",
+        "checkJs": false,
+        "declaration": false,
+        "inlineSources": true,
+        "jsx": "preserve",
+        "lib": ["es2015", "es2015.promise", "es5", "es6", "dom"],
+        "module": "es2020",
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "paths": { "@/*": ["./js/*"] },
+        "removeComments": true,
+        "sourceMap": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "target": "es2015"
+    },
+    "include": [
+        "js/**/*.ts",
+        "js/**/*.tsx",
+        "js/**/*.vue"
+    ],
+}

@@ -1,0 +1,38 @@
+# METEO
+
+api.feed.meteo.station-list:
+  path: /meteo/station-list
+  controller: App\Controller\ApiFeedMeteoController::getMeteoStationList
+
+api.feed.meteo.update:
+  path: /meteo/update/{placeId}
+  controller: App\Controller\ApiFeedMeteoController::update
+
+# Enedis/Linky
+
+api.feed.enedis.consent.callback:
+  path: /enedis/consent/callback
+  controller: App\Controller\ApiFeedEnedisController::consentCallback
+
+api.feed.enedis.consent:
+  path: /enedis/consent/{placeId}
+  controller: App\Controller\ApiFeedEnedisController::consent
+
+api.feed.enedis.consent.check:
+  path: /enedis/consent/{placeId}/check
+  controller: App\Controller\ApiFeedEnedisController::consentCheck
+
+# Grdf/Gazpar
+
+api.feed.grdf.consent.callback:
+  path: /grdf/consent/callback
+  controller: App\Controller\ApiFeedGrdfController::consentCallback
+
+api.feed.grdf.consent:
+  path: /grdf/consent/{placeId}
+  controller: App\Controller\ApiFeedGrdfController::consent
+
+api.feed.grdf.consent.check:
+  path: /grdf/consent/{placeId}/check
+  controller: App\Controller\ApiFeedGrdfController::consentCheck
+

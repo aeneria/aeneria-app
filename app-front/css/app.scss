@@ -1,0 +1,89 @@
+
+@import "fonts";
+@import "variables";
+
+
+// @import 'primevue/resources/themes/lara-light-indigo/theme.css';
+@import 'primevue/resources/themes/tailwind-light/theme.css';
+// @import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+// @import 'primevue/resources/themes/bootstrap4-light-purple/theme.css';
+@import 'primevue/resources/primevue.css';
+@import 'primeflex/primeflex.css';
+@import 'primeicons/primeicons.css';
+@import 'tippy.js/dist/tippy.css';
+
+@import "~@fortawesome/fontawesome-free/css/all.css";
+
+body {
+  background-color: $body-bg-color;
+  font-family: $font-text;
+}
+.p-component {
+  font-family: $font-text;
+}
+
+.p-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+
+  .p-card-title {
+    font-family: $font-title;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.p-title {
+  font-family: $font-title;
+  font-weight: 500;
+}
+
+.graph text, .tippy-content{
+  font-family: $font-text;
+  font-size: 0.8rem;
+}
+
+h1 {
+  font-family: $font-title;
+  font-weight: 500;
+  margin-top: 0;
+}
+
+h2 {
+  font-family: $font-title;
+  font-size: 1.50rem;
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 1rem;
+  font-family: $font-title;
+}
+a.p-button {
+  text-decoration: none;
+}
+.p-datepicker table td > span {
+  border-radius: 20px;
+}
+.p-divider.bg-color .p-divider-content {
+  background-color: $body-bg-color;
+}
+.p-button.p-button-sm,
+.p-button.p-button-rounded.p-button-sm {
+  height: 2rem;
+  &.p-button-icon-only {
+    width: 2rem;
+  }
+}
+
+.p-button.p-button-xs,
+.p-button.p-button-rounded.p-button-xs {
+  height: 1.5rem;
+  &.p-button-icon-only {
+    width: 1.5rem;
+  }
+  .p-button-icon {
+    font-size: 0.675rem;
+  }
+}
+

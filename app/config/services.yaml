@@ -1,0 +1,107 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'fr'
+    aeneria.version: '2@beta2'
+
+    # aeneria features
+    aeneria.user.max_places: "%env(AENERIA_USER_MAX_PLACES)%"
+    aeneria.user.can_share_place: "%env(AENERIA_USER_CAN_SHARE_PLACE)%"
+    aeneria.user.can_fetch: "%env(AENERIA_USER_CAN_FETCH)%"
+    aeneria.user.can_export: "%env(AENERIA_USER_CAN_EXPORT)%"
+    aeneria.user.can_import: "%env(AENERIA_USER_CAN_IMPORT)%"
+    aeneria.place_can_be_public: "%env(AENERIA_PLACE_CAN_BE_PUBLIC)%"
+    aeneria.demo_mode: "%env(AENERIA_DEMO_MODE)%"
+    aeneria.welcome_message: "%env(AENERIA_WELCOME_MESSAGE)%"
+
+    aeneria.proxy_url: "%env(AENERIA_PROXY_URL)%"
+    aeneria.proxy_for_enedis: "%env(AENERIA_PROXY_FOR_ENEDIS)%"
+    aeneria.proxy_for_grdf: "%env(AENERIA_PROXY_FOR_GRDF)%"
+
+    # Enedis Data Connect
+    aeneria.enedis.client_id: "%env(ENEDIS_CLIENT_ID)%"
+    aeneria.enedis.client_secret: "%env(ENEDIS_CLIENT_SECRET)%"
+    aeneria.enedis.redirect_uri: "%env(ENEDIS_REDIRECT_URI)%"
+    aeneria.enedis.endpoint_auth: "%env(ENEDIS_ENDPOINT_AUTH)%"
+    aeneria.enedis.endpoint_token: "%env(ENEDIS_ENDPOINT_TOKEN)%"
+    aeneria.enedis.endpoint_data: "%env(ENEDIS_ENDPOINT_DATA)%"
+
+    # Grdf Adict
+    aeneria.grdf.client_id: "%env(GRDF_CLIENT_ID)%"
+    aeneria.grdf.client_secret: "%env(GRDF_CLIENT_SECRET)%"
+    aeneria.grdf.redirect_uri: "%env(GRDF_REDIRECT_URI)%"
+    aeneria.grdf.endpoint_auth: "%env(GRDF_ENDPOINT_AUTH)%"
+    aeneria.grdf.endpoint_data: "%env(GRDF_ENDPOINT_DATA)%"
+
+    # Matomo
+    env(MATOMO_URL): ""
+    env(MATOMO_SITE_ID): ""
+    aeneria.matomo.url: "%env(MATOMO_URL)%"
+    aeneria.matomo.site_id: "%env(MATOMO_SITE_ID)%"
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $projectDir: '%kernel.project_dir%'
+            $userMaxPlaces: '%aeneria.user.max_places%'
+            $userCanSharePlace: '%aeneria.user.can_share_place%'
+            $userCanFetch: '%aeneria.user.can_fetch%'
+            $userCanExport: '%aeneria.user.can_export%'
+            $userCanImport: '%aeneria.user.can_import%'
+            $isDemoMode: '%aeneria.demo_mode%'
+            $placeCanBePublic: '%aeneria.place_can_be_public%'
+            $proxyUrl: '%aeneria.proxy_url%'
+            $useProxyForEnedis: '%aeneria.proxy_for_enedis%'
+            $useProxyForGrdf: '%aeneria.proxy_for_grdf%'
+
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Model,Entity,Migrations,Tests,Kernel.php}'
+
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    App\Repository\:
+        public: true # For unit tests
+        resource: '../src/Repository'
+        tags: ['doctrine.repository']
+
+    App\Twig\:
+        resource: '../src/Twig'
+        tags: ['twig.extension', 'container.hot_path']
+
+    App\EventListener\DoctrineEventSubscriber:
+        tags:
+            - name: 'doctrine.event_subscriber'
+
+    Aeneria\EnedisDataConnectApi\Client\DataConnectClient:
+        arguments:
+            $httpClient: "@http_client"
+            $authEndpoint: "@=parameter('aeneria.proxy_for_enedis') ? parameter('aeneria.proxy_url') ~ '/enedis-data-connect' : parameter('aeneria.enedis.endpoint_auth')"
+            $tokenEndpoint: "@=parameter('aeneria.proxy_for_enedis') ? parameter('aeneria.proxy_url') ~ '/enedis-data-connect' : parameter('aeneria.enedis.endpoint_token')"
+            $dataEndpoint: "%aeneria.enedis.endpoint_data%"
+            $clientId: "%aeneria.enedis.client_id%"
+            $clientSecret: "%aeneria.enedis.client_secret%"
+            $redirectUri: "%aeneria.enedis.redirect_uri%"
+
+    Aeneria\EnedisDataConnectApi\Client\DataConnectClientInterface:
+        alias: Aeneria\EnedisDataConnectApi\Client\DataConnectClient
+
+    Aeneria\GrdfAdictApi\Client\GrdfAdictClient:
+        arguments:
+            $httpClient: "@http_client"
+            $authEndpoint: "%aeneria.grdf.endpoint_auth%"
+            $dataEndpoint: "%aeneria.grdf.endpoint_data%"
+            $clientId: "%aeneria.grdf.client_id%"
+            $clientSecret: "%aeneria.grdf.client_secret%"
+            $redirectUri: "%aeneria.grdf.redirect_uri%"
+
+    Aeneria\GrdfAdictApi\Client\GrdfAdictClientInterface:
+        alias: Aeneria\GrdfAdictApi\Client\GrdfAdictClient

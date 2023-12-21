@@ -1,7 +1,0 @@
-security.login:
-  path: /login
-  controller: App\Controller\SecurityController::login
-
-security.logout:
-  path: /logout
-  controller: App\Controller\SecurityController::logout

@@ -1,13 +1,24 @@
-# æneria version 1.1.6
+# æneria version 2.0.0
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-* Fix the way the app log error while fetching data form Enedis.
+* **Nouvelle interface** (en vuejs)
+* **Ajout du support du compteur Gazpar**
+* Aide utilisateur in-app
+* Tableau de bord d'administration amélioré
+* Meilleure gestion de la détection de lien cassé æneria/enedis, æneria/grdf
+* Mise à jour vers Symfony 5.4
+* Nouvel environnement de développement en docker
+* Autres résolutions de bugs mineurs
 
 ## Anciennes versions
+### 1.1.6
+
+* Fix the way the app log error while fetching data form Enedis.
+*
 ### 1.1.5
 
 * Fix bug in Notificatin feature

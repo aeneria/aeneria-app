@@ -3,8 +3,9 @@ Installer æneria
 
 Tout d'abord pour utiliser æneria,
 
-* Vous devez avoir accès à un Linky et à un `compte Enedis <https://espace-client-connexion.enedis.fr/auth/UI/Login?realm=particuliers>`_
-* Via ce compte, vous devez activer l'option *Courbe de charge* pour pouvoir avoir accès à votre consommation horaire
+* Vous devez avoir accès
+    * soit à un compteur Linky (et donc à un compte Enedis raccroché à ce compteur)
+    * soit à un compteur Gazpar (et donc à un compte GRDF raccroché à ce compteur)
 
 Installation via YunoHost
 **************************
@@ -35,17 +36,6 @@ Prérequis
 
 * PHP 7.3 et supérieur
 * PostgreSQL (9.6 et supérieur)
-
-.. note::
-
-    MySQL et SQLite devraient fonctionner mais vous aurez à adapter les fichiers ``.env`` & ``config/packages/doctrine.yaml``
-
-    Il n'est pas prévu que æneria Les supporte *officiellement*.
-
-.. warning::
-
-    Les migrations de æneria sont uniquement générées pour PostgreSQL, si vous utilisez un autre type de serveur, gardez à l'esprit qu'il
-    faudra vérifier chaque migration avant de la lancer !
 
 Installation
 =============
@@ -95,38 +85,6 @@ Copiez le fichier ``.env.dist`` puis adaptez-le :
     ...
 
 
-Adaptez également le fichier ``config/packages/doctrine.yaml`` si votre serveur de base de données n'est pas PostgreSQL :
-
-.. code-block:: yaml
-
-    # fichier config/packages/doctrine.yaml
-
-    ...
-
-    # Renseigner ici les info de votre dbal
-    doctrine:
-        dbal:
-            # Configure these for your database server
-
-            # Mysql
-            # driver: 'pdo_mysql'
-            # server_version: '5.2'
-            # charset: utf8mb4
-            # default_table_options:
-            #     charset: utf8mb4
-            #     collate: utf8mb4_unicode_ci
-
-            # PostgreSQL
-            driver: 'pdo_pgsql'
-            server_version: '9.6'
-            charset: utf8
-
-            #SQLLite
-            # driver:   pdo_sqlite
-            # charset: utf8
-
-    ...
-
 3. Générer la base de données
 -------------------------------
 
@@ -136,27 +94,16 @@ Lancez le commande d'installation d'aeneria :
 
     php7.3 bin/console aeneria:install
 
-4. Configurer Enedis Data-connect
-------------------------------------
+4. Configurer Enedis Data-connect et GRDF ADICT
+------------------------------------------------
 
-æneria utilise l'API Enedis Data Connect pour obtenir les données de consommation
-d'électricité. Mais pour utiliser cette API il est nécessaire d'avoir un compte.
-Seulement, pour ouvrir un compte sur la Data Hub d'Enedis, il faut être une entreprise,
-une association ou une collectivité locale.
+.. note::
 
-Pour permettre à tout le monde d'utiliser æneria, un proxy a été développé pour qu'une
-instance d'æneria puisse bénéficier du compte d'aeneria.com.
+    Avant d'aller plus loin, lisez :ref:`la page sur notre proxy communautaire <proxy>` pour savoir
+    dans quel mode vous souhaitez utiliser æneria.
 
-Au lieu d'utiliser le comportement classique pour se connecter à Enedis :
-
-``votre instance æneria <=[via vos propres identifiants de connexion enedis]=> Enedis Data Connect``
-
-Vous pouvez configurez votre instance comme ça :
-
-``votre instance æneria <=> proxy.aeneria.com <=[via les identifiants de connexion d'aeneria.com]=> Enedis Data Connect``
-
-Il y a donc 2 sortes de mode :
-
+Mode 1 - Connexion directe à Enedis et GRDF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Soit vous créez un compte Enedis et vous renseignez vos informations de connexion
 de cette manière dans le fichier `.env` :
 
@@ -166,6 +113,15 @@ de cette manière dans le fichier `.env` :
 
     ...
 
+    # æneria proxy URL
+    AENERIA_PROXY_URL=https://proxy.aeneria.com
+    # should the app use æneria proxy (1 for yes, 0 for no)
+    AENERIA_PROXY_FOR_ENEDIS=0
+    AENERIA_PROXY_FOR_GRDF=0
+
+    ## If you use your own API keys, fill the fields below
+
+    # Enedis Data Hub
     ENEDIS_CLIENT_ID=[votreClientIdEnedis]
     ENEDIS_CLIENT_SECRET=[votreClientSecretEnedis]
     ENEDIS_REDIRECT_URI=[votreRedirectUriEnedis]
@@ -173,13 +129,28 @@ de cette manière dans le fichier `.env` :
     ENEDIS_ENDPOINT_TOKEN=https://gw.prd.api.enedis.fr
     ENEDIS_ENDPOINT_DATA=https://gw.prd.api.enedis.fr
 
+    # Grdf adict
+    GRDF_CLIENT_ID=[votreClientIdGrdf]
+    GRDF_CLIENT_SECRET=[votreClientSecretGrdf]
+    GRDF_REDIRECT_URI=[votreRedirectUriGrdf]
+    GRDF_ENDPOINT_AUTH=https://sofit-sso-oidc.grdf.fr
+    GRDF_ENDPOINT_DATA=https://api.grdf.fr
+
     ...
 
 .. note::
 
-    Pour obtenir vos propres identifiants de connexion, rendez-vous sur
+    Pour obtenir vos propres identifiants de connexion Enedis Data Connect, rendez-vous sur
     `le Data Hub d'Enedis <https://datahub-enedis.fr/data-connect/>`_
 
+.. note::
+
+    Pour obtenir vos propres identifiants de connexion Grdf Adict, rendez-vous sur
+    `le portail Grdf Adict <https://sites.grdf.fr/web/portail-api-grdf-adict/>`_
+
+
+Mode 2 - Connexion à Enedis et GRDF via le proxy æneria
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
 
 .. code-block:: bash
@@ -188,20 +159,31 @@ Soit vous utilisez proxy.aeneria.com en utilisant cette configuration
 
     ...
 
-    ENEDIS_ENDPOINT_AUTH=https://proxy.aeneria.com/enedis-data-connect
-    ENEDIS_ENDPOINT_TOKEN=https://proxy.aeneria.com/enedis-data-connect
+    # æneria proxy URL
+    AENERIA_PROXY_URL=https://proxy.aeneria.com
+    # should the app use æneria proxy (1 for yes, 0 for no)
+    AENERIA_PROXY_FOR_ENEDIS=1
+    AENERIA_PROXY_FOR_GRDF=1
+
+    # les variables en dessous _doivent_ rester
+
+    # Enedis Data Hub
+    ENEDIS_CLIENT_ID=%%ENEDIS_CLIENT_ID%%
+    ENEDIS_CLIENT_SECRET=%%ENEDIS_CLIENT_SECRET%%
+    ENEDIS_REDIRECT_URI=%%ENEDIS_REDIRECT_URI%%
+    ENEDIS_ENDPOINT_AUTH=https://mon-compte-particulier.enedis.fr
+    ENEDIS_ENDPOINT_TOKEN=https://gw.prd.api.enedis.fr
     ENEDIS_ENDPOINT_DATA=https://gw.prd.api.enedis.fr
+
+    # Grdf adict
+    GRDF_CLIENT_ID=%%GRDF_CLIENT_ID%%
+    GRDF_CLIENT_SECRET=%%GRDF_CLIENT_SECRET%%
+    GRDF_REDIRECT_URI=%%GRDF_REDIRECT_URI%%
+    GRDF_ENDPOINT_AUTH=https://sofit-sso-oidc.grdf.fr
+    GRDF_ENDPOINT_DATA=https://api.grdf.fr
 
     ...
 
-.. warning::
-
-    proxy.aeneria.com est un serveur communautaire fourni à titre gracieux.
-
-    **Merci de l'utiliser raisonnablement et dans un cadre privé non-commercial.**
-
-    Nous nous réservons le droit de bannir de ce serveur les instances qui en feront
-    un usage trop intensif, et ce **sans explications et sans avertissement**.
 
 5. Créer un administrateur
 ----------------------------------------
@@ -213,39 +195,6 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
     php7.3 bin/console aeneria:user:add [admin_email] [password]
     php7.3 bin/console aeneria:user:grant [admin_email]
 
-6. Générer l'ensemble des flux Météo (facultatif - usage avancée)
--------------------------------------------------------------------
-
-.. danger::
-
-    Cette fonctionnalité correspond à un usage avancée.
-    Testez d'abord æneria sans l'utiliser.
-
-Si vous le souhaitez, vous pouvez créer l'ensemble des flux météo pour l'utilisateur admin.
-L'intérêt est de commencer à stocker toutes les données météo dès l'installation de l'instance.
-Un utilisateur qui créée son compte dans le futur aura directement accès à l'ensemble de données météos
-depuis l'installation d'æneria.
-Par contre, en faisant ça, l'ensemble des données des 62 stations Météo sera historisé, ce qui augmente
-la taille de la base de données.
-
-Pour ça, lancer la commande suivante :
-
-.. code-block:: sh
-
-    php7.3 bin/console aeneria:feed:meteo:generate-all [username]
-
-.. note::
-
-    Les données Météo étant des données publiques, il n’y a pour elles pas de problème de confidentialité.
-    Pour simplifier les traitements, les données des flux météo ne sont jamais supprimées. Si vous souhaitez
-    quand même les supprimer, vous pouver le faire en utilisant la commande ``aeneria:feed:clean-orphans``.
-
-.. warning::
-
-    L'adresse générée par cette commande n'est pas destinée à ensuite être utilisée via
-    l'interface d'æneria. Elle a pour unique but de définir une première fois l'ensemble
-    des stations météo.
-
 7. Mettre en place le CRON
 ----------------------------
 
@@ -253,7 +202,8 @@ Mettez en place le CRON en exécutant la commande suivante :
 
 .. code-block:: sh
 
-    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:fetch-data" > /etc/cron.d/aeneria
+    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:fetch-data" > /etc/cron.d/aeneria-fetch
+    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:pending-action:process-expired" > /etc/cron.d/aeneria-pending-action
     # où [user] est l'utilisateur linux qui lancera le cron
 
 

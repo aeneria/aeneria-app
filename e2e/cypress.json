@@ -1,5 +1,0 @@
-{
-    "baseUrl": "http://pilea.local",
-    "ignoreTestFiles": "**/examples/*.js",
-    "screenshotOnRunFailure": "true"
-}

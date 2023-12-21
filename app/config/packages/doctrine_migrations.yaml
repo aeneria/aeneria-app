@@ -1,0 +1,4 @@
+doctrine_migrations:
+    migrations_paths:
+        'App\Migrations' : 'src/Migrations'
+    em: default

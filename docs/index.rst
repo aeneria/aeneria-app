@@ -1,18 +1,18 @@
 æneria : Analyser votre consommation d'énergie
 ################################################
 
-.. image:: img/favicon.png
+.. image:: img/logo.png
    :align: center
 
 `æneria <https://aeneria.com>`_ est un petit tableau de bord permettant d'analyser sa
-consommation d''énergie à partir des données d'un Linky.
+consommation d''énergie à partir des données d'un Linky et Gazpar.
 
 L'idée derrière æneria est de permettre à l'utilsateur de pouvoir, au travers de quelques tableaux de bord :
 
 * Mieux comprendre sa consommation d'énergie
 * Analyser sa consommation en fonction de données météorologiques
 
-.. image:: img/dash_accueil.png
+.. image:: img/preview-1.png
    :align: center
 
 
@@ -27,14 +27,8 @@ Installer æneria facilement avec YunoHost !
    :maxdepth: 2
    :caption: Contenu :
 
-   utilisateur
    administrateur
    developpeur
-
-Todo List
-**************************
-
- * Ajouter la consommation de gaz via l'API GRDF ADICT
 
 Support
 **************************
