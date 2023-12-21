@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\FeedDataProvider;
 
-use App\GrdfAdict\Exception\GrdfAdictException;
-use App\GrdfAdict\Model\InfoTechnique;
-use App\GrdfAdict\Model\Token;
-use App\GrdfAdict\Client\GrdfAdictClientInterface;
+use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
+use Aeneria\GrdfAdictApi\Model\InfoTechnique;
+use Aeneria\GrdfAdictApi\Model\Token;
+use Aeneria\GrdfAdictApi\Client\GrdfAdictClientInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;

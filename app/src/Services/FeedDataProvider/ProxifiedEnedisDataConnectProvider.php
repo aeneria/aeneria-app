@@ -8,7 +8,6 @@ use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
 use Aeneria\EnedisDataConnectApi\Model\Address;
 use Aeneria\EnedisDataConnectApi\Model\MeteringValue;
 use Aeneria\EnedisDataConnectApi\Model\Token;
-use Aeneria\EnedisDataConnectApi\Client\DataConnectClientInterface;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
@@ -18,6 +17,7 @@ use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use App\Services\NotificationService;
+use App\Services\ProxyClient\EnedisDataConnectClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -28,31 +28,24 @@ use Symfony\Component\Serializer\SerializerInterface;
  *
  * @see https://datahub-enedis.fr/data-connect/documentation/
  */
-class EnedisDataConnectProvider extends AbstractFeedDataProvider
+class ProxifiedEnedisDataConnectProvider extends AbstractFeedDataProvider
 {
-    /** @var RouterInterface */
-    private $router;
-    /** @var DataConnectClientInterface */
-    private $dataConnect;
+    /** @var EnedisDataConnectClient */
+    private $enedisDataConnectProxy;
     /** @var SerializerInterface */
     private $serializer;
-
-    /** @var Token */
-    private $accessToken = null;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        DataConnectClientInterface $dataConnect,
-        RouterInterface $router,
+        EnedisDataConnectClient $enedisDataConnectProxy,
         SerializerInterface $serializer,
         NotificationService $notificationService,
         LoggerInterface $logger
     ) {
-        $this->router = $router;
-        $this->dataConnect = $dataConnect;
+        $this->enedisDataConnectProxy = $enedisDataConnectProxy;
         $this->serializer = $serializer;
 
         parent::__construct(
@@ -80,6 +73,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     {
         return [
             'PDL' => 'Point de livraison',
+            'ENCODED_PDL' => 'PDL encodé, envoyé par le proxy au consentement',
         ];
     }
 
@@ -103,8 +97,8 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         $errors = [];
 
         foreach ($feeds as $feed) {
-            if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-                throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
+            if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+                throw new \InvalidArgumentException("Should be an array of Proxified EnedisDataConnect Feeds overhere !");
             }
 
             // In order to avoid to flood enedis API, if for some reason, a feed gets too many errors
@@ -117,7 +111,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
             }
 
             if ($force || !$this->feedRepository->isUpToDate($feed, $date, $feed->getFrequencies())) {
-                $this->logger->debug("EnedisDataConnect - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+                $this->logger->debug("EnedisDataConnectProxified - Start fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
 
                 if ($data = $this->fetchDataForFeed($date, $feed, $errors)) {
                     $this->persistData($date, $feed, $data);
@@ -126,7 +120,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
                     $this->entityManager->persist($feed);
                     $this->entityManager->flush();
 
-                    $this->logger->info("EnedisDataConnect - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
+                    $this->logger->info("EnedisDataConnectProxified - Data fetched", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d')]);
                 }
             }
         }
@@ -139,39 +133,28 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
      */
     public function getConsentUrl(string $state): string
     {
-        return $this->dataConnect
-            ->getAuthorizeV1Client()
-            ->getConsentPageUrl(
-                'P12M',
-                $state
-            )
-        ;
+        return $this->enedisDataConnectProxy->getConsentPageUrl($state);
     }
 
     /**
      * Check enedis consent from code. And update/create
      * related feed.
      */
-    public function handleConsentCallback(string $usagePointId, Place $place): void
+    public function handleConsentCallback(string $encodedPdl, Place $place): void
     {
-        $address = $this->dataConnect
-            ->getCustomersV5Client()
-            ->requestUsagePointAdresse(
-                $this->getAccessToken(),
-                $usagePointId
-            )
-        ;
+        $address = $this->enedisDataConnectProxy->requestUsagePointAdresse($encodedPdl);
 
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
             $feed = new Feed();
             $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
-            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
+            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED);
             $place->addFeed($feed);
         }
 
         $feed->setName((string) $address);
         $feed->setSingleParam('ADDRESS', $this->serializer->serialize($address, 'json'));
-        $feed->setSingleParam('PDL', $usagePointId);
+        $feed->setSingleParam('PDL', $address->usagePointId);
+        $feed->setSingleParam('ENCODED_PDL', $encodedPdl);
         $feed->setFetchError(0);
 
         $this->entityManager->persist($feed);
@@ -190,17 +173,11 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
     public function consentCheck(Feed $feed): ?Address
     {
         if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Should be an array of EnedisDataConnect Feeds overhere !");
+            throw new \InvalidArgumentException("Should be an array of Proxified EnedisDataConnect Feeds overhere !");
         }
 
         try {
-            return $this->dataConnect
-                ->getCustomersV5Client()
-                ->requestUsagePointAdresse(
-                    $this->getAccessToken(),
-                    $this->getPdl($feed)
-                )
-            ;
+            return $this->enedisDataConnectProxy->requestUsagePointAdresse($this->getEncodedPdl($feed));
         } catch (DataConnectException $e) {
             return null;
         }
@@ -213,14 +190,14 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         try {
             $data['days'] = $this->getDailyData($date, $feed);
         } catch (DataConnectException $e) {
-            $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+            $this->logger->error("ProxifiedEnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
         }
 
         try {
             $data['hours'] = $this->getHourlyData($date, $feed);
         } catch (DataConnectException $e) {
-            $this->logger->error("EnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
+            $this->logger->error("ProxifiedEnedisDataConnect - Error while fetching data", ['feed' => $feed->getId(), 'date' => $date->format('Y-m-d'), 'exception' => $e->getMessage()]);
             $errors[] = new FetchingError($feed, $date, $e);
         }
 
@@ -233,11 +210,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         $startDate = clone $date;
 
         $meteringData = $this
-            ->dataConnect
-            ->getMeteringDataV5Client()
+            ->enedisDataConnectProxy
             ->requestConsumptionLoadCurve(
-                $this->getAccessToken(),
-                $this->getPdl($feed),
+                $this->getEncodedPdl($feed),
                 $startDate,
                 $endDate
             )
@@ -267,11 +242,9 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         $startDate = clone $date;
 
         $meteringData = $this
-            ->dataConnect
-            ->getMeteringDataV5Client()
+            ->enedisDataConnectProxy
             ->requestDailyConsumption(
-                $this->getAccessToken(),
-                $this->getPdl($feed),
+                $this->getEncodedPdl($feed),
                 $startDate,
                 $endDate
             )
@@ -351,8 +324,8 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
     public function getAddressFrom(Feed $feed): ?Address
     {
-        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a Proxified EnedisDataConnect feed.");
         }
 
         if (\array_key_exists('ADDRESS', $feed->getParam()) && $address = $feed->getParam()['ADDRESS']) {
@@ -367,30 +340,19 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
     public function getPdl(Feed $feed): ?string
     {
-        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
-            throw new \InvalidArgumentException("Given feed is not a enedisDataConnect feed.");
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a Proxified EnedisDataConnect feed.");
         }
 
         return $feed->getParam()['PDL'] ?? null;
     }
 
-    /**
-     * Get a valid Access Token
-     */
-    private function getAccessToken(): string
+    public function getEncodedPdl(Feed $feed): ?string
     {
-        if (!$this->accessToken->isAccessTokenStillValid()) {
-            $this->accessToken = $this
-                ->dataConnect
-                ->getAuthorizeV1Client()
-                ->requestAuthorizationToken()
-            ;
-
-            // On évite de dépasser les quotas de Enedis,
-            // on attends 1 seconde entre chaque requête
-            \sleep(1);
+        if (Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED !== $feed->getFeedDataProviderType()) {
+            throw new \InvalidArgumentException("Given feed is not a Proxified EnedisDataConnect feed.");
         }
 
-        return $this->accessToken->accessToken;
+        return $feed->getParam()['ENCODED_PDL'] ?? null;
     }
 }

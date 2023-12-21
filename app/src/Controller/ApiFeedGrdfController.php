@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\GrdfAdict\Exception\GrdfAdictException;
+use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
 use App\Entity\Feed;
 use App\Entity\User;
 use App\Repository\PlaceRepository;
@@ -18,17 +18,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ApiFeedGrdfController extends AbstractAppController
 {
-    /** @var bool */
-    private $useProxyForGrdf;
+    private bool $useProxyForGrdf;
 
-    /** @var PendingActionService */
-    private $actionService;
-    /** @var JwtService */
-    private $jwtService;
-    /** @var GrdfAdictProvider */
-    private $grdfAdictProvider;
-    /** @var ProxifiedGrdfAdictProvider */
-    private $proxifiedGrdfAdictProvider;
+    private PendingActionService $actionService;
+    private JwtService $jwtService;
+    private GrdfAdictProvider $grdfAdictProvider;
+    private ProxifiedGrdfAdictProvider $proxifiedGrdfAdictProvider;
 
     public function __construct(
         bool $userCanSharePlace,

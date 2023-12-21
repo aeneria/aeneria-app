@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services\FeedDataProvider;
 
-use App\GrdfAdict\Exception\GrdfAdictException;
-use App\GrdfAdict\Model\InfoTechnique;
+use Aeneria\GrdfAdictApi\Exception\GrdfAdictException;
+use Aeneria\GrdfAdictApi\Model\InfoTechnique;
 use App\Entity\DataValue;
 use App\Entity\Feed;
 use App\Entity\FeedData;
 use App\Entity\Place;
-use App\GrdfAdict\Client\GrdfAdictAeneriaProxyClient;
 use App\Model\FetchingError;
 use App\Repository\DataValueRepository;
 use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use App\Services\NotificationService;
+use App\Services\ProxyClient\GrdfAdictClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
 {
-    /** @var GrdfAdictAeneriaProxyClient */
+    /** @var GrdfAdictClient */
     private $grdfAdictProxy;
     /** @var SerializerInterface */
     private $serializer;
@@ -35,7 +35,7 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
         FeedRepository $feedRepository,
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
-        GrdfAdictAeneriaProxyClient $grdfAdictProxy,
+        GrdfAdictClient $grdfAdictProxy,
         NotificationService $notificationService,
         SerializerInterface $serializer,
         LoggerInterface $logger

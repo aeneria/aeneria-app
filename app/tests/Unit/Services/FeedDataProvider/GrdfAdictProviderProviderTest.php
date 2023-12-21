@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\FeedDataProvider;
 
-use App\GrdfAdict\Client\MockGrdfAdictClient;
+use Aeneria\GrdfAdictApi\Client\MockGrdfAdictClient;
 use App\Services\FeedDataProvider\GrdfAdictProvider;
 use App\Services\NotificationService;
 use App\Tests\AppTestCase;

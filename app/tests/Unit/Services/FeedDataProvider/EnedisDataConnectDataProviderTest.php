@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\FeedDataProvider;
 
-use App\EnedisDataConnect\Client\MockDataConnectClient;
-use App\EnedisDataConnect\Model\Address;
-use App\EnedisDataConnect\Model\Token;
+use Aeneria\EnedisDataConnectApi\Client\MockDataConnectClient;
+use Aeneria\EnedisDataConnectApi\Model\Address;
+use Aeneria\EnedisDataConnectApi\Model\Token;
 use App\Entity\Feed;
 use App\Services\FeedDataProvider\EnedisDataConnectProvider;
 use App\Services\NotificationService;

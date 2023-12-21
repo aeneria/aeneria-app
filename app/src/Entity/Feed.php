@@ -17,6 +17,7 @@ class Feed implements \JsonSerializable
     public const FEED_TYPE_METEO = 'METEO';
 
     public const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT = 'ENEDIS_DATA_CONNECT';
+    public const FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED = 'ENEDIS_DATA_CONNECT_PROXIFIED';
     public const FEED_DATA_PROVIDER_GRDF_ADICT = 'GRDF_ADICT';
     public const FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED = 'GRDF_ADICT_PROXIFIED';
     public const FEED_DATA_PROVIDER_METEO_FRANCE = 'METEO_FRANCE';
@@ -48,7 +49,10 @@ class Feed implements \JsonSerializable
             self::FEED_TYPE_ELECTRICITY => [
                 'NAME' => 'Électricité',
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_ELEC],
-                'DATA_PROVIDER_TYPE' => [self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT],
+                'DATA_PROVIDER_TYPE' => [
+                    self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT,
+                    self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED,
+                ],
                 'FREQUENCIES' => DataValue::getAllFrequencies(),
             ],
             self::FEED_TYPE_GAZ => [
@@ -56,7 +60,7 @@ class Feed implements \JsonSerializable
                 'DATA_TYPE' => [FeedData::FEED_DATA_CONSO_GAZ],
                 'DATA_PROVIDER_TYPE' => [
                     self::FEED_DATA_PROVIDER_GRDF_ADICT,
-                    self::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED
+                    self::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED,
                 ],
                 'FREQUENCIES' => [
                     'DAY' => DataValue::FREQUENCY_DAY,
@@ -110,6 +114,7 @@ class Feed implements \JsonSerializable
     {
         switch ($feedDataProviderType) {
             case self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
+            case self::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED:
                 return 'Compteur Linky';
             case self::FEED_DATA_PROVIDER_GRDF_ADICT:
             case self::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED:

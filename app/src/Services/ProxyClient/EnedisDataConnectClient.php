@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\GrdfAdict\Client;
+namespace App\Services\ProxyClient;
 
-use App\GrdfAdict\Exception\GrdfAdictConsentException;
-use App\GrdfAdict\Exception\GrdfAdictDataNotFoundException;
-use App\GrdfAdict\Exception\GrdfAdictException;
-use App\GrdfAdict\Exception\GrdfAdictQuotaExceededException;
-use App\GrdfAdict\Model\InfoTechnique;
-use App\GrdfAdict\Model\MeteringData;
+use Aeneria\EnedisDataConnectApi\Exception\DataConnectConsentException;
+use Aeneria\EnedisDataConnectApi\Exception\DataConnectDataNotFoundException;
+use Aeneria\EnedisDataConnectApi\Exception\DataConnectException;
+use Aeneria\EnedisDataConnectApi\Exception\DataConnectQuotaExceededException;
+use Aeneria\EnedisDataConnectApi\Model\Address;
+use Aeneria\EnedisDataConnectApi\Model\MeteringData;
 use App\Services\JwtService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * A service to use æneria-proxy grdf adict API.
+ * A service to use æneria-proxy enedis data connect API.
  *
  * @see https://gitlab.com/aeneria/aeneria-proxy
  */
-class GrdfAdictAeneriaProxyClient
+class EnedisDataConnectClient
 {
     /** @var string */
     private $proxyUrl;
@@ -51,13 +51,13 @@ class GrdfAdictAeneriaProxyClient
             'state' => $state,
             'key' => $this->jwtService->getPublicKey(),
             'callback' => \urlencode(
-                $this->router->generate('api.feed.grdf.consent.callback', [], RouterInterface::ABSOLUTE_URL)
+                $this->router->generate('api.feed.enedis.consent.callback', [], RouterInterface::ABSOLUTE_URL)
             ),
         ];
 
         $response = $this->httpClient->request(
             'POST',
-            \sprintf('%s/grdf-adict/authorize', $this->proxyUrl),
+            \sprintf('%s/enedis-data-connect/authorize', $this->proxyUrl),
             [
                 'body' => $body,
             ]
@@ -68,14 +68,14 @@ class GrdfAdictAeneriaProxyClient
         return \json_decode($response->getContent());
     }
 
-    public function requestInfoTechnique(string $encodedPce): InfoTechnique
+    public function requestUsagePointAdresse(string $encodedPdl): Address
     {
         $response = $this->httpClient->request(
             'GET',
             \sprintf(
-                '%s/grdf-adict/adict/v2/pce/%s/info-technique',
+                '%s/enedis-data-connect/%s/addresse',
                 $this->proxyUrl,
-                $encodedPce
+                $encodedPdl
             )
         );
 
@@ -87,20 +87,47 @@ class GrdfAdictAeneriaProxyClient
             $this->jwtService->getPrivateKey(),
         );
 
-        return InfoTechnique::fromJson($decrypted);
+        return Address::fromJson($decrypted);
     }
 
-    public function requestConsoInformative(
-        $encodedPce,
+    public function requestConsumptionLoadCurve(
+        $encodedPdl,
         \DateTimeInterface $dateDebut,
         \DateTimeInterface $dateFin
     ): MeteringData {
         $response = $this->httpClient->request(
             'GET',
             \sprintf(
-                '%s/grdf-adict/adict/v2/pce/%s/conso-informative/%s/%s',
+                '%s/enedis-data-connect/%s/consumption-load-curve/%s/%s',
                 $this->proxyUrl,
-                $encodedPce,
+                $encodedPdl,
+                $dateDebut->format('Y-m-d'),
+                $dateFin->format('Y-m-d')
+            )
+        );
+
+        $this->checkResponse($response);
+
+        \openssl_private_decrypt(
+            $response->getContent(),
+            $decrypted,
+            $this->jwtService->getPrivateKey(),
+        );
+
+        return MeteringData::fromJson($decrypted);
+    }
+
+    public function requestDailyConsumption(
+        $encodedPdl,
+        \DateTimeInterface $dateDebut,
+        \DateTimeInterface $dateFin
+    ): MeteringData {
+        $response = $this->httpClient->request(
+            'GET',
+            \sprintf(
+                '%s/enedis-data-connect/%s/daily-consumption/%s/%s',
+                $this->proxyUrl,
+                $encodedPdl,
                 $dateDebut->format('Y-m-d'),
                 $dateFin->format('Y-m-d')
             )
@@ -124,13 +151,13 @@ class GrdfAdictAeneriaProxyClient
         if (200 !== $code) {
             switch ($code) {
                 case 403:
-                    throw new GrdfAdictConsentException($response->getContent(false), $code);
+                    throw new DataConnectConsentException($response->getContent(false), $code);
                 case 404:
-                    throw new GrdfAdictDataNotFoundException($response->getContent(false), $code);
+                    throw new DataConnectDataNotFoundException($response->getContent(false), $code);
                 case 429:
-                    throw new GrdfAdictQuotaExceededException($response->getContent(false), $code);
+                    throw new DataConnectQuotaExceededException($response->getContent(false), $code);
                 default:
-                    throw new GrdfAdictException($response->getContent(false), $code);
+                    throw new DataConnectException($response->getContent(false), $code);
             }
         }
     }
