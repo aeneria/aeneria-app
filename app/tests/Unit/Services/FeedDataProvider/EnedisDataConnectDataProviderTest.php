@@ -21,7 +21,6 @@ class EnedisDataConnectDataProviderTest extends AppTestCase
         RouterInterface $router = null
     ): EnedisDataConnectProvider {
         return new EnedisDataConnectProvider(
-            false,
             $this->getEntityManager(),
             $this->getFeedRepository(),
             $this->getFeedDataRepository(),
