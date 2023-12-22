@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Services\JwtService;
+use App\Services\SodiumCryptoService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,12 +17,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class GenerateKeyCommand extends Command
 {
-    /** @var JwtService */
-    private $jwtService;
-
-    public function __construct(JwtService $jwtService)
-    {
-        $this->jwtService = $jwtService;
+    public function __construct(
+        private JwtService $jwtService,
+        private SodiumCryptoService $sodiumCryptoService,
+    ) {
         parent::__construct();
     }
 
@@ -39,15 +38,22 @@ class GenerateKeyCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         if (!$input->getOption('force') && $this->jwtService->keyExists()) {
-            $io->warning("Key seems to already exists, use '--force' to regenerate it.");
+            $io->warning("RSA keys seem to already exist, use '--force' to regenerate it.");
+        } else {
+            $io->text('Creating RSA keys...');
+            $this->jwtService->generateRsaKey();
 
-            return 0;
+            $io->success('RSA key has been successfully generated.');
         }
 
-        $io->text('Creating key...');
-        $this->jwtService->generateRsaKey();
+        if (!$input->getOption('force') && $this->sodiumCryptoService->keyExists()) {
+            $io->warning("Sodium Keypair seems to already exist, use '--force' to regenerate it.");
+        } else {
+            $io->text('Creating Sodium keypair...');
+            $this->sodiumCryptoService->generateKeypair();
 
-        $io->success('RSA key has been successfully generated.');
+            $io->success('Sodium keypair has been successfully generated.');
+        }
 
         return 0;
     }

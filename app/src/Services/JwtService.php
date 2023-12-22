@@ -7,16 +7,13 @@ namespace App\Services;
 use Firebase\JWT\JWT;
 use Symfony\Component\Filesystem\Exception\IOException;
 
-/**
- * Data exporter services.
- */
 class JwtService
 {
-    private $privateDir;
-    private $privateKeyFilename;
-    private $privateKey;
-    private $publicKeyFilename;
-    private $publicKey;
+    private string $privateDir;
+    private string $privateKeyFilename;
+    private ?string $privateKey = null;
+    private string $publicKeyFilename;
+    private ?string $publicKey = null;
 
     public function __construct(string $projectDir)
     {

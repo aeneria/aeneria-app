@@ -50,7 +50,7 @@ class ApiPlaceController extends AbstractAppController
 
         $place = new Place();
         $place->setUser($user);
-        $place->setName($data->name);
+        $place->setName((string) $data->name);
 
         $meteoFeed = $feedRepository->getOrCreateMeteoFranceFeed([
             'STATION_ID' => $station->key,

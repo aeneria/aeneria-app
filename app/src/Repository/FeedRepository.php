@@ -167,7 +167,7 @@ class FeedRepository extends ServiceEntityRepository
             $meteoFranceFeed
                 ->setFeedType(Feed::FEED_TYPE_METEO)
                 ->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_METEO_FRANCE)
-                ->setName($param['STATION_ID'])
+                ->setName((string) $param['STATION_ID'])
                 ->setParam($param)
             ;
             $this->createDependentFeedData($meteoFranceFeed);

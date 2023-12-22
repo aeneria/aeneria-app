@@ -11,6 +11,7 @@ use Aeneria\EnedisDataConnectApi\Exception\DataConnectQuotaExceededException;
 use Aeneria\EnedisDataConnectApi\Model\Address;
 use Aeneria\EnedisDataConnectApi\Model\MeteringData;
 use App\Services\JwtService;
+use App\Services\SodiumCryptoService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -22,34 +23,18 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  */
 class EnedisDataConnectClient
 {
-    /** @var string */
-    private $proxyUrl;
-
-    /** @var HttpClientInterface */
-    private $httpClient;
-    /** @var RouterInterface */
-    private $router;
-    /** @var JwtService */
-    private $jwtService;
-
     public function __construct(
-        string $proxyUrl,
-        HttpClientInterface $httpClient,
-        RouterInterface $router,
-        JwtService $jwtService
-    ) {
-        $this->proxyUrl = $proxyUrl;
-
-        $this->httpClient = $httpClient;
-        $this->router = $router;
-        $this->jwtService = $jwtService;
-    }
+        private string $proxyUrl,
+        private HttpClientInterface $httpClient,
+        private RouterInterface $router,
+        private SodiumCryptoService $sodiumCryptoService
+    ) {}
 
     public function getConsentPageUrl(string $state): string
     {
         $body = [
             'state' => $state,
-            'key' => $this->jwtService->getPublicKey(),
+            'key' => \urlencode($this->sodiumCryptoService->getPublicKey()),
             'callback' => \urlencode(
                 $this->router->generate('api.feed.enedis.consent.callback', [], RouterInterface::ABSOLUTE_URL)
             ),
@@ -81,11 +66,8 @@ class EnedisDataConnectClient
 
         $this->checkResponse($response);
 
-        \openssl_private_decrypt(
-            $response->getContent(),
-            $decrypted,
-            $this->jwtService->getPrivateKey(),
-        );
+        $content = \json_decode($response->getContent());
+        $decrypted = $this->sodiumCryptoService->open(\urldecode($content->data));
 
         return Address::fromJson($decrypted);
     }
@@ -108,11 +90,8 @@ class EnedisDataConnectClient
 
         $this->checkResponse($response);
 
-        \openssl_private_decrypt(
-            $response->getContent(),
-            $decrypted,
-            $this->jwtService->getPrivateKey(),
-        );
+        $content = \json_decode($response->getContent());
+        $decrypted = $this->sodiumCryptoService->open(\urldecode($content->data));
 
         return MeteringData::fromJson($decrypted);
     }
@@ -135,11 +114,8 @@ class EnedisDataConnectClient
 
         $this->checkResponse($response);
 
-        \openssl_private_decrypt(
-            $response->getContent(),
-            $decrypted,
-            $this->jwtService->getPrivateKey(),
-        );
+        $content = \json_decode($response->getContent());
+        $decrypted = $this->sodiumCryptoService->open(\urldecode($content->data));
 
         return MeteringData::fromJson($decrypted);
     }
