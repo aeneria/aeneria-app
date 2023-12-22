@@ -7,21 +7,21 @@
 
 * **Nouvelle interface** (en vuejs)
 * **Ajout du support du compteur Gazpar**
+* **Mise à jour de l'API Enedis et du serveur proxy communautaire**
 * Aide utilisateur in-app
 * Tableau de bord d'administration amélioré
 * Meilleure gestion de la détection de lien cassé æneria/enedis, æneria/grdf
-* Mise à jour vers Symfony 5.4
-* Nouvel environnement de développement en docker
+* Mise à jour vers Symfony 5.4 & php 8.2
 * Autres résolutions de bugs mineurs
 
 ## Anciennes versions
 ### 1.1.6
 
 * Fix the way the app log error while fetching data form Enedis.
-*
+
 ### 1.1.5
 
-* Fix bug in Notificatin feature
+* Fix bug in Notification feature
 
 ### 1.1.4
 
