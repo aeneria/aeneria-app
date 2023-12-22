@@ -33,9 +33,9 @@ Rendez-vous dans le répertoire parent du répertoire d'installation d'æneria, 
     rsync -av ../aeneria-app-backup/private/ private/
 
     # Lancer les éventuelles migrations :
-    php8.1 bin/console doctrine:migrations:migrate
+    php8.2 bin/console doctrine:migrations:migrate
 
     # Videz les caches :
-    php8.1 bin/console c:c
+    php8.2 bin/console c:c
 
 Et voilà, votre instance d'æneria est à jour !

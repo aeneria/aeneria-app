@@ -112,10 +112,10 @@ Les commandes sont toutes auto-documentées, et s'utilisent comme des commandes 
     cd /emplacement/de/aeneria
 
     # Pour connaitre l'utilisation d'une commande :
-    php8.1 bin/console aeneria:user:activate --help
+    php8.2 bin/console aeneria:user:activate --help
 
     # Pour l'utiliser :
-    php8.1 bin/console aeneria:user:activate username
+    php8.2 bin/console aeneria:user:activate username
 
 
 

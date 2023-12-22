@@ -1,5 +1,5 @@
 default:
-  image: php:8.1
+  image: php:8.2
   before_script:
     - apt-get update -yqq
     - apt-get install git zip zlib1g-dev libzip-dev libxml2-dev libonig-dev libpng-dev libghc-curl-dev libldb-dev libldap2-dev postgresql postgresql-client libpq-dev -yqq
@@ -56,6 +56,18 @@ build:composer-install:
     expire_in: '1 hour'
     paths:
       - app/vendor
+
+# Tests CS and Static analysis
+test:composer-checks:
+  inherit:
+    default: true
+  stage: tests
+  script:
+    - cd app
+    - cp .env.dist .env
+    - php composer.phar install
+    - php composer.phar checks
+    - cd ..
 
 # Tests PHPUNIT
 test:phpunit:

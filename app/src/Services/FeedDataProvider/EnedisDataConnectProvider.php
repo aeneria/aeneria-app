@@ -20,7 +20,6 @@ use App\Repository\FeedRepository;
 use App\Services\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -30,8 +29,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
-    /** @var RouterInterface */
-    private $router;
     /** @var DataConnectClientInterface */
     private $dataConnect;
     /** @var SerializerInterface */
@@ -46,12 +43,10 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         FeedDataRepository $feedDataRepository,
         DataValueRepository $dataValueRepository,
         DataConnectClientInterface $dataConnect,
-        RouterInterface $router,
         SerializerInterface $serializer,
         NotificationService $notificationService,
         LoggerInterface $logger
     ) {
-        $this->router = $router;
         $this->dataConnect = $dataConnect;
         $this->serializer = $serializer;
 
