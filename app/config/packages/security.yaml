@@ -17,6 +17,7 @@ security:
             security: false
         main:
             lazy: true
+            entry_point: form_login
             provider: app_user_provider
             form_login:
                 login_path: security.login
