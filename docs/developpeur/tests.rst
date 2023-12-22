@@ -25,11 +25,11 @@ Pour lancer les tests PHPUNIT, il faut préalablement avoir créé un minimum de
   # On peut maintenant lancer les tests l'esprit tranquille:
   docker compose exec php-fpm bin/phpunit
 
-CS Fixer
+CS Fixer and static ananylis
 -------------
 
-Avant de commiter, passez-donc un petit coup de CS-Fixer pour s'assurer que le style de code reste homogène :
+Avant de commiter, lacner pour s'assurer que le style de code reste homogène :
 
 .. code-block:: bash
 
-  docker compose exec php-fpm vendor/bin/php-cs-fixer fix --allow-risky=yes
+  docker compose exec php-fpm composer checks
