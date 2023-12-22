@@ -34,7 +34,7 @@ d'un PHP récent et d'un serveur de base de données PostgreSQL.
 Prérequis
 ==========
 
-* PHP 7.3 et supérieur
+* PHP 8.1 et supérieur
 * PostgreSQL (9.6 et supérieur)
 
 Installation
@@ -92,7 +92,7 @@ Lancez le commande d'installation d'aeneria :
 
 .. code-block:: sh
 
-    php7.3 bin/console aeneria:install
+    php8.1 bin/console aeneria:install
 
 4. Configurer Enedis Data-connect et GRDF ADICT
 ------------------------------------------------
@@ -192,8 +192,8 @@ Ajoutez une premier utilisateur et donnez-lui les droits administrateur :
 
 .. code-block:: sh
 
-    php7.3 bin/console aeneria:user:add [admin_email] [password]
-    php7.3 bin/console aeneria:user:grant [admin_email]
+    php8.1 bin/console aeneria:user:add [admin_email] [password]
+    php8.1 bin/console aeneria:user:grant [admin_email]
 
 7. Mettre en place le CRON
 ----------------------------
@@ -202,8 +202,8 @@ Mettez en place le CRON en exécutant la commande suivante :
 
 .. code-block:: sh
 
-    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:fetch-data" > /etc/cron.d/aeneria-fetch
-    echo "*/10  *  *  *  * [user] php7.3 /[app_folder]/bin/console aeneria:pending-action:process-expired" > /etc/cron.d/aeneria-pending-action
+    echo "*/10  *  *  *  * [user] php8.1 /[app_folder]/bin/console aeneria:fetch-data" > /etc/cron.d/aeneria-fetch
+    echo "*/10  *  *  *  * [user] php8.1 /[app_folder]/bin/console aeneria:pending-action:process-expired" > /etc/cron.d/aeneria-pending-action
     # où [user] est l'utilisateur linux qui lancera le cron
 
 

@@ -1,9 +1,9 @@
 .. _proxy:
 
-Utiliser le proxy communautaire d'æneria
+Utiliser le serveur communautaire d'æneria
 #########################################
 
-Avant de vous expliquer le fonctionnement du proxy communautaire d'æneria, lisez
+Avant de vous expliquer le fonctionnement du serveur communautaire d'æneria, lisez
 attentivement les 2 paragraphes suivants:
 
 .. warning::
@@ -21,7 +21,7 @@ attentivement les 2 paragraphes suivants:
     votre consentement pour accéder aux données, vous donnez votre consentement
     pour proxy.aeneria.com et non pour *votre* instance æneria.
 
-    Cela signifie que, techniquement, le serveur proxy peut avoir accès à toutes
+    Cela signifie que, techniquement, le serveur communautaire peut avoir accès à toutes
     vos données. Nous sommes de bonne fois (ou du moins nous essayons de l'être
     le plus possible) et nous vous promettons que nous n'irons pas voir vos données.
 
@@ -42,7 +42,7 @@ Mais pour utiliser ces APIs il est nécessaire d'avoir un compte chez ces 2 plat
 un contrat. Seulement, pour ouvrir un compte sur chacune de ces plateformes, il faut être une
 entreprise, une association ou une collectivité locale.
 
-Pour permettre à tout le monde d'utiliser æneria, un proxy a été mis à disposition pour qu'une
+Pour permettre à tout le monde d'utiliser æneria, un serveur communautaire a été mis à disposition pour qu'une
 instance d'æneria puisse bénéficier des clés d'API d'aeneria.com.
 
 Au lieu d'utiliser le comportement classique pour se connecter à Enedis et Grdf:
@@ -65,7 +65,7 @@ Au lieu d'utiliser le comportement classique pour se connecter à Enedis et Grdf
 
 
 
-Vous pouvez configurez votre instance pour quelle passe par proxy.aeneria.com, le proxy
+Vous pouvez configurez votre instance pour quelle passe par proxy.aeneria.com, le serveur
 communautaire :
 
 .. code-block::
