@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Services\JwtService;
+use App\Services\SodiumCryptoService;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -21,16 +22,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class InstallCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-    private JwtService $jwtService;
-
     protected InputInterface $defaultInput;
     protected SymfonyStyle $io;
 
-    public function __construct(EntityManagerInterface $entityManager, JwtService $jwtService)
-    {
-        $this->entityManager = $entityManager;
-        $this->jwtService = $jwtService;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private JwtService $jwtService,
+        private SodiumCryptoService $sodiumCryptoService,
+    ) {
         parent::__construct();
     }
 
@@ -211,11 +210,12 @@ class InstallCommand extends Command
         return $this;
     }
 
-    protected function generateRsaKey()
+    protected function generateKeys()
     {
         $this->io->section('Step 4 of 4: Creating RSA key.');
         $this->io->text('Creating key...');
         $this->jwtService->generateRsaKey();
+        $this->sodiumCryptoService->generateKeypair();
     }
 
     /**
