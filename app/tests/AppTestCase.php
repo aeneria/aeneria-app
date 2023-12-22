@@ -11,7 +11,6 @@ abstract class AppTestCase extends KernelTestCase
 {
     use AppTestTrait;
 
-    private $_container;
     private $_kernel;
 
     /**
