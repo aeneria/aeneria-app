@@ -121,10 +121,11 @@ class ApiFeedEnedisController extends AbstractAppController
         $place = $this->checkPlace($placeId);
 
         $enedisFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY);
-        if (!$$enedisFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
+        if (!$enedisFeed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
             return $this->dataValidationErrorResponse('feed', "Aucun compteur Linky n'est associé à cette adresse.");
         }
 
+        $address = null;
         switch($enedisFeed->getFeedDataProviderType()) {
             case Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
                 $address = $this->enedisDataConnectProvider->consentCheck($enedisFeed);
@@ -136,7 +137,7 @@ class ApiFeedEnedisController extends AbstractAppController
                 return $this->dataValidationErrorResponse('feed', "Aucun compteur Linky n'est associé à cette adresse.");
         }
 
-        if (!$address = $this->enedisDataConnectProvider->consentCheck($enedisFeed)) {
+        if (!$address) {
             return $this->dataValidationErrorResponse('feed', "Il y a eut une erreur au moment de validé le consentement.");
         }
 

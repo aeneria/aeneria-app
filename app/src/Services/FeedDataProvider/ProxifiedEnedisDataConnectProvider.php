@@ -172,7 +172,7 @@ class ProxifiedEnedisDataConnectProvider extends AbstractFeedDataProvider
      */
     public function consentCheck(Feed $feed): ?Address
     {
-        if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT !== $feed->getFeedDataProviderType()) {
+        if ((!$feed instanceof Feed) || Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED !== $feed->getFeedDataProviderType()) {
             throw new \InvalidArgumentException("Should be an array of Proxified EnedisDataConnect Feeds overhere !");
         }
 
@@ -185,7 +185,10 @@ class ProxifiedEnedisDataConnectProvider extends AbstractFeedDataProvider
 
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
-        $data = [];
+        $data = [
+            'days' => [],
+            'hours' => [],
+        ];
 
         try {
             $data['days'] = $this->getDailyData($date, $feed);

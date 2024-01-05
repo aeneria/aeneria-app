@@ -203,7 +203,10 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
 
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
-        $data = [];
+        $data = [
+            'days' => [],
+            'hours' => [],
+        ];
 
         try {
             $data['days'] = $this->getDailyData($date, $feed);
@@ -374,7 +377,7 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
      */
     private function getAccessToken(): string
     {
-        if (!$this->accessToken->isAccessTokenStillValid()) {
+        if (!($this->accessToken && $this->accessToken->isAccessTokenStillValid())) {
             $this->accessToken = $this
                 ->dataConnect
                 ->getAuthorizeV1Client()

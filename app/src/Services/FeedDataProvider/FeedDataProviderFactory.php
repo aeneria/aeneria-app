@@ -8,34 +8,14 @@ use App\Entity\Feed;
 
 class FeedDataProviderFactory
 {
-    /** @var EnedisDataConnectProvider */
-    private $enedisDataConnectProvider;
-
-    /** @var MeteoFranceDataProvider */
-    private $meteoFranceDataProvider;
-
-    /** @var GrdfAdictProvider */
-    private $grdfAdictProvider;
-
-    /** @var ProxifiedGrdfAdictProvider */
-    private $proxifiedGrdfAdictProvider;
-
-    /** @var FakeDataProvider */
-    private $fakeDataProvider;
-
     public function __construct(
-        EnedisDataConnectProvider $enedisDataConnectProvider,
-        MeteoFranceDataProvider $meteoFranceDataProvider,
-        GrdfAdictProvider $grdfAdictProvider,
-        ProxifiedGrdfAdictProvider $proxifiedGrdfAdictProvider,
-        FakeDataProvider $fakeDataProvider
-    ) {
-        $this->enedisDataConnectProvider = $enedisDataConnectProvider;
-        $this->meteoFranceDataProvider = $meteoFranceDataProvider;
-        $this->grdfAdictProvider = $grdfAdictProvider;
-        $this->proxifiedGrdfAdictProvider = $proxifiedGrdfAdictProvider;
-        $this->fakeDataProvider = $fakeDataProvider;
-    }
+        private EnedisDataConnectProvider $enedisDataConnectProvider,
+        private ProxifiedEnedisDataConnectProvider $proxifiedEnedisDataConnectProvider,
+        private MeteoFranceDataProvider $meteoFranceDataProvider,
+        private GrdfAdictProvider $grdfAdictProvider,
+        private ProxifiedGrdfAdictProvider $proxifiedGrdfAdictProvider,
+        private FakeDataProvider $fakeDataProvider
+    ) { }
 
     /**
      * @param Feed[] $feeds
@@ -64,6 +44,8 @@ class FeedDataProviderFactory
     public function fromType(string $feedDataProviderType): FeedDataProviderInterface
     {
         switch ($feedDataProviderType) {
+            case Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED:
+                return $this->proxifiedEnedisDataConnectProvider;
             case Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT:
                 return $this->enedisDataConnectProvider;
             case Feed::FEED_DATA_PROVIDER_METEO_FRANCE:
@@ -86,6 +68,7 @@ class FeedDataProviderFactory
     {
         return [
             Feed::FEED_DATA_PROVIDER_METEO_FRANCE,
+            Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT_PROXIFIED,
             Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT,
             Feed::FEED_DATA_PROVIDER_GRDF_ADICT,
             Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED,

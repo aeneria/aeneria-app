@@ -131,7 +131,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
      */
     private function getAccessToken(): string
     {
-        if (!$this->accessToken->isAccessTokenStillValid()) {
+        if (!($this->accessToken && $this->accessToken->isAccessTokenStillValid())) {
             $this->accessToken = $this
                 ->grdfAdict
                 ->getAuthentificationClient()
@@ -231,7 +231,10 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
-        $data = [];
+        $data = [
+            'days' => [],
+            'hours' => [],
+        ];
 
         $endDate = $date->add(new \DateInterval('P1D'));
         $startDate = clone $date;
