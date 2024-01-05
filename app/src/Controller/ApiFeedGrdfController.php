@@ -102,6 +102,10 @@ class ApiFeedGrdfController extends AbstractAppController
                 $this->grdfAdictProvider->handleConsentCallback($code, $place);
             }
         } catch (GrdfAdictException $e) {
+            $this->logger->error(
+                '[GRDF] - Erreur lors du retour de consentement : ' . $e->getMessage(),
+                ['exception' => $e]
+            );
             return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/error/' . $place->getId()]);
         }
 

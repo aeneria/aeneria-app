@@ -94,13 +94,18 @@ class ApiFeedEnedisController extends AbstractAppController
                 }
                 $this->proxifiedEnedisDataConnectProvider->handleConsentCallback($encodedPdl, $place);
             } else {
-                if (!$code = $request->get('code')) {
-                    return $this->dataValidationErrorResponse('code', "Un argument 'code' doit être fourni.");
+                if (!$usagePoints = $request->get('usage_point_id')) {
+                    return $this->dataValidationErrorResponse('usage_point_id', "Un argument 'usage_point_id' doit être fourni.");
                 }
+                $usagePoints = \explode(',', $usagePoints);
 
-                $this->enedisDataConnectProvider->handleConsentCallback($code, $place);
+                $this->enedisDataConnectProvider->handleConsentCallback(\reset($usagePoints), $place);
             }
         } catch (DataConnectException $e) {
+            $this->logger->error(
+                '[ENEDIS] - Erreur lors du retour de consentement : ' . $e->getMessage(),
+                ['exception' => $e]
+            );
             // Sur une erreur au retour d'enedis data-connect, sur une erreur
             // on renvoit sur une page d'erreur du front
             return $this->redirectToRoute('app.home.trailing', ['slug' => 'mon-compte/callback/error/' . $place->getId()]);

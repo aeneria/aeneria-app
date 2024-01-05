@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aeneria/enedis-data-connect",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:aeneria/enedis-data-connect.git",
-                "reference": "3897ba61af0d4faf20d41e41374e969d99b364d8"
+                "reference": "96275dd0e138497df2540ad6c6d5017d3cc1e987"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fenedis-data-connect/repository/archive.zip?sha=3897ba61af0d4faf20d41e41374e969d99b364d8",
-                "reference": "3897ba61af0d4faf20d41e41374e969d99b364d8",
+                "url": "https://gitlab.com/api/v4/projects/aeneria%2Fenedis-data-connect/repository/archive.zip?sha=96275dd0e138497df2540ad6c6d5017d3cc1e987",
+                "reference": "96275dd0e138497df2540ad6c6d5017d3cc1e987",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 }
             ],
             "description": "A small library to use a part of Enedis Data Connect API with PHP : https://datahub-enedis.fr/data-connect/",
-            "time": "2023-12-21T14:51:10+00:00"
+            "time": "2024-01-05T11:42:12+00:00"
         },
         {
             "name": "aeneria/grdf-adict",

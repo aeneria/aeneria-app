@@ -7,13 +7,17 @@ namespace App\Controller;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Repository\PlaceRepository;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class AbstractAppController extends AbstractController
+abstract class AbstractAppController extends AbstractController implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /** @var PlaceRepository */
     protected $placeRepository;
 
