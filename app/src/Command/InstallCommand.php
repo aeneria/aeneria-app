@@ -56,7 +56,7 @@ class InstallCommand extends Command
             ->setupDatabase()
             ->setupMigration()
             ->clearCache()
-            ->generateRsaKey()
+            ->generateKeys()
         ;
 
         $this->io->success('aeneria has been successfully installed.');
