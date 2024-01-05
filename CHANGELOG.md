@@ -1,9 +1,14 @@
-# æneria version 2.0.0
+# æneria version 2.0.2
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
+
+Bug fixes
+
+## Anciennes versions
+### 2.0.0
 
 * **Nouvelle interface** (en vuejs)
 * **Ajout du support du compteur Gazpar**
@@ -14,7 +19,6 @@
 * Mise à jour vers Symfony 5.4 & php 8.2
 * Autres résolutions de bugs mineurs
 
-## Anciennes versions
 ### 1.1.6
 
 * Fix the way the app log error while fetching data form Enedis.
