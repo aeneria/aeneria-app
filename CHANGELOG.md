@@ -1,11 +1,11 @@
-# æneria version 2.0.2
+# æneria version 2.0.3
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-Bug fixes
+Bug fixes et améliorations de l'UI
 
 ## Anciennes versions
 ### 2.0.0
