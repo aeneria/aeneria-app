@@ -15,7 +15,7 @@ class FeedDataProviderFactory
         private GrdfAdictProvider $grdfAdictProvider,
         private ProxifiedGrdfAdictProvider $proxifiedGrdfAdictProvider,
         private FakeDataProvider $fakeDataProvider
-    ) { }
+    ) {}
 
     /**
      * @param Feed[] $feeds

@@ -29,13 +29,10 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EnedisDataConnectProvider extends AbstractFeedDataProvider
 {
-    /** @var DataConnectClientInterface */
-    private $dataConnect;
-    /** @var SerializerInterface */
-    private $serializer;
+    private DataConnectClientInterface $dataConnect;
+    private SerializerInterface $serializer;
 
-    /** @var Token */
-    private $accessToken = null;
+    private null|Token $accessToken = null;
 
     public function __construct(
         EntityManagerInterface $entityManager,

@@ -26,13 +26,10 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class GrdfAdictProvider extends AbstractFeedDataProvider
 {
-    /** @var GrdfAdictClientInterface */
-    private $grdfAdict;
-    /** @var SerializerInterface */
-    private $serializer;
+    private GrdfAdictClientInterface $grdfAdict;
+    private SerializerInterface $serializer;
 
-    /** @var Token */
-    private $accessToken = null;
+    private null|Token $accessToken = null;
 
     public function __construct(
         EntityManagerInterface $entityManager,
