@@ -8,7 +8,6 @@ import Energie from '@/page/dashboard/Energie';
 import Home from '@/page/dashboard/Home';
 import Meteo from '@/page/dashboard/Meteo';
 import MonCompte from '@/page/MonCompte';
-import NewPlace from '@/component/mon-compte/place/form/new/NewPlace';
 import CallbackEnedis from './component/mon-compte/place/CallbackEnedis';
 import CallbackGrdf from './component/mon-compte/place/CallbackGrdf';
 import NotFound from './component/misc/NotFound';
@@ -24,7 +23,6 @@ export const router = (basePath: string, store: Store<State>) => createRouter({
     { name: 'analyse', path: basePath + '/analyse', component: Analyse },
     { name: 'comparaison', path: basePath + '/comparaison', component: Comparaison },
     { name: 'mon-compte', path: basePath + '/mon-compte', component: MonCompte },
-    { name: 'new-place', path: basePath + '/mon-compte/nouvelle-adresse', component: NewPlace },
     { name: 'callback-enedis', path: basePath + '/mon-compte/callback/enedis/:placeId', component: CallbackEnedis },
     { name: 'callback-grdf', path: basePath + '/mon-compte/callback/grdf/:placeId', component: CallbackGrdf },
     {

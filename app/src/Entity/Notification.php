@@ -17,7 +17,7 @@ class Notification implements \JsonSerializable
     public const TYPE_DATA_FETCH = 'data_fetch';
     public const TYPE_TOO_MANY_FETCH_ERROR = 'too_many_fetch_error';
 
-    private int $id = 0;
+    private ?int $id = null;
     private string $type;
     private string $level;
     private ?User $user;

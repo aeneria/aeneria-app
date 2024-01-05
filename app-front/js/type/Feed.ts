@@ -3,6 +3,7 @@ import { FeedData } from "./FeedData"
 export enum DataProvider {
   linky = 'LINKY',
   enedisDataConnect = 'ENEDIS_DATA_CONNECT',
+  enedisDataConnectProxified = 'ENEDIS_DATA_CONNECT_PROXIFIED',
   grdfAdict = 'GRDF_ADICT',
   grdfAdictProxified = 'GRDF_ADICT_PROXIFIED',
   meteoFrance = 'METEO_FRANCE',
@@ -33,6 +34,7 @@ export function feedLabelLong(feed: Feed): string {
     case DataProvider.linky :
       return 'Compte Enedis&nbsp;: ' + feed.param['LOGIN']
     case DataProvider.enedisDataConnect :
+    case DataProvider.enedisDataConnectProxified :
       return 'Linky&nbsp;: PDL&nbsp;-&nbsp;'+ JSON.parse(feed.param['ADDRESS'])?.usagePointId
     case DataProvider.grdfAdict :
     case DataProvider.grdfAdictProxified :
@@ -41,6 +43,8 @@ export function feedLabelLong(feed: Feed): string {
       return ''+ feed.param['CITY']
     case DataProvider.fake :
       return 'FakeProvider&nbsp;: '+ feed.type
+    default :
+      return ''
   }
 }
 
@@ -49,8 +53,10 @@ export function feedLabelShort(feed: Feed): string {
     case DataProvider.linky :
       return 'Compteur Enedis'
     case DataProvider.enedisDataConnect :
+    case DataProvider.enedisDataConnectProxified :
       return 'Compteur Linky'
     case DataProvider.grdfAdict :
+    case DataProvider.grdfAdictProxified :
       return 'Compteur Gazpar'
     case DataProvider.meteoFrance :
       return 'Météo France'
@@ -66,6 +72,7 @@ export function feedTechnicalId(feed: Feed): string {
     case DataProvider.linky :
       return 'N/A'
     case DataProvider.enedisDataConnect :
+    case DataProvider.enedisDataConnectProxified :
       return JSON.parse(feed.param['ADDRESS'])?.usagePointId
     case DataProvider.grdfAdict :
     case DataProvider.grdfAdictProxified :
@@ -84,6 +91,7 @@ export function feedIcon(feed: Feed): string {
     case DataProvider.linky :
       return 'fa-solid fa-tachometer-alt'
     case DataProvider.enedisDataConnect :
+    case DataProvider.enedisDataConnectProxified :
       return 'fa-solid fa-plug'
     case DataProvider.grdfAdict :
     case DataProvider.grdfAdictProxified :
@@ -102,6 +110,7 @@ export function feedDescription(feed: Feed): string {
     case DataProvider.linky :
       return 'Compteur Enedis associé'
     case DataProvider.enedisDataConnect :
+    case DataProvider.enedisDataConnectProxified :
       return 'Compteur Linky associé'
     case DataProvider.grdfAdict :
     case DataProvider.grdfAdictProxified :

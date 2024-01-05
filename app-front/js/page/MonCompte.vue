@@ -24,6 +24,7 @@
       <EditEmailForm :visible="displayEditEmailForm" v-on:toggleVisible="toggleEditEmailForm"/>
       <EditPasswordForm :visible="displayEditPasswordForm" v-on:toggleVisible="toggleEditPasswordForm"/>
       <DeleteAccountForm :visible="displayDeleteAccountForm" v-on:toggleVisible="toggleDeleteAccountForm"/>
+      <NewPlaceForm :visible="displayNewPlaceForm" v-on:toggleVisible="toggleNewPlaceForm"/>
 
       <Divider align="left" class="bg-color">
         <div class="p-d-inline-flex p-ai-center">
@@ -41,7 +42,7 @@
           icon="pi pi-plus-circle"
           label="Ajouter une adresse"
           class="p-button-rounded p-button-secondary"
-          @click="goToNewPLace"
+          @click="toggleNewPlaceForm"
         />
       </div>
     </div>

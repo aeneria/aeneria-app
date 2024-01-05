@@ -1,15 +1,18 @@
 <template>
-   <div v-if="place" class="parameter p-grid p-ai-start p-mt-2">
-    <div class="p-col-12">
-      <h1>C'est tout bon !</h1>
-      <p>Votre compteur Gazpar a été correctement configuré. Des données devraient commencer à apparaitre d'ici ~15 minutes.</p>
+  <div class="p-d-flex p-jc-center">
+    <Card v-if="place">
+      <template #title>
+        C'est tout bon !
+      </template>
+      <template #content>
+        <p>Votre compteur Gazpar a été correctement configuré. Des données devraient commencer à apparaitre d'ici ~15 minutes.</p>
 
-      <div v-if="!feedElectricite">
-        <p class="p-mb-0">Si vous le souhaitez, vous pouvez en plus ajouter un compteur Linky d'Enedis</p>
-        <small>(Il sera toujours possible de le faire plus tard)</small>
-      </div>
-
-      <div class="p-mt-4">
+        <div v-if="!feedElectricite">
+          <p class="p-mb-0">Si vous le souhaitez, vous pouvez en plus ajouter un compteur Linky d'Enedis</p>
+          <small>(Il sera toujours possible de le faire plus tard)</small>
+        </div>
+      </template>
+      <template #footer>
         <Button
           v-if="!feedElectricite"
           @click="toggleLinkyForm()"
@@ -26,15 +29,15 @@
         >
         Aller à l'accueil
         </router-link>
-      </div>
-    </div>
+      </template>
+    </Card>
+    <Spinner v-else />
     <AddLinkyForm
       :visible="displayAddLinkyForm"
       v-on:toggleVisible="toggleLinkyForm()"
       :place="place"
     />
   </div>
-  <Spinner v-else />
 </template>
 
 <script lang="ts" src="./CallbackGrdf.ts"/>

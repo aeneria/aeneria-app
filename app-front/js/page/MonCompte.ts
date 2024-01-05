@@ -7,6 +7,7 @@ import Divider from 'primevue/divider';
 import EditEmailForm from '@/component/mon-compte/form/EditEmailForm';
 import DeleteAccountForm from '@/component/mon-compte/form/DeleteAccountForm';
 import EditPasswordForm from '@/component/mon-compte/form/EditPasswordForm';
+import NewPlaceForm from '@/component/mon-compte/place/form/new/NewPlaceForm';
 
 export default defineComponent({
   name: 'MonCompte',
@@ -18,6 +19,7 @@ export default defineComponent({
     EditEmailForm,
     DeleteAccountForm,
     EditPasswordForm,
+    NewPlaceForm,
   },
   setup() {
     const menuMonCompte = ref()
@@ -31,6 +33,7 @@ export default defineComponent({
       displayEditEmailForm: false,
       displayEditPasswordForm: false,
       displayDeleteAccountForm: false,
+      displayNewPlaceForm: false,
       menuMonCompteItems: [
         {
             label: 'Modifier mon adresse e-mail',
@@ -71,8 +74,8 @@ export default defineComponent({
     toggleDeleteAccountForm() {
       this.displayDeleteAccountForm = !this.displayDeleteAccountForm
     },
-    goToNewPLace() {
-      this.$router.push({name: 'new-place'})
+    toggleNewPlaceForm() {
+      this.displayNewPlaceForm = !this.displayNewPlaceForm
     },
   },
 });

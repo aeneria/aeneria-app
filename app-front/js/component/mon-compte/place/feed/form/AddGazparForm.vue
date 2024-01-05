@@ -9,8 +9,11 @@
     <div class="p-text-center p-mb-4">
       <img class="img-fluid" src="/image/logo-grdf.png" alt="Logo de GRDF">
     </div>
+
     <p>
-      En cliquant sur ce bouton, vous allez accéder au service <i>Client Connect</i> de GRDF qui vous permettera de donner votre accord pour que GRDF nous transmette vos données.
+      À l'étape suivante, vous allez être rediriger vers service <i>Client Connect</i>
+      de GRDF qui vous permettera de donner votre accord pour que GRDF nous transmette
+      vos données.
     </p>
 
     <template #footer>

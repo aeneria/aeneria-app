@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue';
 import Button from 'primevue/button';
+import Card from 'primevue/card';
 import { findFeedByType, Place } from '@/type/Place';
 import AddGazparForm from './feed/form/AddGazparForm';
 import Spinner from '../../graphique/Spinner';
@@ -12,6 +13,7 @@ export default defineComponent({
   name: 'CallbackEnedis',
   components: {
     Button,
+    Card,
     AddGazparForm,
     Spinner,
     RouterLink,

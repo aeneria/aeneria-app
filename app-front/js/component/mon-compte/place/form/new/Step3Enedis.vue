@@ -1,12 +1,7 @@
 <template>
-  <Dialog
-    header="Associer un compteur Linky d'Enedis"
-    v-model:visible="visible"
-    :style="{width: '650px'}"
-    :breakpoints="{'650px': '100vw'}"
-    :modal="true" :closable="false"
-  >
-    <div class="p-text-center p-mb-4">
+  <div class="parameter p-d-block">
+
+    <div class="p-text-center p-my-4">
       <img class="img-fluid" src="/image/logo-enedis.png" alt="Logo d'Enedis">
     </div>
 
@@ -32,23 +27,27 @@
       </div>
     </Message>
 
-    <template #footer>
-      <div class="p-text-center">
-        <Button
-          label="Annuler"
-          icon="pi pi-times"
-          @click="closeBasic()"
-          class="p-button-text p-button-rounded p-button-secondary"
-        />
-        <Button
-          label="Associer un compteur Linky"
-          icon="pi pi-arrow-right"
-          @click="post()"
-          class="p-button-rounded p-button-secondary"
-        />
-      </div>
-    </template>
-  </Dialog>
+    <div class="p-d-flex p-jc-end">
+      <Button
+        label="Annuler"
+        icon="pi pi-times"
+        @click="$emit('cancel')"
+        class="p-button-text p-button-rounded p-button-secondary"
+      />
+      <Button
+        label="Étape précédente"
+        icon="pi pi-arrow-left"
+        @click="$emit('previous')"
+        class="p-button-text p-button-rounded p-button-secondary"
+      />
+      <Button
+        label="Associer votre compteur Linky"
+        icon="pi pi-arrow-right"
+        @click="$emit('next')"
+        class="p-button-rounded p-button-secondary"
+      />
+    </div>
+  </div>
 </template>
 
-<script lang="ts" src="./AddLinkyForm.ts" />
+<script lang="ts" src="./Step3Enedis.ts" />
