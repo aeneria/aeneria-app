@@ -78,8 +78,7 @@ services:
         tags: ['twig.extension', 'container.hot_path']
 
     App\EventListener\DoctrineEventSubscriber:
-        tags:
-            - name: 'doctrine.event_subscriber'
+        tags: ['doctrine.event_subscriber']
 
     Aeneria\EnedisDataConnectApi\Client\DataConnectClient:
         arguments:

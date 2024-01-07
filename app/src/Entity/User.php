@@ -22,6 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     private int $id;
     private bool $active;
     private string $username;
+    private ?string $email = null;
     private array $roles = [];
     /** The hashed password */
     private string $password;
@@ -81,15 +82,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return $this->getUserIdentifier();
+    }
+
+    public function getEmail(): string
+    {
+        return (string) $this->email ?? $this->username;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getEmail(): string
+    public function setEmail(?string $email): self
     {
-        return (string) $this->username;
+        $this->email = $email;
+
+        return $this;
     }
 
     /**
