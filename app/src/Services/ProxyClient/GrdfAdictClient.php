@@ -33,7 +33,7 @@ class GrdfAdictClient
     {
         $body = [
             'state' => $state,
-            'key' => $this->sodiumCryptoService->getPublicKey(),
+            'key' => \urlencode($this->sodiumCryptoService->getPublicKey()),
             'callback' => \urlencode(
                 $this->router->generate('api.feed.grdf.consent.callback', [], RouterInterface::ABSOLUTE_URL)
             ),

@@ -70,7 +70,7 @@ class SodiumCryptoService
         return \sodium_crypto_box_seal($payload, $this->getPublicKey());
     }
 
-    public function open(string $encrypted): string
+    public function open(string $encrypted): string|bool
     {
         return \sodium_crypto_box_seal_open($encrypted, $this->getKeypair());
     }

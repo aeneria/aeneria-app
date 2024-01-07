@@ -228,10 +228,7 @@ class GrdfAdictProvider extends AbstractFeedDataProvider
 
     private function fetchDataForFeed(\DateTimeImmutable $date, Feed $feed, array &$errors): array
     {
-        $data = [
-            'days' => [],
-            'hours' => [],
-        ];
+        $data = [];
 
         $endDate = $date->add(new \DateInterval('P1D'));
         $startDate = clone $date;
