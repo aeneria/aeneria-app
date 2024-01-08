@@ -11,11 +11,28 @@
       vos données.
     </p>
 
+    <Message severity="info" :closable="false">
+      <p>
+        Pour qu'æneria fonctionne correctement, à l'étape suivante, donnez votre consentement
+        pour les données suivantes&nbsp;:
+        <ul>
+          <li>
+            Mes données de consommation gaz&nbsp;: oui
+            <ul>
+              <li>Période&nbsp;: choisissez la période la plus grande possible</li>
+              <li>Autoriser l'accès à mes données publiées&nbsp;: oui</li>
+              <li>Autoriser l'accès à mes données informatives&nbsp;: oui</li>
+            </ul>
+          </li>
+          <li>Mes données techniques&nbsp;: oui</li>
+        </ul>
+      </p>
+    </Message>
+
     <ProxyWarningMessage
       v-if="$store.state.configuration?.proxyForGrdf"
       provider="GRDF"
     />
-
     <div class="p-d-flex p-jc-end">
       <Button
         label="Annuler"

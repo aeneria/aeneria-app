@@ -27,6 +27,20 @@
       </div>
     </Message>
 
+    <Message severity="info" :closable="false">
+      <p>
+        Pour avoir accès à l'ensemble des graphiques proposés par æneria, nous vous conseillons d'activer
+        la collecte horaire.
+      </p>
+      <p>
+        Depuis votre compte client Enedis, rendez-vous dans l'ongler "Gérer l’accès à mes données" puis activez&nbsp;:
+        <ul>
+          <li>L'enregistrement de la consommation horaire</li>
+          <li>La collecte de la consommation horaire</li>
+        </ul>
+      </p>
+    </Message>
+
     <ProxyWarningMessage
       v-if="$store.state.configuration?.proxyForEnedis"
       provider="Enedis"
