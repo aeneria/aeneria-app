@@ -10,7 +10,7 @@ export default defineComponent({
   },
   methods: {
     goToNewPLace() {
-      this.$router.push({name: 'new-place'})
+      this.$router.push({name: 'mon-compte'})
     },
   }
 });
