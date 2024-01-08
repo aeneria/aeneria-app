@@ -132,6 +132,10 @@
     ul {
       list-style: none;
       padding-left: 0.5rem;
+      .icon {
+        width: 1.5rem;
+        text-align: center;
+      }
       ul {
         list-style: disc;
         padding-left: 2rem;
