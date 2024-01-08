@@ -16,6 +16,11 @@
       vos données.
     </p>
 
+    <ProxyWarningMessage
+      v-if="$store.state.configuration?.proxyForGrdf"
+      provider="GRDF"
+    />
+
     <template #footer>
       <div class="p-text-center">
         <Button

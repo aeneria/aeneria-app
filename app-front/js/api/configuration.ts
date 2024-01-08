@@ -85,6 +85,9 @@ export function queryConfiguration(): Promise<Configuration> {
       userCanExport: data.userCanExport === '1',
       userCanImport: data.userCanImport === '1',
       placeCanBePublic: data.placeCanBePublic === '1',
+      proxyForEnedis: data.proxyForEnedis === '1',
+      proxyForGrdf: data.proxyForGrdf === '1',
+      proxyUrl: data.proxyUrl,
       isDemoMode: data.isDemoMode === '1',
       version: data.version,
     }

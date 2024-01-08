@@ -5,6 +5,7 @@ import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 import { Place } from '@/type/Place';
 import { queryGrdfConsentUrl } from '@/api/feed';
+import ProxyWarningMessage from '@/component/misc/ProxyWarningMessage';
 
 export default defineComponent({
   name: 'AddGazparForm',
@@ -13,6 +14,7 @@ export default defineComponent({
     Dialog,
     InputText,
     Message,
+    ProxyWarningMessage,
   },
   props: {
     visible: {

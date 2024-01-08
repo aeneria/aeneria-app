@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import Message from 'primevue/message';
+import ProxyWarningMessage from '@/component/misc/ProxyWarningMessage';
 
 
 export default defineComponent({
@@ -12,6 +13,7 @@ export default defineComponent({
     Divider,
     Message,
     RouterLink,
+    ProxyWarningMessage,
   },
   computed: {
     ...mapState([

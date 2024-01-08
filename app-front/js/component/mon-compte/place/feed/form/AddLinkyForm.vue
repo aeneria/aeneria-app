@@ -16,11 +16,11 @@
       vos données.
     </p>
 
-    <Message severity="warn" :closable="false">
+    <Message severity="info" :closable="false">
       <p>Pour donner votre autorisation, vous devez avoir un compte personnel Enedis.</p>
       <div class="p-text-center">
         <a
-        class="p-button p-button-rounded p-button-sm p-button-outlined p-button-warning"
+        class="p-button p-button-rounded p-button-sm p-button-outlined p-button-info"
         href="https://mon-compte-particulier.enedis.fr/"
           target="_blank"
         >
@@ -31,6 +31,11 @@
         <small class="p-mt-2">(Munissez-vous d'une facture d’électricité pour créer votre espace)</small>
       </div>
     </Message>
+
+    <ProxyWarningMessage
+      v-if="$store.state.configuration?.proxyForEnedis"
+      provider="Enedis"
+    />
 
     <template #footer>
       <div class="p-text-center">

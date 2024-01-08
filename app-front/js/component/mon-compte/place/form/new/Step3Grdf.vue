@@ -11,6 +11,11 @@
       vos données.
     </p>
 
+    <ProxyWarningMessage
+      v-if="$store.state.configuration?.proxyForGrdf"
+      provider="GRDF"
+    />
+
     <div class="p-d-flex p-jc-end">
       <Button
         label="Annuler"

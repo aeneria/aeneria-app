@@ -46,6 +46,18 @@ export default defineComponent({
           valeur: this.$store.state.configuration?.userCanImport ? 'Oui' : 'Non',
         },
         {
+          libelle: "Le serveur communautaire est utilisé pour les données Enedis",
+          valeur: this.$store.state.configuration?.proxyForEnedis ? 'Oui' : 'Non',
+        },
+        {
+          libelle: "Le serveur communautaire est utilisé pour les données GRDF",
+          valeur: this.$store.state.configuration?.proxyForGrdf ? 'Oui' : 'Non',
+        },
+        {
+          libelle: "URL du serveur communautaire utilisé",
+          valeur: this.$store.state.configuration?.proxyUrl,
+        },
+        {
           libelle: "Démo mode activé",
           valeur: this.$store.state.configuration?.isDemoMode ? 'Oui' : 'Non',
         },

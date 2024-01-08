@@ -24,7 +24,7 @@
       id="button-selection"
       icon="pi pi-filter-fill"
       title="Modifier la sélection courante"
-      class="p-button-rounded p-button-secondary p-button-icon"
+      class="p-button-rounded p-button-secondary p-button-icon p-button-lg"
       @click="toggleDialog()"
     />
     <Dialog

@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     private int $id;
     private bool $active;
     private string $username;
-    private ?string $email = null;
+    private ?string $identifier = null;
     private array $roles = [];
     /** The hashed password */
     private string $password;
@@ -55,7 +55,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
 
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return $this->identifier ?? $this->username;
+    }
+
+    public function setUserIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
     }
 
     public function setActive(bool $isActive): self
@@ -82,22 +89,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
      */
     public function getUsername(): string
     {
-        return $this->getUserIdentifier();
+        return $this->username;
     }
 
     public function getEmail(): string
     {
-        return (string) $this->email ?? $this->username;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
+        return (string) $this->username;
     }
 
     /**
