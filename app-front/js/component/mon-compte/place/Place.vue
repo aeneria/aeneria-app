@@ -45,7 +45,6 @@
             label="Gazpar"
             title="Associer un compteur Gazpar de GRDF"
             aria-haspopup="true"
-            aria-controls="overlay_menu_edition"
             class="p-button-sm p-button-rounded p-button-secondary p-ml-1"
           />
           <Button
@@ -55,7 +54,6 @@
             label="Linky"
             title="Associer un compteur Linky de ERDF"
             aria-haspopup="true"
-            aria-controls="overlay_menu_edition"
             class="p-button-sm p-button-rounded p-button-secondary p-ml-1"
           />
           <Button
@@ -63,11 +61,11 @@
             title="Gérer l'adresse"
             @click="toggleMenuEdition"
             aria-haspopup="true"
-            aria-controls="overlay_menu_edition"
+            :aria-controls="'overlay_menu_edition_' + place.id"
             class="p-button-sm p-button-rounded p-button-secondary p-button-icon-only p-ml-1"
           />
           <Menu
-            id="overlay_menu_edition"
+            :id="'overlay_menu_edition_' + place.id"
             ref="menuEdition"
             :model="menuEditionItems"
             :popup="true"
@@ -99,12 +97,6 @@
       v-if="displayImportDataForm"
       :visible="displayImportDataForm"
       v-on:toggleVisible="toggleImportDataForm()"
-      :place="place"
-    />
-    <RefreshDataForm
-      v-if="displayRefreshDataForm"
-      :visible="displayRefreshDataForm"
-      v-on:toggleVisible="toggleRefreshDataForm()"
       :place="place"
     />
     <AddLinkyForm

@@ -8,9 +8,8 @@ import DeleteForm from './form/DeleteForm';
 import EditForm from './form/EditForm';
 import ExportDataForm from './form/ExportDataForm';
 import ImportDataForm from './form/ImportDataForm';
-import RefreshDataForm from './form/RefreshDataForm';
-import AddLinkyForm from './feed/form/AddLinkyForm';
-import AddGazparForm from './feed/form/AddGazparForm';
+import AddLinkyForm from './feed/feedEnedis/form/AddLinkyForm';
+import AddGazparForm from './feed/feedGrdf/form/AddGazparForm';
 import { MenuItem } from 'primevue/menuitem';
 import { mapState } from 'vuex';
 import { Feed as FeedObject, FeedType } from '@/type/Feed';
@@ -26,7 +25,6 @@ export default defineComponent({
     EditForm,
     ExportDataForm,
     ImportDataForm,
-    RefreshDataForm,
     AddLinkyForm,
     AddGazparForm,
   },
@@ -70,9 +68,6 @@ export default defineComponent({
     toggleImportDataForm() {
       this.displayImportDataForm = !this.displayImportDataForm
     },
-    toggleRefreshDataForm() {
-      this.displayRefreshDataForm = !this.displayRefreshDataForm
-    },
     toggleLinkyForm() {
       this.displayAddLinkyForm = !this.displayAddLinkyForm
     },
@@ -105,14 +100,6 @@ export default defineComponent({
         },
       )
 
-      if (this.configuration.userCanFetch) {
-        menuEditionItems.push({
-          label: 'Rafraîchir des données',
-          icon: 'pi pi-refresh',
-          command: () => this.toggleRefreshDataForm()
-        })
-      }
-
       if (this.configuration.userCanExport) {
         menuEditionItems.push({
           label: 'Exporter des données',
@@ -129,7 +116,7 @@ export default defineComponent({
         })
       }
 
-      if (this.configuration.userCanImport || this.configuration.userCanExport || this.configuration.userCanFetch) {
+      if (this.configuration.userCanImport || this.configuration.userCanExport) {
         menuEditionItems.push({separator: true})
       }
 
