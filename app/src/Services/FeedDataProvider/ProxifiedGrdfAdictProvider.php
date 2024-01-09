@@ -142,10 +142,10 @@ class ProxifiedGrdfAdictProvider extends AbstractFeedDataProvider
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_GAZ)) {
             $feed = new Feed();
             $feed->setFeedType(Feed::FEED_TYPE_GAZ);
-            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED);
             $place->addFeed($feed);
         }
 
+        $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_GRDF_ADICT_PROXIFIED);
         $feed->setName((string) $info);
         $feed->setFetchError(0);
         $feed->setSingleParam('PCE', $info->pce);

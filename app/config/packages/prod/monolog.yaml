@@ -3,7 +3,7 @@ monolog:
         main:
             type: rotating_file
             path: "%kernel.logs_dir%/%kernel.environment%.log"
-            action_level: info
+            level: info
             date_format: Y-m-d
             max_files: 10
             channels: ["!php"]

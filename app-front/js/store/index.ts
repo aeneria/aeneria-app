@@ -170,7 +170,7 @@ export const store = createStore({
       postPlaceDataRefresh(data.placeId, data.feedId, data.start, data.end).then(() => {
         this.state.notifications.push({
           severity:'info',
-          summary: "Le rafraissement des données a été programmé",
+          summary: "Le rafraichissement des données a été programmé",
           detail: `Il s'effectuera dans les prochaines minutes`
         })
       })

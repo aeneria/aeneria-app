@@ -157,10 +157,10 @@ class EnedisDataConnectProvider extends AbstractFeedDataProvider
         if (!$feed = $place->getFeed(Feed::FEED_TYPE_ELECTRICITY)) {
             $feed = new Feed();
             $feed->setFeedType(Feed::FEED_TYPE_ELECTRICITY);
-            $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
             $place->addFeed($feed);
         }
 
+        $feed->setFeedDataProviderType(Feed::FEED_DATA_PROVIDER_ENEDIS_DATA_CONNECT);
         $feed->setName((string) $address);
         $feed->setSingleParam('ADDRESS', $this->serializer->serialize($address, 'json'));
         $feed->setSingleParam('PDL', $usagePointId);
