@@ -67,8 +67,8 @@ export default defineComponent({
     menuEditionItems(): Array<MenuItem>{
       const menuEditionItems = new Array<MenuItem>(
         {
-          label: "Gérer la connexion à Enedis",
-          icon: 'pi pi-link',
+          label: "Modifier la station météo",
+          icon: 'pi pi-pencil',
           command: () => this.toggleCheckConnectionForm(),
         },
         {
