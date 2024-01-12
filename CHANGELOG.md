@@ -1,11 +1,14 @@
-# æneria version 2.0.3
+# æneria version 2.1.0
 
 * [Télécharger les sources complètes d'æneria](http://statics.aeneria.com/) (Avec les dépendances Composer et les assets compilés)
 * [Accéder à la documentation](https://docs.aeneria.com/fr/latest/)
 
 ## Nouveautés
 
-Bug fixes et améliorations de l'UI
+* Import de masse des données consommation
+  * Enedis/Linky : import des fichiers CSV téléchargeables via l'espace personnel Enedis ("Heure" ou "Jour")
+  * GRDF/Gazpar : import des fichiers XLSX téléchargeables via l'espace GRDF
+* Bug fixes et améliorations de l'UI
 
 ## Anciennes versions
 ### 2.0.0
