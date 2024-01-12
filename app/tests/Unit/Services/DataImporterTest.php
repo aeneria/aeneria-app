@@ -13,16 +13,19 @@ final class DataImporterTest extends AppTestCase
     public function testDataImporterWithCleanExport()
     {
         $dataValueRepository = $this->getDataValueRepository();
+        $entityManager = $this->getEntityManager();
         $dataImporter = new DataImporter(
             $dataValueRepository,
+            $entityManager,
             $this->getLogger()
         );
 
         $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
 
-        $errors = $dataImporter->importPlace(
+        $errors = $dataImporter->importFile(
             $user->getPlaces()[0],
+            null,
             $this->getResourceDir() . '/clean-export.ods'
         );
 
@@ -32,16 +35,19 @@ final class DataImporterTest extends AppTestCase
     public function testDataImporterWithBrokenExport()
     {
         $dataValueRepository = $this->getDataValueRepository();
+        $entityManager = $this->getEntityManager();
         $dataImporter = new DataImporter(
             $dataValueRepository,
+            $entityManager,
             $this->getLogger()
         );
 
         $user = $this->getUserRepository()->findOneByUsername('user-test@example.com');
         \assert($user instanceof User);
 
-        $errors = $dataImporter->importPlace(
+        $errors = $dataImporter->importFile(
             $user->getPlaces()[0],
+            null,
             $this->getResourceDir() . '/broken-export.ods'
         );
 

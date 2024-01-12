@@ -328,7 +328,7 @@ class DataImporter
         $batchStart = $batchEnd = null;
         /** @var DataValue[] */
         $batchDataValues = [];
-        $batchSize = 100;
+        $batchSize = 1000;
         while ($row = \fgetcsv($stream, 1024, ';')) {
             if (false === ($date = \DateTimeImmutable::createFromFormat('!Y-m-d?H+', $row[0]))) {
                 $errors[] = $message = \sprintf("Ligne %s - La date n'est pas valide.", $number);
