@@ -64,7 +64,7 @@ class DataValueRepository extends ServiceEntityRepository
     /**
      * Agregate Values for a frequency and a date and persist it to EntityManager.
      */
-    public function updateOrCreateAgregateValue(\DateTimeImmutable $date, Feed $feed, int $frequency)
+    public function updateOrCreateAgregateValue(\DateTimeInterface $date, Feed $feed, int $frequency)
     {
         list('from' => $firstDay, 'to' => $lastDay, 'previousFrequency' => $previousFrequency) = DataValue::getAdaptedBoundariesForFrequency($date, $frequency);
 

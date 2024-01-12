@@ -10,18 +10,18 @@
     <Message severity="warn" class="p-mb-4 p-mt-1">
       Attention, si des données existent pour les dates importées, elle seront écrasées !
     </Message>
-    <div class="">
+    <div class="p-d-flex p-ai-center">
       <FileUpload
         name="file[]"
-        :customUpload="true"
-        @uploader="onUpload"
-        :showCancelButton="false"
-        :showUploadButton="false"
-        :auto="true"
         :fileLimit="1"
-        :remove='onRemove'
-        uploadLabel="Choisir un fichier à importer"
+        mode="basic"
+        customUpload
+        @uploader="onUpload"
+        :multiple="false"
+        :auto="true"
+        :accept="acceptedMimeType"
       />
+      <div v-if="file" class="p-ml-3 overflow-wrap"><p>{{ file.name }}</p></div>
     </div>
 
     <template #footer>

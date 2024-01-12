@@ -122,7 +122,7 @@ class PendingActionService
         );
     }
 
-    public function createDataImportAction(User $user, Place $place, string $filename): PendingAction
+    public function createDataImportAction(User $user, Place $place, ?Feed $feed, string $filename): PendingAction
     {
         return $this->createAction(
             self::ACTION_IMPORT_DATA,
@@ -130,6 +130,7 @@ class PendingActionService
             new \DateTimeImmutable('now'),
             [
                 'place' => $place->getId(),
+                'feed' => $feed->getId() ?? null,
                 'filename' => $filename,
             ]
         );
@@ -154,14 +155,21 @@ class PendingActionService
             $this->delete($action);
             throw new \InvalidArgumentException("Impossible de trouver la place avec l'id " . $placeId);
         }
+        $feed = null;
+        $feedId = $action->getSingleParam('feed');
+        if ($feedId && !($feed = $this->feedRepository->find($feedId))) {
+            $this->logger->error("Pending Action - Unfound feed, delete action", ['user' => $action->getUser()->getId(), 'action' => $action->getId(), 'feed' => $feedId]);
+            $this->delete($action);
+            throw new \InvalidArgumentException("Impossible de trouver le feed avec l'id " . $feedId);
 
+        }
         if (!$filename = $action->getSingleParam('filename')) {
             $this->logger->error("Pending Action - Missing parameter 'filename', delete action", ['user' => $action->getUser()->getId(), 'action' => $action->getId()]);
             $this->delete($action);
             throw new \InvalidArgumentException("L'action n'a pas de paramètre 'filename'");
         }
         try {
-            $errors = $this->dataImporter->importPlace($place, $filename);
+            $errors = $this->dataImporter->importFile($place, $feed, $filename);
 
             $this->notificationService->handleImportNotification($action->getUser(), $place, $errors);
         } catch (\Exception $e) {

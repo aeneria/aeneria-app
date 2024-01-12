@@ -194,18 +194,32 @@ export const store = createStore({
           detail: `Il s'effectuera dans les prochaines minutes`
         })
       })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
+      })
     },
     [FEED_IMPORT_DATA] ({}, data) {
-      postFeedDataImport(data.placeId, data.file).then(() => {
+      postFeedDataImport(data.placeId, data.feedId, data.file).then(() => {
         this.state.notifications.push({
           severity:'info',
           summary: "L'import a été programmé",
           detail: `Il s'effectuera dans les prochaines minutes`
         })
       })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
+      })
     },
     [FEED_REFRESH_DATA] ({}, data) {
-      postFeedDataRefresh(data.feedId, data.start, data.end).then(() => {
+      postFeedDataRefresh(data.placeId, data.feedId, data.start, data.end).then(() => {
         this.state.notifications.push({
           severity:'info',
           summary: "Le rafraichissement des données a été programmé",

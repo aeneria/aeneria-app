@@ -1,3 +1,11 @@
+api.feed.data.refresh:
+  path: /data/refresh
+  controller: App\Controller\ApiFeedController::dataRefresh
+
+api.feed.data.import:
+  path: /data/import
+  controller: App\Controller\ApiFeedController::dataImport
+
 # METEO
 
 api.feed.meteo.station-list:

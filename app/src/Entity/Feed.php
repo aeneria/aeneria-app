@@ -301,6 +301,9 @@ class Feed implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return Collection<FeedData>
+     */
     public function getFeedDatas(): Collection
     {
         return $this->feedDatas;

@@ -18,18 +18,18 @@
       de données créé via æneria : si vous essayez d'importer des fichiers provenant d'une
       autre source, faites-le à vos risques et périls !
     </Message>
-    <div class="">
+    <div class="p-d-flex p-ai-center">
       <FileUpload
         name="file[]"
-        :customUpload="true"
-        @uploader="onUpload"
-        :showCancelButton="false"
-        :showUploadButton="false"
-        :auto="true"
         :fileLimit="1"
-        :remove='onRemove'
-        uploadLabel="Choisir un fichier à importer"
+        mode="basic"
+        customUpload
+        @uploader="onUpload"
+        :multiple="false"
+        :auto="true"
+        accept="application/vnd.oasis.opendocument.spreadsheet"
       />
+      <div v-if="file" class="p-ml-3 overflow-wrap"><p>{{ file.name }}</p></div>
     </div>
 
     <template #footer>

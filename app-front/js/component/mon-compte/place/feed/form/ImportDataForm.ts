@@ -7,6 +7,7 @@ import { FEED_IMPORT_DATA } from '@/store/actions';
 import { required } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { Feed } from '@/type/Feed';
+import { Place } from '@/type/Place';
 
 export default defineComponent({
   name: 'ImportDataForm',
@@ -26,10 +27,18 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    place: {
+      type: Object as PropType<Place>,
+      required: true
+    },
     feed: {
       type: Object as PropType<Feed>,
       required: true
     },
+    acceptedMimeType: {
+      type: String,
+      required: true,
+    }
   },
   data() {
     return {
@@ -63,6 +72,7 @@ export default defineComponent({
       }
 
       this.$store.dispatch(FEED_IMPORT_DATA, {
+        placeId: this.place.id,
         feedId: this.feed.id,
         file: this.file,
       })

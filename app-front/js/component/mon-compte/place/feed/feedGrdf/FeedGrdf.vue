@@ -34,6 +34,7 @@
       :visible="displayRefreshDataForm"
       title="Rafraichir les données depuis GRDF"
       v-on:toggleVisible="toggleRefreshDataForm()"
+      :place="place"
       :feed="feed"
     >
       <p>
@@ -54,7 +55,9 @@
       :visible="displayImportDataForm"
       title="Importer un fichier de données GRDF"
       v-on:toggleVisible="toggleImportDataForm()"
+      :place="place"
       :feed="feed"
+      acceptedMimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     >
       <p>
         GRDF vous propose, depuis votre compte personnel, d'exporter vos données de consommation.

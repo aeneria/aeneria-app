@@ -33,9 +33,10 @@ export function queryGrdfConsentCheck(placeId: number): Promise<any> {
   return queryData(`api/feed/grdf/consent/${placeId}/check`, )
 }
 
-export function postFeedDataImport(feedId: string, file: File): Promise<any> {
+export function postFeedDataImport(placeId: string, feedId: string, file: File): Promise<any> {
 
   var data = new FormData()
+  data.append('placeId', placeId)
   data.append('feedId', feedId)
   data.append('file', file)
 
@@ -55,10 +56,11 @@ export function postFeedDataImport(feedId: string, file: File): Promise<any> {
   })
 }
 
-export function postFeedDataRefresh(feedId: string, start: Date, end: Date): Promise<any> {
+export function postFeedDataRefresh(placeId: string, feedId: string, start: Date, end: Date): Promise<any> {
   return postData(
     `/api/feed/data/refresh`,
     {
+      placeId: placeId,
       feedId: feedId,
       start: timeFormat("%d/%m/%Y")(start),
       end: timeFormat("%d/%m/%Y")(end),

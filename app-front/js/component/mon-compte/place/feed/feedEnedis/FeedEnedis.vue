@@ -34,6 +34,7 @@
       :visible="displayRefreshDataForm"
       title="Rafraichir les données depuis Enedis"
       v-on:toggleVisible="toggleRefreshDataForm()"
+      :place="place"
       :feed="feed"
     >
       <p>
@@ -54,7 +55,9 @@
       :visible="displayImportDataForm"
       title="Importer un fichier de données Enedis"
       v-on:toggleVisible="toggleImportDataForm()"
+      :place="place"
       :feed="feed"
+      acceptedMimeType="text/*"
     >
       <p>
         Enedis vous propose, depuis votre compte personnel, d'exporter vos données de consommation.
