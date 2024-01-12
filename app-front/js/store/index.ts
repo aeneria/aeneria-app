@@ -1,10 +1,10 @@
 import { postUserEmail, postUserPassword, queryConfiguration, queryNotifications, queryPlaces, queryUser } from '@/api/configuration'
-import { postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
-import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDataRefresh, postPlaceDelete, postPlaceEdit } from '@/api/place'
+import { postFeedDataImport, postFeedDataRefresh, postFeedMeteoUpdate, queryEnedisConsentUrl, queryGrdfConsentUrl } from '@/api/feed'
+import { postPlaceCreate, postPlaceDataExport, postPlaceDataImport, postPlaceDelete, postPlaceEdit } from '@/api/place'
 import { Place } from '@/type/Place'
 import { State } from 'vue'
 import { createStore } from 'vuex'
-import { INIT_CONFIGURATION, INIT_SELECTION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, PLACE_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD } from './actions'
+import { INIT_CONFIGURATION, INIT_SELECTION, PLACE_CREATE, PLACE_DELETE, PLACE_EDIT_METEO, PLACE_EDIT, PLACE_EXPORT_DATA, PLACE_IMPORT_DATA, FEED_REFRESH_DATA, USER_UPDATE_EMAIL, USER_UPDATE_PASSWORD, FEED_IMPORT_DATA } from './actions'
 import { RESET_NOTIFICATIONS, SET_CONFIGURATION, SET_DISCONNECTED, SET_PLACE_LIST, SET_USER } from './mutations'
 import { moduleSelection, persistSelectionPlugin } from './modules/selection'
 import { ToastMessageOptions } from 'primevue/toast'
@@ -75,9 +75,10 @@ export const store = createStore({
           } else {
             notification.level = 'info'
           }
+          const level = notification.level as "error"|"success"|"info"|"warn"|undefined;
 
           this.state.notifications.push({
-            severity: notification.level,
+            severity: level,
             summary: "Notification du système",
             detail: notification.message
           })
@@ -100,7 +101,7 @@ export const store = createStore({
         })
       })
       this.state.notifications.push({
-        severity:'success',
+        severity: 'success',
         summary: "Votre modification a été enregistrée.",
         detail: `Votre adresse e-mail est désormais ${data.newEmail}.`
       })
@@ -117,6 +118,13 @@ export const store = createStore({
       }).then(url => {
         location.href = url
       })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
+      })
     },
     [PLACE_EDIT_METEO] ({commit}, data) {
       postFeedMeteoUpdate(data.placeId, data.meteo.key).then(() => {
@@ -127,6 +135,13 @@ export const store = createStore({
           severity:'success',
           summary: "L'adresse a été correctement mise à jour.",
           detail: `Elle utilisera maintenant les données de la station ${data.meteo.label}.`
+        })
+      })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
         })
       })
     },
@@ -143,6 +158,13 @@ export const store = createStore({
           detail: `Son nom est maintenant ${data.name}.`
         })
       })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
+      })
     },
     [PLACE_DELETE] ({dispatch, commit}, data) {
       postPlaceDelete(data.placeId, ).then(() => {
@@ -152,6 +174,13 @@ export const store = createStore({
         })
       }).then(() => {
         this.state.notifications.push({severity:'success', summary: "L'adresse a été correctement supprimée."})
+      })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
       })
     },
     [PLACE_EXPORT_DATA] ({}, data) {
@@ -165,9 +194,32 @@ export const store = createStore({
           detail: `Il s'effectuera dans les prochaines minutes`
         })
       })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
+      })
     },
-    [PLACE_REFRESH_DATA] ({}, data) {
-      postPlaceDataRefresh(data.placeId, data.feedId, data.start, data.end).then(() => {
+    [FEED_IMPORT_DATA] ({}, data) {
+      postFeedDataImport(data.placeId, data.feedId, data.file).then(() => {
+        this.state.notifications.push({
+          severity:'info',
+          summary: "L'import a été programmé",
+          detail: `Il s'effectuera dans les prochaines minutes`
+        })
+      })
+      .catch(err => {
+        this.state.notifications.push({
+          severity:'error',
+          summary: "Erreur",
+          detail: err
+        })
+      })
+    },
+    [FEED_REFRESH_DATA] ({}, data) {
+      postFeedDataRefresh(data.placeId, data.feedId, data.start, data.end).then(() => {
         this.state.notifications.push({
           severity:'info',
           summary: "Le rafraichissement des données a été programmé",

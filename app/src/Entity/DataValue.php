@@ -373,21 +373,21 @@ class DataValue implements \JsonSerializable
      *    ]
      *  * ...
      */
-    public static function getAdaptedBoundariesForFrequency(\DateTimeImmutable $dateToAdapt, int $frequency): array
+    public static function getAdaptedBoundariesForFrequency(\DateTimeInterface $dateToAdapt, int $frequency): array
     {
-        $date = \DateTime::createFromImmutable($dateToAdapt);
+        $date = \DateTime::createFromInterface($dateToAdapt);
 
         switch ($frequency) {
             case DataValue::FREQUENCY_DAY:
-                $firstDay = \DateTime::createFromImmutable($dateToAdapt);
-                $lastDay = \DateTime::createFromImmutable($dateToAdapt);
+                $firstDay = \DateTime::createFromInterface($dateToAdapt);
+                $lastDay = \DateTime::createFromInterface($dateToAdapt);
 
                 $lastDay->add(new \DateInterval('PT23H'));
 
                 $previousFrequency = DataValue::FREQUENCY_HOUR;
                 break;
             case DataValue::FREQUENCY_WEEK:
-                $firstDay = \DateTime::createFromImmutable($dateToAdapt);
+                $firstDay = \DateTime::createFromInterface($dateToAdapt);
                 $w = 0 == $date->format('w') ? 6 : $date->format('w') - 1;
                 $firstDay->sub(new \DateInterval('P' . $w . 'D'));
 
@@ -397,7 +397,7 @@ class DataValue implements \JsonSerializable
                 $previousFrequency = DataValue::FREQUENCY_DAY;
                 break;
             case DataValue::FREQUENCY_MONTH:
-                $firstDay = \DateTime::createFromImmutable($dateToAdapt);
+                $firstDay = \DateTime::createFromInterface($dateToAdapt);
                 $firstDay->sub(new \DateInterval('P' . ($date->format('d') - 1) . 'D'));
 
                 $lastDay = clone $firstDay;
@@ -417,8 +417,8 @@ class DataValue implements \JsonSerializable
         }
 
         return [
-            'from' => \DateTimeImmutable::createFromMutable($firstDay),
-            'to' => \DateTimeImmutable::createFromMutable($lastDay),
+            'from' => \DateTimeImmutable::createFromInterface($firstDay),
+            'to' => \DateTimeImmutable::createFromInterface($lastDay),
             'previousFrequency' => $previousFrequency,
         ];
     }

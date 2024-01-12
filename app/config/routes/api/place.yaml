@@ -17,7 +17,3 @@ api.place.data.export:
 api.place.data.import:
   path: /data/import
   controller: App\Controller\ApiPlaceController::dataImport
-
-api.place.data.refresh:
-  path: /data/refresh
-  controller: App\Controller\ApiPlaceController::dataRefresh

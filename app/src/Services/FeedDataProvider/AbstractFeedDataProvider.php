@@ -167,14 +167,6 @@ abstract class AbstractFeedDataProvider implements FeedDataProviderInterface
                 $feed->addFetchError();
                 $this->entityManager->persist($feed);
                 $this->entityManager->flush();
-
-                if ($place = $feed->getFirstPlace()) {
-                    $this->notificationService->handleFetchDataNotification(
-                        $place->getUser(),
-                        $feed,
-                        [$error]
-                    );
-                }
             }
         }
 

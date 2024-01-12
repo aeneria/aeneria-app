@@ -28,8 +28,15 @@
           <template #body="{data}">
             <i :class="data.severity"></i>
           </template>
-          <template #filter="{filterModel,filterCallback}">
-              <Dropdown v-model="filterModel.value" @change="filterCallback()" :options="severityOptions" placeholder="Any" class="p-column-filter" :showClear="true">
+          <template #filter="{filterModel, filterCallback}">
+              <MultiSelect
+                v-model="filterModel.value"
+                @change="filterCallback()"
+                :options="severityOptions"
+                placeholder="Any"
+                class="p-column-filter"
+                :showClear="true"
+              >
                   <template #value="slotProps">
                       <i :class="slotProps.value" v-if="slotProps.value"></i>
                       <span v-else>{{slotProps.placeholder}}</span>
@@ -37,7 +44,7 @@
                   <template #option="slotProps">
                       <i :class="slotProps.option"></i> {{ getLogSeverityLabel(slotProps.option) }}
                   </template>
-              </Dropdown>
+              </MultiSelect>
           </template>
         </Column>
         <Column header="Message" field="message" bodyClass="text-center"></Column>

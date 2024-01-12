@@ -1,18 +1,18 @@
 import { defineComponent, PropType } from 'vue';
 import Button from 'primevue/button';
-import EditMeteoForm from './form/EditMeteoForm';
-import EditLinkyForm from './form/EditLinkyForm';
-import EditGazparForm from './form/EditGazparForm';
-import { Feed, feedDescription, feedIcon, feedLabelLong, FeedType } from '@/type/Feed';
+import FeedEnedis from './feedEnedis/FeedEnedis';
+import FeedGrdf from './feedGrdf/FeedGrdf';
+import FeedMeteoFrance from './feedMeteoFrance/FeedMeteoFrance';
+import { Feed, FeedType } from '@/type/Feed';
 import { Place } from '@/type/Place';
 
 export default defineComponent({
   name: 'Feed',
   components: {
     Button,
-    EditMeteoForm,
-    EditLinkyForm,
-    EditGazparForm,
+    FeedEnedis,
+    FeedGrdf,
+    FeedMeteoFrance,
   },
   props: {
     place: {
@@ -35,15 +35,6 @@ export default defineComponent({
     },
   },
   computed: {
-    label(): string {
-      return feedLabelLong(this.feed)
-    },
-    icon(): string {
-      return feedIcon(this.feed)
-    },
-    description(): string {
-      return feedDescription(this.feed)
-    },
     isMeteoFeed(): boolean {
       return this.feed.type == FeedType.meteo
     },

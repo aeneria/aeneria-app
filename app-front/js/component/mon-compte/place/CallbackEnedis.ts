@@ -2,7 +2,7 @@ import { defineComponent } from 'vue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import { findFeedByType, Place } from '@/type/Place';
-import AddGazparForm from './feed/form/AddGazparForm';
+import AddGazparForm from './feed/feedGrdf/form/AddGazparForm';
 import Spinner from '../../graphique/Spinner';
 import { mapState } from 'vuex';
 import { Feed as FeedObject, FeedType } from '@/type/Feed';

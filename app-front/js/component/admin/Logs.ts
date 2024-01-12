@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
-import Dropdown from 'primevue/dropdown';
+import MultiSelect from 'primevue/multiselect';
 import Column from 'primevue/column';
 import {  queryLogs } from '@/api/admin';
 import { timeFormat } from 'd3';
@@ -13,13 +13,13 @@ export default defineComponent({
     Button,
     Column,
     DataTable,
-    Dropdown,
+    MultiSelect,
   },
   data() {
     return {
       logs: null as null|Array<any>,
       filters: {
-        'severity': {value: null, matchMode: FilterMatchMode.EQUALS}
+        'severity': {value: null, matchMode: FilterMatchMode.IN}
       },
       severityOptions: [
         "fa-solid fa-bomb",
