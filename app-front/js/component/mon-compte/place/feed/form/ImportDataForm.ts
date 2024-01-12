@@ -1,21 +1,19 @@
 import { defineComponent, PropType } from 'vue';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import FileUpload, { FileUploadUploaderEvent } from 'primevue/fileupload';
 import Message from 'primevue/message';
-import Calendar from 'primevue/calendar';
-import { Place } from '@/type/Place';
-import { FEED_REFRESH_DATA } from '@/store/actions';
+import { FEED_IMPORT_DATA } from '@/store/actions';
 import { required } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import { Feed, feedLabelShort } from '@/type/Feed';
-
+import { Feed } from '@/type/Feed';
 
 export default defineComponent({
-  name: 'RefreshDataForm',
+  name: 'ImportDataForm',
   components: {
     Button,
     Dialog,
-    Calendar,
+    FileUpload,
     Message,
   },
   setup: () => ({ v$: useVuelidate() }),
@@ -28,10 +26,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    place: {
-      type: Object as PropType<Place>,
-      required: true
-    },
     feed: {
       type: Object as PropType<Feed>,
       required: true
@@ -39,20 +33,27 @@ export default defineComponent({
   },
   data() {
     return {
-      range: [],
       submitted: false,
+      file: null as File|null,
     }
   },
   validations() {
     return {
-      range: {
-        required
+      file: {
+        required,
       },
     }
   },
   methods: {
     closeBasic() {
+      this.file = null
       this.$emit('toggleVisible')
+    },
+    onUpload(event: FileUploadUploaderEvent) {
+      this.file = Array.isArray(event.files) ? event.files[0] : event.files
+    },
+    onRemove() {
+      this.file = null
     },
     post(isValid: boolean) {
       this.submitted = true
@@ -61,19 +62,11 @@ export default defineComponent({
         return
       }
 
-      this.$store.dispatch(FEED_REFRESH_DATA, {
-        placeId: this.place.id,
+      this.$store.dispatch(FEED_IMPORT_DATA, {
         feedId: this.feed.id,
-        start: this.range[0],
-        end: this.range[1],
+        file: this.file,
       })
       this.$emit('toggleVisible')
-    },
-    feedLabel(feed: Feed): string {
-      return feedLabelShort(feed)
-    },
-    feedValues(feed: Feed): null|{feed: Feed, range: Date[], submitted: Boolean} {
-      return this[feed.id] ?? null
     },
   },
   emits: ['toggleVisible'],

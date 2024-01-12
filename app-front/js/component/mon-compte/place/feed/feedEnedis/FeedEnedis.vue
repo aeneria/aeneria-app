@@ -34,14 +34,13 @@
       :visible="displayRefreshDataForm"
       title="Rafraichir les données depuis Enedis"
       v-on:toggleVisible="toggleRefreshDataForm()"
-      :place="place"
       :feed="feed"
     >
       <p>
         Il peut parfois être nécessaire de rafraichir les données d'un flux manuellement : c'est
         à dire forcer la mise à jour des données depuis les serveurs d'Enedis, GrDF et de Météo France.
       </p>
-      <Message severity="info" :closable="false" class="p-mb-4 p-mt-1">
+      <Message severity="info" class="p-mb-4 p-mt-1">
         <p>
           Les données d'un compteur Linky :
           <ul>
@@ -51,6 +50,29 @@
         </p>
       </Message>
     </RefreshDataForm>
+    <ImportDataForm
+      :visible="displayImportDataForm"
+      title="Importer un fichier de données Enedis"
+      v-on:toggleVisible="toggleImportDataForm()"
+      :feed="feed"
+    >
+      <p>
+        Enedis vous propose, depuis votre compte personnel, d'exporter vos données de consommation.
+      </p>
+      <p>
+        Cet export est le moyen le plus simple et le plus efficace pour importer des données en masse sur æneria.
+      </p>
+      <p>
+        Les fichiers générés sont des CSV qui peuvent contenir des données journalières ou des données horaires.
+        Ces 2 types de fichier sont acceptés par l'import d'æneria.
+      </p>
+      <Message severity="warn" class="p-mb-4 p-mt-1">
+        <p>
+          Cet import a été prévu pour fonctionner avec les fichiers CSV issus d'Enedis et seulement ces fichiers.
+          Si vous essayez d'importer des fichiers provenant d'une autre source, faites-le à vos risques et périls !
+        </p>
+      </Message>
+    </ImportDataForm>
   </div>
 </template>
 

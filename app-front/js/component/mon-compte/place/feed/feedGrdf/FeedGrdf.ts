@@ -2,6 +2,7 @@ import { defineComponent, PropType, ref } from 'vue';
 import Button from 'primevue/button';
 import EditGazparForm from './form/EditGazparForm';
 import RefreshDataForm from '../form/RefreshDataForm';
+import ImportDataForm from '../form/ImportDataForm';
 import { Feed, feedDescription, feedIcon, feedLabelLong } from '@/type/Feed';
 import { Place } from '@/type/Place';
 import Menu from 'primevue/menu';
@@ -13,6 +14,7 @@ export default defineComponent({
   components: {
     Button,
     EditGazparForm,
+    ImportDataForm,
     Menu,
     RefreshDataForm,
     Message,
@@ -90,8 +92,7 @@ export default defineComponent({
 
       if (this.configuration.userCanImport) {
         menuEditionItems.push({
-          label: 'Importer un fichier CSV Enedis',
-          class: 'p-disabled',
+          label: 'Importer un fichier de données GRDF',
           icon: 'pi pi-download',
           command: () => this.toggleImportDataForm()
         })

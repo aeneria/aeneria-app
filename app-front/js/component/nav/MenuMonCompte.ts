@@ -37,7 +37,9 @@ export default defineComponent({
         menuMonCompteItems.push({
             label: 'Mon compte',
             icon: 'pi pi-user',
-            to: '/app/mon-compte',
+            command: () => {
+                this.$router.push({name: 'mon-compte'})
+            },
         })
       }
 
@@ -45,7 +47,9 @@ export default defineComponent({
         menuMonCompteItems.push({
           label: 'Administration',
           icon: 'pi pi-shield',
-          to: '/app/admin',
+          command: () => {
+              this.$router.push({name: 'admin'})
+          },
         })
       }
 
@@ -53,21 +57,23 @@ export default defineComponent({
         {
             label: 'À Propos',
             icon: 'pi pi-info-circle',
-            to: '/app/a-propos',
+            command: () => {
+                this.$router.push({name: 'about'})
+            },
         },
         {
             label: 'Aide',
             icon: 'pi pi-question-circle',
-            to: '/app/aide',
+            command: () => {
+                this.$router.push({name: 'aide'})
+            },
         }
       )
 
       menuMonCompteItems.push({
           label: 'Déconnexion',
           icon: 'pi pi-sign-out',
-          command: () => {
-              window.location.href = '/logout'
-          }
+          url: '/logout',
       })
 
       return menuMonCompteItems

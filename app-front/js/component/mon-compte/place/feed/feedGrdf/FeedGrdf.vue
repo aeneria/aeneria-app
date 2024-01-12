@@ -34,7 +34,6 @@
       :visible="displayRefreshDataForm"
       title="Rafraichir les données depuis GRDF"
       v-on:toggleVisible="toggleRefreshDataForm()"
-      :place="place"
       :feed="feed"
     >
       <p>
@@ -51,6 +50,28 @@
         </p>
       </Message>
     </RefreshDataForm>
+    <ImportDataForm
+      :visible="displayImportDataForm"
+      title="Importer un fichier de données GRDF"
+      v-on:toggleVisible="toggleImportDataForm()"
+      :feed="feed"
+    >
+      <p>
+        GRDF vous propose, depuis votre compte personnel, d'exporter vos données de consommation.
+      </p>
+      <p>
+        Cet export est le moyen le plus simple et le plus efficace pour importer des données en masse sur æneria.
+      </p>
+      <p>
+        Les fichiers générés sont des XLSX qui contiennent des données journalières.
+      </p>
+      <Message severity="warn" class="p-mb-4 p-mt-1">
+        <p>
+          Cet import a été prévu pour fonctionner avec les fichiers XLSX issus de GRDF et seulement ces fichiers.
+          Si vous essayez d'importer des fichiers provenant d'une autre source, faites-le à vos risques et périls !
+        </p>
+      </Message>
+    </ImportDataForm>
   </div>
 </template>
 
