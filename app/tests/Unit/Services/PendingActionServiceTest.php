@@ -132,7 +132,7 @@ final class PendingActionServiceTest extends AppTestCase
             $this->getLogger()
         );
 
-        $action = $actionService->createDataImportAction($user, $place, 'totototo');
+        $action = $actionService->createDataImportAction($user, $place, null, 'totototo');
 
         self::assertSame($action->getUser(), $user);
         self::assertTrue($action->existParam('place'));
@@ -298,7 +298,7 @@ final class PendingActionServiceTest extends AppTestCase
         $dataImporter = $this->createMock(DataImporter::class);
         $dataImporter
             ->expects($this->exactly(1))
-            ->method('importPlace')
+            ->method('importFile')
             ->willReturn([])
         ;
 

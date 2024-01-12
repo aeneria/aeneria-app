@@ -420,7 +420,7 @@ class DataImporter
         while ($row = \fgetcsv($stream, 1024, ';')) {
             // Le fichier contenant des données journalière finit par des lignes
             // décrivant la période couverte. ça ne nous intéresse pas ici.
-            if ('Période' === $row[0]) {
+            if ('Periode' === $row[0]) {
                 break;
             }
 
@@ -469,9 +469,7 @@ class DataImporter
         \fclose($stream);
 
         $current = \DateTimeImmutable::createFromInterface($start);
-        var_dump('end ' . $end->format('d-m-Y'));
         while($current < $end) {
-            var_dump($current->format('d-m-Y'));
             // Persist week data.
             $this->dataValueRepository->updateOrCreateAgregateValue($current, $feed, DataValue::FREQUENCY_WEEK);
             $this->entityManager->flush();

@@ -130,7 +130,7 @@ class PendingActionService
             new \DateTimeImmutable('now'),
             [
                 'place' => $place->getId(),
-                'feed' => $feed->getId() ?? null,
+                'feed' => $feed ? $feed->getId() : null,
                 'filename' => $filename,
             ]
         );
