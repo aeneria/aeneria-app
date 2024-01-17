@@ -230,10 +230,12 @@ class ProxifiedEnedisDataConnectProvider extends AbstractFeedDataProvider
                 ->format('Y-m-d H:00')
             ;
             if (\array_key_exists($key, $data)) {
-                $data[$key] += $meteringValue->value / 1000;
+                $data[$key] = ($data[$key] + $meteringValue->value) / 2;
             } else {
-                $data[$key] = $meteringValue->value / 1000;
+                $data[$key] = $meteringValue->value;
             }
+
+            $data[$key] = $data[$key] / 1000;
         }
 
         return $data;

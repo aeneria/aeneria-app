@@ -339,11 +339,14 @@ class DataImporter
 
             // C'est la 2e colonne qui contient les valeurs en kWh.
             if (!\is_numeric($value = $row[1])) {
-                $errors[] = $message = \sprintf(
-                    "ligne %s - La colone 2 n'est pas valides ou vides.",
-                    $number
-                );
-                $this->logger->error("Import Data - " . $message, ['place' => $place->getId(), 'feedId' => $feed->getId()]);
+                // On ne remonte pas d'erreur si le champ est juste vide.
+                if ($value !== '') {
+                    $errors[] = $message = \sprintf(
+                        "ligne %s - La colone 2 n'est pas valides ou vides.",
+                        $number
+                    );
+                    $this->logger->error("Import Data - " . $message, ['place' => $place->getId(), 'feedId' => $feed->getId()]);
+                }
 
                 continue;
             }
@@ -361,7 +364,11 @@ class DataImporter
             $key = $date->format('Y-m-d H:00');
 
             if (\array_key_exists($key, $batchDataValues)) {
-                $batchDataValues[$key]->setValue($batchDataValues[$key]->getValue() + (float)$value);
+                // Si on a 2 données pour la même heure, c'est
+                // que se sont des données à la demie heure,
+                // on adapte alors le calcul
+                $newValue = ($batchDataValues[$key]->getValue() + ((float)$value / 1000))/2;
+                $batchDataValues[$key]->setValue($newValue);
             } else {
                 $batchDataValues[$key] = (new DataValue())
                     ->setFrequency(DataValue::FREQUENCY_HOUR)
@@ -379,27 +386,6 @@ class DataImporter
             }
         }
         \fclose($stream);
-
-        $current = \DateTimeImmutable::createFromInterface($start);
-        while($current < $end) {
-            // Persist day data.
-            $this->dataValueRepository->updateOrCreateAgregateValue($current, $feed, DataValue::FREQUENCY_DAY);
-            $this->entityManager->flush();
-
-            // Persist week data.
-            $this->dataValueRepository->updateOrCreateAgregateValue($current, $feed, DataValue::FREQUENCY_WEEK);
-            $this->entityManager->flush();
-
-            // Persist month data.
-            $this->dataValueRepository->updateOrCreateAgregateValue($current, $feed, DataValue::FREQUENCY_MONTH);
-            $this->entityManager->flush();
-
-            // Persist year data.
-            $this->dataValueRepository->updateOrCreateAgregateValue($current, $feed, DataValue::FREQUENCY_YEAR);
-            $this->entityManager->flush();
-
-            $current = $current->add(new \DateInterval('P1D'));
-        }
 
         return $errors;
     }

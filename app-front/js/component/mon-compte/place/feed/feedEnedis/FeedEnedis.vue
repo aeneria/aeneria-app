@@ -75,6 +75,17 @@
           Si vous essayez d'importer des fichiers provenant d'une autre source, faites-le à vos risques et périls !
         </p>
       </Message>
+      <Message severity="info" class="p-mb-4 p-mt-1">
+        <p>
+          Les données horaires d'Enedis peuvent être incomplètes (voire erronées). Pour cette raison, lors
+          de l'import d'un fichier de données horaires, æneria n'essaye pas de déduire les données
+          journalières à partir des données horaires présentes dans le fichier.
+        </p>
+        <p>
+          Ainsi, pour avoir l'ensemble des données dans æeneria (horaires et jounralières), il est nécessaire
+          d'importer un fichier de données horaires <strong>et</strong> un fichier de données journalières.
+        </p>
+      </Message>
     </ImportDataForm>
   </div>
 </template>
