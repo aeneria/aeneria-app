@@ -19,7 +19,6 @@
         @uploader="onUpload"
         :multiple="false"
         :auto="true"
-        :accept="acceptedMimeType"
       />
       <div v-if="file" class="p-ml-3 overflow-wrap"><p>{{ file.name }}</p></div>
     </div>

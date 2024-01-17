@@ -34,10 +34,6 @@ export default defineComponent({
     feed: {
       type: Object as PropType<Feed>,
       required: true
-    },
-    acceptedMimeType: {
-      type: String,
-      required: true,
     }
   },
   data() {

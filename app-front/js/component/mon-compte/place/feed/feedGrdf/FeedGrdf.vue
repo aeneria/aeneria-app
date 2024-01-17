@@ -57,7 +57,6 @@
       v-on:toggleVisible="toggleImportDataForm()"
       :place="place"
       :feed="feed"
-      acceptedMimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     >
       <p>
         GRDF vous propose, depuis votre compte personnel, d'exporter vos données de consommation.
@@ -66,7 +65,9 @@
         Cet export est le moyen le plus simple et le plus efficace pour importer des données en masse sur æneria.
       </p>
       <p>
-        Les fichiers générés sont des XLSX qui contiennent des données journalières.
+        Les fichiers générés sont des XLSX qui contiennent des données journalières. Pour y accéder,
+        rendez-vous dans l'onglet <a href="https://monespace.grdf.fr/client/particulier/consommation">Maitriser ma consommation</a>
+        de votre espace GRDF.
       </p>
       <Message severity="warn" class="p-mb-4 p-mt-1">
         <p>

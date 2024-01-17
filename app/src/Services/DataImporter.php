@@ -242,6 +242,8 @@ class DataImporter
             }
         }
 
+        $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_DAY, $batchDataValues);
+
         $reader->close();
 
         $current = \DateTimeImmutable::createFromInterface($start);
@@ -387,6 +389,8 @@ class DataImporter
         }
         \fclose($stream);
 
+        $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_HOUR, $batchDataValues);
+
         return $errors;
     }
 
@@ -453,6 +457,8 @@ class DataImporter
             }
         }
         \fclose($stream);
+
+        $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_HOUR, $batchDataValues);
 
         $current = \DateTimeImmutable::createFromInterface($start);
         while($current < $end) {
