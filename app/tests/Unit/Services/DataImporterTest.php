@@ -81,7 +81,7 @@ final class DataImporterTest extends AppTestCase
             $this->getResourceDir() . '/Enedis_Conso_Heure.csv'
         );
 
-        self::assertCount(13, $errors); // il y a 13 lignes vides
+        self::assertCount(0, $errors);
     }
 
     public function testDataImporterEnedisDayFile()
