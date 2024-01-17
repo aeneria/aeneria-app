@@ -386,6 +386,8 @@ class DataImporter
                 $batchStart = $batchEnd = null;
                 $batchDataValues = [];
             }
+
+            $number++;
         }
         \fclose($stream);
 
@@ -407,6 +409,8 @@ class DataImporter
         $batchStart = $batchEnd = null;
         $batchDataValues = [];
         $batchSize = 1000;
+        $previousIndex = null;
+        $currentIndex = null;
         while ($row = \fgetcsv($stream, 1024, ';')) {
             // Le fichier contenant des données journalière finit par des lignes
             // décrivant la période couverte. ça ne nous intéresse pas ici.
@@ -422,12 +426,29 @@ class DataImporter
             }
 
             // C'est la 3e colonne qui contient les valeurs en kWh.
-            if (!\is_numeric($value = $row[2])) {
-                $errors[] = $message = \sprintf(
-                    "ligne %s - La colone 3 n'est pas valides.",
-                    $number
-                );
-                $this->logger->error("Import Data - " . $message, ['place' => $place->getId(), 'feedId' => $feed->getId()]);
+            // Attention, cette valeur est un index et non une consommation.
+            // Pour obtenir la consommation, il faut soustraire la index du jour
+            // avec celui du jour précédent.
+            if (!\is_numeric($currentIndex = $row[2])) {
+                // On ne remonte pas d'erreur si le champ est juste vide.
+                if ($currentIndex !== '') {
+                    $errors[] = $message = \sprintf(
+                        "ligne %s - La colone 3 n'est pas valides. (%s)",
+                        $number,
+                        $currentIndex
+                    );
+                    $this->logger->error("Import Data - " . $message, ['place' => $place->getId(), 'feedId' => $feed->getId()]);
+                }
+                $previousIndex = null;
+
+                continue;
+            }
+            $currentIndex = (float)$currentIndex;
+
+            if (!$previousIndex) {
+                // On a pas d'index pour la jour précédent,
+                // on ne pet pas connaitre la conso du jour.
+                $previousIndex = $currentIndex;
 
                 continue;
             }
@@ -442,23 +463,28 @@ class DataImporter
             }
             $batchEnd = \DateTimeImmutable::createFromInterface($date);
 
-            $batchDataValues[$date->format('Y-m-d H:00')] = (new DataValue())
-                ->setFrequency(DataValue::FREQUENCY_HOUR)
+            $batchDataValues[$date->format('Y-m-d')] = (new DataValue())
+                ->setFrequency(DataValue::FREQUENCY_DAY)
                 ->setFeedData($feedData)
                 ->setDate($date)
-                ->setValue((float) $value / 1000) // Les données du fichier sont en Wh
+                ->setValue((float) ($currentIndex - $previousIndex) / 1000) // Les données du fichier sont en Wh
                 ->updateDateRelatedData()
             ;
 
             if ($batchSize <= \count($batchDataValues)) {
-                $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_HOUR, $batchDataValues);
+                $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_DAY, $batchDataValues);
                 $batchStart = $batchEnd = null;
                 $batchDataValues = [];
             }
+
+            $previousIndex = $currentIndex;
+            $number++;
         }
         \fclose($stream);
 
-        $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_HOUR, $batchDataValues);
+        if (\count($batchDataValues)) {
+            $this->dataValueRepository->massImport($batchStart, $batchEnd, [$feedData], DataValue::FREQUENCY_DAY, $batchDataValues);
+        }
 
         $current = \DateTimeImmutable::createFromInterface($start);
         while($current < $end) {
