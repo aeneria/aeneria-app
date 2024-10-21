@@ -1,8 +1,10 @@
 # æneria - A little dashboard to analyse your energy consumption data
 
-<p align="center">
-    <img src="https://aeneria.com/user/pages/02.a-propos/_about/aeneria.png">
-</p>
+
+## 💀💀💀 This application is no longer maintained 💀💀💀
+**see https://gitlab.com/aeneria/aeneria-app/-/issues/51 to rad more about it**
+
+--- 
 
 The idea of [æneria](aeneria.com) is to display energy consumption and weather data on a little dashboard that allow the user to:
 
