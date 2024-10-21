@@ -2,7 +2,7 @@
 
 
 ## 💀💀💀 This application is no longer maintained 💀💀💀
-**see https://gitlab.com/aeneria/aeneria-app/-/issues/51 to rad more about it**
+**see https://gitlab.com/aeneria/aeneria-app/-/issues/51 to read more about it**
 
 --- 
 
